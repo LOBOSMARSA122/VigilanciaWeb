@@ -1,0 +1,91 @@
+﻿
+
+<div class="" id="reportWeight" style="width:100%">
+    <div id="Weight" class="chart table-responsive"></div>
+</div>
+
+<div>
+</div>
+@{
+
+    if (Request.Browser.Browser == "IE" && Convert.ToDouble(Request.Browser.Version) < 9.0)
+    {
+    }
+    else
+    {
+        <script>
+            function LoadWeight(data) {  
+
+                var WeightDate = [];
+                var Weight = [];
+                for (let i = 0; i < data.Weights.length; i++) {
+                    Weight.push(parseFloat(data.Weights[i].y));
+                    WeightDate.push(data.Weights[i].Date);
+                };
+
+                Highcharts.chart('Weight', {
+
+                title: {
+                    text: 'Historial'
+                },
+
+                subtitle: {
+                    text: ''
+                },
+                
+                yAxis: {
+                    title: {
+                        text: ''
+                    }
+                },
+                legend: {
+                    layout: 'horizontal',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                plotOptions: {
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        },
+                        //pointStart: '2018-10-07'
+                    }
+                },
+                xAxis: {
+
+                    categories: WeightDate,
+                    labels: {
+                        skew3d: true,
+                        style: {
+                            fontSize: '16px'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'IMC',
+                    data: Weight,
+                }],
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+
+            });
+                
+        }
+        </script>
+    }
+}
+

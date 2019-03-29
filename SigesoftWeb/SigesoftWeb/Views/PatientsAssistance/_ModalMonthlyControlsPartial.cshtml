@@ -1,0 +1,108 @@
+﻿<div class="" id="reporteMonContr" style="width:100%">
+    <div id="chartModalMonthlyControls" class="chart table-responsive"></div>
+</div>
+
+
+@{
+
+    if (Request.Browser.Browser == "IE" && Convert.ToDouble(Request.Browser.Version) < 9.0)
+    {
+    }
+    else
+    {
+        <script>
+            function LoadModalMonContr(data) {
+                var obj = JSON.parse(data);
+                var days = obj.NroDays;
+                var controls = obj.DailyControls;
+                var controlsCompleted = obj.DailyControlsCompleted;
+
+                var arrDays = [];
+                var arrControls = [];
+                var arrControlsCompleted = [];
+
+                for (var x in days) {
+                    arrDays.push(days[x].NroDay);
+                }
+
+                for (var x in controls) {
+                    arrControls.push(parseInt(controls[x].y));
+                }
+
+                for (var x in controlsCompleted) {
+                    arrControlsCompleted.push(parseInt(controlsCompleted[x].y));
+                }
+
+                Highcharts.chart('chartModalMonthlyControls', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    xAxis: {
+                        categories: arrDays
+                    },
+                    yAxis: [{
+                        min: 0,
+                        title: {
+                            text: 'Controles'
+                        }
+                    }, {
+                        title: {
+                            text: 'Atendidos'
+                        },
+                        opposite: true
+                    }],
+                    legend: {
+                        shadow: false
+                    },
+                    tooltip: {
+                        shared: true
+                    },
+                    plotOptions: {
+                        column: {
+                            grouping: false,
+                            shadow: false,
+                            borderWidth: 0
+                        },
+                        series: {
+                            borderWidth: 0,
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.y: f}'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Controles',
+                        color: 'rgba(165,170,217,1)',
+                        data: arrControls,
+                        pointPadding: 0.3,
+                        pointPlacement: -0.2
+                    }, {
+                        name: 'Controles Completados',
+                        color: 'rgba(126,86,134,.9)',
+                        data: arrControlsCompleted,
+                        pointPadding: 0.4,
+                        pointPlacement: -0.2
+                        }],
+                    responsive: {
+                        rules: [{
+                            condition: {
+                                maxWidth: 500
+                            },
+                            chartOptions: {
+                                legend: {
+                                    layout: 'horizontal',
+                                    align: 'center',
+                                    verticalAlign: 'bottom'
+                                }
+                            }
+                        }]
+                    }
+                });
+            }
+        </script>
+    }
+}

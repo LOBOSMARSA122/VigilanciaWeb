@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DC91C17B-6BA6-4507-9BF4-0C72F78D25C9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BE</RootNamespace>
+    <AssemblyName>BE</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="itextsharp">
+      <HintPath>..\..\..\..\SalusLaboris\Proyecto Salus Laboris\ExternalLibraries\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\AplicationHierarchyBE.cs" />
+    <Compile Include="Common\AttentionInAreaBE.cs" />
+    <Compile Include="Common\AttentionInAreaComponentBE.cs" />
+    <Compile Include="Common\Boards.cs" />
+    <Compile Include="Common\Cie10BE.cs" />
+    <Compile Include="Common\CIIUIBE.cs" />
+    <Compile Include="Common\ClientSession.cs" />
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="Common\DataHierarchyBE.cs" />
+    <Compile Include="Common\Dropdownlist.cs" />
+    <Compile Include="Common\EmailBE.cs" />
+    <Compile Include="Common\Enumeratores.cs" />
+    <Compile Include="Common\KeyValueDTO.cs" />
+    <Compile Include="Common\LogBE.cs" />
+    <Compile Include="Common\MasterRecommendationRestricctionDto.cs" />
+    <Compile Include="Common\MultiDataModel.cs" />
+    <Compile Include="Common\MultimediaFileBE.cs" />
+    <Compile Include="Common\NodeBE.cs" />
+    <Compile Include="Common\NodeOrganizationLocationProfileBE.cs" />
+    <Compile Include="Common\NodeOrganizationLocationWarehouseProfileBE.cs" />
+    <Compile Include="Common\NodeOrganizationProfileBE.cs" />
+    <Compile Include="Common\NodeServiceProfileBE.cs" />
+    <Compile Include="Common\OperationResult.cs" />
+    <Compile Include="Common\PacientBE.cs" />
+    <Compile Include="Common\PacientMultimediaDataBE.cs" />
+    <Compile Include="Common\PersonDto.cs" />
+    <Compile Include="Common\ProfessionalBE.cs" />
+    <Compile Include="Common\RecommendationDto.cs" />
+    <Compile Include="Common\RestrictionDto.cs" />
+    <Compile Include="Common\RoleNodeComponentProfileBE.cs" />
+    <Compile Include="Common\SupplierBE.cs" />
+    <Compile Include="Common\SystemParameterBE.cs" />
+    <Compile Include="Common\Utils.cs" />
+    <Compile Include="Component\AdditionalExams.cs" />
+    <Compile Include="Component\ComponentDto.cs" />
+    <Compile Include="Component\ComponentFieldDto.cs" />
+    <Compile Include="Component\ComponentFieldsDto.cs" />
+    <Compile Include="Component\ComponentFieldValuesDto.cs" />
+    <Compile Include="Component\ComponentFieldValuesRecommendationDto.cs" />
+    <Compile Include="Component\ComponentFieldValuesRestrictionDto.cs" />
+    <Compile Include="ConfDx\ConfigDxCustom.cs" />
+    <Compile Include="ConfDx\ConfigDxDto.cs" />
+    <Compile Include="Diagnostic\Diagnostic.cs" />
+    <Compile Include="Diagnostic\DiseasesDto.cs" />
+    <Compile Include="Diagnostic\DxFrecuenteBE.cs" />
+    <Compile Include="Diagnostic\DxFrecuenteDetalleBE.cs" />
+    <Compile Include="Eso\EsoCustom.cs" />
+    <Compile Include="Eso\RecipesCustom.cs" />
+    <Compile Include="Eso\ValorCampo.cs" />
+    <Compile Include="History\FamilyMedicalAntecedentsBE.cs" />
+    <Compile Include="History\HistoryBE.cs" />
+    <Compile Include="History\NoxiousHabitsBE.cs" />
+    <Compile Include="History\PersonMedicalHistoryBE.cs" />
+    <Compile Include="History\TypeOfEppBE.cs" />
+    <Compile Include="History\WorkStationDangersBE.cs" />
+    <Compile Include="ItexSharp\HandlingItextSharp.cs" />
+    <Compile Include="ItexSharp\MergeExPDF.cs" />
+    <Compile Include="ItexSharp\pdfPage.cs" />
+    <Compile Include="MedicalAssistance\Boards.cs" />
+    <Compile Include="MedicalAssistance\PersonMedicalHistoryList.cs" />
+    <Compile Include="MedicalAssistance\ReviewEMO.cs" />
+    <Compile Include="MedicalAssistance\Schedule.cs" />
+    <Compile Include="MedicalAssistance\TopDiagnostic.cs" />
+    <Compile Include="Notification\Boards.cs" />
+    <Compile Include="Notification\NotificationAlertBE.cs" />
+    <Compile Include="Notification\NotificationDto.cs" />
+    <Compile Include="Notification\NotificationsBE.cs" />
+    <Compile Include="Notification\SendNotificationBE.cs" />
+    <Compile Include="Organization\AreaBE.cs" />
+    <Compile Include="Organization\Boards.cs" />
+    <Compile Include="Organization\CodigoEmpresaBE.cs" />
+    <Compile Include="Organization\GesBE.cs" />
+    <Compile Include="Organization\GroupOccupationBE.cs" />
+    <Compile Include="Organization\LocationBE.cs" />
+    <Compile Include="Organization\OccupationBE.cs" />
+    <Compile Include="Organization\OrganizationBE.cs" />
+    <Compile Include="Organization\OrganizationPersonBE.cs" />
+    <Compile Include="Plan\Boards.cs" />
+    <Compile Include="Plan\PlanVigilanciaDto.cs" />
+    <Compile Include="ProductWarehouse\Boards.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\ProtocolBE.cs" />
+    <Compile Include="Protocol\ProtocolComponentDto.cs" />
+    <Compile Include="Protocol\ProtocolSystemUserBE.cs" />
+    <Compile Include="Common\SecuentialBE.cs" />
+    <Compile Include="ReportManager\ComponentsByServiceBe.cs" />
+    <Compile Include="ReportManager\ComponentsServiceId.cs" />
+    <Compile Include="ReportManager\OrdenReporteDto.cs" />
+    <Compile Include="ReportManager\OrdenReportesBe.cs" />
+    <Compile Include="ReportManager\ReportManagerBe.cs" />
+    <Compile Include="Schedule\ScheduleCustom.cs" />
+    <Compile Include="Security\ApplicationHierarchyBE.cs" />
+    <Compile Include="Security\AuthorizationModel.cs" />
+    <Compile Include="Security\RoleNodeBE.cs" />
+    <Compile Include="Security\RoleNodeProfileBE.cs" />
+    <Compile Include="Security\SystemUserDto.cs" />
+    <Compile Include="Security\SystemUserGobalProfileBE.cs" />
+    <Compile Include="Security\SystemUserRoleNodeBE.cs" />
+    <Compile Include="Service\CalendarDto.cs" />
+    <Compile Include="Service\DiagnosticRepositoryDto.cs" />
+    <Compile Include="Service\ServiceComponentBe.cs" />
+    <Compile Include="Service\ServiceComponentTemp.cs" />
+    <Compile Include="Service\ServiceDto.cs" />
+    <Compile Include="Service\ServiceComponentDto.cs" />
+    <Compile Include="Service\ServiceComponentFieldsBE.cs" />
+    <Compile Include="Service\ServiceComponentFieldValuesDto.cs" />
+    <Compile Include="Service\ServiceComponentMultimediaBE.cs" />
+    <Compile Include="Service\ServiceMultimediaBE.cs" />
+    <Compile Include="Service\ServiceStatusBE.cs" />
+    <Compile Include="Service\TimeLine.cs" />
+    <Compile Include="Sigesoft\Common.cs" />
+    <Compile Include="Sigesoft\DiagnosticRepositoryList.cs" />
+    <Compile Include="Sigesoft\OrganizationDto.cs" />
+    <Compile Include="Sigesoft\PacientList.cs" />
+    <Compile Include="Sigesoft\RecetaDto.cs" />
+    <Compile Include="Sigesoft\RecomendationList.cs" />
+    <Compile Include="Sigesoft\RestrictionList.cs" />
+    <Compile Include="Sigesoft\ServiceComponentFieldsList.cs" />
+    <Compile Include="Sigesoft\ServiceComponentFieldValuesList.cs" />
+    <Compile Include="Sigesoft\ServiceComponentList.cs" />
+    <Compile Include="Sigesoft\ServiceList.cs" />
+    <Compile Include="Sigesoft\UsuarioGrabo.cs" />
+    <Compile Include="Subscription\SubscriptionBE.cs" />
+    <Compile Include="Test\TestConcurrenceDto.cs" />
+    <Compile Include="Vigilancia\VigilanciaDto.cs" />
+    <Compile Include="Vigilancia\VigilanciaServiceCustom.cs" />
+    <Compile Include="Vigilancia\VigilanciaServiceDto.cs" />
+    <Compile Include="Warehouse\Boards.cs" />
+    <Compile Include="Warehouse\MovementBE.cs" />
+    <Compile Include="Warehouse\MovementDetailBE.cs" />
+    <Compile Include="Warehouse\ProductBE.cs" />
+    <Compile Include="Warehouse\ProductsForMigrationBE.cs" />
+    <Compile Include="Warehouse\ProductWarehouseBE.cs" />
+    <Compile Include="Warehouse\RestrictedWarehouseProfileBE.cs" />
+    <Compile Include="Warehouse\RestrictedWarehouseProfileListBE.cs" />
+    <Compile Include="Warehouse\WarehouseBE.cs" />
+    <Compile Include="Worker\ServiceWorkerBE.cs" />
+    <Compile Include="Worker\VapidBe.cs" />
+    <Compile Include="Worker\WorkerPwa.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,3290 @@
+﻿
+<style>
+    .ui-autocomplete-input {
+        z-index: 1511;
+        position: relative;
+    }
+
+    .ui-menu .ui-menu-item a {
+        font-size: 12px;
+    }
+
+    .ui-autocomplete {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1510 !important;
+        float: left;
+        display: none;
+        min-width: 160px;
+        width: 160px;
+        padding: 4px 0;
+        margin: 2px 0 0 0;
+        list-style: none;
+        background-color: #ffffff;
+        border-color: #ccc;
+        border-color: rgba(0, 0, 0, 0.2);
+        border-style: solid;
+        border-width: 1px;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        -webkit-background-clip: padding-box;
+        -moz-background-clip: padding;
+        background-clip: padding-box;
+        *border-right-width: 2px;
+        *border-bottom-width: 2px;
+    }
+
+    .ui-menu-item > a.ui-corner-all {
+        display: block;
+        padding: 3px 15px;
+        clear: both;
+        font-weight: normal;
+        line-height: 18px;
+        color: #555555;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .ui-state-hover, .ui-state-active {
+        color: #ffffff;
+        text-decoration: none;
+        background-color: #0088cc;
+        border-radius: 0px;
+        -webkit-border-radius: 0px;
+        -moz-border-radius: 0px;
+        background-image: none;
+    }
+
+    #modalIns {
+        width: 500px;
+    }
+    .fa-medkit {
+        color: green;
+        font-size: 20px;
+    }
+    .disabled {
+        background-color: #eaeaea !important
+    }
+    body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+    .fa-info-circle {
+        color: #FF8800 !important;
+        font-size: 1.1rem !important;
+    }
+
+    .tableActive::-webkit-scrollbar {
+        max-width: 7px;
+        max-height: 7px;
+    }
+
+    .btn-generar {
+        border-radius: 0px;
+        width: 152px !important;
+    }
+
+    .infobtn {
+        border-radius: 0px;
+    }
+
+    .row-active {
+        background-color: rgba(128, 128, 128, 0.3) !important;
+    }
+
+    .btn-light {
+        border-radius: 0px !important;
+        height: 60px !important;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.4) !important;
+    }
+
+    .tableActive::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #dddddd;
+    }
+
+    #DivCategory::-webkit-scrollbar {
+        max-width: 7px;
+        max-height: 7px;
+    }
+
+    #DivCategory::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #dddddd;
+    }
+
+    #DivReport::-webkit-scrollbar {
+        max-width: 7px;
+        max-height: 7px;
+    }
+
+    #DivReport::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #dddddd;
+    }
+
+    .tblScroll::-webkit-scrollbar {
+        max-width: 7px;
+        max-height: 7px;
+    }
+
+    .tblScroll::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #dddddd;
+    }
+
+    .contTablePrin::-webkit-scrollbar {
+        max-width: 7px;
+        max-height: 7px;
+    }
+
+    .contTablePrin::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #dddddd;
+    }
+
+    .tableNoActive {
+        height: 0 !important;
+        width: 0 !important;
+        overflow: hidden;
+        /*transition: all ease 1s;*/
+    }
+
+    .tableActive {
+        height: 100%;
+        width: 100%;
+        overflow-y: scroll;
+        transition: all ease 1s;
+    }
+
+    .contForm {
+        border: 1px rgba(173, 173,173, 0.3) solid;
+    }
+
+    .titleLabel {
+        background-color: lightskyblue;
+        font-size: 0.9rem;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .lblTipo {
+        font-size: 0.9rem;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .lblDX {
+        position: absolute;
+        z-index: 100;
+        margin-top: -25px;
+        background: #fff;
+        font-size: 0.9rem;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    span .fa-file-pdf {
+        font-size: 15px;
+        color: red;
+    }
+
+    span .fa-file-download {
+        font-size: 15px;
+        color: forestgreen;
+    }
+
+    span .fa-check-circle {
+        font-size: 15px;
+        color: dodgerblue;
+        cursor: default;
+    }
+
+    span .fa-eye {
+        font-size: 15px;
+        color: fuchsia;
+    }
+
+        span .fa-eye:hover {
+            color: hotpink;
+        }
+
+    span .fa-file-download:hover {
+        font-size: 15px;
+        color: darkgreen;
+    }
+
+    span .fa-file-pdf:hover {
+        color: darkred;
+    }
+
+    .ColumnNoWrap {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .bodyRow {
+        height: auto;
+        max-height: 150px;
+    }
+
+    .breadcrumb-1 {
+        height: 35px !important;
+        padding: 4px 5px 2px 5px !important;
+        width: 300px !important
+    }
+
+    .View {
+        width: 100%;
+        max-height: 150px;
+        margin: 10px;
+        border: 1px rgba(173, 173,173, 0.1) inset;
+        overflow-y: scroll;
+        overflow-x: scroll;
+    }
+
+        .View::-webkit-scrollbar {
+            max-width: 7px;
+            max-height: 7px;
+        }
+
+        .View::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            background-color: #dddddd;
+            border: 1px solid #c9c9c9;
+        }
+
+    .bodyRow {
+        height: 150px;
+    }
+
+    #js-save-exam {
+        background-color: #17a2b8;
+        border-radius: 0px;
+        min-width: 150px;
+        height: 38px;
+        color: #fff;
+        border: 0px;
+    }
+
+        #js-save-exam:hover {
+            color: #fff;
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+
+    #auditoria {
+        border-top: 2px dashed #00c0ef;
+        background-color: #d9f1f7;
+    }
+
+    .contAuditoria {
+        border-top: 1px solid rgba(0,0,0,0.2)
+    }
+
+    #DivMedicalConsultation {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .lbl-auditoria {
+        font-size: 1rem;
+        font-family: 'Roboto' sans-serif;
+    }
+
+    .lbl-separador {
+        font-size: 1.2rem;
+    }
+
+    .input-audiometry {
+        max-width: 30px;
+        max-height: 30px;
+    }
+
+    .row-right {
+        border-left: 1px solid rgba(0,0,0,0.3)
+    }
+
+    .lbl-disa {
+        font-size: 0.75rem !important;
+        color: rgba(0,0,0,0.5);
+    }
+
+    .lbl-oiod {
+        width: auto;
+        font-size: 0.6rem !important;
+        color: rgba(0,0,0,0.8);
+    }
+
+    .contGraphic {
+        border-top: 1px rgba(173, 173,173, 0.3) inset;
+    }
+
+
+    .col-audiometry-9 > label {
+        margin: 0;
+        font-size: 0.6rem !important;
+        color: rgba(0,0,0,0.7) !important;
+    }
+
+    #div-agendar {
+        border-radius: 0.3rem 0px 0px 0.3rem;
+        background-color: #db8b0b;
+        color: white;
+        z-index: 999;
+        font-size: 1.1rem !important;
+        position: fixed;
+        height: 29px;
+        right: -80px;
+        top: 52px;
+        transition: right 0.8s;
+        cursor: pointer;
+    }
+
+        #div-agendar:hover {
+            right: 0px;
+            transition: right 0.8s;
+        }
+
+    #div-fin-vigilancia {
+        border-radius: 0.3rem 0px 0 0.3rem;
+        background-color: #d33724;
+        color: white;
+        z-index: 999;
+        font-size: 1.1rem;
+        position: fixed;
+        height: 29px;
+        right: -154px;
+        transition: right 0.8s;
+        top: 84px;
+        cursor: pointer;
+    }
+
+        #div-fin-vigilancia:hover {
+            right: 0px;
+            transition: right 0.8s;
+        }
+
+    .lbls-flotAg, .lbls-flotFi {
+        font-size: 1.05rem;
+        font-family: sans-serif;
+    }
+
+    .lbls-flotAg {
+        background-color: #f39c12;
+        width: 80px;
+        cursor: pointer;
+    }
+
+    .lbls-flotFi {
+        background-color: #dd4b39;
+        width: 154px;
+        cursor: pointer;
+    }
+
+    .drop-down-cont {
+        cursor: pointer;
+        border-radius: 0.3rem !important;
+        border: 1px solid #dddddd !important;
+        position: relative;
+        height: 39px;
+        width: 230px;
+        background-color: #fff;
+    }
+    #select-category {
+        height: 31px !important;
+    }
+    .cont-dinamic-select {
+        position: relative;
+        width: 230px;
+        height: 31px !important;
+        transition: height 5s !important;
+        z-index: 10;
+    }
+
+        .cont-dinamic-select.active {
+            width: 230px;
+            height: auto; 
+        }
+
+    .options-select {
+        display: flex;
+        flex-flow: column;
+        height: 25px;
+        width: auto;
+        overflow: hidden;
+        background-color: #92b6ef;
+        border-bottom: 1px solid #dddddd;
+    }
+
+        .options-select.active {
+            height: auto;
+            border-left: 1px solid #dddddd;
+            border-right: 1px solid #dddddd;
+            background-color: #fff;
+            border-bottom: 1px solid #dddddd;
+        }
+
+    .name-category {
+        height: 28px;
+        border-left: 1px solid #dddddd;
+        border-right: 1px solid #dddddd;
+        border-bottom: 1px solid #dddddd;
+        background-color: #fff;
+    }
+
+        .name-category:hover {
+            color: white;
+            background-color: #2771f9;
+            cursor: pointer;
+        }
+
+        .name-category.active {
+            color: #fff;
+            background-color: #6897e2;
+        }
+
+    .childrens {
+        height: 25px;
+        width: auto;
+        white-space: nowrap;
+        border-bottom: 1px solid #dddddd;
+    }
+
+        .childrens:hover {
+            color: #fff;
+            cursor: pointer;
+            background-color: #4985f4;
+        }
+
+    .contenedor-opt {
+        border-radius: 0.3rem;
+        border-top: 1px solid #dddddd;
+        border-bottom: 1px solid #dddddd;
+        position: absolute;
+        z-index: 5000 !important;
+        top: 0px;
+        left: 230px;
+        background-color: #fff;
+    }
+    .border-danger-comp {
+        border: 1px solid #dc3545 !important;
+    }
+    .container {
+        height: 600px;
+    }
+
+    .points {
+        height: 25px;
+        width: 25px;
+        border-radius: 50%;
+        background-color: #dddddd;
+        position: absolute;
+        top: -7px;
+        border: 2px solid #fff;
+    }
+
+        .points:hover {
+            background-color: #fff;
+            border: 2px solid #dddddd;
+        }
+
+        .points.point-success {
+            background-color: #28a745;
+            border: 2px solid #1c8e36;
+        }
+
+            .points.point-success:hover {
+                background-color: #1c8e36;
+                border: 2px solid #28a745;
+            }
+
+    .time-line {
+        width: 80%;
+        height: 10px;
+        background-color: #dddddd;
+        position: relative;
+    }
+
+    #point-1 {
+        left: -2px;
+    }
+
+    #point-2 {
+        left: calc(50% - 12.5px);
+    }
+
+    #point-3 {
+        cursor: pointer;
+        right: -2px;
+    }
+
+        #point-3::after {
+            content: "Estado de atención.";
+            position: absolute;
+            left: -62px;
+            width: 200px;
+            bottom: -58px;
+            font-size: 1rem;
+            font-family: 'Roboto', sans-serif;
+            color: #68706a;
+        }
+
+    #point-1:before {
+        content: "Iniciado";
+        position: absolute;
+        left: -12px;
+        bottom: -33px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        color: rgba(0, 0, 0, 0.8);
+    }
+
+    #time-line:after {
+        content: "Exámenes por culminar";
+        position: absolute;
+        left: calc(50% - 90px);
+        bottom: -40px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        color: rgba(0, 0, 0, 0.8);
+    }
+
+
+
+    .mid-time-line:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 10px;
+        background-color: #28a745;
+        width: 50%;
+    }
+
+    .end-time-line {
+        background-color: #28a745;
+    }
+
+    .cont-time-line {
+        position: -webkit-sticky !important;
+        position: sticky !important;
+        bottom: 2rem;
+        right: 0;
+        background-color: #fff;
+        margin-right: -8px;
+    }
+
+    .titulo {
+        padding-left: 10px;
+        color: #3c3c3b;
+        text-align: left;
+        border-bottom: 1px rgba(173, 173,173, 0.5) inset;
+        font-weight: 500;
+    }
+
+    [data-estate=Culminado]::before {
+        content: "Culminado";
+        position: absolute;
+        left: -29px;
+        width: 200px;
+        bottom: -33px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        color: #68706a;
+    }
+
+    [data-estate=Estado]::before {
+        content: "Estado";
+        position: absolute;
+        left: -25px;
+        bottom: -33px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        color: #68706a;
+    }
+
+    [data-estate=Incompleto]::before {
+        content: "Incompleto";
+        position: absolute;
+        left: -29px;
+        width: 200px;
+        bottom: -33px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        color: #68706a;
+    }
+
+    [data-estate=Cancelado]::before {
+        content: "Cancelado";
+        position: absolute;
+        left: -31px;
+        width: 200px;
+        bottom: -33px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        color: #68706a;
+    }
+
+    [data-estate=EsperandoAptitud]::before {
+        content: "Esperando Aptitud";
+        position: absolute;
+        left: -60px;
+        width: 200px;
+        bottom: -33px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        color: #68706a;
+    }
+
+    [data-estate=Iniciado]::before {
+        content: "Iniciado";
+        position: absolute;
+        left: -20px;
+        bottom: -33px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        color: #68706a;
+    }
+
+    [data-estate=PorIniciar]::before {
+        content: "Por Iniciar";
+        position: absolute;
+        left: -30px;
+        width: 200px;
+        bottom: -33px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        color: #68706a;
+    }
+
+    [data-estate=AtencionCulminada]::before {
+        content: "Atención Culminada";
+        position: absolute;
+        left: -65px;
+        width: 200px;
+        bottom: -33px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        color: #68706a;
+    }
+
+    [data-estate=Finalizar]::before {
+        content: "Finalizar Atención";
+        position: absolute;
+        left: -50px;
+        width: 200px;
+        bottom: -33px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        color: #68706a;
+    }
+</style>
+<div class="container-fluid">
+    <div id="div-agendar"><span class="px-4"><i class="far fa-calendar-alt"></i></span><label class="m-0 px-2 lbls-flotAg">Agendar</label></div>
+    <div id="div-fin-vigilancia"><span class="px-4"><i class="fas fa-hourglass-end"></i></span><label class="m-0 px-2 lbls-flotFi">Finalizar vigilancia</label></div>
+    @{
+        var personId = ViewBag.PersonId;
+        if (ViewBag.ServiceId != "")
+        {
+
+            var serviceId = ViewBag.ServiceId;
+            <button id="firstService" class="d-none" onclick="LoadMedicalConsultationJSON('@serviceId' , '@personId')"></button>
+            <input type="hidden" id="js-serviceId" value="@serviceId" />
+            <input type="hidden" id="js-personId" value="@personId" />
+        }
+        @*else
+            {
+
+                <button id="newMedicalConsultation" class="d-none" onclick="NewMedicalConsultation('@personId')"></button>
+
+            }*@
+        <button id="indicators" class="d-none" onclick="LoadIndicators('@personId')"></button>
+
+    }
+
+    <nav class="mt-2" aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-1">
+            <li class="breadcrumb-item"><a href="/PatientsAssistance">Servicios Vigilancia</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Consulta Médica</li>
+        </ol>
+    </nav>
+    <section class="contenedor-main  row w-100 m-0 justify-content-end">
+        <main class="col-md-8 pl-0">
+            <div class="Chart mb-3 mx-0 ml-0">
+                <div class="box box-info mb-1" id="acordion">
+                    <div class="box-header with-border" id="heading1">
+                        <h3 class="box-title" style="cursor:pointer;" onclick="ColapseTable('RenderBoardMedicalSummaryPartial','heightBoardMedicalSummaryPartial')"><i class="fas fa-poll-h"></i> Resumen EMO</h3>
+                    </div>
+                </div>
+                <input id="heightBoardMedicalSummaryPartial" type="hidden" value="">
+                <div id="RenderBoardMedicalSummaryPartial" class="row w-100 m-0" style="overflow:hidden">
+                    @*@Html.Partial("_BoardMedicalSummaryPartial")*@
+                    <div class="row w-100 mr-0 p-0 mb-2 mx-lg-1 m-0" id="DivESO" style="overflow:hidden">
+                        <div class="col-12 ml-0 mr-0 p-0 mb-2 mb-md-0 col-lg-4">
+                            <div class="row titleRow p-0 m-0">
+                                <div class="col-12 p-0 m-0">
+                                    <div class="ml-2">
+                                        Antecedentes médicos
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row bodyRow p-0 m-0">
+                                <div id="DivNotices" class="col-12 View p-0 m-0">
+                                    <table class="table tableNotice table-bordered table-sm">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th scope="col">Fecha/Grupo</th>
+                                                <th scope="col">Descripción</th>
+                                                <th scope="col">Tipo de atención</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="tbody">
+                                            @{
+                                                var item = ViewBag.Antecedent;
+                                                if (item == null)
+                                                {
+                                                    <tr><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+
+                                                }
+                                                else if (item.Count == 0)
+                                                {
+                                                    <tr><td colspan="7" class="text-center">No hay resultados</td></tr>
+                                                }
+                                                else
+                                                {
+                                                    for (int i = 0; i < item.Count; i++)
+                                                    {
+                                                        <tr style="cursor:default">
+                                                            <td class="ColumnNoWrap">@item[i].v_DateOrGroup</td>
+                                                            <td class="ColumnNoWrap">@item[i].v_DiseasesName</td>
+                                                            <td class="ColumnNoWrap">@item[i].v_AntecedentTypeName</td>
+                                                        </tr>
+                                                    }
+
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 ml-0 mr-0 p-0 mb-2 mb-md-0 px-lg-1 col-lg-4 ">
+                            <div class="row titleRow p-0 m-0">
+                                <div class="col-12 p-0 m-0">
+                                    <div class="ml-2">
+                                        ESO
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row bodyRow p-0 m-0">
+                                <div id="DivNotices" class="col-12 View p-0 m-0">
+                                    <table class="table tableNotice table-bordered table-sm">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th>R</th>
+                                                <th>D</th>
+                                                <th>V</th>
+                                                <th>Sugerencia Vigilancia</th>
+                                                <th scope="col">Fecha/Servicio</th>
+                                                <th scope="col">Aptitud</th>
+                                                <th scope="col">Diagnóstico</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="tbody" id="js-tbody-cont">
+                                            @{
+                                                var item1 = ViewBag.Reviews;
+                                                if (item1 == null)
+                                                {
+                                                    <tr><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+
+                                                }
+                                                else if (item1.Count == 0)
+                                                {
+                                                    <tr><td colspan="7" class="text-center">No hay resultados</td></tr>
+                                                }
+                                                else
+                                                {
+
+                                                    for (int i = 0; i < item1.Count; i++)
+                                                    {
+                                                        if (item1[i].MasterServiceId == 2)
+                                                        {
+                                                            if (item1[i].IsRevisedHistoryId == 1)
+                                                            {
+                                                                <tr style="cursor:default">
+                                                                    <td class="ColumnNoWrap "><span><i class="far fa-check-circle"></i></span></td>
+                                                                    <td class="ColumnNoWrap"><span style=" cursor:pointer" onclick="DownloadPdf('@item1[i].ServiceId')"><i class="fas fa-file-download"></i></span></td>
+                                                                    <td class="ColumnNoWrap "><span><i style="color:blue !important; cursor:pointer" onclick="LoadMedicalConsultationJSON('@item1[i].ServiceId', '@item1[i].PatientId', 'eye')" class="eye-@item1[i].ServiceId js-icon-eye far fa-eye"></i></span></td>
+                                                                    <td class="ColumnNoWrap">@item1[i].VigilanciaRecomendada</td>
+                                                                    <td class="ColumnNoWrap">@item1[i].ServiceDate.ToShortDateString()</td>
+                                                                    <td class="ColumnNoWrap">@item1[i].Aptitude</td>
+                                                                    <td class="ColumnNoWrap">@item1[i].DiseaseName</td>
+                                                                </tr>
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr style="cursor:default">
+                                                                    <td class="ColumnNoWrap"><span style=" cursor:pointer" onclick="RevisedStatus('@item1[i].ServiceId' , '@i')"><i class="fas fa-info-circle row-@i"></i></span></td>
+                                                                    <td class="ColumnNoWrap"><span style=" cursor:pointer" onclick="DownloadPdf('@item1[i].ServiceId')"><i class="fas fa-file-download"></i></span></td>
+                                                                    <td class="ColumnNoWrap"><span><i style="color:blue !important; cursor:pointer" onclick="LoadMedicalConsultationJSON('@item1[i].ServiceId', '@item1[i].PatientId' , 'eye')" class="eye-@item1[i].ServiceId js-icon-eye far fa-eye"></i></span></td>
+                                                                    <td class="ColumnNoWrap">@item1[i].VigilanciaRecomendada</td>
+                                                                    <td class="ColumnNoWrap">@item1[i].ServiceDate.ToShortDateString()</td>
+                                                                    <td class="ColumnNoWrap">@item1[i].Aptitude</td>
+                                                                    <td class="ColumnNoWrap">@item1[i].DiseaseName</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 ml-0 mr-0 p-0 mb-2 mb-md-0 col-lg-4">
+                            <div class="row titleRow p-0 m-0">
+                                <div class="col-12 p-0 m-0">
+                                    <div class="ml-2">
+                                        Atenciones médicas
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row p-0 bodyRow m-0">
+                                <div id="DivNotices" class="col-12 View p-0 m-0">
+                                    <table class="table tableNotice table-bordered table-sm">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th scope="col">V</th>
+                                                <th scope="col">Fecha/Servicio</th>
+                                                <th scope="col">Diagnóstico</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody class="tbody">
+
+                                            @{
+                                                var item2 = ViewBag.Reviews;
+                                                if (item2 == null)
+                                                {
+                                                    <tr><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+
+                                                }
+                                                else if (item2.Count == 0)
+                                                {
+                                                    <tr><td colspan="7" class="text-center">No hay resultados</td></tr>
+                                                }
+                                                else
+                                                {
+                                                    for (var x = 0; x < item2.Count; x++)
+                                                    {
+
+                                                        if (item2[x].MasterServiceId == 10)
+                                                        {
+                                                            <tr style="cursor:default">
+                                                                <td class="ColumnNoWrap text-center"><span><i style="color:blue !important; cursor:pointer" onclick="LoadMedicalConsultationJSON('@item2[x].ServiceId', '@item2[x].PatientId' , 'no-eye')" class="eye-@item2[x].ServiceId js-icon-eye far fa-eye"></i></span></td>
+                                                                <td class="ColumnNoWrap">@item2[x].ServiceDate.ToShortDateString()</td>
+                                                                <td class="ColumnNoWrap">@item2[x].DiseaseName</td>
+                                                            </tr>
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Chart mb-3 mx-0 ml-0">
+                <div class="box box-info mb-1" id="acordion">
+                    <div class="box-header with-border" id="heading1">
+                        <h3 class="box-title" style="cursor:pointer;"><i class="fas fa-paperclip"></i> Datos del Paciente</h3>
+                    </div>
+                </div>
+                <input id="heightDivDataPacient" type="hidden" value="">
+                <div class="table-responsive " id="DivDataPacient">
+                    <div class="row" style="margin:0px; padding:0px;">
+                        <div class="col-12">
+                            <form action="/">
+                                <div class="form-group row">
+                                    <div class="col-12 mt-2 col-md-4">
+                                        <input type="text" class="form-control inputLabelFloat" placeholder="" value="@ViewBag.Indicators.DataPatient[0].Name" name="pacient" id="name" />
+                                        @*<input type="text" class="form-control inputLabelFloat" placeholder="" value="" name="pacient" id="name" />*@
+                                        <label for="" class="has-float-label static">Paciente</label>
+                                    </div>
+                                    <div class="col-12  mt-2 col-md-4">
+                                        <input type="text" class="form-control inputLabelFloat" placeholder="" value="@ViewBag.Indicators.DataPatient[0].Empresa" name="pass" id="empresa" />
+                                        @*<input type="text" class="form-control inputLabelFloat" placeholder="" value="" name="pass" id="empresa" />*@
+                                        <label for="" class="has-float-label static">Empresa/Sede/Área</label>
+                                    </div>
+                                    <div class="col-12  mt-2 col-md-4">
+                                        <input type="text" class="form-control inputLabelFloat" placeholder="" value="@ViewBag.Indicators.DataPatient[0].Puesto" name="pacient" id="area" />
+                                        @*<input type="text" class="form-control inputLabelFloat" placeholder="" value="" name="pacient" id="area" />*@
+                                        <label for="" class="has-float-label static">Puesto</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="box box-info mb-1" id="acordion">
+                <div class="box-header with-border" id="heading1">
+                    <h3 class="box-title" style="cursor:pointer;" onclick="ColapseTable('DivMedicalConsultation','heightDivMedicalConsultation')"><i class="fas fa-user-md"></i> Consulta Médica</h3>
+                </div>
+            </div>
+            <input id="heightDivMedicalConsultation" type="hidden" value="">
+            <div class="Chart" id="DivMedicalConsultation">
+                @Html.Partial("_MedicalConsultationPartial")
+                <div class="row contAuditoria justify-content-between mt-2 mx-1 pt-2 pb-0 w-auto">
+                    <div class="col-12 px-2 col-md-6">
+                        <label>COMENTARIO DE <span id="nameCategory"></span></label>
+                        <textarea style="font-size:0.9rem ; resize: none" rows="3" class="form-control" id="comentAuditoria"></textarea>
+                    </div>
+                    <div class="col-12 px-2 col-md-3">
+                        <div class="row w-100 m-0 p-0">
+                            <label>ESTADO DEL EXAMEN</label>
+                            @{
+                                if (ViewBag.EstadoAuditoria != null)
+                                {
+                                    <select class="mb-2 form-control" id="EstadoAuditoria">
+                                        @foreach (SigesoftWeb.Models.Common.Dropdownlist G in ViewBag.EstadoAuditoria)
+                                        {
+                                            <option value="@G.Id">@G.Value</option>
+                                        }
+                                    </select>
+                                }
+                            }
+
+                        </div>
+                        <div class="row  w-100 m-0 p-0 justify-content-end">
+                            <input style="cursor: pointer" type="button" style="min-width: 150px;" id="js-save-exam" value="Examen" class="btn btn-info text-center" onclick="return SaveExam(event, this)">
+                        </div>
+                    </div>
+                    <div id="auditoria" class="col-12 p-0 mt-4">
+                        <div class="row w-100 m-0 p-0 ">
+                            <div style="border-right:2px dashed #00c0ef" class="col-12 col-md-6  pt-2">
+                                <label class="lbl-auditoria">Usuario:</label>
+                                <label class="lbl-auditoria" style="font-weight: bolder" id="lblUsusario"></label>
+                                <label class="lbl-auditoria">Fecha Creación:</label>
+                                <label class="lbl-auditoria" style="font-weight: bolder" id="fechInsercion"></label>
+                            </div>
+
+                            <div class="col-12 col-md-6  pt-2">
+                                <label class="lbl-auditoria">Usuario:</label>
+                                <label class="lbl-auditoria" style="font-weight: bolder" id="usuarioModificacion"></label>
+                                <label class="lbl-auditoria">Fecha Modificación:</label>
+                                <label class="lbl-auditoria" style="font-weight: bolder" id="fechModificacion"></label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mt-4" id="MedicalResult" style="position:relative">
+                @Html.Partial("_MedicalResult")
+
+            </div>
+
+        </main>
+        <aside class="col-md-4 w-100">
+            <div class="row notice ">
+                <div class="col-12 Chart mr-0">
+                    <div class="row title" onclick="ColapseTable('DivTopDx','heightDivTopDx')">
+                        Indicadores
+                    </div>
+                    <input id="heightDivTopDx" type="hidden" value="">
+                    <div id="DivTopDx" style="overflow:hidden">
+                        <div class="row info">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="weight-tab" data-toggle="tab" role="tab" aria-controls="Weight" aria-selected="true" onclick="NavTabActive()" href="#Weight">IMC</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="Haemoglobin-tab" data-toggle="tab" role="tab" aria-controls="Haemoglobin" aria-selected="true" onclick="NavTabActive()" href="#Haemoglobin">Hemoglobina</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="Cholesterol-tab" data-toggle="tab" role="tab" aria-controls="Cholesterol" aria-selected="true" onclick="NavTabActive()" href="#Cholesterol">Colesterol</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="BloodPressure-tab" data-toggle="tab" role="tab" aria-controls="BloodPressure" aria-selected="true" onclick="NavTabActive()" href="#BloodPressure">Presión</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="Glucose-tab" data-toggle="tab" role="tab" aria-controls="Glucose" aria-selected="true" onclick="NavTabActive()" href="#Glucose">Glucosa</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="Espiro-tab" data-toggle="tab" role="tab" aria-controls="Espiro" aria-selected="true" onclick="NavTabActive()" href="#Espiro">Espirometría</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent" style="width:100%">
+                                <div class="tab-pane fade show active" id="Weight" role="tabpanel" aria-labelledby="home-tab">@Html.Partial("_WeightPartial")</div>
+                                <div class="tab-pane fade" id="Haemoglobin" role="tabpanel" aria-labelledby="profile-tab">@Html.Partial("_HaemoglobinPartial")</div>
+                                <div class="tab-pane fade" id="Cholesterol" role="tabpanel" aria-labelledby="contact-tab">@Html.Partial("_CholesterolPartial")</div>
+                                <div class="tab-pane fade" id="BloodPressure" role="tabpanel" aria-labelledby="contact-tab">@Html.Partial("_BloodPressurePartial")</div>
+                                <div class="tab-pane fade" id="Glucose" role="tabpanel" aria-labelledby="contact-tab">@Html.Partial("_GlucosePartial")</div>
+                                <div class="tab-pane fade" id="Espiro" role="tabpanel" aria-labelledby="contact-tab">@Html.Partial("_EspiroPartial")</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 js-cont-list-examen d-none Chart mr-0">
+                    <div class="row title" onclick="ColapseTable('DivCategory','heightDivCategory')">
+                        Exámenes adicionales
+                    </div>
+                    <input id="heightDivCategory" type="hidden" value="">
+                    <div id="DivCategory" style="max-height: 500px; overflow-y:scroll; ">
+                        <div class="row info">
+                            <ul class="w-100 list-group list-group-flush" id="lista-examen"></ul>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="cont-recipes" class=" row p-0 m-0 w-100">
+                    <div class="col-12 Chart mr-0" id="">
+                        <div class="row title" onclick="ColapseTable('DivReceta','heightDivReceta')">
+                            Receta: <strong> N° 0001</strong>
+                        </div>
+                        <input id="heightDivReceta" type="hidden" value="">
+                        <div id="DivReceta">
+                            <div class="row w-100 m-0 info">
+                                <table class="table table-bordered table-sm table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Dx</th>
+                                            <th>Medicamento</th>
+                                            <th>Posología</th>
+                                            <th>Duración</th>
+                                            <th>Cant.</th>
+                                            <th>Stock</th>
+                                            <th>X</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="body-recetas">
+                                        <tr><td colspan="7" class="text-center sin-resultados">No hay resultados</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row w-100 mx-0 mt-2 p-2 justify-content-between">
+                                <button class="btn btn-sm btn-success" id="add-medicines" data-toggle="modal" data-target="#modal-add-medicine">Agregar Medicamendo</button>
+                                <button class="btn btn-sm btn-primary" id="print-recipe">Imprimir Receta</button>
+                            </div>
+
+                            @*-------MODAL--------*@
+                            <div class="modal fade bd-example-modal-lg" id="modal-add-medicine" tabindex="-1" role="dialog" aria-labelledby="modal-add-medicine-label" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modal-add-medicine-label">Agregar Medicamento</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="js-NameMedicine" style="border-top-left-radius: 0.3rem; border-bottom-left-radius: 0.3rem;" placeholder="Buscar medicamento..." aria-label="Buscar medicamento..." aria-describedby="btn-GetMedicines">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-outline-info" type="button" id="btn-GetMedicines"><i class="fas fa-search"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="js-Diseases" style="border-top-left-radius: 0.3rem; border-bottom-left-radius: 0.3rem;" placeholder="Buscar diagnostico..." aria-label="Buscar diagnostico..." aria-describedby="btn-GetDiseases">
+                                                    <input type="hidden" id="js-DiseasesID">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-outline-info" type="button" id="btn-Diseases"><i class="fas fa-magic"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div id="render-list-medicine">
+                                                    <table class="table table-sm table-hover table-bordered" style="text-align:left">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" class="custom-control-input" value="0" id="allProducts">
+                                                                        <label class="custom-control-label" for="allProducts"></label>
+                                                                    </div>
+                                                                </th>
+                                                                <th class="d-none">ProductId</th>
+                                                                <th>Medicamento</th>
+                                                                <th>P.A</th>
+                                                                <th>Descripción</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="body-medicamentos">
+                                                            <tr><td colspan="5" class="text-center sin-resultados-medicinas">No hay resultados</td></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer justify-content-between">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <button type="button" class="btn btn-primary" onclick="setMedicines('#body-medicamentos')" id="set-medicines">Agregar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-12 js-cont-reports Chart mr-0">
+                    <div class="row title" onclick="ColapseTable('DivReport','heightDivReport')">
+                        Reportes
+                    </div>
+                    <input id="heightDivReport" type="hidden" value="">
+                    <div id="DivReport" style="max-height: 500px; overflow-y:scroll; ">
+                        <div class="row info">
+                            <ul class="list-group list-group-flush w-100 pl-2" id="lista-report"></ul>
+                            <div class="col-12 d-flex justify-content-center px-0 mt-4 my-2">
+                                <button onclick="GenerarReport()" class="btn btn-generar btn-info w-100">Generar</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+        <div class="col-md-4 w-100 cont-time-line Chart  pb-4">
+            <div class="row titulo">
+                Línea de tiempo: Atención médica
+            </div>
+
+            <input id="heightDivTimeLine" type="hidden" value="">
+            <div id="DivTimeLine" style="max-height: 500px;">
+                <aside class="row my-5 px-4">
+                    <article class="col-12  d-flex justify-content-center">
+                        <div class="time-line d-flex justify-content-between" id="time-line" data-serviceid="">
+                            <div class="points" id="point-1"></div>
+                            <div class="points" id="point-2"></div>
+                            <div class="points" data-estate="EsperandoAptitud" id="point-3"></div>
+                        </div>
+                    </article>
+                </aside>
+            </div>
+
+        </div>
+        <div class="modal fade" id="TypeEstate-Modal" tabindex="-1" role="dialog" aria-labelledby="TypeEstate-title" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="TypeEstate-title">Culminar Atención</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @{
+                            if (ViewBag.EstateEso != null)
+                            {
+                                <label>Estado:</label>
+                                <select class="mb-2 custom-select" id="EstateEso">
+                                    <option value="-1">--Seleccionar--</option>
+                                    @foreach (SigesoftWeb.Models.Common.Dropdownlist G in ViewBag.EstateEso)
+                                    {
+                                        <option value="@G.Id">@G.Value</option>
+                                    }
+                                </select>
+                            }
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row justify-content-between p-0 w-100 m-0">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                            <button type="button" class="btn btn-primary" id="end-atenttion"><i class="fas fa-check"></i></button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <input type="text" class="d-none" id="permission" />
+
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/jquery-ui.js"></script>
+<link href="~/Content/jquery-ui.css" rel="stylesheet" />
+
+
+<script src="~/Scripts/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="~/Scripts/exporting.js"></script>
+<script src="~/Scripts/offline-exporting.js"></script>
+<link href="~/Content/css/highcharts.css" rel="stylesheet">
+
+
+<script src="~/Scripts/generador.js"></script>
+<link href="~/Content/css/estilosConstruc.css" rel="stylesheet" />
+<script src="~/Scripts/Alert.js"></script>
+<link href="~/Content/css/Alert.css" rel="stylesheet" />
+<script src="~/Scripts/generadorCategorias.js"></script>
+<script src="~/Scripts/listasExamen.js"></script>
+<script src="~/Scripts/generadorListReporte.js"></script>
+
+
+<script>
+
+    //MedicalResult();
+
+    $("#indicators").click();
+    function ChangeCheckboxMedicines(check) {
+
+        var value = "";
+        if ($(check).val() == "0" || $(check).val() == 0) {
+             value = "1";
+        } else {
+             value = "0";
+        }
+
+        $(check).val(value);
+    }
+    $(document).ready(function () {
+
+        $("#modal-add-medicine").on("keyup", "#js-Diseases" , function () {
+            var value = $(this).val();
+            autocompleteDiseases(value, "#js-Diseases", "#js-DiseasesID");
+        });
+        $("#allProducts").on("change", function () {
+            var rows = $("#body-medicamentos tr");
+
+            for (var i = 0; i < rows.length; i++) {
+                if (rows.eq(i).find("input[type='checkbox']").val() == "0") {
+                    var bool = true;
+                    var value = "1";
+                } else {
+                    var value = "0";
+                    var bool = false;
+                };
+                rows.eq(i).find("input[type='checkbox']").val(value).prop('checked', bool);
+            }
+        });
+
+        $("#btn-GetMedicines").on("click", () => {
+            var value = $("#js-NameMedicine").val();
+            var promise = GetMedicine(value);
+            promise.then(function (json) {
+                
+                if (json.length > 0) {
+                    let arrHtml = [];
+                    for (let i = 0; i < json.length; i++) {
+                        let arrJson = json[i].split("|");
+                        let html = `
+                                <tr class="">
+                                    <td class="text-center">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input checkbox-rows" onchange="ChangeCheckboxMedicines(this)" value="0" id="id-${arrJson[1]}">
+                                            <label class="custom-control-label" for="id-${arrJson[1]}"></label>
+                                        </div>
+                                    </td>                                    
+                                    <td class="d-none" id="${arrJson[1]}">${arrJson[1]}</td>
+                                    <td>${arrJson[0]}</td>
+                                    <td></td>
+                                    <td>${arrJson[2]}</td>
+                                </tr>
+                                `;
+                        arrHtml.push(html);
+                    }
+                    $("#body-medicamentos").html(arrHtml.join(""));
+                    
+                } else {
+                    $("#body-medicamentos").html(`<tr><td colspan="7"  class="text-center sin-resultados">No hay resultados</td></tr>`);
+                }
+                
+
+            }).catch(error => {
+                console.log(error)
+            });
+            
+        });
+
+        $("#cbo-organization").attr("disabled", true);
+        if ($("#firstService").length > 0) {
+            $("#firstService").click();
+        };
+        if ($("#newMedicalConsultation").length > 0) {
+            $("#newMedicalConsultation").click();
+        }
+
+        //GenerateCalender();
+
+        var inputs = document.getElementsByClassName('inputLabelFloat');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].addEventListener('keyup', function () {
+                if (this.value.length >= 1) {
+                    this.nextElementSibling.classList.add('static');
+                } else {
+                    this.nextElementSibling.classList.remove('static');
+                }
+            });
+        }
+        $("#end-atenttion").on("click", function () {
+            if ($("#EstateEso").val() != "-1") {
+                $("#TypeEstate-Modal div .modal-content").addClass("loadingGrid");
+
+                var oServiceStatusBE = {
+                    ServiceId: $(".time-line").data("serviceid"),
+                    StatusServiceId: $("#EstateEso").val(),
+                };
+
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: oServiceStatusBE,
+                    url: '/PatientsAssistance/SaveServiceStatus',
+                    success: function (json) {
+                        console.log(json);
+                        $("#TypeEstate-Modal div .modal-content").removeClass("loadingGrid");
+                        if (json) {
+
+                            $("#TypeEstate-Modal").modal('hide');
+                            switch ($("#EstateEso").val()) {
+                                case "1":
+                                    $("#point-3").attr("data-estate", "PorIniciar").addClass("point-success");
+
+                                    $("#point-2").addClass("point-success");
+                                    $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                                    $("#point-1").addClass("point-success");
+                                    break;
+                                case "2":
+                                    $("#point-3").attr("data-estate", "Iniciado").addClass("point-success");
+
+                                    $("#point-2").addClass("point-success");
+                                    $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                                    $("#point-1").addClass("point-success");
+                                    break;
+                                case "3":
+                                    $("#point-3").attr("data-estate", "Culminado").addClass("point-success").removeAttr("data-toggle").removeAttr("data-target");
+                                    $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                                    $("#point-2").addClass("point-success");
+                                    $("#point-1").addClass("point-success");
+                                    break;
+                                case "4":
+                                    $("#point-3").attr("data-estate", "Incompleto").addClass("point-success");
+
+                                    $("#point-2").addClass("point-success");
+                                    $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                                    $("#point-1").addClass("point-success");
+                                    break;
+                                case "5":
+                                    $("#point-3").attr("data-estate", "Cancelado").addClass("point-success");
+
+                                    $("#point-2").addClass("point-success");
+                                    $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                                    $("#point-1").addClass("point-success");
+                                    break;
+                                case "6":
+                                    $("#point-3").attr("data-estate", "EsperandoAptitud").addClass("point-success");
+
+                                    $("#point-2").addClass("point-success");
+                                    $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                                    $("#point-1").addClass("point-success");
+                                    break;
+                                default:
+                                    break;
+                            }
+                            alertafixed({
+                                type: 'success',
+                                class: 'js-atenttion-success',
+                                title: 'Hecho',
+                                message: 'Se realizó la operación correctamente.',
+                            })
+                            $("#EstateEso").val("-1");
+                        } else {
+                            alertafixed({
+                                type: 'info',
+                                class: 'js-atenttion-info',
+                                title: 'Aviso',
+                                message: 'No se guardó los cambios.',
+                            })
+                        }
+
+                    },
+                    error: function (error) {
+                        console.log("ERROR: ", error);
+                        alertafixed({
+                            type: 'danger',
+                            class: 'js-atenttion-error',
+                            title: 'ERROR',
+                            message: 'Sucedió un error al conectarse al servidor.',
+                        })
+                    },
+                });
+            } else {
+                alertafixed({
+                    type: 'warning',
+                    class: 'js-atenttion-end',
+                    title: 'Validación',
+                    message: 'Seleccione un estado para continuar.',
+                })
+            }
+        });
+    });
+
+    $(".js-icon-eye").on("click", function () {
+
+        $(".fa-eye").parent().parent().parent().css("background-color", "transparent");
+        $(this).parent().parent().parent().css("background-color", "#dddddd");
+
+    });
+
+    $("#div-fin-vigilancia").on("click", function () {
+        notificacion({
+            classTitleAndButtons: "warningTitleAndButtons",
+            classMessage: "warningMessage",
+            title: "¡ Confirmación !",
+            icono: "",
+            contenido: "¿ Seguro de finalizar vigilancia ?",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "si",
+            mostrarBtnOk: "no",
+        });
+        $(".bigBox-Aceptar").on("click", function () {
+            console.log("Vigilancia")
+        });
+
+    });
+
+    $("#div-agendar").on("click", function () {
+        notificacion({
+            classTitleAndButtons: "warningTitleAndButtons",
+            classMessage: "warningMessage",
+            title: "¡ Confirmación !",
+            icono: "",
+            contenido: "¿ Seguro de agendar paciente ?",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "si",
+            mostrarBtnOk: "no",
+        });
+        $(".bigBox-Aceptar").on("click", function () {
+            console.log("Agendar")
+        });
+    });
+
+    $("#print-recipe").on("click", _ => {
+
+        $("DivReceta").parent().addClass("loadingGrid");
+        let rowsRecipes = $("#body-recetas tr");
+        let rowsRecomendations = $("#dx-recomendaciones tr");
+        let rowsRestrictions = $("#dx-restricciones tr");
+        let arrObj = [];
+        let arrRecomendations = [];
+        let arrRestrictions = [];
+        
+        if (!rowsRecipes.eq(0).find("td").hasClass("sin-resultados")) {
+            let complete = true;
+            for (let item of rowsRecipes) {
+                let DiseaseName = item.cells[0].innerText;
+                let ProductName = item.cells[1].innerText;
+                let Posologia = item.cells[2].children[0].value;
+                let Duration = item.cells[3].children[0].value;
+                let Quantity = item.cells[4].children[0].value;
+                let StockActual = item.cells[5].innerText;
+                let ProductId = item.cells[7].innerText;
+                if (Posologia === "" || Duration === "" || Quantity === "") {
+                    complete = false;
+                }
+                let obj = {
+                    DiseaseName,
+                    ProductName,
+                    Posologia,
+                    Duration,
+                    Quantity,
+                    StockActual,
+                    ProductId,
+                }
+
+                arrObj.push(obj);
+                
+            }
+
+            if (complete) {
+                if (!rowsRecomendations.eq(0).hasClass("sin-resultados")) {
+                    for (var i = 0; i < rowsRecomendations.length; i++) {
+                        if (!rowsRecomendations.eq(i).hasClass("d-none")) {
+                            let obj = {
+                                RecomendationName: rowsRecomendations.eq(i).find("td").eq(1).find("textarea").val(),
+                            }
+                            arrRecomendations.push(obj);
+                        }
+                    }
+                }
+
+                if (!rowsRestrictions.eq(0).hasClass("sin-resultados")) {
+                    for (var i = 0; i < rowsRestrictions.length; i++) {
+                        if (!rowsRestrictions.eq(i).hasClass("d-none")) {
+                            let obj = {
+                                RestrictionName: rowsRestrictions.eq(i).find("td").eq(1).find("textarea").val(),
+                            }
+                            arrRestrictions.push(obj);
+                        }
+                    }
+                }
+
+                let warehouseId = sessionStorage.getItem("warehouseId");
+                if (warehouseId != -1) {
+                    let almacen = $('#cbo-organizationWarehouse option[value=' + warehouseId + ']').text();
+                    notificacion({
+                        classTitleAndButtons: "warningTitleAndButtons",
+                        classMessage: "warningMessage",
+                        title: "¡ Aviso !",
+                        icono: "",
+                        contenido: `Se guardará con el almacén <strong>${almacen}</strong> , ¿desea continuar?`,
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "",
+                        mostrarBtnOk: "no",
+                    })
+
+                    $(".bigBox-Aceptar").on("click", _ => {
+                        $(".bigBox-Cancelar").trigger("click");
+                        let data = {
+                            ServiceId: $("#js-serviceId").val(),
+                            PersonId: $("#js-personId").val(),
+                            WarehouseId: warehouseId,
+                            ListRecomendations: arrRecomendations,
+                            ListRestrictions: arrRestrictions,
+                            ListProducts: arrObj,
+                        };
+
+                        $.ajax({
+                            cache: false,
+                            method: 'POST',
+                            dataType: 'json',
+                            data: data,
+                            url: '/PatientsAssistance/PrintRecipes',
+                            success: json => {
+                                console.log(json);
+
+                                if (location.hostname === "localhost") {
+                                    var fileName = json + ".pdf";
+                                    var url = "http://localhost:1932/ESO/" + fileName;
+                                    window.open(url, '_blank');
+                                } else {
+                                    var url = "https://www.omegavigilanciaservicios.com/ESO/" + json + ".pdf";
+                                    window.open(url, '_blank');
+                                }
+
+
+                                for (var x = 0; x < rowsRecipes.length; x++) {
+                                    let refreshStock = 0;
+                                    let Quantity = parseInt(rowsRecipes.eq(x).find("td").eq(4).find("input").val());
+                                    let StockActual = parseInt(rowsRecipes.eq(x).find("td").eq(5).text());          
+                                    
+                                    if (StockActual > Quantity) {
+                                        refreshStock = StockActual - Quantity;
+                                    }
+                                    rowsRecipes.eq(x).find("td").eq(5).text(refreshStock);
+
+                                }
+                                $("DivReceta").parent().removeClass("loadingGrid");
+                            },
+                            error: error => {
+                                console.log(error);
+                            }
+                        })
+                    })
+
+                } else {
+                    alertafixed({
+                        title: 'Validación',
+                        message: 'Debe seleccionar un almacén.',
+                        type: 'warning',
+                        class: 'error-sin-almacen'
+                    })
+                }
+            } else {
+                alertafixed({
+                    title: 'Validación',
+                    message: 'Complete la receta para continuar.',
+                    type: 'warning',
+                    class: 'error-completo-false'
+                })
+            }
+
+            
+        } else {
+            alertafixed({
+                title: 'Aviso',
+                message: 'No hay recetas por imprimir.',
+                type: 'info',
+                class: 'error-sin-almacen'
+            })
+        }
+        
+        
+
+    });
+
+    const setMedicines = (bodyId) => {
+        var rows = $(bodyId + " tr");
+
+        if ($("#js-Diseases").val() == "" || $("#js-DiseasesID").val() == "") {
+            alertafixed({
+                type: 'warning',
+                class: 'js-war-true',
+                title: 'Validación',
+                message: 'Elija un diagnóstico.'
+            });
+        } else {
+            if (rows.length > 0) {
+                var cantRows = 0;
+                let arrRows = [];
+                let rowsRecetas = $("#body-recetas tr");
+                if (rowsRecetas.length > 0 && !rowsRecetas.eq(0).find("td").eq(0).hasClass("sin-resultados")) {
+                    arrRows.push($("#body-recetas").html());
+                }
+                for (let i = 0; i < rows.length; i++) {
+                    let value = rows.eq(i).find('td').eq(0).find('input[type="checkbox"]').val();
+                    if (value == "1") {
+                        let diagnostico = $("#js-Diseases").val();
+                        let diagnosticoId = $("#js-DiseasesID").val();
+                        let medicamentoId = rows.eq(i).find('td').eq(1).text();
+                        let medicamento = rows.eq(i).find('td').eq(2).text();
+
+                        let rowHtml = `
+                            <tr class="row-receta-new">
+                                <td>${diagnostico}</td>
+                                <td>${medicamento}</td>
+                                <td><textarea style="max-height:38px; resize:none" class="form-control"></textarea></td>
+                                <td><input class="form-control" type="text" /></td>
+                                <td><input style="width:70px" type="text" onkeyup="onlyInteger(this)" class="js-cantidad form-control p-1"  /></td>
+                                <td>105</td>
+                                <td><i onclick="deleteRowRecipe(this)" class="fas fa-trash-alt"></i></td>
+                                <td class="d-none">${medicamentoId}</td>
+                            </tr>
+                            `;
+                        arrRows.push(rowHtml);
+                        cantRows++;
+                    }
+
+                }
+
+                
+                if (cantRows > 0) {
+                    $("#body-recetas").html(arrRows.join(""));
+                    $("#js-Diseases").val("");
+                    $("#js-DiseasesId").val("");
+                    $("#js-NameMedicine").val("");
+                    $("#allProducts").val(1).prop("checked", false);
+                    $(bodyId).html(`<tr><td colspan="7" class="text-center sin-resultados">No hay resultados</td></tr>`);
+
+                    $('#modal-add-medicine').modal('hide');
+                } else {
+                    alertafixed({
+                        type: 'warning',
+                        class: 'js-error-true',
+                        title: 'Validación',
+                        message: 'No hay filas seleccionadas.'
+                    });
+                }
+
+            }
+        }
+        
+        
+        
+        
+    }
+
+    const autocompleteDiseases = (value, inputDiseasesName, inputDiseasesId) => {
+
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: {
+                'value': value,
+            },
+            url: '/ConfiguradorDx/SearchDiagnostic',
+            success: function (json) {
+                if (json.length != 0 && json != null) {
+                    var arrayName = [];
+                    var arrayId = [];
+                    for (var i = 0; i < json.length; i++) {
+                        var Getsplit = json[i].split("|");
+                        arrayName.push(Getsplit[0]);
+                        arrayId.push(Getsplit[1]);
+                    }
+
+                    $(inputDiseasesName).autocomplete({
+                        source: arrayName,
+                        change: function (event, ui) {
+                            val = $(inputDiseasesName).val();
+                            exists = $.inArray(val, arrayName);
+                            $(inputDiseasesId).val(arrayId[exists]);
+                        }
+                    });
+                }
+
+            },
+            error: function (error) {
+                console.log("ERROR", error);
+            }
+        });
+
+    }
+
+    const onlyInteger = input => {
+        input.value = input.value.replace(/[^0-9]/, '');
+
+        if (event.which == 190 || event.which == 110) {
+
+            alertafixed({
+                type: 'warning',
+                class: 'js-enteros',
+                title: 'Validación',
+                message: 'Porfavor, igrese solo números enteros'
+
+            })
+        }
+    }
+
+    const deleteRowRecipe = icon =>  {
+        let row = $(icon).parent().parent();
+        row.remove();
+        //if (row.hasClass("row-receta-new")) {
+        //    row.remove();
+        //} else {
+        //    row.addClass("d-none");
+        //    row.find("td").eq(9).text(4)
+        //    row.find("td").eq(10).text(2)
+        //}
+    }
+
+    const GetConfigDx = input => {
+        var diseasesId = $(input).parent().parent().find("td").eq(0).find("input").val();
+        var warehouseId = sessionStorage.getItem("warehouseId");
+
+        if (warehouseId != "-1") {
+            if (diseasesId != "" && diseasesId != undefined) {
+                $("#body-recetas").addClass("loadingGrid");
+                $.ajax({
+                    cache: false,
+                    method: 'GET',
+                    dataType: 'json',
+                    data: {
+                        'diseasesId': diseasesId,
+                        'warehouseId': warehouseId,
+                    },
+                    url: '/ConfiguradorDx/GetConfigDxByDiseasesId',
+                    success: json => {
+
+                        let arrHtml = [];
+                        var body = $("#body-recetas");
+                        //if (!body.find("tr").eq(0).find("td").eq(0).hasClass("sin-resultados")) {
+                        //    arrHtml.push(body.html());
+                        //}
+                        for (let item of json) {
+                            let stockActual = item.r_StockActual == null ? 0 : item.r_StockActual;
+                            let html = `
+                            <tr>
+                                <td>${item.v_DiseaseName}</td>
+                                <td>${item.v_ProductName}</td>
+                                <td><textarea style="max-height:38px; resize:none" class="form-control"></textarea></td>
+                                <td><input class="form-control" type="text"/></td>
+                                <td><input style="width:70px" type="text" onkeyup="onlyInteger(this)" class="js-cantidad form-control p-1" /></td>
+                                <td>${stockActual}</td>
+                                <td><i onclick="deleteRowRecipe(this)" class="fas fa-trash-alt"></i></td>
+                                <td class="d-none">${item.v_ProductId}</td>
+                            </tr>
+                            `;
+                            arrHtml.push(html);
+                        }
+                        if (arrHtml.length > 0) {
+                            $("#body-recetas").html(arrHtml.join(""));
+                        } else {
+                            $("#body-recetas").html(`<tr><td colspan="7" class="text-center sin-resultados">No hay resultados</td></tr>`);
+                        }
+
+                        $("#body-recetas").removeClass("loadingGrid");
+
+                    },
+                    error: error => {
+                        console.log("ERROR: ", error);
+                    },
+
+                });
+            }
+        }
+        
+    }
+
+    function GetMedicine(value) {
+        return Promise.resolve($.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: {
+                'value': value,
+            },
+            url: '/ConfiguradorDx/SearchProduct',
+        }));
+        
+    }
+
+    function LoadIndicators(patientId) {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'patientId': patientId },
+            url: '/PatientsAssistance/Indicators',
+            success: function (json) {
+
+                LoadWeight(json);
+                LoadCholesterol(json);
+                LoadHaemoglobin(json);
+                LoadBloodPressure(json);
+                LoadGlucose(json);
+                LoadCvf(json);
+            },
+            error: function (error) {
+                console.log("ERROR", error);
+            }
+
+        });
+
+    }
+
+    function LoadMedicalConsultationJSON(serviceId, personId, click = "no-eye") {
+
+
+        if (click == "eye") {
+            $("#js-save-exam").attr("disabled", true);
+            $("#js-save-exam").css({
+                "background-color": 'rgba(173, 173, 173, 0.7)',
+                "cursor": 'default',
+            });
+            $("#permission").val(false);
+        } else {
+            $("#js-save-exam").attr("disabled", false);
+            $("#js-save-exam").css({
+                "background-color": '#17a2b8;',
+                "cursor": 'pointer',
+            });
+            $("#permission").val(true);
+        }
+
+        $('#DivMedicalConsultation').addClass('loadingGrid');
+        //$(loading).appendTo($("#DivMedicalConsultation"));
+
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            url: '/PatientsAssistance/GetServiceComponentsForBuildMenu?serviceId=' + serviceId,
+            success: function (json) {
+                $("#nav-tabContent").empty();
+                $("#ulDinamic").empty();
+
+                construirInfo(json, personId, serviceId);
+
+                if ($(".eye-" + serviceId).length > 0) {
+
+                    $(".fa-eye").parent().parent().parent().css("background-color", "transparent");
+                    $(".eye-" + serviceId).parent().parent().parent().css("background-color", "#dddddd");
+                }
+
+                $("#DivMedicalConsultation").removeClass('loadingGrid');
+
+                ComponenentInfo(json);
+
+                $(".js-cont-list-examen").removeClass("d-none");
+            },
+            error: function (error) {
+                console.log(error);
+            },
+
+        })
+        MedicalResult(serviceId);
+        LoadListOfReport(serviceId);
+        TimeLineByServiceId(serviceId);
+    }
+
+    function NewMedicalConsultation(personId) {
+        $('#DivMedicalConsultation').addClass('loadingGrid');
+        $.ajax({
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            data: { 'personId': personId },
+            url: '/PatientsAssistance/NewMedicalConsultation',
+            success: function (json) {
+                //GetAtencionesMedica(personId, $("#cbo-organization").val())
+                $("#nav-tabContent").empty();
+                $("#ulDinamic").empty();
+
+                construirInfo(json, personId);
+                $("#DivMedicalConsultation").removeClass('loadingGrid');
+                ComponenentInfo(json);
+                $(".js-cont-list-examen").removeClass("d-none");
+            },
+            error: function (error) {
+                console.log('ERROR', error);
+            }
+        });
+        ListOfAdditionalExams();
+    }
+
+    function LoadListOfReport(serviceId) {
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: { 'serviceId': serviceId },
+            url: '/PatientsAssistance/ReportManagerByServiceId',
+            success: function (json) {
+                generateListReport(json)
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    }
+
+    function ListOfAdditionalExams() {
+        $('#DivCategory').addClass('loadingGrid');
+        $.ajax({
+            cache: false,
+            dateType: 'json',
+            method: 'GET',
+            url: "/PatientsAssistance/ListOfAdditionalExams",
+            success: function (json) {
+                generateList(json);
+                $("#DivCategory").removeClass('loadingGrid');
+            },
+            error: function (error) {
+
+            }
+        });
+    }
+
+    function ComponenentInfo(Json) {
+
+        Json.forEach(function (value) {
+
+            var categor = value.i_CategoryId;
+
+
+            $("#list-examen_" + categor).addClass("loadingGrid");
+            $("#examen_" + categor).addClass("loadingGrid");
+
+
+            $.ajax({
+                cache: false,
+                dataType: 'html',
+                method: 'GET',
+                data: { 'serviceComponentId': value.v_ServiceComponentId },
+                url: '/PatientsAssistance/GetInfo',
+                success: function (json) {
+                    var parse = JSON.parse(json);
+
+                    setData(parse, categor);
+
+                },
+                error: function (error) {
+                    console.log(error);
+                },
+            });
+
+        });
+
+    }
+
+    function setData(array, categor) {
+
+        array.forEach(function (value) {
+            var field = $("#field_" + value.v_ComponentFieldId);
+            if (field.length > 0) {
+
+                //Para los usercontrol
+                if (field.hasClass('group-field')) {
+
+                    switch (field.attr('name')) {
+                        case 'N009-OTS00000015':
+                            if (value.v_Value == 1) {
+                                $('input[name="N009-OTS00000015"]').eq(0).prop('checked', true).addClass('enviar-este');
+                            } else {
+                                $('input[name="N009-OTS00000015"]').eq(1).prop('checked', true).addClass('enviar-este');
+                            }
+                            break;
+                        case 'N009-OTS00000018':
+                            if (value.v_Value == 1) {
+                                $('input[name="N009-OTS00000018"]').eq(0).prop('checked', true).addClass('enviar-este');
+                            } else {
+                                $('input[name="N009-OTS00000018"]').eq(1).prop('checked', true).addClass('enviar-este');
+                            }
+                            break;
+                        case 'N009-OTS00000021':
+                            if (value.v_Value == 1) {
+                                $('input[name="N009-OTS00000021"]').eq(0).prop('checked', true).addClass('enviar-este');
+                            } else {
+                                $('input[name="N009-OTS00000021"]').eq(1).prop('checked', true).addClass('enviar-este');
+                            }
+                            break;
+                        case 'N009-OTS00000024':
+                            if (value.v_Value == 1) {
+                                $('input[name="N009-OTS00000024"]').eq(0).prop('checked', true).addClass('enviar-este');
+                            } else {
+                                $('input[name="N009-OTS00000024"]').eq(1).prop('checked', true).addClass('enviar-este');
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
+                } else {
+                    field.val(value.v_Value);
+                }
+
+            };
+            var fieldCb = $("#field_cb_" + value.v_ComponentFieldId);
+            if (fieldCb.length > 0) {
+
+                $("#field_cb_" + value.v_ComponentFieldId + " option[value=" + value.v_Value + "]").attr("selected", true);
+
+            }
+
+        });
+        setUserInputs();
+        for (var j = 0; j < $('input:checkbox').length; j++) {
+            if ($('input:checkbox:eq(' + j + ')').val() == 1 || $('input:checkbox:eq(' + j + ')').val() == "1") {
+                $('input:checkbox:eq(' + j + ')').prop('checked', true);
+            }
+        };
+        
+        for (var x = 0; x < $('input:radio').length; x++) {
+            if (!$('input:radio:eq(' + x + ')').hasClass('group-field')) {
+                if ($('input:radio:eq(' + x + ')').val() == 1) {
+                    $('input:radio:eq(' + x + ')').prop("checked", true);
+                }
+            }
+            
+        };
+        $("#list-examen_" + categor).removeClass("loadingGrid");
+        $("#examen_" + categor).removeClass("loadingGrid");
+
+    }
+
+    function TableActive() {
+        var contIcon = $(".contIcon");
+        $(".tblcontrol").toggleClass("tableNoActive");
+        $(".tblcontrol").toggleClass("tableActive");
+    }
+
+    function RevisedStatus(serviceId, iterador) {
+
+        ScrollTop();
+        var width = $(window).width();
+        var height = $(window).height();
+
+        notificacion({
+            classTitleAndButtons: "warningTitleAndButtons",
+            classMessage: "warningMessage",
+            title: "¡ Aviso !",
+            icono: "",
+            contenido: "¿Seguro de marcar como revisado? ",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "",
+            mostrarBtnOk: "no",
+        })
+
+        $(".bigBox-Aceptar").on("click", function () {
+            var status = true;
+            $(".pluginContenedor").remove();
+            $("#Loading").show().css("width", width + "px").css("height", height + "px");
+            $("#Loading > img").css("margin-left", ((width - 200) / 2) + "px").css("margin-top", ((height - 266) / 2) + "px");
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'POST',
+                url: '/PatientsAssistance/RevisedStatusEMO?serviceId=' + serviceId + '&status=' + status,
+                success: function (json) {
+                    $("#Loading").hide();
+
+
+                    if (json) {
+                        $(".row-" + iterador).removeClass("fas fa-info-circle").addClass("far fa-check-circle");
+                        $(".row-" + iterador).parent().removeAttr("onclick");
+                    } else {
+                        notificacion({
+                            classTitleAndButtons: "infoTitleAndButtons",
+                            classMessage: "infoMessage",
+                            title: "Error",
+                            icono: "",
+                            contenido: "No se pudo grabar",
+                            btnAceptar: "Aceptar",
+                            btnCancelar: "Cancelar",
+                            btnOk: "OK",
+                            mostrarBtnAceptarAndCancelar: "no",
+                            mostrarBtnOk: "",
+                        })
+                        //alerta("No se pudo eliminar el proveedor", "rojo");
+                    }
+                },
+                error: function (error) {
+                    //alerta("Sucedió un error al conectarse al servidor", "rojo");
+                    notificacion({
+                        classTitleAndButtons: "infoTitleAndButtons",
+                        classMessage: "infoMessage",
+                        title: "Error",
+                        icono: "",
+                        contenido: "Sucedió un error al conectarse al servidor",
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "no",
+                        mostrarBtnOk: "",
+                    })
+                    $("#Loading").hide();
+                    console.log(error);
+                }
+            })
+        })
+
+
+    }
+
+    function ScrollTop() {
+        $("html, body").animate({
+            scrollTop: 0
+        }, 100)
+    }
+
+    function NavTabActive() {
+        $("ul li a").removeClass("active");
+        $(this).toggleClass("active");
+    }
+
+    function DownloadPdf(serviceId) {
+        data = {
+            patientId: serviceId
+        };
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            data: data,
+            url: 'http://vigilanciasanlorenzo.dyndns-web.com:8081/PatientsAssistance/DownloadFile',
+            //url: '/PatientsAssistance/DownloadFile',
+            success: function (response) {
+                var base64 = response;
+                //var base64 = JSON.parse(response);
+                var binaryString = window.atob(base64._buffer);
+                var binaryLen = binaryString.length;
+                var bytes = new Uint8Array(binaryLen);
+                for (var i = 0; i < binaryLen; i++) {
+                    var ascii = binaryString.charCodeAt(i);
+                    bytes[i] = ascii;
+                }
+                var d = new Date();
+                var fileName = serviceId + ".pdf";
+                var blob = new Blob([bytes], { type: 'application/pdf' });
+
+                if (window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(blob, fileName);
+                } else if (window.navigator.userAgent.indexOf("Firefox") > 0) {
+
+                    var url = window.URL.createObjectURL(blob);
+                    var anchorElement = document.createElement("a");
+                    anchorElement.style = "display: none";
+                    anchorElement.href = url;
+                    anchorElement.download = fileName;
+                    document.body.appendChild(anchorElement);
+                    anchorElement.click();
+                    document.body.removeChild(anchorElement);
+
+                    setTimeout(function () {
+                        window.URL.revokeObjectURL(url);
+                    }, 1000);
+                } else {
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = fileName;
+                    link.click();
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    function TestSave() {
+
+        var width = $(window).width();
+        var height = $(window).height();
+        $("#Loading").show().css("width", width + "px").css("height", height + "px");
+        $("#Loading > img").css("margin-left", ((width - 200) / 2) + "px").css("margin-top", ((height - 266) / 2) + "px");
+
+        $.ajax({
+            cache: false,
+            dataType: 'html',
+            method: 'GET',
+            url: '/PatientsAssistance/TestSave?categoryName=' + $('#js-save-exam').val(),
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    $("#Loading").hide();
+
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                $("#Loading").hide();
+                console.log(error);
+            }
+        });
+    }
+
+    function MedicalResult(serviceId) {
+        $.ajax({
+
+            cache: false,
+            method: 'GET',
+            dataType: 'html',
+            data: { 'serviceId': serviceId },
+            url: '/PatientsAssistance/MedicalResult',
+            success: function (html) {
+                $("#MedicalResult").html(html);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    function RowClick(idBody, idRow) {
+
+        $("#" + idBody + " tr").removeClass("row-active");
+        $(idRow).addClass("row-active");
+
+    }
+
+    function EliminarDiagnostico(idBody) {
+        if ($("#" + idBody + " tr").hasClass("row-active")) {
+
+            notificacion({
+                classTitleAndButtons: "warningTitleAndButtons",
+                classMessage: "warningMessage",
+                title: "¡ Advertencia !",
+                icono: "",
+                contenido: "¿Seguro de eliminar el diagnóstico? ",
+                btnAceptar: "Aceptar",
+                btnCancelar: "Cancelar",
+                btnOk: "OK",
+                mostrarBtnAceptarAndCancelar: "si",
+                mostrarBtnOk: "no",
+            });
+            $(".bigBox-Aceptar").on("click", function () {
+
+                $(".bigBox-Cancelar").trigger('click');
+                var idRow = $("#" + idBody + " .row-active").attr("id");
+                if ($("#" + idRow + " td:eq(4) input").val() == 2 && $("#" + idRow + " td:eq(5) input").val() == 1) {
+                    $("#" + idBody + " .row-active").remove();
+                    if ($("." + idRow).length > 0) {
+                        $("." + idRow).remove();
+                    }
+
+                } else {
+                    $("#" + idBody + " .row-active").addClass("d-none");
+
+                    if ($("#" + idRow + " td:eq(4) input").hasClass("RS-NEW") == false) {
+                        $("#" + idRow + " td:eq(4) input").val(4);
+                        $("#" + idRow + " td:eq(5) input").val(2);
+
+                        for (var i = 0; i < $("#dx-recomendaciones ." + idRow).length; i++) {
+
+                            if ($("#dx-recomendaciones ." + idRow).eq(i).find("td:eq(3) input").hasClass("RS-NEW") == false) {
+                                $("#dx-recomendaciones ." + idRow).eq(i).find("td:eq(3) input").val(4);
+                                $("#dx-recomendaciones ." + idRow).eq(i).find("td:eq(4) input").val(2);
+                                $("#dx-recomendaciones ." + idRow).eq(i).addClass("d-none");
+                            } else {
+                                $("#dx-recomendaciones ." + idRow).eq(i).addClass("d-none remove-si");
+
+                            };
+
+                        }
+                        for (var x = 0; x < $("#dx-restricciones ." + idRow).length; x++) {
+
+                            if ($("#dx-restricciones ." + idRow).eq(x).find("td:eq(3) input").hasClass("RS-NEW") == false) {
+                                $("#dx-restricciones ." + idRow).eq(x).find("td:eq(3) input").val(4);
+                                $("#dx-restricciones ." + idRow).eq(x).find("td:eq(4) input").val(2);
+                                $("#dx-restricciones ." + idRow).eq(x).addClass("d-none");
+                            } else {
+                                $("#dx-restricciones ." + idRow).eq(x).addClass("d-none remove-si");
+
+                            }
+
+
+                        }
+
+                    } else {
+                        $("." + idRow).remove();
+                    }
+                }
+
+            })
+
+        } else {
+
+            notificacion({
+                classTitleAndButtons: "infoTitleAndButtons",
+                classMessage: "infoMessage",
+                title: "¡ Aviso !",
+                icono: "",
+                contenido: "No ha seleccionado una fila.",
+                btnAceptar: "Aceptar",
+                btnCancelar: "Cancelar",
+                btnOk: "OK",
+                mostrarBtnAceptarAndCancelar: "no",
+                mostrarBtnOk: "si",
+            });
+
+        }
+
+    }
+
+    function EliminarRecomenRestric(idBody) {
+        if ($("#" + idBody + " tr").hasClass("row-active")) {
+
+            notificacion({
+                classTitleAndButtons: "warningTitleAndButtons",
+                classMessage: "warningMessage",
+                title: "¡ Advertencia !",
+                icono: "",
+                contenido: "¿Seguro de eliminar la fila? ",
+                btnAceptar: "Aceptar",
+                btnCancelar: "Cancelar",
+                btnOk: "OK",
+                mostrarBtnAceptarAndCancelar: "si",
+                mostrarBtnOk: "no",
+            });
+            $(".bigBox-Aceptar").on("click", function () {
+
+                $(".bigBox-Cancelar").trigger('click');
+                var row = $("#" + idBody + " .row-active");
+
+                let td = row.find('td');
+                if (!td.eq(3).find('input').hasClass("RS-NEW")) {
+                    row.addClass("d-none");
+                    td.eq(3).find('input').val(4);
+                    td.eq(4).find('input').val(2);
+
+                    console.log(td.eq(3).find('input').val());
+                    console.log(td.eq(4).find('input').val());
+                } else {
+                    //$("#" + idBody + " .row-active").removeAttr("class").addClass("d-none remove-si");
+                    row.remove();
+                }
+
+
+
+            })
+
+        } else {
+
+            notificacion({
+                classTitleAndButtons: "infoTitleAndButtons",
+                classMessage: "infoMessage",
+                title: "¡ Aviso !",
+                icono: "",
+                contenido: "No ha seleccionado una fila.",
+                btnAceptar: "Aceptar",
+                btnCancelar: "Cancelar",
+                btnOk: "OK",
+                mostrarBtnAceptarAndCancelar: "no",
+                mostrarBtnOk: "si",
+            });
+
+        }
+    }
+
+    function EditDiagnostico(idBody) {
+        if ($("#" + idBody + " tr").hasClass("row-active")) {
+
+            var idRow = $("#" + idBody + " .row-active").attr("id");
+            let row = $("#" + idBody + " .row-active");
+            if (row.attr("data-estado") != "nuevo") {
+                let td = row.find('td');
+
+                //td.eq(1).find('input').prop('disabled', false);
+                td.eq(2).find('div div.disabled').removeClass('disabled');
+                td.eq(4).find('input').val(3);
+                td.eq(5).find('input').val(2);
+                //$("#" + idRow + " td:eq(1) input").prop('disabled', false);
+                //$("#" + idRow + " td:eq(2) div div.disabled").removeClass('disabled');
+                //$("#" + idRow + " td:eq(4) input").val(3);
+                //$("#" + idRow + " td:eq(5) input").val(2);
+
+                for (let i = 0; i < $("." + idRow).length; i++) {
+                    if (!$("." + idRow).eq(i).find('td:eq(3) input').hasClass('RS-NEW')) {
+                        $("." + idRow).eq(i).find('td:eq(3) input').val(3)
+                        $("." + idRow).eq(i).find('td:eq(4) input').val(2)
+                    }
+                    
+                }
+
+
+            } else {
+
+                alertafixed({
+                    type: 'info',
+                    class: 'js-' + idRow + '-true',
+                    title: 'Aviso',
+                    message: 'No se puede editar un elemento nuevo.'
+                });
+
+            }
+
+        } else {
+
+            notificacion({
+                classTitleAndButtons: "infoTitleAndButtons",
+                classMessage: "infoMessage",
+                title: "¡ Aviso !",
+                icono: "",
+                contenido: "No ha seleccionado una fila.",
+                btnAceptar: "Aceptar",
+                btnCancelar: "Cancelar",
+                btnOk: "OK",
+                mostrarBtnAceptarAndCancelar: "no",
+                mostrarBtnOk: "si",
+            });
+
+        }
+
+    }
+
+    //function EditRecomenRestric(idBody) {
+    //    if ($("#" + idBody + " tr").hasClass("row-active")) {
+            
+    //        var idRow = $("#" + idBody + " .row-active").attr("id");
+            
+    //        if ($("#" + idBody + " .row-active").data("estado") != "nuevo") {
+
+    //            $("#" + idRow + " td:eq(1) textarea").prop('disabled', false);
+    //            //$("#" + idRow + " td:eq(2) select").prop('disabled', false);
+
+    //            $("#" + idRow + " td:eq(3) input").val(3);
+    //            $("#" + idRow + " td:eq(4) input").val(2);
+
+    //            var idSelect = $("#" + idRow + " td:eq(2) select").attr("id");
+    //            //setComboDiagnostico(idSelect);
+    //        } else {
+
+    //            alertafixed({
+    //                type: 'info',
+    //                class: 'js-' + idRow + '-true',
+    //                title: 'Aviso',
+    //                message: 'No se puede editar un elemento nuevo.'
+    //            });
+    //        }
+
+
+    //    } else {
+
+    //        notificacion({
+    //            classTitleAndButtons: "infoTitleAndButtons",
+    //            classMessage: "infoMessage",
+    //            title: "¡ Aviso !",
+    //            icono: "",
+    //            contenido: "No ha seleccionado una fila.",
+    //            btnAceptar: "Aceptar",
+    //            btnCancelar: "Cancelar",
+    //            btnOk: "OK",
+    //            mostrarBtnAceptarAndCancelar: "no",
+    //            mostrarBtnOk: "si",
+    //        });
+
+    //    }
+
+    //}
+
+    function NewDiagnostic(idBody) {
+        if ($("#" + idBody + " .sin-resultados").length > 0) {
+            $("#" + idBody + " .sin-resultados").remove();
+        }
+        var cant = $(".cont-dinamic-select").length;
+        var numberRow = $("#" + idBody + " tr").length;
+        var row = `<tr id="id-${idBody}-${numberRow}" data-estado="nuevo" onclick="RowClick( '${idBody}'  , this)">
+                        <td class="d-none"><input type="text" value=""/></td>
+                        <td><input class="form-control form-control-sm" autocomplete="off" onkeyup="AutocompleteDisease(event, this)" id="DS-NEW-${numberRow}" type="text" style="height: 38px; width: 330px !important; border-radius: 0.3rem !important"/></td>
+                        <td>
+                            <div class="cont-dinamic-select contenedor-select-${cant}">
+                                <div id="select-category" onclick="selectCategory(this)" class="row m-0 px-3 justify-content-between align-items-center drop-down-cont"><label class="m-0 lbl-category" style="overflow:hidden; max-height:17px">--SELECCIONAR--</label><i class="fas fa-sort-down"></i>
+                                </div>
+                            </div>
+                        </td>
+                        <td><input class="form-control form-control-sm" type="text" style="height: 38px; max-width: 230px !important; border-radius: 0.3rem !important" disabled/></td>
+                        <td class="d-none"><input class="RS-NEW" id="RS-NEW-${numberRow}" type="text" value="2" /></td>
+                        <td class="d-none"><input class="RT-NEW" id="RT-NEW-${numberRow}" type="text" value="1" /></td>
+                    </tr>`;
+        $(row).appendTo($("#" + idBody));
+        setCategoryComboDiag()
+    }
+
+    function NewRestricRecomen(idBody) {
+        var type = 0;
+        if (idBody == "dx-recomendaciones") {
+            type = 1
+        } else {
+            type = 2
+        }
+        if ($("#" + idBody + " .sin-resultados").length > 0) {
+            $("#" + idBody + " .sin-resultados").remove();
+        }
+        var numberRow = $("#" + idBody + " tr").length;
+        var row = `<tr data-estado="nuevo" onclick="RowClick( '${idBody}'  , this)">
+                        <td class="d-none"><input type="text" value=""/></td>
+                        <td><textarea  rows="3" onkeyup="AutocompleteRestricRecomen(event, this)" data-tipo="${type}" autocomplete="off" class="form-control form-control-sm" id="${idBody}-NEW-${numberRow}" type="text" style="height: 38px; max-width: 330px !important; border-radius: 0.3rem !important"></textarea></td>
+                        <td>
+                        <select style="max-width: 230px !important; border-radius: 0.3rem !important" onchange="selectDiasease(this)" class="form-control set-combo custom-select" id="select-${idBody}-${numberRow}" type="text"">
+                          <option value="-1">---Seleccionar---</option>
+                        </select>
+                        </td>
+                        <td class="d-none"><input class="RS-NEW" id="RS-NEW-${numberRow}" type="text" value="2" /></td>
+                        <td class="d-none"><input class="RT-NEW" id="RT-NEW-${numberRow}" type="text" value="1" /></td>
+                    </tr>`;
+        $(row).appendTo($("#" + idBody));
+        setComboDiagnostico("select-" + idBody + "-" + numberRow, "nuevo");
+
+    }
+
+    function setComboDiagnostico(idSelect, estado = "editado") {
+
+        $("#" + idSelect + " option").remove();
+
+        var rowDiagnostic = $("#diagnosticos tr");
+        if (estado == "nuevo") {
+            var firstOpt = `<option value="-1">--Seleccionar--</option>`;
+            $(firstOpt).appendTo($("#" + idSelect));
+        };
+
+        
+
+        for (var i = 0; i < rowDiagnostic.length; i++) {
+
+            var diseasesId = $("#diagnosticos tr:eq(" + i + ")").attr("id");
+            var diseasesName = $("#diagnosticos tr:eq(" + i + ") td:eq(1) input").val();
+
+            if (diseasesId != "tdError") {
+                if (!$("#diagnosticos tr:eq(" + i + ")").hasClass("d-none")) {
+                    var opt = `<option value="${diseasesId}">${diseasesName}</option>`;
+                    $(opt).appendTo($("#" + idSelect));
+
+                }
+
+            }
+
+
+        }
+
+
+
+
+    }
+
+    function selectDiasease(idSelect) {
+
+        var diseasesId = $(idSelect).val();
+
+        $(idSelect).parent().parent().removeClass().addClass(diseasesId + " row-active");
+
+    }
+
+    function SaveResult() {
+
+        if (sessionStorage.getItem("warehouseId") != "-1") {
+            let warehouse = $("#cbo-organizationWarehouse option:selected").text();
+
+            //Validaciones
+            if (ValidacionDiseases()) {
+                if (ValidacionRecomendaciones() && ValidacionReestricciones()) {
+                    
+                    notificacion({
+                        classTitleAndButtons: "infoTitleAndButtons",
+                        classMessage: "infoMessage",
+                        title: "¡ Aviso !",
+                        icono: "",
+                        contenido: `Se guardará con el almacén <strong>${warehouse}</strong>, ¿desea continuar?`,
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "si",
+                        mostrarBtnOk: "no",
+                    });
+
+                    $(".bigBox-Aceptar").on("click", function () {
+                        $("#MedicalResult").addClass('loadingGrid');
+                        $(".bigBox-Cancelar").trigger('click');
+                        let data = FindDataDiseases();
+                        console.log(data);
+                        $.ajax({
+                            cache: false,
+                            method: 'POST',
+                            dataType: 'json',
+                            data: { 'diagnostics': data },
+                            url: '/PatientsAssistance/SaveDiagnostic',
+                            success: json => {
+                                console.log(json);
+                                
+                                for (let i = 0; i < $(".RS-NEW").length; i++) {
+                                    let rows = $(".RS-NEW").eq(i).parent().parent();
+                                    
+                                    if (rows.find("td:eq(3) input") != "") {
+                                        $(".RS-NEW").eq(i).val('1');
+                                        rows.find('td:eq(1) textarea').prop('disabled', true);
+                                        rows.find('td:eq(1) input').prop('disabled', true);
+                                        rows.find('td:eq(2) .cont-dinamic-select #select-category').addClass('disabled');
+                                        rows.find('td:eq(2) select').prop('disabled', true);
+                                        rows.removeAttr("data-estado");
+                                        $(".RS-NEW").eq(i).addClass("RS-OLD").removeClass('RS-NEW');
+                                    }
+                                }
+
+
+                                for (let i = 0; i < $(".RT-NEW").length; i++) {
+                                    if ($(".RT-NEW").eq(i).parent().find("td:eq(4) input") != "") {
+                                        $(".RT-NEW").eq(i).val('2');
+                                    }
+                                }
+
+                                $('#Div_MedicalDiseases').removeClass('loadingGrid');
+
+                                alertafixed({
+                                    type: 'success',
+                                    class: 'js-true',
+                                    title: 'Hecho',
+                                    message: 'Se guardo correctamente.'
+                                });
+                                $("#MedicalResult").removeClass('loadingGrid');
+                            },
+                            error: err => {
+                                console.error(err);
+                                $("#MedicalResult").removeClass('loadingGrid');
+                            }
+                        })
+
+                    });
+                    
+                }
+            }
+            
+            
+        } else {
+            alertafixed({
+                type: 'warning',
+                class: 'js-alamcen-on',
+                title: 'Validación',
+                message: 'Seleccione un almacén en la parte superior para continuar.'
+            });
+        }
+        
+    };
+
+    function setTextSelect(option, componentId) {
+
+        $(option).parent().parent().parent().parent().find(".lbl-category").text($(option).text());
+        $(option).parent().parent().parent().parent().find(".componentid-for-select").val(componentId);
+        $(option).parent().parent().parent().parent().attr("data-componentid", componentId);
+        $(option).parent().parent().parent().find("div").eq(0).trigger("click");
+
+    }
+
+    const ValidacionDiseases = _ => {
+
+        let rows = $("#diagnosticos tr");
+        for (let i = 0; i < rows.length; i++) {
+
+            let td = rows.eq(i).find('td');
+
+            if (!rows.eq(i).hasClass('sin-resultados')) {
+
+                if (td.eq(1).find('input').val() == "") {
+
+                    alertafixed({
+                        type: 'warning',
+                        class: 'diagnosticos-error',
+                        title: 'Validación',
+                        message: 'Debe ingresar un diagnóstico para continuar.'
+                    })
+                    td.eq(1).find('input').addClass('border-danger');
+                    return false;
+                } else {
+
+                    if (td.eq(1).find('input').hasClass('border-danger')) {
+                        td.eq(1).find('input').removeClass('border-danger');
+                        td.eq(1).find('input').addClass('border-success');
+                    } else if (td.eq(1).find('input').hasClass('border-success')) {
+                        td.eq(1).find('input').removeClass('border-success');
+                    }
+                    
+
+                } 
+
+                if (td.eq(2).attr("data-componentid") == "" || td.eq(2).attr("data-componentid") === undefined) {
+
+                    alertafixed({
+                        type: 'warning',
+                        class: 'diagnosticos-error',
+                        title: 'Validación',
+                        message: 'Debe seleccionar un componente para continuar.'
+                    })
+                    return false;
+                } 
+                if (td.eq(0).find('input').val() == "") {
+
+                    alertafixed({
+                        type: 'warning',
+                        class: 'diagnosticos-error',
+                        title: 'Validación',
+                        message: 'Profavor, ingrese un diagnostico correcto.'
+                    })
+                    td.eq(1).find('input').addClass('border-danger');
+                    return false;
+                } else {
+
+                    if (td.eq(1).find('input').hasClass('border-danger')) {
+                        td.eq(1).find('input').removeClass('border-danger');
+                        td.eq(1).find('input').addClass('border-success');
+                    } else if (td.eq(1).find('input').hasClass('border-success')) {
+                        td.eq(1).find('input').removeClass('border-success');
+                    }
+
+                } 
+
+                if (td.eq(3).find('input').val() == "") {
+
+                    alertafixed({
+                        type: 'warning',
+                        class: 'diagnosticos-error',
+                        title: 'Validación',
+                        message: 'No se agregó correcatamente el CIE10, porfavor, borre la fila indicada y vuelva a ingresar.'
+                    })
+                    row.addClass('table-danger');
+                    return false;
+                }
+
+            } else {
+
+                alertafixed({
+                    type: 'warning',
+                    class: 'diagnosticos-error',
+                    title: 'Validación',
+                    message: 'No existen diagnósticos que guardar.'
+                })
+
+            }
+        }
+        return true;
+    };
+
+    const ValidacionRecomendaciones = _ => {
+        let rows = $("#dx-recomendaciones tr");
+        
+        for (let i = 0; i < rows.length; i++) {
+            let td = rows.eq(i).find('td');
+            if (td.eq(0).find('input').val() == "") {
+                alertafixed({
+                    type: 'warning',
+                    class: 'recomendation-error',
+                    title: 'Validación',
+                    message: 'Debe ingresar una Recomendación válida.'
+                })
+                td.eq(1).find('textarea').addClass("border-danger");
+                console.log(td.eq(0).find('input').val());
+                return false;
+            } else {
+                if (td.eq(1).find('textarea').hasClass("border-danger")) {
+                    td.eq(1).find('textarea').removeClass("border-danger")
+
+                    td.eq(1).find('textarea').addClass("border-success")
+                } else if (td.eq(1).find('textarea').hasClass("border-success")) {
+                    td.eq(1).find('textarea').removeClass("border-success")
+                }
+                
+                
+            }
+            if (td.eq(2).find('select').val() == "-1") {
+                alertafixed({
+                    type: 'warning',
+                    class: 'recomendation-error',
+                    title: 'Validación',
+                    message: 'Debe seleccionar un Diagnóstico.'
+                })
+                td.eq(2).find('select').addClass("border-danger");
+                return false;
+            } else {
+                if (td.eq(2).find('select').hasClass("border-danger")) {
+                    td.eq(2).find('select').removeClass("border-danger")
+
+                    td.eq(2).find('select').addClass("border-success")
+                } else if (td.eq(2).find('select').hasClass("border-success")) {
+                    td.eq(2).find('select').removeClass("border-success")
+                }
+
+
+            }
+
+        }
+
+        return true;
+    }
+
+    const ValidacionReestricciones = _ => {
+        let rows = $("#dx-restricciones tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            let td = rows.eq(i).find('td');
+            if (td.eq(0).find('input').val() == "") {
+                alertafixed({
+                    type: 'warning',
+                    class: 'recomendation-error',
+                    title: 'Validación',
+                    message: 'Debe ingresar una Restricción válida.'
+                })
+                td.eq(1).find('textarea').addClass("border-danger");
+                return false;
+            } else {
+                if (td.eq(1).find('textarea').hasClass("border-danger")) {
+                    td.eq(1).find('textarea').removeClass("border-danger")
+
+                    td.eq(1).find('textarea').addClass("border-success")
+                } else if (td.eq(1).find('textarea').hasClass("border-success")) {
+                    td.eq(1).find('textarea').removeClass("border-success")
+                }
+
+
+            }
+            if (td.eq(2).find('select').val() == "-1") {
+                alertafixed({
+                    type: 'warning',
+                    class: 'recomendation-error',
+                    title: 'Validación',
+                    message: 'Debe seleccionar un Diagnóstico.'
+                })
+                td.eq(2).find('select').addClass("border-danger");
+                return false;
+            } else {
+                if (td.eq(2).find('select').hasClass("border-danger")) {
+                    td.eq(2).find('select').removeClass("border-danger")
+
+                    td.eq(2).find('select').addClass("border-success")
+                } else if (td.eq(2).find('select').hasClass("border-success")) {
+                    td.eq(2).find('select').removeClass("border-success")
+                }
+
+
+            }
+
+        }
+
+        return true;
+    }
+
+    function AutocompleteDisease(evt, input) {
+
+        var name = input.value;
+
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: { 'name': name },
+            url: '/PatientsAssistance/SearchDisease',
+            success: function (json) {
+                var arrayName = [];
+                var arrayId = [];
+                var arrayCie = [];
+                for (var i = 0; i < json.length; i++) {
+                    var Getsplit = json[i].split("|");
+                    arrayName.push(Getsplit[0]);
+                    arrayId.push(Getsplit[1]);
+                    arrayCie.push(Getsplit[2]);
+                }
+                let row = $(input).parent().parent();
+                let td = row.find('td');
+                let oldRowId = row.attr('id');
+                $(input).autocomplete({
+                    source: arrayName,
+                    change: function (event, ui) {
+                        val = $(this).val();
+                        exists = $.inArray(val, arrayName);
+
+                        if ($(input).val() != "") {
+
+                            let rowDiagnosticoId = $("#" + arrayId[exists]).length;                                        
+
+                            //Busca si el diagnostico elegido ya existe pero está removido
+                            if ($('[data-diseasesid=' + arrayId[exists] + ']').length === 1 && $('[data-diseasesid=' + arrayId[exists] + ']').hasClass('d-none')) {
+                                $(input).parent().parent().remove();
+                                $('[data-diseasesid=' + arrayId[exists] + ']').eq(0).removeClass('d-none');
+                            } else {
+
+                                //Agrega el CIE10 al input
+                                td.eq(3).find('input').val(arrayCie[exists]);
+
+                                //Agrega el id del diagnostico al input oculto para luego validar si exiten errores
+                                td.eq(0).find('input').val(arrayId[exists]);                                
+
+                                //Si no existe el diagnóstico seleccionado
+                                if (!ExistDiseases(rowDiagnosticoId, td, input, arrayName[exists])) {
+                                    row.attr('data-diseasesid', arrayId[exists]).attr('id', arrayId[exists]);
+
+                                    if (arrayId[exists] !== undefined) {
+                                        var opt = `<option value="${arrayId[exists]}">${arrayName[exists]}</option>`;
+
+
+                                        //Busco las recomendaciones y reestricciones con el diagnostico anterior y los cambio
+                                        $("." + oldRowId).removeClass(oldRowId).addClass(arrayId[exists]);
+
+                                        for (let i = 0; i < $("." + arrayId[exists]).length; i++) {
+
+                                            var select = $("." + arrayId[exists]).eq(i).find('td').eq(2).find('select');
+
+                                            $(opt).appendTo(select);
+                                            select.find('option[value=' + arrayId[exists] + ']').attr("selected", true);
+
+                                        }
+                                        GetConfigDx(input);
+                                    }
+                                }
+                            }
+
+                            
+                            
+                        }
+
+                    }
+                });
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                console.log(error);
+            }
+        });
+
+
+    }
+
+    function AutocompleteRestricRecomen(evt, input) {
+
+        var name = input.value;
+        var type = $(input).data("tipo");
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: {
+                'name': name,
+                'typeId': type,
+            },
+            url: '/PatientsAssistance/Searchmasterrecommendationrestricction',
+            success: function (json) {
+                var arrayName = [];
+                var arrayId = [];
+                for (var i = 0; i < json.length; i++) {
+                    var Getsplit = json[i].split("|");
+                    arrayName.push(Getsplit[0]);
+                    arrayId.push(Getsplit[1]);
+                }
+                let row = $(input).parent().parent();
+                $(input).autocomplete({
+                    source: arrayName,
+                    change: function (event, ui) {
+                        val = $(this).val();
+                        exists = $.inArray(val, arrayName);
+
+                        //Envío el id de la reestriccion o recomendación al input oculto
+                        row.find('td').eq(0).find('input').val(arrayId[exists]);
+
+                    }
+                });
+            },
+            error: function (error) {
+                console.log("ERROR", error);
+            }
+        });
+
+
+    }
+
+    function ResizeTable(id) {
+        $("#" + id).animate({
+            height: 'toggle'
+        });
+    }
+
+    function selectCategory(div) {
+        if (!$(div).hasClass('disabled')) {
+            $(div).next().toggleClass("d-none");
+        }
+        
+
+    }
+
+    function selectOption(element) {
+
+        if (!$("#" + element.id).parent().hasClass("active")) {
+            $(".options-select").removeClass("active")
+            $("#" + element.id).parent().toggleClass("active");
+        } else {
+            $("#" + element.id).parent().toggleClass("active");
+        }
+        if (!$("#" + element.id).hasClass("active")) {
+            $(".name-category").removeClass("active");
+            $("#" + element.id).addClass("active");
+        } else {
+            $("#" + element.id).removeClass("active");
+        }
+
+    }
+
+    function TimeLineByServiceId(serviceId) {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'serviceId': serviceId },
+            url: '/PatientsAssistance/TimeLineByServiceId',
+            success: function (json) {
+
+
+                $(".time-line").attr("data-serviceid", serviceId);
+                if (json[0].Active == 1) {
+                    $("#point-1").addClass("point-success");
+                    $("#point-2").removeClass("point-success");
+                    $("#point-3").removeClass("point-success");
+                    $(".time-line").removeClass("mid-time-line").removeClass("end-time-line");
+
+                    $("#point-3").attr("data-estate", "Finalizar").removeAttr("data-toggle").removeAttr("data-target");
+
+                };
+                if (json[1].Active == 1) {
+
+                    $("#point-2").addClass("point-success");
+                    $("#point-1").addClass("point-success");
+                    $("#point-3").removeClass("point-success");
+                    $(".time-line").addClass("mid-time-line").removeClass("end-time-line");
+
+                    $("#point-3").attr("data-estate", "Finalizar").removeAttr("data-toggle").removeAttr("data-target");
+
+                };
+                if (json[2].Active == 1) {
+                    $("#point-2").addClass("point-success");
+                    $("#point-1").addClass("point-success");
+
+                    switch (json[2].StatusService) {
+                        case "PorIniciar":
+                            $("#point-3").attr("data-estate", "PorIniciar").addClass("point-success").attr("data-toggle", "modal").attr("data-target", "#TypeEstate-Modal");
+
+                            $("#point-2").addClass("point-success");
+                            $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                            $("#point-1").addClass("point-success");
+                            break;
+                        case "Iniciado":
+                            $("#point-3").attr("data-estate", "Iniciado").addClass("point-success").attr("data-toggle", "modal").attr("data-target", "#TypeEstate-Modal");
+
+                            $("#point-2").addClass("point-success");
+                            $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                            $("#point-1").addClass("point-success");
+                            break;
+                        case "Culminado":
+                            $("#point-3").attr("data-estate", "Culminado").addClass("point-success").removeAttr("data-toggle").removeAttr("data-target");
+                            $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                            $("#point-2").addClass("point-success");
+                            $("#point-1").addClass("point-success");
+                            break;
+                        case "Incompleto":
+                            $("#point-3").attr("data-estate", "Incompleto").addClass("point-success").attr("data-toggle", "modal").attr("data-target", "#TypeEstate-Modal");
+
+                            $("#point-2").addClass("point-success");
+                            $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                            $("#point-1").addClass("point-success");
+                            break;
+                        case "Cancelado":
+                            $("#point-3").attr("data-estate", "Cancelado").addClass("point-success").attr("data-toggle", "modal").attr("data-target", "#TypeEstate-Modal");
+
+                            $("#point-2").addClass("point-success");
+                            $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                            $("#point-1").addClass("point-success");
+                            break;
+                        case "EsperandoAptitud":
+                            $("#point-3").attr("data-estate", "EsperandoAptitud").addClass("point-success").attr("data-toggle", "modal").attr("data-target", "#TypeEstate-Modal");
+
+                            $("#point-2").addClass("point-success");
+                            $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                            $("#point-1").addClass("point-success");
+                            break;
+                        default:
+                            break;
+                    }
+
+                };
+                if (json[0].Active == 0 && json[1].Active == 0 && json[2].Active == 0) {
+                    $("#point-3").attr("data-estate", "AtencionCulminada").addClass("point-success").removeAttr("data-toggle").removeAttr("data-target");
+                    $(".time-line").addClass("end-time-line").removeClass("mid-time-line");
+                    $("#point-2").addClass("point-success");
+                    $("#point-1").addClass("point-success");
+                };
+            },
+            error: function (error) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'js-time-line',
+                    title: 'ERROR',
+                    message: 'Sucedió un error al cargar la linea de estados.'
+                });
+                console.log("ERROR: ", error);
+            }
+        });
+    }
+
+    const FindDataDiseases = _ => {
+        let arrDiseases = [];
+        let rows = $("#diagnosticos tr");
+        for (let i = 0; i < rows.length; i++) {
+            let td = rows.eq(i).find('td');
+
+            let DiseaseId = rows.eq(i).attr('id');
+            let DiagnosticRepositoryId = rows.eq(i).attr('data-diagnostic-repository');
+            let DiseaseName = td.eq(1).find('input').val();
+            let ComponentId = td.eq(2).attr("data-componentid");
+            //$("#diagnosticos tr:eq(" + i + ") td:eq(2)").data("componentid")
+            let Cie10 = td.eq(3).find('input').val();
+            let RecordStatus = td.eq(4).find('input').val();
+            let RecordType = td.eq(5).find('input').val();
+
+            let obj = {
+                    ServiceId: '@ViewBag.ServiceId',
+                    DiseaseId,
+                    DiagnosticRepositoryId,
+                    DiseaseName,
+                    ComponentId,
+                    Cie10,
+                    RecordStatus,
+                    RecordType,
+                    Recommendations: FindDataRecommendations(DiseaseId, DiseaseName),
+                    Restrictions: FindDataRestrictions(DiseaseId, DiseaseName),
+            }
+            arrDiseases.push(obj);
+        }
+        return arrDiseases;
+    }
+
+    const FindDataRecommendations = (DiseaseId, DiseaseName) => {
+        let arrRecommendations = [];
+        let rows = $("#dx-recomendaciones ." + DiseaseId);
+        for (let i = 0; i < rows.length; i++) {
+
+            let td = rows.eq(i).find('td');
+
+            let RecommendationId = rows.eq(i).attr('id');
+            let MasterRecommendationId = td.eq(0).find('input').val();
+            let RecommendationName = td.eq(1).find('textarea').val();
+            let RecordStatus = td.eq(3).find('input').val();
+            let RecordType = td.eq(4).find('input').val();
+
+            let objRecomendations = {
+                DiseaseId,
+                DiseaseName,
+                RecommendationId,
+                MasterRecommendationId,
+                RecommendationName,
+                RecordStatus,
+                RecordType,
+            }
+            arrRecommendations.push(objRecomendations);
+        }
+
+        return arrRecommendations;
+    }
+
+    const FindDataRestrictions = (DiseaseId, DiseaseName) => {
+        let arrRestrictions = [];
+        let rows = $("#dx-restricciones ." + DiseaseId);
+        for (let i = 0; i < rows.length; i++) {
+
+            let td = rows.eq(i).find('td');
+
+            let RestrictionId = rows.eq(i).attr('id');
+            let MasterRestrictionId = td.eq(0).find('input').val();
+            let RestrictionName = td.eq(1).find('textarea').val();
+            let RecordStatus = td.eq(3).find('input').val();
+            let RecordType = td.eq(4).find('input').val();
+
+            var objRestriction = {
+                DiseaseId,
+                DiseaseName,
+                MasterRestrictionId,
+                RestrictionId,
+                RestrictionName,
+                RecordStatus,
+                RecordType,
+            }
+            arrRestrictions.push(objRestriction);
+        }
+
+        return arrRestrictions;
+        
+    }
+
+    const ExistDiseases = (row, td, input, name) => {
+        if (row > 0) {
+            td.eq(3).find('input').val("");//Borramos el CIE10 del input
+            td.eq(0).find('input').val("");//Borramos el diagnostico del input oculto
+            $(input).val("");//borramos los escrito en el input original
+            $(input).focus();//Se establece el focus
+            alertafixed({
+                type: 'warning',
+                class: 'js-diseases-false',
+                title: 'Validación',
+                message: 'Ya axiste un diagnóstico ' + name + '.'
+            });
+            return true;
+        }
+        return false;
+    }
+
+</script>
+

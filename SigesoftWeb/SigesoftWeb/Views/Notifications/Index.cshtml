@@ -1,0 +1,552 @@
+﻿
+@{
+    var Organizations = ViewBag.USER.Organizations;
+}
+
+<style>
+    .form-control{
+        border-radius: 0.3rem
+    }
+    .ColumnNoWrap {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+</style>
+<section class="container-fluid mt-2">
+    <section class="row w-100 m-0">
+        <article class="col-12">
+            <article class="row w-100 m-0">
+                <div class="col-sm-6 col-md-3 mt-3">
+                    <label>Tipo Notificación:</label>
+                    <select class="custom-select" id="type-notification">
+                        @{
+                            foreach (var item in ViewBag.NotificationType)
+                            {
+                                <option value="@item.Id">@item.Value</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-3 mt-3">
+                    <label>Empresa:</label>
+                    <select class="custom-select" id="worker-organizationId">
+                        <option value="-1">--Todos--</option>
+                        @{
+                            foreach (var item in Organizations)
+                            {
+                                <option value="@item.OrganizationId">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-2 mt-3">
+                    <label>Estado Notificación</label>
+                    <select class="custom-select" id="state-notification">
+                        @{
+                            foreach (var item in ViewBag.EstateNotification)
+                            {
+                                <option value="@item.Id">@item.Value</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-2 mt-3">
+                    <label>F.I Envío</label>
+                    <input type="date" class="form-control" id="fi-send-notification" />
+                </div>
+                <div class="col-sm-6 col-md-2 mt-3">
+                    <label>F.F Envío</label>
+                    <input type="date" class="form-control" id="ff-send-notification" />
+                </div>
+
+                <div class="col-sm-6 col-md-3 mt-3">
+                    <label>Trabajador/DNI</label>
+                    <input type="text" autocomplete="off" class="form-control" id="name-worker" />
+                </div>
+                <div class="col-sm-6 col-md-3 mt-3">
+                    <label>Titulo Notificación</label>
+                    <input type="text" autocomplete="off" class="form-control" id="filt-title-notification" />
+                </div>
+                <div class="col-12 col-sm-6 col-md-2 mt-3">
+                    <label style="opacity:0">Filtro</label>
+                    <button class="btn w-100 btn-info" id="filter-notifications"><i class="fa fa-search"></i> Filtrar</button>
+                </div>
+            </article>
+        </article>
+        <article class="col-12" id="renderMailBody">
+            @Html.Partial("_BoardMailBodyPartial")
+        </article>
+    </section>
+</section>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/Alert.js"></script>
+<link href="~/Content/css/Alert.css" rel="stylesheet" />
+<script>
+
+    $(document).ready(function () {
+        var now = new Date();
+
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var hour = now.getHours();
+        var minutes = now.getMinutes();
+
+        var dayIni = day - day + 1;
+
+        var todayIni = now.getFullYear() + "-" + (month) + "-" + ("0" + dayIni);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+        $('#fi-send-notification').val(todayIni);
+        $('#ff-send-notification').val(today);
+        Filter(1);
+
+
+        $("#cbo-organization").on("change", function () {
+
+            var id = $("#cbo-organization").val();
+            sessionStorage.setItem("organizationId", id);
+            sessionStorage.setItem("warehouseId", "-1");
+            SetComboAlmacen(id);
+            Filter(1);
+
+        });
+
+    });
+
+    $("#filter-notifications").on("click", function () {
+        Filter(1);
+    });
+
+    $("#renderMailBody").on("click", "#re-notify", function () {
+        var checks = $(".checkbox-rows");
+        var arrNotify = [];
+        for (var i = 0; i < checks.length; i++) {
+            if (checks.eq(i).val() == "0") {
+                arrNotify.push((checks.eq(i).attr("id")));
+            };
+        }
+
+        if (arrNotify.length > 0) {
+            notificacion({
+                classTitleAndButtons: "warningTitleAndButtons",
+                classMessage: "warningMessage",
+                title: "¡ Confirmación !",
+                contenido: "Se volverá a enviar la notificación con el mismo título y mensaje a los trabajadores seleccionados",
+                btnAceptar: "Aceptar",
+                btnCancelar: "Cancelar",
+                btnOk: "OK",
+                mostrarBtnAceptarAndCancelar: "si",
+                mostrarBtnOk: "no",
+            });
+            $(".bigBox-Aceptar").on("click", function () {
+                $(".bigBox-Cancelar").trigger("click");
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: { 'jsonArray': JSON.stringify(arrNotify) },
+                    url: '/Notifications/ReNotify',
+                    success: function (json) {
+                        if (json == "OK") {
+                            alertafixed({
+                                type: "success",
+                                title: "HECHO",
+                                message: "Se envió la notificación correctamente.",
+                                class: "js-validacion-ok",
+                            });
+                            Filter(1);
+                        }
+                    },
+                    error: function (error) {
+                        alertafixed({
+                            type: "danger",
+                            title: "ERROR",
+                            message: "Sucedió un error al conectarse al servido.",
+                            class: "js-validacion-fail",
+                        });
+                        console.log("ERROR", error)
+                    },
+                });
+            });
+        } else {
+            alertafixed({
+                type: "info",
+                title: "AVISO",
+                message: "No ha seleccionado ninguna fila.",
+                class: "js-validacion-rows",
+            });
+        }
+
+    });
+
+    $("#renderMailBody").on("change", "#allNotificationId", function () {
+        var rows = $("#body-notifications tr");
+
+        for (var i = 0; i < rows.length; i++) {
+            if (rows.eq(i).find("input[type='checkbox']").val() == "1") {
+                var bool = true;
+                var value = "0";
+            } else {
+                var value = "1";
+                var bool = false;
+            };
+            rows.eq(i).find("input[type='checkbox']").val(value).prop('checked', bool);
+        }
+    });
+
+    $("#renderMailBody").on("change", ".checkbox-rows", function () {
+        if ($(this).val() == "1") {
+            var value = "0";
+        } else {
+            var value = "1";
+        }
+        $(this).val(value);
+
+    });
+
+    $("#renderMailBody").on("click", "#schedule-notification", function () {
+
+        $("#modalProgramarNotificacion").on('hidden.bs.modal', function () {
+
+            DateTime('fechCita-prog-notification');
+            DateTime('progFechEnvio');
+
+            $("#cont-fech-cita").addClass("d-none");
+            $("#cont-archivo").addClass("d-none");
+            $("#fileCampSalud").val("");
+            $("#type-notification-modal").val("-1");
+            $("#title-prog-notification").val("");
+            $("#body-prog-notification").val("");
+            $(".row-informacion").remove();
+            if ($("#programFechEnvio").val() == "0") {
+                $("#programFechEnvio").val("1").prop('checked', false);
+                $("#progFechEnvio").addClass("d-none");
+            }
+
+        });
+        $("#modalProgramarNotificacion").on('show.bs.modal', function () {
+            $("#organizationid-modal").val($("#cbo-organization").val());
+        });
+    })
+
+    $("#renderMailBody").on("change", "#programFechEnvio", function () {
+        if ($(this).val() == "1") {
+            DateTime('progFechEnvio');
+            $(this).val("0");
+            $("#progFechEnvio").removeClass("d-none");
+        } else {
+            DateTime('progFechEnvio');
+            $(this).val("1");
+            $("#progFechEnvio").addClass("d-none");
+        }
+    });
+
+    $("#renderMailBody").on("change", "#type-notification-modal", function () {
+
+        if ($(this).val() == "2") {
+            DateTime('fechCita-prog-notification');
+            $("#fileCampSalud").val("");
+            $("#cont-fech-cita").removeClass("d-none");
+            $("#cont-archivo").addClass("d-none");
+        } else if ($(this).val() == "3") {
+
+            DateTime('fechCita-prog-notification');
+            $("#cont-fech-cita").addClass("d-none");
+            $("#cont-archivo").removeClass("d-none");
+        } else {
+            DateTime('fechCita-prog-notification');
+            $("#fileCampSalud").val("");
+            $("#cont-fech-cita").addClass("d-none");
+            $("#cont-archivo").addClass("d-none");
+        }
+    });
+
+    $("#renderMailBody").on("click", "#send-notification", function () {
+        var send = true;
+
+        if ($("#title-prog-notification").val() == "" || $("#body-prog-notification").val() == "" || $(".row-validation").length > 0 || $("#type-notification-modal").val() == "-1") {
+            send = false;
+        };
+
+        if (send) {
+            var textSelected = $('#type-notification-modal option[value=' + $("#type-notification-modal").val() + ']').text();
+            var fecha = $("#programFechEnvio").val() == "1" ? "inmediatamente" : "el " + $("#progFechEnvio").val();
+            notificacion({
+                classTitleAndButtons: "warningTitleAndButtons",
+                classMessage: "warningMessage",
+                title: "¡ Confirmación !",
+                contenido: "Se enviará " + textSelected + " " + fecha + " al confirmar el envío.",
+                btnAceptar: "Aceptar",
+                btnCancelar: "Cancelar",
+                btnOk: "OK",
+                mostrarBtnAceptarAndCancelar: "si",
+                mostrarBtnOk: "no",
+            });
+            $(".bigBox-Aceptar").on("click", function () {
+                $(".bigBox-Cancelar").trigger("click");
+                
+                SendFile('Notifications', 'SendFile', 'fileCampSalud');
+            });
+        } else {
+            alertafixed({
+                type: "warning",
+                title: "VALIDACIÓN",
+                message: "Complete los campos para continuar",
+                class: "js-validacion-modal",
+            });
+
+        }
+    });
+
+
+    /*validacionoes*/
+    $("#renderMailBody").on('blur', '[data-validation-input="string"]', function () {
+
+        var MinMax = $(this).data("length").split("-");
+        var message = $(this).data("message");
+        var min = parseInt(MinMax[0]);
+        var max = parseInt(MinMax[1]);
+
+        var label = `<div class="row-validation w-100 m-0 p-0 pl-2"><label style=" color: #dc3545; font-size: 0.8rem; margin: 0px; ">${message}</label></div>
+                    `;
+
+        if ($(this).val().length > max || $(this).val().length < min) {
+
+            if (!$(this).next().hasClass("row-validation")) {
+
+                if ($(this).next().hasClass("row-informacion")) {
+                    $(this).next().remove();
+                }
+                $(this).addClass("border-danger");
+                $($(this)).after(label);
+            }
+
+        } else if ($(this).next().hasClass("row-validation")) {
+            $(this).removeClass("border-danger");
+            $(this).next().remove()
+        }
+    });
+
+    $("#renderMailBody").on('keyup', '[data-validation-input="string"]', function () {
+
+        var largo = $(this).val().length;
+        var MinMax = $(this).data("length").split("-");
+        var min = parseInt(MinMax[0]);
+        var max = parseInt(MinMax[1]);
+
+        if ($(this).val().length < max || $(this).val().length > min) {
+            if (!$(this).next().hasClass("row-informacion")) {
+
+                var info = `
+                <div class="row-informacion w-100 m-0 p-0 pl-2">
+                    <label style=" color: #adabab; font-size: 0.7rem; margin: 0px; ">Total: </label>
+                    <label class="largo" style="color: #adabab; font-size: 0.7rem; margin: 0px;" >${largo}</label>
+                    <label style=" color: #adabab; font-size: 0.7rem; margin: 0px; ">/</label>
+                    <label style=" color: #adabab; font-size: 0.7rem; margin: 0px; ">${MinMax[1]}</label>
+                </div>
+                `;
+                if ($(this).next().hasClass("row-validation")) {
+                    $(this).removeClass("border-danger");
+                    $(this).next().remove();
+                }
+                $($(this)).after(info);
+            } else {
+                $(this).next().find(".largo").text(largo);
+            };
+
+        };
+    });
+    /*fin validacionoes*/
+
+    function DateTime(idInput) {
+        $.datetimepicker.setLocale('es');
+        var now = new Date();
+
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var hour = now.getHours();
+        var minutes = now.getMinutes();
+        var today = now.getFullYear() + "-" + (month) + "-" + (day) + " " + hour + ":" + minutes;
+
+        $('#' + idInput).datetimepicker({
+            value: today,
+            step: 10,
+            format: 'd-m-Y h:i a',
+        });
+    }
+
+    function Filter(index) {
+
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+
+        $("#body-notifications").addClass("loadingGrid");
+        var data = {
+            TypeNotificationId: $("#type-notification").val(),
+            OrganizationId: organizationId,
+            Worker: $("#name-worker").val(),
+            StateNotificationId: $("#state-notification").val(),
+            NotificationDateStart: $("#fi-send-notification").val(),
+            NotificationDateEnd: $("#ff-send-notification").val(),
+            Title: $("#filt-title-notification").val(),
+
+            Index: index,
+            Take: $("#take").val()
+        };
+
+        $.ajax({
+            cache: false,
+            dataType: 'html',
+            method: 'POST',
+            async: true,
+            data: data,
+            url: '/Notifications/Filter',
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    $("#body-notifications").addClass("loadingGrid");
+                    $("#renderMailBody").html(html);
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alertafixed({
+                    title: "ERROR",
+                    type: "danger",
+                    message: "Sucedió un error al conectarse al servidor",
+                    class: "js-error",
+                });
+                console.log("ERROR: ", error)
+            }
+        });
+    };
+
+    function SendFile(controller, func, idInputFile) {
+
+        var data = {};
+        var selectValue = $("#type-notification-modal").val();
+
+        if (selectValue == "2") {
+            data = {
+                d_NotificationDate: $("#progFechEnvio").val(),
+                v_OrganizationId: $("#organizationid-modal").val(),
+                i_TypeNotificationId: selectValue,
+                d_ScheduleDate: $("#fechCita-prog-notification").val(),
+                v_Title: $("#title-prog-notification").val(),
+                v_Body: $("#body-prog-notification").val(),
+            }
+
+
+        } else if (selectValue == "3") {
+
+            data = {
+                d_NotificationDate: $("#progFechEnvio").val(),
+                v_OrganizationId: $("#organizationid-modal").val(),
+                i_TypeNotificationId: selectValue,
+                v_Title: $("#title-prog-notification").val(),
+                v_Body: $("#body-prog-notification").val(),
+
+            }
+
+        } else {
+            data = {
+                d_NotificationDate: $("#progFechEnvio").val(),
+                v_OrganizationId: $("#organizationid-modal").val(),
+                i_TypeNotificationId: selectValue,
+                v_Title: $("#title-prog-notification").val(),
+                v_Body: $("#body-prog-notification").val(),
+            }
+        };
+
+
+
+        if ($("#" + idInputFile).val != "") {
+
+            var file = new FormData();
+            for (i = 0; i < document.getElementById(idInputFile).files.length; i++) {
+                file.append("files[]", document.getElementById(idInputFile).files[i]);
+            }
+
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'POST',
+                data: file,
+                contentType: false,
+                processData: false,
+                url: '/' + controller + '/' + func,
+                success: function (json) {
+                    var String1 = JSON.stringify(data);
+                    var String2 = JSON.stringify(json);
+
+                    $.ajax({
+                        cache: false,
+                        dataType: 'json',
+                        method: 'POST',
+                        data: {
+                            'data': String1,
+                            'file': String2,
+                        },
+                        url: '/Notifications/ScheduleNotification',
+                        success: function (json) {
+                            cosnole.log(json)
+                        },
+                        error: function (error) {
+                            alertafixed({
+                                type: 'danger',
+                                class: 'js-error',
+                                title: 'ERROR',
+                                message: 'Sucedió un error al conectar al servidor'
+                            })
+
+                            console.log(error);
+                        }
+                    });
+
+                },
+                error: function (error) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'js-error',
+                        title: 'ERROR',
+                        message: 'Sucedió un error al conectar al servidor'
+                    })
+
+                    console.log(error);
+                }
+            });
+
+        } else {
+            var String1 = JSON.stringify(data);
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'POST',
+                data: {
+                    'data' : String1
+                },
+                url: '/Notifications/ScheduleNotification',
+                success: function (json) {
+
+                    cosnole.log(json)
+                },
+                error: function (error) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'js-error',
+                        title: 'ERROR',
+                        message: 'Sucedió un error al conectar al servidor'
+                    })
+
+                    console.log(error);
+                }
+            });
+        }
+        
+
+    }
+
+</script>

@@ -1,0 +1,97 @@
+﻿
+
+<div class="" id="reporte11" style="width:100%">
+    <div id="chartPressure" class="chart table-responsive"></div>
+</div>
+
+@{
+
+    if (Request.Browser.Browser == "IE" && Convert.ToDouble(Request.Browser.Version) < 9.0)
+    {
+    }
+    else
+    {
+        <script>
+            function LoadBloodPressure(data) {
+
+                var BloodPressureSisDate = [];
+                var BloodPressureSis = [];
+                var BloodPressureDia = [];
+
+                for (let i = 0; i < data.BloodPressureSis.length; i++) {
+                    BloodPressureSis.push(parseFloat(data.BloodPressureSis[i].y));
+                    BloodPressureSisDate.push(data.BloodPressureSis[i].Date);
+                    
+                };
+                for (let i = 0; i < data.BloodPressureDia.length; i++) {
+                    BloodPressureDia.push(parseFloat(data.BloodPressureDia[i].y));
+                }
+            Highcharts.chart('chartPressure', {
+
+                title: {
+                    text: 'Historial'
+                },
+
+                subtitle: {
+                    text: ''
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'mmHg'
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                plotOptions: {
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        },
+                        //pointStart: '2018-10-07'
+                    }
+                },
+                xAxis: {
+
+                    categories: BloodPressureSisDate,
+                    labels: {
+                        skew3d: true,
+                        style: {
+                            fontSize: '16px'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Presión Sistólica',
+                    data: BloodPressureSis,
+                },{
+                    name: 'Presión Diastólica',
+                    data: BloodPressureDia,
+                }],
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'vertical',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+
+            });
+
+        }
+        </script>
+    }
+}
+

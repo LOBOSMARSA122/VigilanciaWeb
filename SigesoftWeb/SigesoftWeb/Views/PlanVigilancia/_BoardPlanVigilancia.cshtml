@@ -1,0 +1,252 @@
+﻿
+@{
+    int Take = 0;
+    int Total = 0;
+    int Primer = 0;
+    int Ultimo = 0;
+    int Index = 0;
+
+    if (ViewBag.DataPV != null)
+    {
+        Take = ViewBag.DataPV.Take;
+        Index = ViewBag.DataPV.Index;
+        Total = ViewBag.DataPV.TotalRecords;
+        Primer = ((Index - 1) * Take) + 1;
+        Ultimo = Primer + (ViewBag.DataPV.List.Count - 1);
+
+        Primer = Primer < 0 ? 0 : Primer;
+        Ultimo = Ultimo < 0 ? 0 : Ultimo;
+
+
+
+    }
+    else
+    {
+        Take = 0;
+    }
+}
+
+<div class="container-fluid" style="padding:0px;">
+    <div class="box box-default mt-2" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;" onclick="ColapsarTabla('table-responsive')"><i class="icon-list-numbered"></i> Listado </h3>
+        </div>
+    </div>
+</div>
+<div>
+    <span class="informacion">Mostrando desde N° @Primer hasta @Ultimo de un total de @Total entradas</span>
+    <div class="float-lg-right informacion">
+        Total de registros:
+        <select id="take" onchange="Filtrar(1)">
+            <option value="10" @(Take == 10 ? "selected" : "")>10</option>
+            <option value="25" @(Take == 25 ? "selected" : "")>25</option>
+            <option value="50" @(Take == 50 ? "selected" : "")>50</option>
+            <option value="0" @(Take == 0 ? "selected" : "")>TODOS</option>
+        </select>
+    </div>
+</div>
+<div class="box box-info mt-2">
+    <div class="table-responsive">
+        <table class="table table-hover" id="TablaAExportar">
+            <thead>
+                <tr class="text-center">
+                    <th class="d-none">Id</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+
+                    if (ViewBag.DataPV == null)
+                    {
+                        <tr><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+                    }
+                    else if (ViewBag.DataPV.List.Count == 0)
+                    {
+                        <tr><td colspan="7" class="text-center">No hay resultados</td></tr>
+                    }
+                    else
+                    {
+                        foreach (var item in ViewBag.DataPV.List)
+                        {
+
+                            <tr>
+                                <td class="d-none">@item.PlanVigilanciaId</td>
+                                <td>@item.Name</td>
+                                <td>@item.Description</td>
+                                <td><span class="d-flex justify-content-center iconEdit align-items-center" onclick="location.href='@Url.Action("CreatePlanVigilancia","PlanVigilancia", new { planVigianciaId =  item.PlanVigilanciaId})'"><i  style="font-size: 1.1rem;" class="far fa-edit"></i></span></td>
+                                <td><span class="d-flex justify-content-center align-items-center iconEdit" onclick="DeleteDiseases('@item.PlanVigilanciaId')"><i style="font-size: 1.1rem;" class="far fa-trash-alt"></i></span></td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="paginacion-tabla d-flex justify-content-center">
+            <div>
+                <ul class="pagination">
+                    @{
+                        if (Index > 1)
+                        {
+                            <li class="page-item" onclick="Filtrar(@(Index - 1))">
+                                <span class="page-link" aria-hidden="true">Anterior</span>
+                            </li>
+                        }
+                        int pagina = 0;
+                        if (Take > 0)
+                        {
+                            for (int i = 0; i < Total; i = i + Take)
+                            {
+                                pagina++;
+                                if ((pagina > (Index - 5)) && pagina < (Index + 5))
+                                {
+                                    <li @(pagina == Index ? "class=pagination-active" : "onclick=Filtrar(" + pagina + ")")><span class="page-link" aria-hidden="true">@pagina</span></li>
+                                }
+
+                            }
+                        }
+                        if (pagina > Index)
+                        {
+                            <li class="page-item" onclick="Filtrar(@(Index + 1))">
+                                <span class="page-link" aria-hidden="true">Siguiente</span>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+
+<script src="~/Scripts/Alert.js"></script>
+<script src="~/Scripts/TweenMax.min.js"></script>
+<link href="~/Content/css/Alert.css" rel="stylesheet" />
+
+
+<script>
+
+
+    function GetDataId(id) {
+
+        $.ajax({
+
+            cache: false,
+            type: 'GET',
+            url: "/PlanVigilancia/CreatePlanVigilancia?planVigianciaId=" + id,
+
+        })
+
+    }
+
+    function trueData(dat, lista) {
+        console.log(dat);
+        console.log(lista);
+    }
+    function VarRazor(idRazor, idJS) {
+        var estate = idRazor == idJS;
+        return estate;
+
+    }
+    function ColapsarTabla(id) {
+        var Altura = $("#TablaAExportar").height() + 60;
+
+        if ($("." + id).height() == 0) {
+            $("." + id).animate({ "height": Altura + "px" }, 400);
+        } else {
+            alturaTabla = $("." + id).height();
+            $("." + id).animate({ "height": "0px" }, 400);
+        }
+    }
+
+    function DeleteDiseases(id) {
+
+        notificacion({
+            classTitleAndButtons: "warningTitleAndButtons",
+            classMessage: "warningMessage",
+            title: "¡ Advertencia !",
+            icono: "",
+            contenido: "¿Seguro de eliminar el registro? ",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "si",
+            mostrarBtnOk: "no",
+        })
+        $(".bigBox-Aceptar").on("click", function () {
+
+            $(".pluginContenedor").remove();
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'GET',
+                url: "/PlanVigilancia/RemovePV?planVigilanciaId=" + id,
+                success: function (json) {
+                    if (json) {
+                        notificacion({
+                            classTitleAndButtons: "successTitleAndButtons",
+                            classMessage: "successMessage",
+                            title: "Hecho",
+                            icono: "",
+                            contenido: "Se eliminó!",
+                            btnAceptar: "Aceptar",
+                            btnCancelar: "Cancelar",
+                            btnOk: "OK",
+                            mostrarBtnAceptarAndCancelar: "no",
+                            mostrarBtnOk: "",
+                        })
+
+                        FilterPV(1);
+                    } else {
+                        notificacion({
+                            classTitleAndButtons: "dangerTitleAndButtons",
+                            classMessage: "successMessage",
+                            title: "Error",
+                            icono: "",
+                            contenido: "No se pudo eliminar.",
+                            btnAceptar: "Aceptar",
+                            btnCancelar: "Cancelar",
+                            btnOk: "OK",
+                            mostrarBtnAceptarAndCancelar: "no",
+                            mostrarBtnOk: "",
+                        })
+                    }
+                },
+                error: function (error) {
+                    notificacion({
+                        classTitleAndButtons: "successTitleAndButtons",
+                        classMessage: "successMessage",
+                        title: "Error",
+                        icono: "",
+                        contenido: "Sucedió un error al conectarse al servidor",
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "no",
+                        mostrarBtnOk: "",
+                    })
+                    $("#Loading").hide();
+                    console.log(error);
+                }
+            })
+        })
+
+        //$.ajax({
+        //    cache: false,
+        //    type: 'GET',
+        //    dataType: 'json',
+        //    url: "/PlanVigilancia/RemovePV?planVigilanciaId=" + id,
+        //    success: function (json) {
+
+        //    },
+        //    error: function (error) {
+        //        console.log(error)
+        //    },
+
+        //})
+    }
+</script>

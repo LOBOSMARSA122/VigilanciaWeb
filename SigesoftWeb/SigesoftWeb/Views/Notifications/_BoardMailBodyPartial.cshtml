@@ -1,0 +1,285 @@
+﻿
+@{
+    /**/
+    var Organizations = ViewBag.USER.Organizations;
+    int Take = 0;
+    int Total = 0;
+    int Primer = 0;
+    int Ultimo = 0;
+    int Index = 0;
+
+    if (ViewBag.Notifications != null && ViewBag.Notifications.list.Count != 0)
+    {
+        Take = ViewBag.Notifications.Take;
+        Index = ViewBag.Notifications.Index;
+        Total = ViewBag.Notifications.TotalRecords;
+        Primer = ((Index - 1) * Take) + 1;
+        Ultimo = Primer + (ViewBag.Notifications.list.Count - 1);
+
+        Primer = Primer < 0 ? 0 : Primer;
+        Ultimo = Ultimo < 0 ? 0 : Ultimo;
+    }
+    else
+    {
+        Take = 0;
+    }
+}
+
+<style>
+    .pendRevisar {
+        font-size: 0.8rem;
+    }
+
+    .ant-badge-status-dot {
+        width: 6px;
+        height: 6px;
+        display: inline-block;
+        border-radius: 50%;
+        vertical-align: middle;
+        position: relative;
+        top: -1px;
+    }
+
+    .text1, .text2, .text3, .text4 {
+        font-size: 0.7em;
+    }
+
+    .text1 {
+        color: #808080;
+    }
+
+    .text2 {
+        color: #FF0000;
+    }
+
+    .text3 {
+        color: #0af332;
+    }
+
+    .text4 {
+        color: #FF0000;
+    }
+
+    .ant-badge-status-BAJA {
+        background-color: white;
+    }
+
+    .ant-badge-status-EMO {
+        background-color: #FF0000;
+    }
+
+    .ant-badge-status-PENDINGCONTROLS {
+        background-color: #0af332;
+        padding-right: 5px;
+    }
+</style>
+<head>
+    <script>
+        function imprime(el) {
+            var restorepage = document.body.innerHTML;
+            var print = document.getElementById(el).innerHTML;
+            document.body.innerHTML = print;
+
+            document.body.style.margin = "10mm 15mm 10mm 15mm";
+            window.print();
+            document.body.innerHTML = restorepage;
+        }
+    </script>
+</head>
+
+<div class="container-fluid mt-4" style="padding:0px;">
+    <div class="box box-default mt-2" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;" onclick="ColapseTable('Table','heightTable')"><i class="icon-list-numbered"></i> Listado de Notificaciones </h3>
+        </div>
+    </div>
+</div>
+<input id="heightTable" type="hidden" value="">
+<div id="Table" style="overflow:hidden">
+    <div>
+        <span class="informacion mr-md-5">Mostrando desde N° @Primer hasta @Ultimo de un total de @Total entradas</span>
+        <div class="float-lg-right informacion">
+            Total de registros:
+            <select id="take" onchange="Filter(1)">
+                <option value="10" @(Take == 10 ? "selected" : "")>10</option>
+                <option value="25" @(Take == 25 ? "selected" : "")>25</option>
+                <option value="50" @(Take == 50 ? "selected" : "")>50</option>
+                <option value="0" @(Take == 0 ? "selected" : "")>TODOS</option>
+            </select>
+        </div>
+    </div>
+    <div class="box box-info mt-2">
+        <div class="table-responsive">
+            <table class="table table-hover" id="TablaAExportar" style="text-align:left">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" value="1" id="allNotificationId">
+                                <label class="custom-control-label" for="allNotificationId"></label>
+                            </div>
+                        </th>
+                        <th class="d-none">PersonId</th>
+                        <th>Empresa</th>
+                        <th>F. Envío</th>
+                        <th>Tipo Notificación</th>
+                        <th>Trabajador</th>
+                        <th>Estado</th>
+                        <th>Leído</th>
+                        <th>Título</th>
+                        <th>Mensaje</th>
+                    </tr>
+                </thead>
+                <tbody id="body-notifications">
+                    @{
+                        if (ViewBag.Notifications == null)
+                        {
+                            <tr><td colspan="9" class="text-center">Error al conectarse al servidor</td></tr>
+                        }
+                        else if (ViewBag.Notifications.list.Count == 0)
+                        {
+                            <tr><td colspan="9" class="text-center">No hay resultados</td></tr>
+                        }
+                        else
+                        {
+                            foreach (var item in ViewBag.Notifications.list)
+                            {
+
+                                <tr class="">
+                                    <td>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input checkbox-rows" value="1" id="@item.NotificationId">
+                                            <label class="custom-control-label" for="@item.NotificationId"></label>
+                                        </div>
+                                    </td>
+                                    <td class="d-none">@item.PersonId</td>
+                                    <td>@item.Organization</td>
+                                    <td>@item.NotificationDate</td>
+                                    <td>@item.TypeNotification</td>
+                                    <td>@item.Worker</td>
+                                    <td>@item.StateNotification</td>
+                                    <td>@item.Read</td>
+                                    <td class="ColumnNoWrap">@item.Title</td>
+                                    <td class="ColumnNoWrap">@item.Body</td>
+                                </tr>
+                            }
+                        }
+                    }
+
+                </tbody>
+            </table>
+            <div class="paginacion-tabla d-flex justify-content-center">
+                <nav class="col-12 d-flex justify-content-center">
+                    <ul class="pagination">
+                        @{
+                            if (Index > 1)
+                            {
+                                <li class="page-item" onclick="Filter(@(Index - 1))">
+                                    <span class="page-link" aria-hidden="true"><i class="text-info fas fa-caret-left"></i></span>
+                                </li>
+                            }
+                            int pagina = 0;
+                            if (Take > 0)
+                            {
+                                for (int i = 0; i < Total; i = i + Take)
+                                {
+                                    pagina++;
+                                    if ((pagina > (Index - 5)) && pagina < (Index + 5))
+                                    {
+                                        <li @(pagina == Index ? "class=pagination-active" : "onclick=Filter(" + pagina + ")")><span class="page-link" aria-hidden="true">@pagina</span></li>
+                                    }
+
+
+                                }
+                            }
+                            if (pagina > Index)
+                            {
+                                <li class="page-item" onclick="Filter(@(Index + 1))">
+                                    <span class="page-link" aria-hidden="true"><i class="text-info fas fa-caret-right"></i></span>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row w-100 m-0 p-0 mb-3">
+    <div class="col-12 p-0 mt-4 d-flex justify-content-between">
+        <button class="btn btn-success" id="re-notify">Volver a notificar</button>
+        <button class="btn btn-info" id="schedule-notification" data-toggle="modal" data-target="#modalProgramarNotificacion">Programar notificación</button>
+    </div>
+</div>
+<!--Modal-->
+<div class="modal fade" tabindex="-1" id="modalProgramarNotificacion" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">NOTIFICACIÓN</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>Empresa:</label>
+                <select class="custom-select" id="organizationid-modal">
+                    @{
+                        foreach (var item in Organizations)
+                        {
+                            <option value="@item.OrganizationId">@item.Name</option>
+                        }
+                    }
+                </select>
+                <label class=" mt-3">Tipo Notificación:</label>
+                <select class="custom-select" id="type-notification-modal">
+                    @{
+                        foreach (var item in ViewBag.NotificationType)
+                        {
+                            <option value="@item.Id">@item.Value</option>
+                        }
+                    }
+                </select>
+                <div class="custom-control mt-3 custom-checkbox mr-sm-2">
+                    <input type="checkbox" class="custom-control-input" value="1" id="programFechEnvio">
+                    <label class="custom-control-label" for="programFechEnvio">Programar fecha de envío.</label>
+                </div>
+                <input type="text" class="form-control mt-2 d-none" value="" id="progFechEnvio" />
+                <div class="mt-3 d-none" id="cont-fech-cita">
+                    <label>Fecha de cita</label>
+                    <input type="text" id="fechCita-prog-notification" class="form-control" value="" />
+                </div>
+                <div class="mt-3">
+                    <label>Título</label>
+                    <input type="text" id="title-prog-notification" class="form-control" data-validation-input="string" data-length="5-30" data-message="Debe ingresar al menos 5 caracteres" />
+                </div>
+                <div class="mt-3">
+                    <label>Mensaje</label>
+                    <textarea id="body-prog-notification" class="form-control" style="resize:none" rows="3" data-validation-input="string" data-length="5-30" data-message="Debe ingresar al menos 5 caracteres"></textarea>
+                </div>
+                <div id="cont-archivo" class="d-none mt-3">
+                    <label class="mt-3">Archivo</label>
+                    <div class="custom-file">
+                        <input type="file" accept="image/jpeg, image/png" class="custom-file-input" id="fileCampSalud">
+                        <label class="custom-file-label" for="fileCampSalud">Elegir archivo...</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row w-100 m-0 p-0 justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    <button type="button" class="btn btn-primary" id="send-notification"><i class="fas fa-check"></i></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+

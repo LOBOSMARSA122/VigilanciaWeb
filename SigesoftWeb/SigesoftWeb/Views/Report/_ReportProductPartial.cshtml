@@ -1,0 +1,200 @@
+﻿@{
+    Dictionary<string, float> Chart1 = new Dictionary<string, float>();
+
+    List<string> NameProduct = new List<string>();
+    List<string> TotalStockProducts = new List<string>();
+
+    int Take = 0;
+    int Total = 0;
+    int Primer = 0;
+    int Ultimo = 0;
+    int Index = 0;
+
+    if (ViewBag.REGISTROSPROD != null)
+    {
+        Take = ViewBag.REGISTROSPROD.Take;
+        Index = ViewBag.REGISTROSPROD.Index;
+        Total = ViewBag.REGISTROSPROD.TotalRecords;
+        Primer = ((Index - 1) * Take) + 1;
+        Ultimo = Primer + (ViewBag.REGISTROSPROD.List.Count - 1);
+
+        Primer = Primer < 0 ? 0 : Primer;
+        Ultimo = Ultimo < 0 ? 0 : Ultimo;
+    }
+    else
+    {
+        Take = 0;
+    }
+}
+
+<style>
+    .BigData {
+        color: #e85b13;
+        font-size: 56px;
+        font-weight: bolder;
+    }
+
+    .SmallData {
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0px 20px;
+    }
+</style>
+<div class="container-fluid" style="padding:0px;">
+    <div class="box box-default mt-2" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;" onclick="ColapsarTabla('table-responsive')"><i class="icon-list-numbered"></i> Reporte </h3>
+        </div>
+    </div>
+</div>
+<div>
+    <span class="informacion">Mostrando desde N° @Primer hasta @Ultimo de un total de @Total entradas</span>
+    <div class="float-lg-right informacion">
+        Total de registros:
+        <select id="take" onchange="Filtrar(1)">
+            <option value="10" @(Take == 10 ? "selected" : "")>10</option>
+            <option value="25" @(Take == 25 ? "selected" : "")>25</option>
+            <option value="50" @(Take == 50 ? "selected" : "")>50</option>
+            <option value="0" @(Take == 0 ? "selected" : "")>TODOS</option>
+        </select>
+    </div>
+</div>
+<div class="container-fluid p-0">
+    <div class="row contReportProduct box-info m-0 p-0">
+        <div class="col-12 col-md-6 ">
+            <div class="table-responsive">
+                <table class="table table-hover" id="TablaAExportar">
+                    <thead>
+                        <tr>
+                            <th>Productos</th>
+                            <th>Categorias</th>
+                            <th>Stock Productos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @{
+
+                        for (int i = 0; i < ViewBag.REGISTROSPROD.List.Count; i++)
+                        {
+                            var a = ViewBag.REGISTROSPROD.List[i].StockActual;
+                            var b = ViewBag.REGISTROSPROD.List[i].ProductName;
+                            var c = ViewBag.REGISTROSPROD.List[i].Category;
+
+                            Chart1.Add(ViewBag.REGISTROSPROD.List[i].ProductName, a);
+
+                            <tr>
+                                <td>@b</td>
+                                <td>@c</td>
+                                <td class="text-center">@a</td>
+                            </tr>
+                    }
+                    NameProduct = Chart1.OrderByDescending(x => x.Value).Select(x => x.Key).ToList();
+                    TotalStockProducts = Chart1.OrderByDescending(x => x.Value).Select(x => x.Value.ToString()).ToList();
+
+                        }
+                    </tbody>
+                </table>
+                <div class="paginacion-tabla d-flex justify-content-center">
+                    <div>
+                        <ul class="pagination">
+                            @{
+                            if (Index > 1)
+                            {
+                                <li class="page-item" onclick="Filtrar(@(Index - 1))">
+                                    <span class="page-link" aria-hidden="true">Anterior</span>
+                                </li>
+                        }
+                        int pagina = 0;
+                        if (Take > 0)
+                        {
+                            for (int i = 0; i < Total; i = i + Take)
+                            {
+                                pagina++;
+                                if ((pagina > (Index - 5)) && pagina < (Index + 5))
+                                {
+                                    <li @(pagina == Index ? "class=pagination-active" : "onclick=Filtrar(" + pagina + ")")><span class="page-link" aria-hidden="true">@pagina</span></li>
+                            }
+
+                        }
+                    }
+                    if (pagina > Index)
+                    {
+                        <li class="page-item" onclick="Filtrar(@(Index + 1))">
+                            <span class="page-link" aria-hidden="true">Siguiente</span>
+                        </li>
+                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 m-0 p-0 " id="reporte1 " style="width:49%">
+            <div id="chart1" class="chart table-responsive"></div>
+        </div>
+    </div>
+</div>
+
+
+@{
+    <script>
+        function Load() {
+            Highcharts.chart('chart1', {
+                chart: {
+                    type: 'column',
+                    options3d: {
+                        enabled: true,
+                        alpha: 10,
+                        beta: 15,
+                        depth: 100
+                    }
+                },
+                title: {
+                    text: 'Gráfico de Productos por almacén stock'
+                },
+                subtitle: {
+                    text: ''
+                },
+                plotOptions: {
+                    column: {
+                        depth: 100,
+                        colorByPoint: true
+                    },
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y:.1f}'
+                        }
+                    }
+                },
+                tooltip: {
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span><b>{point.y:.2f}</b><br/>'
+                },
+                xAxis: {
+
+                    categories: ['@Html.Raw(string.Join("','", NameProduct))'],
+                    labels: {
+                        skew3d: true,
+                        style: {
+                            fontSize: '16px'
+                        }
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Stock'
+                    }
+                },
+                series: [{
+                    name: 'Mostrar',
+                    data: [@Html.Raw(string.Join(",", TotalStockProducts))]
+                }]
+            });
+        };
+
+    </script>
+}
+
+

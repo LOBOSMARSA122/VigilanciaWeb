@@ -1,0 +1,74 @@
+﻿
+<style>
+    .ColumnNoWrap {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+</style>
+    <div class="table-responsive" id="TableSummary">
+        <table class="table table-hover"  style="text-align:center">
+            <thead>
+                <tr>
+                    <th>Dx</th>
+                    <th>Aptitud</th>
+                    <th>Recomendaciones</th>
+                    <th>Restricciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="ColumnNoWrap">HIPOACUSIA MIXTA BILATERAL MODERADA</td>
+                    <td class="ColumnNoWrap">Apto</td>
+                    <td class="ColumnNoWrap">ANTES DE CONDUCIR, DUERMA UN MÍNIMO DE 7 HORAS Y EVITE CONDUCIUR DESPUÉS DE UNA JORNADA DE TRABAJO.</td>
+                    <td class="ColumnNoWrap">EVITAR EL CONSUMO DE BEBIDAS HELADAS</td>
+                </tr>
+                <tr>
+                    <td class="ColumnNoWrap">TRAUMA ACÚSTICO LEVE BILATERAL</td>
+                    <td class="ColumnNoWrap">Apto con Restricción</td>
+                    <td class="ColumnNoWrap">SE LE RECOMIENDA REDUCIR SU PESO CON LA AYUDA DE UNA DIETA RICA EN FIBRAS (FRUTAS Y VERDURAS) Y BAJA EN GRASAS Y CARBOHIDRATOS (HARINAS), ADEMÁS DE REALIZAR ACTIVIDAD FÍSICA AERÓBICA,  EDITAR</td>
+                    <td class="ColumnNoWrap">EN CASO DE PERSISTIR CON LAS MOLESTIAS DE INCONTINENCIA URINARIA SE LE RECOMIENDA UNA EVALUACIÓN POR GINECOLOGÍA.</td>
+                </tr>
+                <tr>
+                    <td class="ColumnNoWrap">CRISTALURIA (CRISTALES DE URATOS AMORFOS EN ORINA)</td>
+                    <td class="ColumnNoWrap">Apto con observaciones</td>
+                    <td class="ColumnNoWrap">SE LE RECOMIENDA CONTROL DE LA PRESIÓN ARTERIAL (LUEGO DE ESTAR SENTADO POR LO MENOS 5 A 10 MINUTOS Y SIN HABER COMIDO).</td>
+                    <td class="ColumnNoWrap">TIENE RESTRICCION PARA LABORAR EN TRABAJOS QUE IMPLIQUE DISCRIMINACION DE COLORES (MANEJO DE CABLES, FIBRA OPTICA, ETC)</td>
+                </tr>
+
+                @*@{
+            if (ViewBag.Pacients == null)
+            {
+                <tr><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+            }
+            else if (ViewBag.Pacients.List.Count == 0)
+            {
+                <tr><td colspan="7" class="text-center">No hay resultados</td></tr>
+            }
+            else
+            {
+                foreach (var item in ViewBag.Pacients.List)
+                {
+                    <tr>
+                        <td>ALberto Merchan Cosme</td>
+                        <td>Masculino</td>
+                        <td>Sede 1</td>
+                        <td>Área 1</td>
+                        <td>Programador</td>
+                        <td>GES 1</td>
+                    </tr>
+                }
+            }
+        }*@
+            </tbody>
+        </table>
+    </div>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/Alert.js"></script>
+<script src="~/Scripts/TweenMax.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+<link href="~/Content/css/fontello.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/css/Alert.css" rel="stylesheet" type="text/css" />
+<script>
+
+
+</script>

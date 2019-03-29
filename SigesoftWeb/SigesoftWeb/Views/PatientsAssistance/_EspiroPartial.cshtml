@@ -1,0 +1,92 @@
+﻿
+
+
+<div class="" id="reporte11" style="width:100%">
+    <div id="chartEspiro" class="chart table-responsive"></div>
+</div>
+
+@{
+
+    if (Request.Browser.Browser == "IE" && Convert.ToDouble(Request.Browser.Version) < 9.0)
+    {
+    }
+    else
+    {
+        <script>
+            function LoadCvf(data) {
+                var EspirosDate = [];
+                var Espiros = [];
+
+                for (let i = 0; i < data.Espiros.length; i++) {
+                    Espiros.push(parseFloat(data.Espiros[i].y));
+                    EspirosDate.push(data.Espiros[i].Date);
+
+                };
+
+            Highcharts.chart('chartEspiro', {
+
+                title: {
+                    text: 'Historial'
+                },
+
+                subtitle: {
+                    text: ''
+                },
+
+                yAxis: {
+                    title: {
+                        text: ''
+                    }
+                },
+                legend: {
+                    layout: 'horizontal',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                plotOptions: {
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        },
+                        //pointStart: '2018-10-07'
+                    }
+                },
+                xAxis: {
+
+                    categories: EspirosDate,
+                    labels: {
+                        skew3d: true,
+                        style: {
+                            fontSize: '16px'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'CVF',
+                    data: Espiros,
+                }],
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+
+            });
+
+            }
+            
+        </script>
+    }
+}
+

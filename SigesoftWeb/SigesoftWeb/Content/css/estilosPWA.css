@@ -1,0 +1,1305 @@
+﻿
+.alertBack {
+    padding: 10px 18px 10px 10px !important;
+    border-radius: 3px 3px 3px 3px;
+    transition: all 1s;
+}
+
+.back-danger {
+    background: #f56954;
+    border-left: 5px #d8513c solid;
+}
+
+.back-success {
+    background: #00a65a;
+    border-left: 5px #008749 solid;
+}
+
+.back-info {
+    background: #00c0ef;
+    border-left: 5px #009bc1 solid;
+}
+
+.back-warning {
+    background: #f39c12;
+    border-left: 5px #cc810c solid;
+}
+/*LOGIN*/
+.d-none{
+    display: none !important;
+}
+.contenedor-login {
+    opacity: 0;
+}
+.img-fondo {
+    border-radius: 6px !important;
+}
+.reci-notification {
+    width: 35px !important;
+    height: 35px !important;
+}
+.view-notification {
+    width: 32px !important;
+    height: 32px !important
+}
+.content-container {
+    position: relative !important;
+    background-color: #fff;
+    height: 640px;
+    width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+.copyright{
+    position: absolute;
+    bottom:20px;
+
+}
+.cuerpo-fondo, .cuerpo-login {
+    position: absolute;
+    top: 0;
+
+    height: 640px !important;
+    width: 360px !important;
+}
+
+    .cuerpo-login > .logo {
+        position: absolute;
+        margin-top: 83px;
+        width: 103.31px;
+        height: 103.31px;
+        border-radius: 50%;
+        background: #FFFFFF;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+    }
+
+        .cuerpo-login > .logo > span {
+            width: 90.96px;
+            height: 50.53px;
+            font-family: Lato;
+            font-style: normal;
+            font-weight: normal;
+            line-height: normal;
+            font-size: 28px;
+            text-align: center;
+            color: #0D9BB7;
+        }
+.logo-omega {
+    width: 80px;
+    height: 80px;
+    border-radius: 14%;
+    background: #FFFFFF;
+    -moz-border-radius: 14%;
+    -webkit-border-radius: 14%;
+}
+    .cuerpo-login > .formulario {
+        position: absolute;
+        margin-top: 223.25px;
+        width: 306.05px;
+        height: 255.81px;
+        background: #FFFFFF;
+        box-shadow: 0px 4px 10px rgba(44, 61, 94, 0.16);
+        border-radius: 6px;
+        padding: 11.88px 20.01px 20.01px 20.01px;
+    }
+
+        .cuerpo-login > .formulario > label {
+            width: 179.06px;
+            height: 23.75px;
+            font-family: Lato;
+            font-style: normal;
+            font-weight: 300;
+            line-height: normal;
+            font-size: 15px;
+            color: #9B9B9B;
+        }
+
+
+.input-usuario {
+    width: 265.86px !important;
+    height: 38.37px !important;
+    padding-left: 25px !important;
+    background: #E3EEF5 !important;
+    opacity: 0.45 !important;
+    border: 1px solid #0D9BB7 !important;
+    box-sizing: border-box !important;
+    border-radius: 4px !important;
+}
+
+    .input-usuario:focus {
+        border-radius: 4px !important;
+        border: 1px solid #45CFEA !important;
+    }
+
+.input-contraseña {
+    width: 265.86px !important;
+    height: 38.37px !important;
+    padding-left: 25px !important;
+    background: #E3EEF5 !important;
+    opacity: 0.45 !important;
+    border-radius: 4px !important;
+    margin-bottom: 43.85px !important;
+}
+
+    .input-contraseña:focus {
+        border: 1px solid #45CFEA !important;
+        border-radius: 4px !important;
+    }
+
+.btn-inicio {
+    width: 265.86px;
+    height: 38.37px;
+}
+
+.div-olvi-contra {
+    position: absolute;
+    margin-top: 496.42px;
+}
+
+    .div-olvi-contra > label {
+        cursor: pointer;
+        font-family: Lato;
+        font-style: normal;
+        font-weight: normal;
+        line-height: normal;
+        font-size: 14px;
+        text-align: center;
+        color: #FFFFFF;
+    }
+
+        .div-olvi-contra > label:hover .border {
+            border-bottom: 1px solid #0D9BB7;
+            ;
+        }
+
+.border {
+    position: absolute;
+    margin-top: 520px;
+    border-bottom: 0.5px solid #fff;
+    opacity: 0.6;
+}
+
+.icon-sesion {
+    height: 16px !important;
+    width: 16px !important;
+    position: absolute;
+    color: #0D9BB7;
+}
+
+.icon-user {
+    left: 53px !important;
+    margin-top: 280px;
+}
+
+.icon-password {
+    left: 53px !important;
+    margin-top: 355px;
+}
+
+/*FIN LOGIN*/
+
+
+/*PERFIL*/
+
+.edit-data{
+    cursor:pointer
+}
+.edit-data:hover {
+    color: black;
+}
+.cont-perfil {
+    z-index: 7;
+    background-color: #FFF;
+}
+
+.header-perfil {
+    position: absolute;
+    width: 100%;
+    height: 116px;
+    top: 0;
+    background: linear-gradient(13.71deg, #01AACC 2.65%, #45CFEA 97.49%);
+}
+
+.cont-header-perfil {
+    position: absolute;
+    width: 100%;
+    height: 116px;
+    background: linear-gradient(13.71deg, #01AACC 2.65%, #45CFEA 97.49%);
+}
+
+    .cont-header-perfil > h2 {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 900;
+        line-height: normal;
+        font-size: 18px;
+        text-align: center;
+        color: #FFFFFF;
+    }
+
+.icon-campana {
+    z-index: 8;
+    position: absolute;
+    font-size: 24px;
+    color: #FFFFFF;
+    right: 6%;
+    cursor: pointer;
+}
+    .icon-campana:active {
+        color: #f4d142 !important;
+    }
+
+.notificaciones {
+    font-size: 1rem;
+    position: absolute;
+    z-index: 7;
+    top: 30px;
+    height: 20px;
+    width: 20px;
+    color: #FFFFFF;
+    right: 5%;
+    background: #FF0202;
+    border-radius: 50%;
+}
+.cerrar-sesion {
+
+    z-index: 8;
+    position: absolute;
+    font-size: 24px;
+    color: #db3939;
+    left: 6%;
+    cursor: pointer;
+}
+.perfil-photo {
+    background-color: #fff;
+    top: 13.125%;
+
+    position: absolute;
+    width: 196px;
+    height: 196px;
+    border-radius: 50%;
+    border: 15.89px solid #fff;
+}
+
+.btn-camera {
+    cursor: pointer;
+    position: absolute;
+    top: 35.78%;
+
+    height: 46px;
+    width: 46px;
+    border-radius: 50%;
+    border: 1px;
+    background: #2AC0DE;
+    font-size: 1.3rem;
+    color: #fff;
+}
+.btn-camera > input {
+    cursor: pointer;
+    position: absolute;
+    top: 35.78%;
+    right: 30.278%;
+    height: 46px;
+    width: 46px;
+    border-radius: 50%;
+    border: 1px;
+    background: #2AC0DE;
+    font-size: 1.3rem;
+    color: #fff;
+}
+
+    .btn-camera:focus {
+        outline: none;
+        background-color: #1db3d1;
+    }
+
+.lbl-name-worker {
+    position: absolute;
+    top: 45.15% !important;
+    color: #6F6A6A;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.lbl-name-organization {
+    position: absolute;
+    top: 50.47% !important;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #6F6A6A;
+}
+
+.div-fech-nac {
+    width: 81.39%;
+    height: 3.125%;
+    position: absolute;
+    top: 59.22%;
+    font-family: Roboto;
+    font-size: 0.9rem;
+    color: #a6a3a3;
+}
+
+.div-lugar-nac {
+    width: 81.39%;
+    height: 3.125%;
+    position: absolute;
+    top: 63.75%;
+    font-family: Roboto;
+    font-size: 0.9rem;
+    color: #a6a3a3;
+}
+
+.div-cellphone {
+    width: 81.39%;
+    height: 3.125%;
+    position: absolute;
+    top: 59.22%;
+    font-family: Roboto;
+    font-size: 0.9rem;
+    color: #a6a3a3;
+}
+
+.div-email {
+    width: 81.39%;
+    height: 3.125%;
+    position: absolute;
+    top: 63.75%;
+    font-family: Roboto;
+    font-size: 0.9rem;
+    color: #a6a3a3;
+}
+.div-estado-civil {
+    width: 81.39%;
+    height: 3.125%;
+    position: absolute;
+    top: 68.28%;
+    font-family: Roboto;
+    font-size: 0.9rem;
+    color: #a6a3a3;
+}
+
+
+.btn-cronog-citas {
+    cursor: pointer;
+    width: 94.16666666666667%;
+    height: 6%;
+    border: 0px;
+    top: 94%;
+    position: absolute;
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #fff;
+    background: #C2C2C2;
+    border-radius: 4px;
+}
+
+.btn-edit-datos {
+    cursor: pointer;
+    width: 94.16666666666667%;
+    height: 6.25%;
+    border: 0px;
+    top: 80.03125%;
+    position: absolute;
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #fff;
+    background: #C2C2C2;
+    border-radius: 4px;
+}
+.btn-certificados {
+    cursor: pointer;
+    width: 94.16666666666667%;
+    height: 6.25%;
+    border: 0px;
+    top: 80.03125%;
+    position: absolute;
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #fff;
+    background: #56bc7d;
+    border-radius: 4px;
+}
+.btn-view-notification {
+    cursor: pointer;
+    width: 94.16666666666667%;
+    height: 6.25%;
+    border: 0px;
+    top: 72.96875%;
+    position: absolute;
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #ffff;
+    background: #2DC2DF;
+    border-radius: 4px;
+
+    
+}
+    .btn-view-notification:focus {
+        outline: none;
+    }
+.btn-cance-suscrip {
+    cursor: pointer;
+    width: 94.16666666666667%;
+    height: 6.25%;
+    border: 0px;
+    top: 87.03125%;
+    position: absolute;
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #fff;
+    background: #C2C2C2;
+    border-radius: 4px;
+
+    
+}
+    .btn-cance-suscrip{
+        outline: none;
+    }
+.btn-cronog-citas:focus {
+    outline: none;
+}
+
+.btn-edit-datos:focus {
+    outline: none;
+}
+.btn-certificados:focus {
+    outline: none;
+}
+.perfil-photo-pop {
+    width: 100% !important;
+    height: 50% !important;
+    border-radius: 50%;
+}
+
+.container-photo-pop {
+    background-color: rgba(0,0,0,0.6);
+    top: 13.125%;
+    position: absolute;
+    width: 196px;
+    height: 196px;
+    border-radius: 50%;
+}
+
+.cont-modal-update {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100%;
+    background: rgba(17, 35, 62, 0.45);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    z-index: 20;
+}
+.modal-update {
+    top: 0;
+    opacity: 0;
+    left: auto;
+    position: absolute;
+    z-index: 25;
+    width: 290px;
+    height: auto;
+
+    background: #FFFFFF;
+    border: 1px solid #F2F2F2;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+.lbl-datas {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 17px;
+    font-size: 0.8rem;
+    color: #bdc1c1 !important;
+}
+
+.border-botttom-light {
+    border-bottom: 1px solid #dddddd;
+}
+
+
+
+/*FIN PERFIL*/
+
+/*TOMAR FOTO*/
+
+.btn-add-foto {
+    cursor: pointer;
+    width: 94.16666666666667%;
+    height: 6.25%;
+    border: 0px;
+    top: 77.96875%;
+    position: absolute;
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #ffff;
+    background: #2DC2DF;
+    border-radius: 4px;
+}
+
+.btn-cancelar-foto {
+    cursor: pointer;
+    width: 94.16666666666667%;
+    height: 6.25%;
+    border: 0px;
+    top: 87.03125%;
+    position: absolute;
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #fff;
+    background: #C2C2C2;
+    border-radius: 4px;
+}
+
+
+
+
+/*FIN TOMAR FOTO*/
+
+/*EDITAR DATOS*/
+
+.user-photo {
+    background-color: #fff;
+    top: 13.125%;
+
+    position: absolute;
+    width: 196px;
+    height: 196px;
+    border-radius: 50%;
+
+}
+
+
+.btn-edit-guardar {
+    cursor: pointer;
+    width: 94.16666666666667%;
+    height: 6.25%;
+    border: 0px;
+    top: 77.96875%;
+    position: absolute;
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #ffff;
+    background: #2DC2DF;
+    border-radius: 4px;
+}
+
+.btn-edit-cancelar {
+    cursor: pointer;
+    width: 94.16666666666667%;
+    height: 6.25%;
+    border: 0px;
+    top: 87.03125%;
+    position: absolute;
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #fff;
+    background: #C2C2C2;
+    border-radius: 4px;
+}
+
+.pencil-edit {
+    color: #2AC0DE;
+    font-size:0.8rem;
+}
+
+.edit-fech-nac {
+    top: 55.78%;
+    width: 81.39%;
+    height: 3.125%;
+    position: absolute;
+}
+.edit-fech-nac2 {
+    position: absolute;
+    top: 59.59%;
+    width:82%;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 20px;
+    font-size: 14px;
+    color: #A6A3A3;
+    left: 9.72%;
+
+    border-bottom: 1px solid #2DC2DF;
+}
+.edit-fech-nac2 > label {
+
+    margin-bottom: 1px !important;
+
+}
+.lbl-edit-fech-nac {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 17px;
+    font-size: 0.8rem;
+    color: #2DC2DF;
+}
+
+.cont-modal-edit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100%;
+    background: rgba(17, 35, 62, 0.45);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    z-index: 20;
+}
+
+.modal-photo-edit {
+    top: 0;
+
+    opacity: 0;
+    left: auto;
+    position: absolute;
+    z-index: 25;
+    width: 290px;
+    height: 147px;
+    padding: 13px 15px 13px 15px !important;
+    background: #FFFFFF;
+    border: 1px solid #F2F2F2;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.lbl-edit-cancelar {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    text-align: center;
+    color: #A6A3A3;
+    cursor: pointer;
+}
+.lbl-edit-Guardar {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    text-align: center;
+    color: #2AC0DE ;
+    cursor: pointer;
+}
+.icon-mas, .icon-basura{
+    height: 46px;
+    width: 46px;
+    border-radius: 50%;
+    font-size: 2rem;
+    color: #fff;
+}
+
+.icon-mas {
+    background: #C2C2C2;
+    font-size: 2rem !important;
+    color: #fff !important;
+    margin-bottom: 0px !important;
+
+}
+
+.icon-basura {
+    background: #CBEBF2;
+    
+}
+.icon-mas:active {
+    background: #8c8c8c;
+}
+
+.icon-basura:active {
+    background: #78d8ed;
+}
+
+.css-nuevo {
+    margin-left: 25px !important;
+}
+
+.css-eliminar {
+    margin-right: 25px !important;
+}
+
+.css-nuevo > label {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 21px;
+    font-size: 14px;
+    color: #A6A3A3;
+}
+
+.css-eliminar > label {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 21px;
+    font-size: 14px;
+    color: #A6A3A3;
+}
+.botones-edit-photo > label {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    text-align: center;
+
+    margin-right: 20px !important;
+    margin-top: 10px !important;
+}
+.disabled {
+    color: #A6A3A3 !important;
+}
+#modal-photo-edit {
+
+    height: 170px !important;
+
+}
+
+/*FIN EDITAR DATOS*/
+/*CONTENEDOR DE LAS NOTIFICACIONES*/
+.cont-notification {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    width: 0px;
+    height: 100%;
+}
+.fondo-notification {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 12;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+.list-notification {
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 15;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    background-color: #fff;
+}
+    .list-notification::-webkit-scrollbar {
+        max-width: 0px;
+        max-height: 0px;
+    }
+
+
+    .list-notification::-webkit-scrollbar {
+        max-width: 0px;
+        max-height: 0px;
+    }
+.header-list-notification {
+    position: relative;
+    background: linear-gradient(9.32deg, #01AACC 2.65%, #45CFEA 97.49%);
+    color: white;
+    height: 13.59% !important;
+    width: 100% !important;
+}
+#iconUp, #iconDown {
+    position: absolute;
+    color: #a8a6a6;
+    font-size:1.4rem;
+    left: calc((100% / 2) - 2px);
+}
+#iconUp {
+    top: 13.9%;
+}
+#iconDown {
+    top: 95%;
+}
+.body-list-notifications {
+    position: relative;
+    background: #fff;
+    height: 86.41%;
+    overflow-y: scroll;
+    width: 100% !important;
+}
+    .body-list-notifications::-webkit-scrollbar {
+        max-width: 0px;
+        max-height: 0px;
+    }
+
+
+    .body-list-notifications::-webkit-scrollbar {
+        max-width: 0px;
+        max-height: 0px;
+    }
+.title-notification {
+    position: absolute;
+    height: 29px;
+    left: 26.85%;
+    right: 26.85%;
+    top: 56.3%;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    font-size: 18px;
+    text-align: center;
+    color: #fff;
+}
+.arrow {
+    cursor: pointer;
+    position: absolute;
+    left: 14px;
+    top: 56.3%;
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+.notification {
+    padding-left: 58px;
+    position: relative;
+    width: 100%;
+    height: auto;
+    background: #E9EFFA;
+    opacity: 0.65;
+    border-bottom: 1px solid #c0c1c4;
+}
+    .notification:hover {
+        opacity: 0.85;
+        cursor:pointer
+    }
+.read {
+    background: #fff !important;
+}
+.icon-reloj {
+    position: absolute;
+    left: 15px;
+    top: 9.4%;
+    font-size: 1.5rem;
+    color: #37C7E3;
+}
+.cont-lbl-notifi{
+    width: 100%;
+
+}
+    .cont-lbl-notifi > label {
+        font-size: 0.9rem;
+        color: #333333;
+        font-family: Roboto;
+        margin-bottom: 2px;
+    }
+
+.lbl-ingr-vigi {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    font-size: 15px;
+    color: #333333;
+}
+.btn-view-datail {
+    margin-top: 3px;
+    cursor: pointer;
+    height: 29px;
+    width: 90px;
+    background: #02b5d8;
+    border-radius: 4px;
+    outline: none;
+    border: 0px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    font-size: 14px;
+    text-align: center;
+    color: #FFFFFF;
+}
+.btn-view-datail:focus {
+    outline: none;
+}
+    .btn-view-datail:active {
+        background: #0a87ad;
+    }
+
+
+/*FIN NOTIFICATION*/
+
+
+
+
+/*INICIO VIGILANCIA*/
+
+.cont-vigilancia {
+    background-color: #fff;
+    
+}
+
+.title-vigilancia {
+    position: relative;
+    background: linear-gradient(9.32deg, #01AACC 2.65%, #45CFEA 97.49%);
+    height: 12.1875%;
+    width: 100%;
+}
+    .title-vigilancia > label {
+        position: absolute;
+        left: 16.67%;
+        right: 16.67%;
+        top: 55.1%;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 900;
+        line-height: normal;
+        font-size: 18px;
+        text-align: center;
+        color: #FFFFFF;
+    }
+    .title-vigilancia > i {
+        position: absolute;
+        left: 6.39%;
+        right: 86.94%;
+        top: 58.9%;
+        font-size: 24px;
+        color: #FFFFFF;
+    }
+
+.detail-vigilancia {
+    position: absolute;
+    left: 28px;
+    height: auto;
+    width: calc(100% - 38px);
+}
+
+.detail-vigilancia {
+    top: 15.3%;
+}
+
+.cont-estado-vigi {
+    position: absolute;
+    top: 20.3%;
+    left: 28px;
+}
+.lbl-vig-estado {
+    position: absolute;
+    top: 23.3%;
+}
+.lbl-vig-estado2 {
+    position: absolute;
+    top: 26.3%;
+}
+.lbl-vig-estado3 {
+    position: absolute;
+    top: 29.3%;
+}
+.lbl-vig-estado3 {
+    position: absolute;
+    top: 32.3%;
+}
+.cont-lbl {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 21px;
+    font-size: 14px;
+    color: #A6A3A3;
+    position: static;
+    width: 100%;
+    height: auto;
+}
+#body-detail {
+    width: calc(100% - 38px);
+    height: auto !important;
+    position:static;
+}
+/*.dats > .lbl-vig-estado {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 21px;
+    font-size: 14px;
+    color: #A6A3A3;
+}*/
+/*.dats > .lbl-badge > span {
+    background: #FF7373 !important;
+    color: #A6A3A3;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    font-size: 10px;
+    color: #FFFFFF;
+}*/
+
+.comentario {
+    position: absolute;
+    top: 55.81%;
+    left: 28px;
+    width:calc(100% - 55px);
+    background: #FFFFFF;
+
+    border-radius: 4px;
+}
+    .comentario > label {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        line-height: normal;
+        font-size: 15px;
+        text-align: justify;
+        color: #888888;
+    }
+
+.boton {
+    position: absolute;
+    left: 10px;
+    width: calc(100% - 20px);
+    border-radius: 4px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 900;
+    line-height: normal;
+    font-size: 16px;
+    text-align: center;
+    color: #fff;
+    height: 40px;
+    border:0;
+}
+
+.btn-confirmar {
+    top: 64.71%;
+    background: #2DC2DF;
+}
+
+.btn-reagendar {
+    top: 73.78%;
+    background: #C2C2C2;
+}
+
+.cont-modal, .cont-modal-unsubscri {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100%;
+    background: rgba(17, 35, 62, 0.45);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    z-index: 20;
+}
+
+.modal-agendar {
+    top: 0;
+    /*top: calc((100% /2) - (147px / 2));*/
+    opacity: 0;
+    left: auto;
+    position: absolute;
+    z-index: 25;
+    width: 290px;
+    height: 147px;
+    padding: 13px 15px 13px 15px !important;
+    background: #FFFFFF;
+    border: 1px solid #F2F2F2;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+.modal-unsubscrib {
+    top: 0;
+    opacity: 0;
+    left: auto;
+    position: absolute;
+    z-index: 25;
+    width: 290px;
+    height: 172px;
+    background-color: #db8b0b;
+    box-sizing: border-box;
+}
+.cont-body-unsubscri {
+    background-color: #f39c12;
+    border-bottom: 1px #d18308 solid;
+    border-top: 1px #d18308 solid;
+}
+.title-unsubscrib {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    font-size: 15px;
+    padding-bottom: 3px;
+    text-align: justify;
+    color: #fff;
+    width: 100%;
+}
+.body-unsubscrib label{
+    color: #fff
+}
+
+.title-reagendar {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    font-size: 15px;
+    padding-bottom: 3px;
+    text-align: justify;
+    color: #888888;
+    width: 100%;
+    border-bottom: 0.5px solid #E5E5E5;
+}
+
+.cont-date {
+    margin-top: 20px;
+}
+    .cont-date > label {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 21px;
+        font-size: 14px;
+        color: #A6A3A3;
+        border-bottom: 0.5px solid #E5E5E5;
+    }
+.botones-agendar {
+    margin-top: 25px;
+    
+}
+.botones-agendar:focus {
+    margin-top: 25px;
+    outline: none;
+}
+    .botones-agendar > label {
+        margin-left: 20px;
+        cursor: pointer !important;
+    }
+
+.lbl-agenda-reagendar {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: #2DC2DF;
+}
+.lbl-agenda-cancelar {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: #B1AEAE;
+}
+.lbl-agenda-cancelar:active {
+    color: black;
+}
+
+/*FIN VIGILANCIA*/
+/*CERTIFICADOS*/
+.cont-certificados {
+    z-index: 5;
+}
+
+.detail-certificados {
+    position: absolute;
+    left: 28px;
+    height: auto;
+    width: 100%;
+}
+
+.detail-certificados {
+    top: 15.3%;
+}
+.lbl-certificados {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 16px;
+    color: #B1AEAE;
+}
+.fa-download {
+    color: green;
+    cursor: pointer;
+    font-size: 1.3rem
+
+}
+    .fa-download:hover {
+        color: #1c4920;
+    }
+/*FIN CERTIFICADOS*/
+
+@media only screen and (max-width: 1023px) {
+    .contenedor-hijo {
+        position: relative !important;
+        overflow: hidden;
+        height: 640px;
+
+    }
+
+    .contenedor {
+        display: flex;
+        padding: 0;
+    }
+    .principal {
+        position: relative !important;
+        width: 100%;
+        height: 640px;
+        margin: auto;
+        overflow: hidden;
+    }
+    #contAlert {
+        position: absolute;
+        top: 10px;
+        right: 0;
+        width: calc((100% / 3) * 2);
+        z-index: 20000;
+    }
+}
+
+@media (min-width: 1024px)  {
+    .contenedor-hijo {
+        position: relative !important;
+        overflow: hidden;
+        height: 640px;
+    }
+
+    .contenedor {
+        display: flex;
+        padding: 0;
+        
+    }
+    .principal {
+        position: relative !important;
+        max-width: 360px;
+        height: 640px;
+        margin: auto;
+        overflow-x: hidden;
+    }
+    #contAlert {
+        position: absolute;
+        top: 10px;
+        right: 0;
+        width: calc((100% / 3) * 2);
+        z-index: 20000;
+    }
+}

@@ -1,0 +1,43 @@
+﻿.has-float-label {
+    margin-left: 15px;
+    position: absolute;
+    /*margin-top: 0.1rem;*/
+    margin-top: -26px;
+    z-index: 1;
+    font-size: 0.9em;
+    color: rgba(0,0,0,0.5);
+    background-color: #fff;
+    transition: all 0.2s;
+}
+.inputLabelFloat {
+    position:relative;
+    z-index: 20;
+    background-color: transparent;
+    margin-top: 10px;
+    height: 30px;
+    font-size: 0.9em;
+}
+    .inputLabelFloat:focus {
+        position:static;
+    }
+    .inputLabelFloat:focus + .has-float-label {
+        margin-top: -42px;
+        font-size: 0.7rem;
+    }
+.static {
+    position: absolute;
+    margin-top: -42px;
+    font-size: 0.7rem;
+    background-color: #fff;
+    z-index: 21;
+}
+.radButton {
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+.labelMotivo{
+    background-color: #fff;
+    position: absolute;
+    top: -12px;
+    font-size: 0.9em;
+}

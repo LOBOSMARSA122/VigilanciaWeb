@@ -1,0 +1,119 @@
+﻿.Chart {
+    height: auto;
+    margin: 10px;
+    box-shadow: 3px 3px 3px #adadad;
+    border: 1px rgba(173, 173,173, 0.1) inset;
+    min-width: 300px;
+}
+
+    .Chart .title {
+        padding-left: 10px;
+        /*padding: 2px;*/
+        color: #3c3c3b;
+        text-align: left;
+        border-bottom: 1px rgba(173, 173,173, 0.5) inset;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .Chart .title:hover {
+        background:rgba(173, 173,173, 0.1);
+    }
+
+    .Chart .info {
+        color: #3c3c3b;
+        font-family: 'Roboto', sans-serif;
+        font-size: 13px;
+        padding: 10px;
+        padding-left: 0px;
+        margin: 1px;
+        border-bottom: 1px rgba(173, 173,173, 0.5) inset;
+        text-align: left;        
+    }
+
+        .Chart .info div {
+            padding-left: 0px;
+        }
+
+        .Chart .info .result {
+            margin-left: 10px;
+        }
+    .Chart .info a{
+        text-decoration:dotted;
+    }
+
+    .Chart div:last-child {
+        border-bottom: none;
+    }
+
+
+
+.contenedor-main {
+    margin-bottom: 20px;
+}
+
+aside {
+    color: #0d47a1;
+}
+
+    aside .notice {
+        /*position: fixed;*/
+        /*margin-right: 15px;*/
+    }
+
+.label-danger,
+.label-info,
+.label-warning,
+.label-success {
+    border-radius: 2px;
+    padding: 2px;
+}
+
+
+
+.prescription {
+    color: #3c3c3b;
+    height: auto;
+    min-height: 200px;
+    margin: 10px;
+    min-width: 300px;
+    border: 1px dashed rgba(173, 173,173, 0.5);
+}
+
+    .prescription .page_header {
+        font-size: 13px;
+        
+    }
+        .prescription .page_header .title {
+            text-decoration:underline;
+        }
+        .prescription .page_header .address {
+            font-size: 10px;
+            text-align:right;
+        }
+
+    .prescription .page_detail{
+        width:100%;
+        padding:0;
+        margin-left:0px;
+        margin-right:0px;
+        border:1px solid red;
+    }
+        .prescription .page_detail .table-bordered th {
+            font-size:8px;
+        }
+
+
+.table-sumary {
+    width:auto;
+}
+    .table-sumary th {
+        color: #3c3c3b;
+        font-size: 10px;
+        text-transform:uppercase;
+    }
+
+    .table-sumary td {
+        text-transform: uppercase;
+        color: #3c3c3b;
+        font-size: 8px;
+    }

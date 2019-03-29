@@ -1,0 +1,102 @@
+﻿@{
+    var base64 = @ViewBag.USER.PersonImage == null ? "" : Convert.ToBase64String(@ViewBag.USER.PersonImage);
+    var imgSrc = base64 != "" ? String.Format("data:image/jpeg;base64,{0}", base64) : "/Content/static/images/foto@default.png";
+    var Organizations = ViewBag.USER.Organizations;
+}
+<style>
+    .js-dropdown-menu {
+
+        padding: 0;
+        top: 40px !important;
+        position: absolute;
+        height: 0px;
+        width: 90%;
+        overflow: hidden;
+        list-style: none;
+    }
+    a:hover{
+        text-decoration: none;
+    }
+
+    .js-drop-down{
+        position:relative;
+    }
+    .lbl-organizacion {
+
+        color: #5e95b9;
+        font-family: 'Roboto', sans-serif;
+        font-size: 13px;
+    }
+</style>
+<header class="fixed-top">
+    <div class="row align-items-center menu">
+        <div class="col-auto align-self-stretch boton-menu ">
+            <a href="#" class="bt-menu" id="first-btn-menu"><span class="text-white"><i class="fas fa-bars"></i></span></a>
+        </div>
+
+        <div class="col logo">
+            <a href="@Url.Content("~/PatientsAssistance")">
+                <span> Módulo de Vigilancia</span>
+            </a>
+        </div>
+        <div class="d-none d-md-block mr-2">
+            <label class="m-0 lbl-organizacion">Organización</label>
+        </div>
+        <div class="d-none d-md-block">
+
+            <select id="cbo-organization" style="height: 35px" class="custom-select">
+                @{
+                    foreach (var item in Organizations)
+                    {
+                        <option value="@item.OrganizationId">@item.Name</option>
+                    }
+                }
+
+            </select>
+        </div>
+        <div class="d-none d-md-block mx-2">
+            <label class="m-0 lbl-organizacion">Almacén</label>
+        </div>
+        <div class="d-none d-md-block">
+
+            <select id="cbo-organizationWarehouse" style="height: 35px" class="custom-select">
+                <option value="-1">--Seleccionar--</option>
+            </select>
+        </div>
+        <div class="d-none d-md-block js-drop-down" onclick="dropdown()">
+
+            <nav class="col ">
+
+                <a href="#" class="imagen">  <img src="@imgSrc" width="35" height="35" /></a>
+                <a href="#" class="nombre-usuario ">Bienvenido: @ViewBag.USER.FullName <i class="fas fa-caret-down"></i></a>
+                <input type="text" class="d-none" id="user-logg" value="@ViewBag.USER.UserName" />
+                <ul class="js-dropdown-menu">
+                    <li class="user-header ">
+                        <div class="text-center d-flex justify-content-end">
+                            <a href="@Url.Content("~/salir")" onclick="setSession()" class="btn btn-danger">Cerrar Sesión</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</header>
+<script>
+    var session = sessionStorage.getItem("organizationId");
+    var second_session = sessionStorage.getItem("warehouseId");
+    if (session != null && session != "" && session != undefined) {
+        document.getElementById("cbo-organization").value = session;
+    }
+    if (second_session != null && second_session != "" && second_session != undefined) {
+        document.getElementById("cbo-organizationWarehouse").value = second_session;
+    }
+    function setSession() {
+        sessionStorage.setItem("organizationId", "");
+        sessionStorage.setItem("warehouseId", "");
+    }
+    document.getElementById('first-btn-menu').addEventListener("click", function () {
+        document.getElementById('wrapper').classList.toggle("active");
+    })
+
+</script>

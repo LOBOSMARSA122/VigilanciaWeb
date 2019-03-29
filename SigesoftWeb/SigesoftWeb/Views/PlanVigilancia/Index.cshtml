@@ -1,0 +1,124 @@
+﻿
+<style>
+    .breadcrumb-1 {
+        font-size: 1.1rem;
+        height: 35px !important;
+        padding: 4px 5px 2px 5px !important;
+        width: 390px !important
+    }
+</style>
+<div class="container-fluid">
+    <nav class="mt-2" aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-1">
+            <li class="breadcrumb-item"><a href="/PatientsAssistance">Servicios Vigilancia</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Plan de vigilancia</li>
+        </ol>
+    </nav>
+    <section>
+        <div class="box box-default mt-2" id="acordion">
+            <div class="box-header with-border" id="heading1">
+                <h3 class="box-title" style="cursor:pointer;" onclick="ColapseTable('divFilter','heightFilter')"><i class="icon-calendar"></i>Bandeja Plan de Vigilancia</h3>
+            </div>
+            <input id="heightFilter" type="hidden" value="">
+            <div id="divFilter" style="overflow:hidden;">
+                <div class="box-body" aria-labelledby="heading1">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="">Nombre</label>
+                                <input type="text" id="Name-PV" class="form-control" maxlength="150" placeholder="Ingrese nombre" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-group">
+                                <label for="" id="filtPaciente" class="d-none d-lg-block" style="visibility: hidden">Filtrar</label>
+                                <button class="btn btn-info boton form-control" onclick="FilterPV(1)">
+                                    <i class="fa fa-search"></i> Filtrar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="container-fluid">
+            <div id="RenderPV" class="wrapperGrid">
+                @Html.Partial("_BoardPlanVigilancia")
+            </div>
+        </div>
+        <div class="row w-100 m-0 p-0 justify-content-end">
+            <div class="col-12 col-md-2">
+                <div class="form-group">
+                    <button class="btn btn-info boton form-control" onclick="location.href='@Url.Action("CreatePlanVigilancia","PlanVigilancia")'">Nuevo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+
+
+<script>
+    $("#cbo-organization").on("change", function () {
+        var id = $("#cbo-organization").val();
+        sessionStorage.setItem("organizationId", id);
+        sessionStorage.setItem("warehouseId", "-1");
+        SetComboAlmacen(id);
+        FilterPV(1);
+    })
+
+    $(document).ready(function () {
+        FilterPV(1);
+    });
+ 
+    
+    function FilterPV(index) {
+
+
+        $('.wrapperGrid').addClass('loadingGrid');
+        var session = sessionStorage.getItem("organizationId");
+        console.log(session);
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+        var data = {
+            Name: $("#Name-PV").val(),
+            OrganizationId: organizationId,
+            Index: index,
+            Take: $("#take").val()
+        };
+
+
+        $.ajax({
+
+            cahe: false,
+            method: 'POST',
+            data: data,
+            dataType: 'html',
+            url: '/PlanVigilancia/FilterPlanVigilancia',
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    $('.wrapperGrid').removeClass('loadingGrid');
+                    $("#RenderPV").html(html);
+                } else {
+                    location.href = "/";
+                }
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+
+        });
+    }
+
+</script>
+
+
+
+
+

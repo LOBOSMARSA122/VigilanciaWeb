@@ -1,0 +1,98 @@
+﻿
+<div id="reportMonthlyCompliance" style="width: 100%">
+    <div id="chartModalMonthlyCompliance" class="chart"></div>
+</div>
+
+@{
+    if (Request.Browser.Browser == "IE" && Convert.ToDouble(Request.Browser.Version) < 9.0)
+    {
+    }
+    else
+    {
+        <script>
+            function ModalMonthlyCompliance(data) {
+                var obj = JSON.parse(data);
+                var controls = obj.DailyControls;
+                var controlsCompleted = obj.DailyControlsCompleted;
+
+                var arrControls = [];
+                var arrControlsCompleted = [];
+
+                var totalControls = 0;
+                var totalControlsCompleted = 0;
+
+                for (var x in controls) {
+                    arrControls.push(parseInt(controls[x].y))
+                    totalControls = totalControls + arrControls[x];
+                }
+
+                for (var x in controlsCompleted) {
+                    arrControlsCompleted.push(parseInt(controlsCompleted[x].y));
+                    totalControlsCompleted = totalControlsCompleted + arrControlsCompleted[x];
+                }
+
+                Highcharts.chart('chartModalMonthlyCompliance', {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    xAxis: {
+                        categories: ['Controles completados', 'Total de controles'],
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: ''
+                        }
+                    },
+                    legend: {
+                        reversed: true
+                    },
+                    plotOptions: {
+                        series: {
+                            shadow: false,
+                            borderWidth: 0,
+                            dataLabels: [{
+                                enabled: true,
+                                inside: true,
+                                enabled: true,
+                                color: 'blue',
+                                formatter: function () {
+                                    var pcnt = (this.y / (totalControls)) * 100;
+                                    return Highcharts.numberFormat(pcnt) + '%';
+                                }
+                            },
+                            {
+                                enabled: true,
+                                inside: false,
+                                format: '({point.y})',
+                                color: 'red'
+                            }],
+                        }
+                    },
+                    series: [{
+                        tspan: false,
+                        pointWidth: 40,
+                        name: '',
+                        colorByPoint: true,
+                        data: [
+                            {
+                                y: totalControlsCompleted,
+                            },
+                            {
+                                y: totalControls,
+                                age: totalControls,
+                            },
+                        ],
+                        showInLegend: false
+
+                    }]
+
+                });
+            }
+        </script>
+    }
+}
+

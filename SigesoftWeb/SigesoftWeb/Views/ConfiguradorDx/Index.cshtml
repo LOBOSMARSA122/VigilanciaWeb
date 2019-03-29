@@ -1,0 +1,280 @@
+﻿<style>
+    #Loading {
+        background-color: rgba(0, 0, 0, 0.60);
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        z-index: 9999;
+    }
+
+        #Loading > img {
+            width: 200px;
+        }
+
+    .pagination-active span {
+        color: #f39c12 !important;
+    }
+</style>
+
+<section class="row w-100 mx-0 mt-3 p-0 justify-content-center">
+    <article class="col-6">
+        <div class="row w-100 m-0 p-0 justify-content-end">
+            <div class="col-12 p-0">
+                <label>Diagnóstico:</label>
+                <input type="text" style="border-radius:0.3rem" class="form-control" id="diagnostic" />
+                <input type="hidden" style="border-radius:0.3rem" class="form-control" id="input-diseasesId" />
+            </div>
+        </div>
+        <div class="row w-100 mx-0 mt-3 p-0 justify-content-end">
+            <div class="col-12 p-0">
+                <label>Medicamento:</label>
+                <input type="text" style="border-radius:0.3rem" class="form-control" id="medicine" />
+                <input type="hidden" style="border-radius:0.3rem" class="form-control" id="input-productId" />
+            </div>
+        </div>
+        <div class="row w-100 mx-0 my-3 p-0 justify-content-end">
+            <div class="col-3 p-0 d-flex justify-content-end">
+                <button class="btn btn-info" id="add-DiagMedicine">Agregar</button>
+            </div>
+        </div>
+        <div class="row w-100 m-0 p-0">
+            <div id="RenderTableConfigDx" class="col-12 p-0">
+                @Html.Partial("_BoardConfigDxPartial")
+            </div>
+            
+            <div class="col-12 p-0 mb-3 d-flex justify-content-end">
+                <button class="btn btn-success" id="save-DiseMedicine">Guardar</button>
+            </div>
+        </div>
+    </article>
+</section>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/Alert.js"></script>
+<link href="~/Content/css/Alert.css" rel="stylesheet" />
+<script>
+    $(document).ready(_ => {
+        $("#take").val(10);
+        Filter(1)
+    })
+
+    const Filter = index => {
+        $("#Table").addClass("loadingGrid");
+        let take = $("#take").val();
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'html',
+            data: { 'index': index, 'take': take },
+            url: '/ConfiguradorDx/GetAllConfigDx',
+            success: html => {
+                $("#RenderTableConfigDx").html(html);
+                $("#Table").removeClass("loadingGrid");
+            },
+            error: error => {
+                $("#Table").removeClass("loadingGrid");
+                console.log(error);
+            }
+        });
+    }
+    $("#medicine").keyup(function () {
+        var value = $(this).val();
+
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: {
+                'value': value,
+            },
+            url: '/ConfiguradorDx/SearchProduct',
+            success: function (json) {
+
+                if (json.length != 0 && json != null) {
+                    var arrayName = [];
+                    var arrayId = [];
+                    var aditionalInfo = [];
+                    for (var i = 0; i < json.length; i++) {
+                        var Getsplit = json[i].split("|");
+                        arrayName.push(Getsplit[0]);
+                        arrayId.push(Getsplit[1]);
+                        aditionalInfo.push(Getsplit[2]);
+                    }
+
+                    $("#medicine").autocomplete({
+                        source: arrayName,
+                        change: function (event, ui) {
+                            val = $(this).val();
+                            exists = $.inArray(val, arrayName);
+                            $("#input-productId").val(arrayId[exists]);
+                        }
+                    });
+                }
+
+            },
+            error: function (error) {
+                console.log("ERROR", error);
+            }
+        });
+
+    });
+
+    $("#diagnostic").keyup(function () {
+        var value = $(this).val();
+
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: {
+                'value': value,
+            },
+            url: '/ConfiguradorDx/SearchDiagnostic',
+            success: function (json) {
+                if (json.length != 0 && json != null) {
+                    var arrayName = [];
+                    var arrayId = [];
+                    var aditionalInfo = [];
+                    for (var i = 0; i < json.length; i++) {
+                        var Getsplit = json[i].split("|");
+                        arrayName.push(Getsplit[0]);
+                        arrayId.push(Getsplit[1]);
+                    }
+
+                    $("#diagnostic").autocomplete({
+                        source: arrayName,
+                        change: function (event, ui) {
+                            val = $(this).val();
+                            exists = $.inArray(val, arrayName);
+                            $("#input-diseasesId").val(arrayId[exists]);
+                        }
+                    });
+                }
+
+            },
+            error: function (error) {
+                console.log("ERROR", error);
+            }
+        });
+
+    });
+
+    $("#add-DiagMedicine").on("click", function () {
+        let diseasesId = $("#input-diseasesId").val();
+        let productId = $("#input-productId").val();
+        if (diseasesId === "" || productId === "") {
+            alertafixed({
+                type: 'warning',
+                class: 'js-error-ids',
+                title: 'Validación',
+                message: 'No hay un diagnóstico o medicamento por agregar.'
+            });
+        } else {
+            if ($("#sin-resultados").length > 0) {
+                $("#sin-resultados").remove();
+            }
+            let diseasesName = $("#diagnostic").val();
+            let productName = $("#medicine").val();
+
+            $("#diseasesId").text(diseasesId);
+            $("#productId").text(productId);
+            var row = `
+                    <tr id="" class="temporal-row" style="cursor:default">
+                        <td class="d-none"></td>
+                        <td class="d-none">${diseasesId}</td>
+                        <td>${diseasesName}</td>
+                        <td class="d-none">${productId}</td>
+                        <td>${productName}</td>
+                        <td>AAA</td>
+                        <td class="text-center"><i style="cursor:pointer" onclick="DeleteRow(this)" class="fas fa-trash-alt"></i></td>
+                        <td class="d-none">2</td>
+                        <td class="d-none" >1</td>
+                    </tr>
+                `;
+            $(row).appendTo($("#body-DiseasesMedicines"));
+
+            $("#diagnostic").val("");
+            $("#medicine").val("");
+            $("#input-diseasesId").val("");
+            $("#input-productId").val("");
+        }
+
+
+    });
+
+    $("#save-DiseMedicine").on("click", function () {
+
+        
+        let arrConfigDxCustom = [];
+
+        var row = $("#body-DiseasesMedicines tr");
+
+        for (let i = 0; i < row.length; i++) {
+            let data = {};
+                data.v_ConfigDxId = row.eq(i).find("td").eq(0).text();
+                data.v_DiseaseId = row.eq(i).find("td").eq(1).text();
+                data.v_ProductId = row.eq(i).find("td").eq(3).text();
+                data.RecordStatus = row.eq(i).find("td").eq(7).text();
+                data.RecordType = row.eq(i).find("td").eq(8).text();
+
+                arrConfigDxCustom.push(data);
+   
+        }
+
+        console.log(arrConfigDxCustom);
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data: { 'configDxCustom': arrConfigDxCustom },
+            url: '/ConfiguradorDx/Save',
+            success: (json) => {
+                if (json) {
+                    alertafixed({
+                        type: 'success',
+                        class: 'js-hecho-ids',
+                        title: 'Hecho',
+                        message: 'Se guardaron los cambios.'
+                    });
+                    for (let i = 0; i < row.length; i++) {
+                        row.eq(i).find("td").eq(7).text(1);
+                        row.eq(i).find("td").eq(8).text(2);
+                        row.eq(i).removeClass("temporal-row");
+                    }
+                    
+                }
+            },  
+            error: (error) => {
+                console.log("ERROR: " , error);
+            },  
+        })
+    });
+
+    function DeleteRow(icon) {
+        var row = $(icon).parent().parent();
+        if (row.hasClass("temporal-row")) {
+            row.remove();
+            if ($("#body-DiseasesMedicines tr").length == 0 ) {
+                var firstRow = `
+                    <tr id="sin-resultados">
+                        <td colspan="6" class="text-center">No hay resultados</td>
+                    </tr>
+                        `;
+                $(firstRow).appendTo($("#body-DiseasesMedicines"));
+            }
+        } else {
+            row.addClass("d-none");
+            row.find("td").eq(7).text(4);
+            row.find("td").eq(8).text(2);
+            if ($("#body-DiseasesMedicines tr").length == 0) {
+                var firstRow = `
+                    <tr id="sin-resultados">
+                        <td colspan="6" class="text-center">No hay resultados</td>
+                    </tr>
+                        `;
+                $(firstRow).appendTo($("#body-DiseasesMedicines"));
+            }
+        }
+    }
+</script>

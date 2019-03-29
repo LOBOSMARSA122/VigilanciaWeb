@@ -1,0 +1,366 @@
+﻿@{
+    var Organizations = ViewBag.USER.Organizations;
+}
+<div class="modal fade  bd-ingreso-egreso-modal-xl" id="ingreso-egreso-modal" tabindex="-1" role="dialog" aria-labelledby="ingreso-egresoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" id="js-content-input-output">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ingreso-egresoLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row w-100 mx-0 row-panel">
+                    <label class="label-panel">Informacion de Note de Ingreso</label>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12 col-sm-3">
+                                <label class="label-sm">Motivo</label>
+                                <select class="custom-select form-control-sm" id="js-motive-movement">
+                                    @{
+                                        foreach (var item in ViewBag.MotiveMovement)
+                                        {
+                                            <option value="@item.Id">@item.Value</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-3" id="cont-proveedor">
+                                <label class="label-sm">Proveedor</label>
+                                <div class="input-group">
+                                    <input id="js-proveedor" data-supplier-id="" disabled type="text" class="form-control form-control-sm" placeholder="Buscar..." aria-label="Buscar..." aria-describedby="btn-view-proveedor">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-outline-info" type="button" id="btn-view-proveedor" data-toggle="modal" data-target=".view-proveedor-modal"><i class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-12 col-sm-2">
+                                <label class="label-sm">Fecha</label>
+                                <input class="form-control form-control-sm" id="fech-ingreso-egreso" type="date" />
+                            </div>
+                            <div class="col-12 col-sm-2">
+                                <label class="label-sm">Doc. Referencia</label>
+                                <input id="js-doc-referencia" class="form-control form-control-sm" type="text" value="" />
+                            </div>
+                            <div class="col-12 col-sm-2">
+                                <label class="label-sm">Procesado</label>
+                                <input style="width: 60px" class="form-control form-control-sm" type="text" disabled value="NO" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row w-100 mx-0 mt-5 row-panel">
+                    <label class="label-panel">Busqueda de Productos / Artículos</label>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12 col-sm-3">
+                                <label class="label-sm">Buscar</label>
+                                <input id="js-buscar" class="form-control form-control-sm" type="text" value="" />
+                            </div>
+                            <div id="cont-producto" class="col-12 col-sm-3">
+                                <label class="label-sm">Producto</label>
+                                <select class="custom-select form-control-sm" id="select-product">
+                                    <option value="-1">--Seleccionar--</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-2">
+                                <label class="label-sm">Cantidad</label>
+                                <input class="form-control form-control-sm" onkeyup="soloEnteros(event, this)" id="js-cant-product" type="text" value="" />
+                            </div>
+                            <div class="col-12 col-sm-2" id="cont-precio">
+                                <label class="label-sm">Precio</label>
+                                <input class="form-control form-control-sm" id="js-price-product" type="number" value="" />
+                            </div>
+                            <div class="col-12 col-sm-2">
+                                <label class="label-sm" style="opacity:0">Agregaaaaaaar</label>
+                                <button class="btn btn-sm btn-success" id="btn-agregar"><i class="fas fa-plus mr-1"></i>Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row w-100 mx-0 mt-5 row-panel">
+                    <label class="label-panel" id="label-table"></label>
+                    <div class="col-12">
+                        <table class="table table-hover table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th class="d-none">IdProducto</th>
+                                    <th>Producto</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Nro Serie</th>
+                                    <th>Categoría</th>
+                                    <th>Cantidad</th>
+                                    <th class="js-col-precio">Precio</th>
+                                    <th class="text-center">X</th>
+                                </tr>
+                            </thead>
+                            <tbody id="body-products">
+                                <tr class="js-sin-contenido"><td class="text-center" colspan="8">Sin contenido</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row w-100 m-0 justify-content-between">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancelar</button>
+
+                    <button style="width: 230px !important" type="button" disabled class="btn btn-sm btn-warning">Descartar Mov.</button>
+
+                    <button type="button" class="btn btn-sm btn-success" id="js-btn-procesar">Guardar y Procesar movimiento</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade  bd-transferencia-modal-xl"  id="transferencia-modal" tabindex="-1" role="dialog" aria-labelledby="transferenciaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="transferenciaLabel">Nueva transferencia entre Almacenes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0 row-panel">
+                    <label class="label-panel">Informacion de Transferencia</label>
+                    <div class="col-12 col-md-6 pl-3 mt-3">
+                        <div class="row mx-0 h-100 row-panel">
+                            <label class="label-panel">Almacén de Origen</label>
+                            <div class="col-3 mt-1">
+                                <label class="label-sm">Nodo</label>
+                            </div>
+                            <div class="col-9 mt-1">
+                                <input type="text" class="form-control form-control-sm" disabled id="js-name-node" value="" />
+                            </div>
+                            <div class="col-3 mt-1">
+                                <label class="label-sm">Empresa/Sede</label>
+                            </div>
+                            <div class="col-9 mt-1">
+                                <select class="custom-select custom-select-sm" id="sede-origen">
+                                    @{
+                                        <option value="-1">--Seleccionar--</option>
+                                        foreach (var item in Organizations)
+                                        {
+                                            <option value="@item.OrganizationId">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-3 mt-1">
+                                <label class="label-sm">Almacén</label>
+                            </div>
+                            <div class="col-9 mt-1">
+                                <select class="custom-select custom-select-sm" id="warehouse-origen">
+                                    <option value="-1">--Seleccionar--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 pr-3 mt-3">
+                        <div class="row w-100 mx-0 row-panel">
+                            <label class="label-panel">Almacén de Destino</label>
+                            <div class="col-3 mt-1">
+
+                            </div>
+                            <div class="col-9 mt-1">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" checked id="almacen-local" name="almacen-destino" class="custom-control-input">
+                                    <label class="custom-control-label label-sm" for="almacen-local">Local</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="almacen-remoto" name="almacen-destino" class="custom-control-input">
+                                    <label class="custom-control-label label-sm" for="almacen-remoto">Remoto</label>
+                                </div>
+                            </div>
+                            <div class="col-3 mt-1">
+                                <label class="label-sm">Nodo</label>
+                            </div>
+                            <div class="col-9 mt-1">
+                                <select disabled class="custom-select custom-select-sm" id="js-select-nodo">
+                                    <option value="-1">--Seleccionar--</option>
+                                </select>
+                            </div>
+                            <div class="col-3 mt-1">
+                                <label class="label-sm">Empresa/Sede</label>
+                            </div>
+                            <div class="col-9 mt-1">
+                                <select class="custom-select custom-select-sm" id="sede-destino">
+                                    @{
+                                        <option value="-1">--Seleccionar--</option>
+                                        foreach (var item in Organizations)
+                                        {
+                                            <option value="@item.OrganizationId">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-3 mt-1">
+                                <label class="label-sm">Almacén</label>
+                            </div>
+                            <div class="col-9 mt-1">
+                                <select class="custom-select custom-select-sm" id="warehouse-destino">
+                                    <option value="-1">--Seleccionar--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <div class="row w-100 mx-0">
+                            <div class="col-1">
+                                <label class="label-sm d-inline-block">Fecha</label>
+                            </div>
+                            <div class="col-2">
+                                <input type="date" id="fech-transfer" class="form-control form-control-sm d-inline-block" value="" />
+                            </div>
+                            <div class="col-1">
+                                <label class="label-sm d-inline-block">Procesado</label>
+                            </div>
+                            <div class="col-1">
+                                <input style="max-width:60px !important" type="text" disabled class="form-control form-control-sm  d-inline-block" value="NO" />
+                            </div>
+                            <div class="col-auto">
+                                <label class="label-sm d-inline-block">Doc.Referencia</label>
+                            </div>
+                            <div class="col-2">
+                                <input type="text" class="form-control form-control-sm d-inline-block" id="js-transfer-doc-reference" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row w-100 mx-0 mt-4 row-panel">
+                    <label class="label-panel">Búsqueda de Productos/Artículos</label>
+                    <div class="col-12">
+                        <div class="row w-100 mx-0">
+                            <div class="col-1">
+                                <label class="label-sm d-inline">Buscar</label>
+                            </div>
+                            <div class="col-2">
+                                <input id="js-transfer-buscar-prod" class="form-control form-control-sm d-inline" type="text" value="" />
+                            </div>
+                            <div class="col-1">
+                                <label class="label-sm d-inline">Producto</label>
+                            </div>
+                            <div class="col-4">
+                                <select class="custom-select custom-select-sm d-inline" id="js-transfer-product-select">
+                                    <option value="-1">--Seleccionar--</option>
+                                </select>
+                            </div>
+                            <div class="col-1">
+                                <label class="label-sm d-inline">Cantidad</label>
+                            </div>
+                            <div class="col-1">
+                                <input id="js-transfer-cantidad-prod"  onkeyup="soloEnteros(event, this)" type="text" class="form-control form-control-sm" value="" />
+                            </div>
+                            <div class="col-2">
+                                <button class="btn btn-sm btn-success d-inline" id="js-add-transfer"><i class="fas fa-plus mr-1"></i>Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row w-100 mx-0 mt-4 row-panel">
+                    <label class="label-panel">Productos a Transferir</label>
+                    <div class="col-12">
+                        <table class="table table-hover table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th class="d-none text-center">IdProducto</th>
+                                    <th class="text-center">Producto</th>
+                                    <th class="text-center">Marca</th>
+                                    <th class="text-center">Modelo</th>
+                                    <th class="text-center">Nro Serie</th>
+                                    <th class="text-center">Categoría</th>
+                                    <th class="text-center">Cantidad</th>
+                                    <th class="text-center">X</th>
+                                </tr>
+                            </thead>
+                            <tbody id="body-transferencias">
+                                <tr class="sin-transferencias">
+                                    <td class="text-center" colspan="7">Sin contenido</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row w-100 m-0 justify-content-between">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancelar</button>
+
+                    <button style="width: 230px !important" type="button" disabled class="btn btn-sm btn-warning">Descartar Mov.</button>
+
+                    <button type="button" class="btn btn-sm btn-success" id="generate-transfer">Guardar y Procesar movimiento</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade view-proveedor-modal" id="js-view-proveedor" tabindex="-1" role="dialog" aria-labelledby="view-proveedorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="view-proveedorLabel">New message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row row-panel w-100 mx-0">
+                    <label class="label-panel">Búsqueda / Filtro</label>
+                    <div class="col-12 col-md-4 mt-2">
+                        <label class="label-sm">Sector</label>
+                        <select class="custom-select custom-select-sm" id="js-sectores">
+                            @{
+                                if (ViewBag.Sector != null)
+                                {
+                                    foreach (var item in ViewBag.Sector)
+                                    {
+                                        <option value="@item.Id">@item.Value</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="-1">--Todos--</option>
+                                }
+
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-3 mt-2">
+                        <label class="label-sm">Razón</label>
+                        <input type="text" id="js-razon-social" class="form-control form-control-sm" value="" />
+                    </div>
+                    <div class="col-12 col-md-3 mt-2">
+                        <label class="label-sm">RUC</label>
+                        <input type="text" id="js-ruc-supplier" class="form-control form-control-sm" value="" />
+                    </div>
+                    <div class="col-12 col-md-2 mt-2 ">
+                        <label style="opacity:0">Filtraaaaaaaaaar</label>
+                        <button class="btn w-100 btn-sm btn-info" onclick="FilterSuppliers(1)"><i class="fas fa-search"></i>Filtrar</button>
+                    </div>
+                </div>
+
+                <div id="board-suppliers">
+                    @Html.Partial("_BoardQuerySupplierPartial")
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        </div>
+    </div>
+</div>

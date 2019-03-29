@@ -1,0 +1,88 @@
+﻿
+<div class="" id="reporte11" style="width:100%">
+    <div id="ChartCholesterol" class="chart table-responsive"></div>
+</div>
+
+
+@{
+
+    if (Request.Browser.Browser == "IE" && Convert.ToDouble(Request.Browser.Version) < 9.0)
+    {
+    }
+    else
+    {
+        <script>
+            function LoadCholesterol(data) {
+
+                var CholesterolsDate = [];
+                var Cholesterols = [];
+                for (let i = 0; i < data.Cholesterols.length; i++) {
+                    Cholesterols.push(parseFloat(data.Cholesterols[i].y));
+                    CholesterolsDate.push(data.Cholesterols[i].Date);
+                };
+        Highcharts.chart('ChartCholesterol', {
+
+                title: {
+                    text: 'Historial'
+                },
+
+                subtitle: {
+                    text: ''
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'mg/dl'
+                    }
+                },
+                legend: {
+                    layout: 'horizontal',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                plotOptions: {
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        },
+                        //pointStart: '2018-10-07'
+                    }
+                },
+                xAxis: {
+
+                    categories: CholesterolsDate,
+                    labels: {
+                        skew3d: true,
+                        style: {
+                            fontSize: '16px'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Colesterol',
+                    data: Cholesterols,
+                }],
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+
+            });
+
+        }
+        </script>
+    }
+}
+

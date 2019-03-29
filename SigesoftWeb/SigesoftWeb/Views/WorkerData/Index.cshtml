@@ -1,0 +1,529 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script src="~/Scripts/main.js"></script>
+    <link href="~/fontawesome/css/all.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/indexPWA.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato|Roboto" rel="stylesheet">
+    <link href="~/Content/css/estilosPWA.css" rel="stylesheet" />
+    <script src="~/Scripts/CreateDevice.js"></script>
+    <link href="../../manifest.json" rel="manifest" />
+    <script src="~/Scripts/Alert.js"></script>
+    <link href="~/Content/css/Alert.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="principal d-flex justify-content-start">
+        <div class="contenedor p-0">
+            <input type="text" class="posicion d-none" value="" />
+            <div id="cont-notification" class="cont-notification">
+                <div class="fondo-notification" onclick="ViewNotification()"></div>
+                <div class="list-notification">
+                    <div class="header-list-notification">
+                        <i class="arrow fas fa-arrow-right" onclick="ViewNotification()"></i>
+                        <label class="title-notification">NOTIFICACIONES</label>
+                    </div>
+                    <div class="body-list-notifications">
+
+                    </div>
+                    
+
+                </div>
+            </div>
+
+            <div id="profile" class="cont-perfil float-left contenedor-hijo d-flex justify-content-center">
+                <div class="header-perfil d-flex justify-content-center">
+                    <div class="cont-header-perfil d-flex justify-content-center align-items-center">
+                        <h2 class="m-0">MI PERFIL</h2>
+                        @{
+                            if (ViewBag.IsSubscribe.Count > 0)
+                            {
+                                <img class="icon-campana reci-notification" title="Recibir notificaciones." id="notificacion" src="~/Content/Images/bell1.png" />
+                            }
+                            else
+                            {
+                                <img class="icon-campana recibe-no reci-notification" onclick="notificarme()" title="Recibir notificaciones." id="notificacion" src="~/Content/Images/bell2.png" />
+                            }
+                        }
+                        <a href="@Url.Content("~/salir")" class="cerrar-sesion"><i class="fas fa-power-off"></i></a>
+                    </div>
+                </div>
+
+
+
+                @{
+                    if (ViewBag.Photo != null)
+                    {
+                        <img class="perfil-photo" src="@ViewBag.Photo">
+                    }
+                    else
+                    {
+                        <img src="~/Content/Images/user.png" />
+                    }
+                }
+
+                <input type="file" id="input-file" class="d-none" />
+
+
+                <label class="lbl-name-worker">@ViewBag.USER.FullName</label>
+                <label class="lbl-name-organization">Empresa</label>
+
+                <div class="div-cellphone">
+                    <label><i class="fas edit-data fa-pencil-alt" onclick="editDataProfile()"></i> CEL:</label>
+                    <label class="pl-2 lbl-cell-phone">@ViewBag.UserData.TelephoneNumber</label>
+                </div>
+                <div class="div-email">
+                    <label><i class="fas edit-data fa-pencil-alt" onclick="editDataProfile()"></i> E-MAIL:</label>
+                    <label class="pl-2 lbl-email">@ViewBag.UserData.Email</label>
+                </div>
+                @{ 
+                    var noRead = 0;
+                    if (ViewBag.UserData.CountNewNotifications != 0)
+                    {
+                        noRead = ViewBag.UserData.CountNewNotifications;
+                    }
+
+                }
+                <button id="js-view-notification" class="btn-view-notification">Notificaciones <span class="badge badge-danger">@noRead</span></button>
+                <button id="btn-certificados" class="btn-certificados" onclick="viewCertificados()">Certificados</button>
+                <input type="button" class="btn-cance-suscrip" name="Cancelarsubs" onclick="modalConfirmation()" value="Cancelar Suscripción" />
+
+                @*Modal Editar*@
+                <div id="cont-modal-update" class="cont-modal d-none"></div>
+
+                <div id="modal-update" class="modal-update d-none">
+                    <div class="row border-botttom-light w-100 p-3 m-0">
+                        <div class="title-update">EDITAR</div>
+                    </div>
+
+                    <div class="row cont-body-update border-botttom-light w-100 p-3 m-0">
+                        <div class="body-update w-100">
+                            <div class="col-12 w-100 p-0 d-flex justify-content-between align-items-center">
+                                <label class="lbl-datas m-0">CELULAR:</label>
+                                <input style="max-width:160px" onkeyup="onlyNumber(this)" type="text" id="cellphone-worker" data-validation-input="string" data-length="7-9" data-message="Debe contener 7 ó 9 caracteres" class="form-control" value="@ViewBag.UserData.TelephoneNumber" />
+                            </div>
+                            <div class="col-12 w-100 p-0   mt-3 d-flex justify-content-between align-items-center">
+                                <label class="lbl-datas m-0">E-MAIL:</label>
+                                <input style="max-width:160px" type="email" id="email-worker" data-validation="email" data-message="Ingrese un E-mail valido." class="form-control" value="@ViewBag.UserData.Email" />
+                            </div>
+                        
+                        </div>
+                    </div>
+                    <div class="row w-100 px-3 py-2 m-0">
+                        <div class="footer-update w-100 d-flex justify-content-between">
+                            <button class="btn btn-outline-dark btn-unsubscri cancel-edit" onclick="cancelModal('modal-update','cont-modal-update')"><i class="fas fa-times"></i></button>
+                            <button class="btn btn-outline-dark btn-unsubscri btn-aceptar-edit" onclick="UpdateData()"><i class="fas fa-check"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                @*Modal Confirmación*@
+
+                <div id="cont-modal-unsubscrib" class="cont-modal d-none"></div>
+
+                <div id="modal-unsubscrib" class="modal-unsubscrib d-none">
+                    <div class="row w-100 p-3 m-0">
+                        <div class="title-unsubscrib">¡ CONFIRMACIÓN !</div>
+                    </div>
+
+                    <div class="row cont-body-unsubscri w-100 p-3 m-0">
+                        <div class="body-unsubscrib d-flex justify-content-between">
+                            <label>¿Seguro de cancelar subscripción?</label>
+                        </div>
+                    </div>
+                    <div class="row w-100 px-3 py-2 m-0">
+                        <div class="footer-unsubscrib w-100 d-flex justify-content-between">
+                            <button class="btn btn-outline-light btn-unsubscri cancel-unsubscrib" onclick="cancelModal('modal-unsubscrib','cont-modal-unsubscrib')"><i class="fas fa-times"></i></button>
+                            <button class="btn btn-outline-light btn-unsubscri btn-aceptar-unsubscrib" onclick="cancelarSuscripcion()"><i class="fas fa-check"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cont-certificados" class="d-flex contenedor-hijo float-left justify-content-center cont-cronograma">
+                <div class="title-vigilancia">
+                    <i class="arrow fas fa-arrow-left" onclick="BackProfile()"></i>
+                    <label>CERTIFICADOS</label>
+                </div>
+
+                <div class="detail-certificados">
+                    <div style="border-bottom: 1px solid #808080" class="row w-100 m-0 p-0 py-3">
+                        <div class="col-2"><i class="fas fa-download"></i></div>
+                        <div class="col-10"><label class="m-0 lbl-certificados">Certificado Médico</label></div>
+                    </div>
+                    <div class="row w-100 m-0 p-0 py-3">
+                        <div class="col-2"><i class="fas fa-download"></i></div>
+                        <div class="col-10"><label class="m-0 lbl-certificados">Examen Médico</label></div>
+                    </div>
+                </div>
+
+            </div>
+
+            @*<div class="d-flex contenedor-hijo float-left justify-content-center cont-edit-datos">
+                <div class="header-perfil d-flex justify-content-center">
+                    <div class="cont-header-perfil d-flex justify-content-center align-items-center">
+                        <h2 class="m-0">Editar Datos</h2>
+                        
+                    </div>
+                </div>
+                @{
+                    if (ViewBag.Photo != null)
+                    {
+                        <img class="perfil-photo" src="@ViewBag.Photo">
+                    }
+                    else
+                    {
+                        <img src="~/Content/Images/user.png" />
+                    }
+                }
+                <label onclick="selectPhotoProfile()" class="btn-camera d-flex justify-content-center align-items-center">
+                    <i class="fas fa-camera"></i>
+                </label>
+
+
+
+                <label class="lbl-name-worker">@ViewBag.USER.FullName<i class="pencil-edit ml-2 fas fa-pencil-alt"></i></label>
+                <label class="lbl-name-organization">Empresa<i class="d-none pencil-edit ml-2 fas fa-pencil-alt"></i></label>
+
+                <div class="edit-fech-nac">
+                    <label class="lbl-edit-fech-nac">Fecha de Nacimiento</label>
+                </div>
+                <div class="edit-fech-nac2">
+                    <label class="lbl-fech-nac">@ViewBag.UserData.BirthDate.ToShortDateString()</label>
+                </div>
+                <div class="div-lugar-nac d-flex justify-content-between">
+                    <label>Lugar de Nacimiento</label>
+                    <label>lima/Lima/Perú<i class="pencil-edit ml-2 fas fa-pencil-alt"></i></label>
+                </div>
+                <div class="div-estado-civil d-flex justify-content-between">
+                    <label>Estado Civil</label>
+                    <label class="lbl-estado-civil">@ViewBag.UserData.MartialStatus<i class="pencil-edit ml-2 fas fa-pencil-alt"></i></label>
+                </div>
+                <button class="btn-edit-guardar">Guardar</button>
+                <button class="btn-edit-cancelar" onclick="cancelEditProfile()">Cancelar</button>
+
+
+                <div id="cont-modal-edit" class="cont-modal d-none">
+                </div>
+                <div id="modal-photo-edit" class="modal-agendar d-none">
+                    <div class="title-reagendar">Foto de perfil</div>
+                    <div class="cont-date d-flex justify-content-between">
+                        <div class="css-nuevo d-inline-block">
+                            <label for="morePhoto" class="d-flex justify-content-center align-items-center icon-mas"><i class="fas fa-plus"></i></label>
+                            <label>Agregar</label>
+                            <input type="file" class="d-none" id="morePhoto" />
+                        </div>
+                        <div class="css-eliminar d-inline-block">
+                            <div class="d-flex justify-content-center align-items-center icon-basura"><i class="far fa-trash-alt"></i></div>
+                            <label>Eliminar</label>
+                        </div>
+                    </div>
+                    <div class="botones-edit-photo d-flex justify-content-end">
+                        <label class="lbl-edit-cancelar" onclick="cancelPhotoProfile()">Cancelar</label>
+                        <label class="lbl-edit-Guardar">Guardar</label>
+                    </div>
+                </div>
+            </div>*@
+
+            <div class="cont-vigilancia float-left contenedor-hijo d-flex justify-content-center">
+                <div class="title-vigilancia">
+                    <i class="arrow fas fa-arrow-left" onclick="BackNotification()"></i>
+                    <label class="tipo-cita">INGRESO A VIGILANCIA</label>
+                </div>
+                <div class="detail-vigilancia">
+                    <div class="dats cont-lbl">
+                        <label style="font-size:1.3rem; color:#808080; font-weight: bold" id="title-detail"></label>
+                    </div>
+                    <div class="dats cont-lbl">
+                        <label class="" style="color:#808080 ; font-weight: bold" >Detalle:</label>
+                        <span id="body-detail" style="width:300px !important"></span>
+                    </div>
+
+                    <div class="dats cont-lbl">
+                        <label style="color:#808080 ; font-weight: bold" class="">Fecha de envío:</label>
+                        <label class="fech-envio"></label>
+                    </div>
+                    <div class="dats d-none cont-lbl">
+                        <label style="color:#808080 ; font-weight: bold" class="">Fecha de cita:</label>
+                        <label class="fech-cita"></label>
+                    </div>
+                    <div class="dats d-none cont-lbl">
+                        <label style="color:#808080 ; font-weight: bold" >Hora cita:</label>
+                        <label class="hora-cita"></label>
+                    </div>
+                    <div class="dats cont-lbl">
+                        <label style="color:#808080 ; font-weight: bold" class="">Doctor:</label>
+                        <label class="medic-name"></label>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="cont-agreg-foto" class="d-flex contenedor-hijo float-left justify-content-center cont-agreg-foto">
+                
+                <video id="player" autoplay style="height: 300px;"></video>
+
+                <button class="btn-add-foto">Tomar Foto</button>
+                <button class="btn-cancelar-foto" onclick="cancelAddFoto()">Cancelar</button>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="d-none">Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+</body>
+
+</html>
+
+<script>
+    
+    var applicationServerPublicKey = '@ViewBag.PublicKey';
+
+    function onlyNumber(input) {
+        input.value = input.value.replace(/[^0-9]/, "");
+
+    };
+
+    function UpdateData() {
+        
+        if ($(".lbl-cell-phone").text() == $("#cellphone-worker").val() && $(".lbl-email").text() == $("#email-worker").val()) {
+            var contalerta = `<div id="contAlert" class="mt-5 mx-0">
+
+                                    </div>`;
+            var alerta = `
+                                    <div class="row alertaSubscri alertBack back-info">
+                                        <div class="col-md-12">
+    	                                    <h2 style="font-size: 0.8rem; color: #fff">¡ Aviso !</h2>
+                                            <p  style="font-size: 0.7rem; color: #fff" class="center m-0">No hay cambios por guardar.</p>
+                                        </div>
+                                    </div>
+
+					                `;
+
+            $("#contAlert").remove();
+            $(contalerta).appendTo($("#profile"));
+            $(alerta).appendTo($("#contAlert"));
+
+            $(".alertaSubscri").fadeOut(2000);
+            setTimeout("$('.alertaSubscri').remove();", 3000);
+        } else {
+            if ($(".cont-body-update").find(".row-validation").length == 0 && $(".cont-body-update").find(".row-validation-email").length == 0) {
+                var WorkerPwa = {
+                    TelephoneNumber: $("#cellphone-worker").val(),
+                    Email: $("#email-worker").val(),
+                };
+                $(".lbl-cell-phone").text($("#cellphone-worker").val());
+                $(".lbl-email").text($("#email-worker").val());
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'oWorkerPwa': WorkerPwa,
+                    },
+                    url: '/WorkerData/UpdateWorker',
+                    success: function (json) {
+                        if (json) {
+                            cancelModal('modal-update', 'cont-modal-update');
+
+                            var contalerta = `<div id="contAlert" class="mt-5 mx-0">
+
+                                            </div>`;
+                            var alerta = `
+                                    <div class="row alertaSubscri alertBack back-success">
+                                        <div class="col-md-12">
+    	                                    <h2 style="font-size: 0.8rem; color: #fff">¡ Hecho !</h2>
+                                            <p  style="font-size: 0.7rem; color: #fff" class="center m-0">Se actualizó correctamente.</p>
+                                        </div>
+                                    </div>
+
+					                `;
+
+                            $("#contAlert").remove();
+                            $(contalerta).appendTo($("#profile"));
+                            $(alerta).appendTo($("#contAlert"));
+
+                            $(".alertaSubscri").fadeOut(2000);
+                            setTimeout("$('.alertaSubscri').remove();", 3000);
+
+                        }
+                    },
+                    error: function (error) {
+                        console.log("ERROR: ", error)
+                    }
+                })
+            }
+
+        }
+
+    };
+
+    $(".body-list-notifications").scroll(function () {
+        
+        var offsets = $(".notification:eq(0)").offset();
+
+        if (offsets.top < -200) {
+            
+            if ($("#iconUp").length == 0) {
+                $("#iconDown").remove();
+                var iconUp = `
+                            <i id="iconUp" class="fas fa-chevron-circle-up"></i>
+                        `;
+                $(iconUp).appendTo($(".list-notification"));
+            }
+            
+        } else {
+            
+            if ($("#iconDown").length == 0) {
+                $("#iconUp").remove();
+                var iconDown = `
+                            <i id="iconDown" class="fas fa-chevron-circle-down"></i>
+                        `;
+                $(iconDown).appendTo($(".list-notification"));
+            }            
+        }
+    });
+    $("#js-view-notification").on('click', function () {
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            datatype: 'json',
+            url: '/WorkerData/Notifications',
+            success: function (json) {
+                if (json.length > 5) {
+                    if ($("#iconDown").length == 0) {
+                        $("#iconUp").remove();
+                        var iconDown = `
+                            <i id="iconDown" class="fas fa-chevron-circle-down"></i>
+                        `;
+                        $(iconDown).appendTo($(".list-notification"));
+                    }
+                }
+                $(".body-list-notifications").empty();
+                for (var i = 0; i < json.length; i++) {
+                    var isRead = json[i].IsRead == 1 ? "read" : "";
+                    var charact = "";
+                    if (json[i].Body != null) {
+                        if (json[i].Body.length > 16) {
+                            charact = json[i].Body.substr(0,16) + '...'
+                        }
+                        else {
+                            charact = json[i].Body;
+                        }
+                    }
+                    var title = "";
+                    if (json[i].Title != null) {
+                        title = json[i].Title.toUpperCase();
+                    }
+                    var html = `
+                            <div class="notification ${isRead}" onclick="ViewDetailNotification(this)">
+                                    <i class="icon-reloj far fa-clock"></i>
+                                    <input type="text" class="d-none notificationId" value="${json[i].NotificationId}" />
+
+                                    <label class="lbl-ingr-vigi">${title}</label>
+
+                                    <div class="detail-notification">
+                                        <div class="cont-lbl-message cont-lbl-notifi">
+                                            <label class="lbl-data-message-notifi">${charact}</label>
+                                        </div>
+
+                                        <div class="cont-lbl-notifi">
+                                            <label class="lbl-fech-notifi">Fecha:</label>
+                                            <label class="lbl-data-fech-notifi">${json[i].NotificationDateString}</label>
+                                        </div>
+
+                                        <div class="cont-lbl-notifi">
+                                            <label class="lbl-doctor-notifi">Doctor:</label>
+                                            <label class="lbl-data-doctor-notifi">${json[i].SystemUser}</label>
+                                        </div>
+                                    </div>
+                            </div>
+                          `;
+                    $(html).appendTo($(".body-list-notifications"));
+                };
+                ViewNotification(3);
+            },
+            error: function (error) {
+                console.log("ERROR: ", error)
+            }
+        });
+
+    });
+
+    $('[data-validation="email"]').on("blur", function () {
+        var email = $(this).val();
+        var message = $(this).data("message");
+        var com = email.charAt(email.length - 4);
+        com = com + email.charAt(email.length - 3);
+        com = com + email.charAt(email.length - 2);
+        com = com + email.charAt(email.length - 1);
+        var arrEmail = [...email];
+
+        var obj = buscarValidacion(email);
+        var fail = false;
+        if (obj.encontrados == 1) {
+            var sig = obj.positions[0] + 1;
+            if (arrEmail[sig] == "." || arrEmail[sig] == " ") {
+                fail = true
+            }
+        }
+
+        if (com != ".com" || obj.encontrados != 1 || fail == true) {
+            if (email.length > 0) {
+                var label = `<div class="row row-validation-email w-100 m-0 p-0 pl-5"><label class="ml-5" style=" color: #dc3545; font-size: 0.8rem; margin: 0px; margin-left:50px; ">${message}*</label></div>
+                `;
+
+                if ($(this).parent().parent().find(".row-validation-email").length == 0) {
+                    $(this).addClass("border-danger");
+                    $(label).appendTo($(this).parent().parent());
+                }
+            }
+
+        } else {
+            $(this).removeClass("border-danger")
+            $(this).parent().parent().find(".row-validation-email").remove();
+        }
+
+    });
+
+    $('[data-validation-input="string"]').on('blur', function () {
+
+        var MinMax = $(this).data("length").split("-");
+        var message = $(this).data("message");
+        var min = parseInt(MinMax[0]);
+        var max = parseInt(MinMax[1]);
+
+        var label = `<div class="col-12 row-validation w-100 m-0 p-0 d-flex justify-content-end"><label style=" color: #dc3545; font-size: 0.8rem; margin: 0px; ">${message}</label></div>
+                    `;
+
+        if ($(this).val().length > max || $(this).val().length < min) {
+
+            if (!$(this).parent().next().hasClass("row-validation")) {
+                $(this).addClass("border-danger");
+                $($(this).parent()).after(label);
+            }
+
+        } else if ($(this).parent().next().hasClass("row-validation")) {
+            $(this).removeClass("border-danger");
+            $(this).parent().next().remove()
+        }
+    });
+
+</script>
+<script src="~/Scripts/camara-class.js"></script>
+
+

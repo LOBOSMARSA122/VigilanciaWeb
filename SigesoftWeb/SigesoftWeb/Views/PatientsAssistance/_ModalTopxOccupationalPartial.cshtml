@@ -1,0 +1,87 @@
+﻿
+
+<div class="" id="reportOccupationalModal" style="width:100%">
+    <div id="chartOccupationalModal" class="chart table-responsive"></div>
+</div> 
+
+@{
+
+    if (Request.Browser.Browser == "IE" && Convert.ToDouble(Request.Browser.Version) < 9.0)
+    {
+    }
+    else
+    {
+        <script>
+            function LoadDxOccupationalModal(data) {
+                var obj = JSON.parse(data);
+                console.log(obj);
+                var arrName = new Array();
+                var arrCant = new Array();
+                var total = obj[0].count;
+                for (var i = 0; i < obj.length; i++) {
+                    arrName.push(obj[i].name)
+                    arrCant.push(obj[i].y);
+                }
+                LoadTotal(total);
+
+                Highcharts.chart('chartOccupationalModal', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    xAxis: {
+                        type: 'category',
+                        categories: arrName,
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Cantidad de casos'
+                        }
+
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+
+                        series: {
+                            enableMouseTracking: false,
+                            borderWidth: 0,
+                            dataLabels: [{
+                                enabled: true,
+                                formatter: function () {
+                                    var pcnt = (this.y / (total)) * 100;
+                                    return Highcharts.numberFormat(pcnt) + '%';
+                                }
+                            },
+                            {
+                                enabled: true,
+                                inside: false,
+                                format: '({point.y})',
+                                color: 'red'
+
+                            }],
+
+                        }
+                    },
+
+                    tooltip: {
+                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                    },
+
+                    series: [
+                        {
+
+                            name: "Browsers",
+                            colorByPoint: true,
+                            data: arrCant,
+                        }
+                    ]
+                });
+            }
+        </script>
+    }
+}

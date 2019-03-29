@@ -1,0 +1,229 @@
+﻿@{
+    int Take = 0;
+    int Total = 0;
+    int Primer = 0;
+    int Ultimo = 0;
+    int Index = 0;
+
+    if (ViewBag.Company != null)
+    {
+        Take = ViewBag.Company.Take;
+        Index = ViewBag.Company.Index;
+        Total = ViewBag.Company.TotalRecords;
+        Primer = ((Index - 1) * Take) + 1;
+        Ultimo = Primer + (ViewBag.Company.List.Count - 1);
+
+        Primer = Primer < 0 ? 0 : Primer;
+        Ultimo = Ultimo < 0 ? 0 : Ultimo;
+    }
+    else
+    {
+        Take = 0;
+    }
+}
+<style>
+    th {
+        text-align: center;
+    }
+
+    .ColumnNoWrap {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+</style>
+<div class="container-fluid" style="padding:0px;">
+    <div class="box box-default mt-2" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;" onclick="ColapsarTabla('table-responsive')"><i class="icon-list-numbered"></i> Listado Empresas </h3>
+        </div>
+    </div>
+</div>
+<div>
+    <span class="informacion">Mostrando desde N° @Primer hasta @Ultimo de un total de @Total entradas</span>
+    <div class="float-lg-right informacion">
+        Total de registros:
+        <select id="take" onchange="Filtrar(1)">
+            <option value="10" @(Take == 10 ? "selected" : "")>10</option>
+            <option value="25" @(Take == 25 ? "selected" : "")>25</option>
+            <option value="50" @(Take == 50 ? "selected" : "")>50</option>
+            <option value="0" @(Take == 0 ? "selected" : "")>TODOS</option>
+        </select>
+    </div>
+</div>
+<div class="box box-info mt-2">
+    <div class="table-responsive">
+        <table class="table table-hover" id="TablaAExportar">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Razón Social</th>
+                    <th>Tipo Organizacion</th>
+                    <th>RUC</th>
+                    <th>Sector</th>
+                    <th>Código</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    if (ViewBag.Company == null)
+                    {
+                        <tr><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+                    }
+                    else if (ViewBag.Company.List.Count == 0)
+                    {
+                        <tr><td colspan="7" class="text-center">No hay resultados</td></tr>
+                    }
+                    else
+                    {
+                        foreach (var item in ViewBag.Company.List)
+                        {
+                            <tr>
+                                <td class="ColumnNoWrap">@item.OrganizationId</td>
+                                <td class="ColumnNoWrap">@item.Name</td>
+                                <td class="ColumnNoWrap">@item.OrganizationType</td>
+                                <td class="ColumnNoWrap text-center">@item.IdentificationNumber</td>
+                                <td class="ColumnNoWrap">@item.SectorName</td>
+                                <td class="ColumnNoWrap">@item.SectorCodigo</td>
+                                <td class="ColumnNoWrap"><a class="iconEdit" href="@Url.Action("CreateCompany", "Organization", new { organizationId = item.OrganizationId })"><span class="d-flex justify-content-center iconEdit align-items-center icon-edit"><i style="font-size: 1.1rem;" class="far fa-edit"></i></span></a></td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="paginacion-tabla d-flex justify-content-center">
+            <div>
+                <ul class="pagination">
+                    @{
+                        if (Index > 1)
+                        {
+                            <li class="page-item" onclick="Filtrar(@(Index - 1))">
+                                <span class="page-link" aria-hidden="true">Anterior</span>
+                            </li>
+                        }
+                        int pagina = 0;
+                        if (Take > 0)
+                        {
+                            for (int i = 0; i < Total; i = i + Take)
+                            {
+                                pagina++;
+                                if ((pagina > (Index - 5)) && pagina < (Index + 5))
+                                {
+                                    <li @(pagina == Index ? "class=pagination-active" : "onclick=Filtrar(" + pagina + ")")><span class="page-link" aria-hidden="true">@pagina</span></li>
+                                }
+
+                            }
+                        }
+                        if (pagina > Index)
+                        {
+                            <li class="page-item" onclick="Filtrar(@(Index + 1))">
+                                <span class="page-link" aria-hidden="true">Siguiente</span>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/Alert.js"></script>
+<script src="~/Scripts/TweenMax.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+<link href="~/Content/css/fontello.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/css/Alert.css" rel="stylesheet" type="text/css" />
+
+<script>
+    $("tbody tr").on("click", function () {
+        console.log("click fila");
+        $("tbody tr").removeClass("classRowsClick");
+        $(this).toggleClass("classRowsClick");
+    });
+    function Delete(id) {
+
+        var width = $(window).width();
+        var height = $(window).height();
+
+        notificacion({
+            classTitleAndButtons: "dangerTitleAndButtons",
+            classMessage: "dangerMessage",
+            title: "¡ Advertencia !",
+            icono: "",
+            contenido: "¿Seguro de eliminar el registro? ",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "si",
+            mostrarBtnOk: "no",
+        })
+
+        $(".bigBox-Aceptar").on("click", function () {
+
+            $(".pluginContenedor").remove();
+            $("#Loading").show().css("width", width + "px").css("height", height + "px");
+            $("#Loading > img").css("margin-left", ((width - 200) / 2) + "px").css("margin-top", ((height - 266) / 2) + "px");
+
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'POST',
+                data: { id: id },
+                url: '/Product/DeleteProduct',
+                success: function (json) {
+                    $("#Loading").hide();
+                    if (json) {
+                        notificacion({
+                            classTitleAndButtons: "successTitleAndButtons",
+                            classMessage: "successMessage",
+                            title: "Hecho",
+                            icono: "",
+                            contenido: "Producto eliminado!",
+                            btnAceptar: "Aceptar",
+                            btnCancelar: "Cancelar",
+                            btnOk: "OK",
+                            mostrarBtnAceptarAndCancelar: "no",
+                            mostrarBtnOk: "",
+                        })
+
+                        Filtrar(1);
+                    } else {
+                        notificacion({
+                            classTitleAndButtons: "successTitleAndButtons",
+                            classMessage: "successMessage",
+                            title: "Error",
+                            icono: "",
+                            contenido: "No se pudo eliminar el producto",
+                            btnAceptar: "Aceptar",
+                            btnCancelar: "Cancelar",
+                            btnOk: "OK",
+                            mostrarBtnAceptarAndCancelar: "no",
+                            mostrarBtnOk: "",
+                        })
+                    }
+                },
+                error: function (error) {
+                    notificacion({
+                        classTitleAndButtons: "successTitleAndButtons",
+                        classMessage: "successMessage",
+                        title: "Error",
+                        icono: "",
+                        contenido: "Sucedió un error al conectarse al servidor",
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "no",
+                        mostrarBtnOk: "",
+                    })
+                    $("#Loading").hide();
+                    console.log(error);
+                }
+            })
+        })
+
+
+    }
+
+</script>
+

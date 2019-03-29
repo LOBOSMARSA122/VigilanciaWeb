@@ -1,0 +1,117 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Sigesoft Web</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Lato|Roboto" rel="stylesheet">
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/css/estilos.css")" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/estilosPWA.css" rel="stylesheet" />
+    <link href="~/fontawesome/css/all.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/jquery")
+    <link href="/manifest.json" rel="manifest" />
+</head>
+<body class="login-page">
+    <div class="contenedor-login">
+        <div class="content-container d-flex justify-content-center">
+            <div class="cuerpo-fondo">
+                <img class="img-fondo" src="~/Content/Images/fondo.png" />
+            </div>
+            <div class="cuerpo-login d-flex justify-content-center">
+                
+                <div class="logo d-flex justify-content-center align-items-center">
+                    <img class="logo-omega" src="~/Content/Images/OmegaNet_2.png" />
+                </div>
+                <form class="formulario" action="/Generals/Login_authentication" method="post">
+                    <label for="usuario">Usuario</label>
+                    <input type="text" name="userName" id="usuario" class="input-usuario" placeholder="Ingrese su usuario" data-validation="required">
+                    <label for="pass">Contraseña</label>
+                    <input type="password" name="password" id="pass" class="input-contraseña form-control" placeholder="Ingrese su contraseña" data-validation="required">
+                    <input type="submit" id="enviar" name="enviar" value="Iniciar sesión" class="btn btn-inicio btn-info">
+                </form>
+                <i class="icon-sesion icon-user far fa-user-circle"></i>
+                <i class="icon-sesion icon-password fas fa-lock"></i>
+                <div class="div-olvi-contra">
+                    <label onmouseover="onHover()">¿Olvidaste tu contraseña?</label>
+                </div>
+                <div class="div-border"></div>
+            </div>
+            <div class="copyright text-center" style="display:block!important;;color:white;">
+                <div>Copyright  &copy; @DateTime.UtcNow.Year</div>
+            </div>
+        </div>
+    </div>
+    
+
+
+
+    @*<div class="container">
+            <div class="row">
+                <div class="col absolute-center is-responsive">
+                    <div class="IniciarSesion text-center m-2">
+                        Iniciar Sesión
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-8">
+                            <form action="/Generals/Login_authentication" method="post">
+                                <div class="form-group">
+                                    <label for="usuario">Usuario</label>
+                                    <input type="text" name="userName" id="usuario" class="form-control" placeholder="Ingrese su usuario" data-validation="required" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="usuario">Contraseña</label>
+                                    <input type="password" name="password" id="pass" class="form-control" placeholder="Ingrese su contraseña" data-validation="required" />
+                                </div>
+                                <div class="form-group mt-2" style="margin:50px 0px !important;">
+                                    <input type="submit" id="enviar" name="enviar" value="Ingresar" class="btn btn-block" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center" style="display:block!important;margin-top:40px;color:white;">
+                <div>Copyright  &copy; @DateTime.UtcNow.Year</div>
+            </div>
+        </div>*@
+    <script src="~/Scripts/JqueryFormValidate.js"></script>
+    <link href="~/Content/Themes/FormValidatorTheme.css" rel="stylesheet" type="text/css" />
+    <script>
+        $.validate();
+        $(document).ready(function () {
+            var height = $(window).height();
+            $(".contenedor-login").animate({
+                    marginTop: (height / 2) - 320,
+                    opacity: 1
+                },
+                500);
+
+            //if (navigator.serviceWorker) {
+            //    navigator.serviceWorker.register("../sw.js");
+            //} 
+        });
+        $(window).resize(function () {
+            var height = $(window).height();
+            $(".contenedor-login").animate({
+                marginTop: (height / 2) - 320,
+                opacity: 1,
+            },500)
+        });
+        function onHover() {
+            if ($(".border").length == 0) {
+                console.log("entro");
+                $(".div-border").stop().toggleClass("border");
+                $(".div-border").animate({
+                    width: 130,
+                }, 300)
+            }
+        }
+    </script>
+</body>
+</html>

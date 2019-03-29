@@ -1,0 +1,39 @@
+﻿@{
+    var base64 = @ViewBag.USER.PersonImage == null ? "" : Convert.ToBase64String(@ViewBag.USER.PersonImage);
+    var imgSrc = base64 != "" ? String.Format("data:image/jpeg;base64,{0}", base64) : "/Content/static/images/foto@default.png";
+}
+<link href="~/Content/css/fontello.css" rel="stylesheet" />
+<div id="sidebar-wrapper" class="barra-lateral">
+    <div class="d-flex justify-content-around align-items-center">
+      
+       
+    </div>
+    <nav class="menu d-flex d-sm-block">
+        <ul class="firstUl">
+            @foreach (var menu in ViewBag.USER.Permissions)
+            {
+                <li>
+                    <ul>
+                        @foreach (var submenu in menu.SubMenus)
+                        {
+                            <li>
+                                <a href="#">@submenu.Description<span class="caret icon-down-dir"></span></a>
+                                @foreach (var submenu_ in submenu.SubMenus)
+                                {
+                                    <ul class="submenu-ebene2 submenu_">
+                                        <li><a href="@Url.Content("~/")@submenu_.Form">@submenu_.Description</a></li>
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            <li>
+                <a href="@Url.Content("~/salir")"><i class="icon-logout"></i><span>Salir del Sistema</span></a>
+            </li>
+        </ul>
+
+       
+    </nav>
+</div>

@@ -1,0 +1,1368 @@
+﻿@{
+    var Organizations = ViewBag.USER.Organizations;
+}
+
+<style>
+    .breadcrumb-1 {
+        font-size: 1.1rem;
+        height: 35px !important;
+        padding: 4px 5px 2px 5px !important;
+        width: 390px !important
+    }
+
+    .form-control {
+        border-radius: 0.3rem;
+    }
+    .label-sm {
+        font-size: 0.875rem
+    }
+    .label-panel{
+        position: absolute;
+        background-color: white;
+        z-index:2;
+        top: -15px;
+        left: 15px
+    }
+    .row-panel {
+        position: relative;
+        border-radius: 0.3rem;
+        border: 1px solid #ccced1;
+        padding: 20px;
+    }
+
+</style>
+<div class="container-fluid">
+    <nav class="mt-2" aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-1">
+            <li class="breadcrumb-item"><a href="/PatientsAssistance">Servicios Vigilancia</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Consulta de Movimientos</li>
+        </ol>
+    </nav>
+    <section>
+        <div class="box box-default mt-2" id="acordion">
+            <div class="box-header with-border" id="heading1">
+                <h3 class="box-title" style="cursor:pointer;" onclick="ColapseTable('divConsultMovement','heightConsultMovement')"><i class="fas fa-truck mr-2"></i>Bandeja Consulta de Movimientos</h3>
+            </div>
+            <input id="heightConsultMovement" type="hidden" value="">
+            <div id="divConsultMovement" style="overflow:hidden;">
+                <div class="box-body" aria-labelledby="heading1">
+                    <article class="row w-100 m-0 p-0">
+                        <div class="col-12 mt-3 col-sm-6 col-xl-2">
+                            <label>Empresa/Sede</label>
+                            <select class="custom-select" id="empresa-sede">
+                                @{
+                                    <option value="-1">--Seleccionar--</option>
+                                    foreach (var item in Organizations)
+                                    {
+                                        <option value="@item.OrganizationId">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12 mt-3 col-sm-3 col-xl-2">
+                            <label>Almacén</label>
+                            <select class="custom-select" id="warehouseByOrganization">
+                                <option value="-1">--Seleccionar--</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mt-3 col-sm-3 col-xl-2">
+                            <label>Tipo</label>
+                            <select class="custom-select" id="js-movement-type">
+                                @{
+                                    foreach (var item in ViewBag.MovementType)
+                                    {
+                                        <option value="@item.Id">@item.Value</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12 mt-3 col-sm-3 col-xl-2">
+                            <label>Desde</label>
+                            <input class="form-control" id="fech-inicial" type="date" value="" />
+                        </div>
+                        <div class="col-12 mt-3 col-sm-3 col-xl-2">
+                            <label>Hasta</label>
+                            <input class="form-control" id="fech-fin" type="date" value="" />
+                        </div>
+                        <div class="col-12 mt-3 col-md-3 col-xl-2 col-sm-3 ml-sm-auto">
+                            <label style="opacity:0">Filtraaaaaaar</label>
+                            <button class="btn w-100 btn-info" id="filter-movements"><i class="fa fa-search"></i>Filtrar</button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="container-fluid">
+            <div id="RenderQueryMovement" class="wrapperGrid">
+                @Html.Partial("_BoardQueryMovementPartial")
+            </div>
+            <div class="row justify-content-end">
+                <div class="col-auto">
+                    <button class="btn btn-success" disabled id="btn-ingreso" data-toggle="modal" data-target=".bd-ingreso-egreso-modal-xl"><i class="fas fa-plus mr-1"></i>Ingreso</button>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-warning" disabled id="btn-egreso" data-toggle="modal" data-target=".bd-ingreso-egreso-modal-xl"><i class="fas fa-minus mr-1"></i>Egreso</button>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-primary" data-toggle="modal" data-target=".bd-transferencia-modal-xl"><i class="fas fa-exchange-alt mr-1"></i>Transferencia entre Almacenes</button>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+@*--------Modals----------*@
+<div id="renderModals">
+    @Html.Partial("_ModalsMovementsPartial")
+</div>
+
+
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<script src="~/Scripts/Alert.js"></script>
+<link href="~/Content/css/Alert.css" rel="stylesheet" />
+<script>
+    let now = new Date();
+
+    let day = ("0" + now.getDate()).slice(-2);
+    let month = ("0" + (now.getMonth() + 1)).slice(-2);
+    let dayIni = day - day + 1;
+
+    let todayIni = now.getFullYear() + "-" + (month) + "-" + ("0" + dayIni);
+    let today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+    $("#fech-inicial").val(todayIni);
+    $("#fech-fin").val(today);
+    $("#fech-ingreso-egreso").val(today);
+    $("#fech-transfer").val(today);
+
+    $(document).ready(() => {
+        
+        $("#almacen-local").on('change', _ => {
+            $("#js-select-nodo").prop("disabled", true);
+            Node(false);
+        })
+
+        $("#almacen-remoto").on('change', _ => {
+            $("#js-select-nodo").prop("disabled", false);
+            Node(true);
+        })
+
+        $("#empresa-sede").on("change", function () {
+            let organizationId = $(this).val();
+            SetAlmacenByOrganizationId(organizationId, 'warehouseByOrganization');
+        });
+
+        $("#sede-origen").on("change", function () {
+            let organizationId = $(this).val();
+            SetAlmacenByOrganizationId(organizationId, 'warehouse-origen');
+            $('#warehouse-origen').removeClass("border-success border-danger");
+            $('#warehouse-destino').removeClass("border-success border-danger");
+        });
+
+        $("#sede-destino").on("change", function () {
+            let organizationId = $(this).val();
+            SetAlmacenByOrganizationId(organizationId, 'warehouse-destino');
+            $('#warehouse-origen').removeClass("border-success border-danger");
+            $('#warehouse-destino').removeClass("border-success border-danger");
+        });
+
+        $("#warehouse-origen").on("change", function () {
+            
+            if (validationWarehousesTransfer($("#warehouse-origen"), 'destino', 'origen')) {
+                GetProductsByWarehouseId($(this).val(), 'js-transfer-product-select');
+            }
+        });
+
+        $("#warehouse-destino").on("change", function () {
+            validationWarehousesTransfer($("#warehouse-destino"), 'origen', 'destino');
+        });
+
+        $("#filter-movements").on('click', () => {
+
+            Filter();
+
+        });
+
+        $("#btn-ingreso").on('click', () => {
+            configInputOutput("INGRESO");
+            GetProductsByWarehouseId(null, 'select-product');
+        })
+
+        $("#btn-egreso").on('click', () => {
+            configInputOutput("EGRESO");
+            GetProductsByWarehouseId($("#warehouseByOrganization").val(), 'select-product');
+        })
+
+        $("#warehouseByOrganization").on("change", function () {
+
+            if ($(this).val() != "-1") {
+                $("#btn-ingreso").prop("disabled", false);
+                $("#btn-egreso").prop("disabled", false);
+            } else {
+
+                $("#btn-ingreso").prop("disabled", true);
+                $("#btn-egreso").prop("disabled", true);
+            }
+        })
+
+        $("#empresa-sede").on("change", _ => {   
+            
+            $("#btn-ingreso").prop("disabled", true);
+            $("#btn-egreso").prop("disabled", true);
+            
+        })
+
+        $("#btn-agregar").on("click", function () {
+            var localS = localStorage.getItem('ingreso');
+            
+            if (localS == 1) {
+                
+                if (ValidacionIngreso()) {
+
+                    let { productId, nameProduct, marca, modelo, numserie, categoria } = GetDataProduct('select-product');
+                    let cantidad = $("#js-cant-product").val();
+                    let precio = $("#js-price-product").val();
+
+                    let row = `<tr>
+                                    <td class="d-none">${productId}</td>
+                                    <td>${nameProduct}</td>
+                                    <td>${marca}</td>
+                                    <td>${modelo}</td>
+                                    <td>${numserie}</td>
+                                    <td>${categoria}</td>
+                                    <td>${cantidad}</td>
+                                    <td class="js-col-precio">${precio}</td>
+                                    <td class="text-center"><i style="cursor:pointer" onclick="DeletedRow(this)" class="fas fa-trash-alt"></i></td>
+                                </tr>`;
+                    if ($("#body-products tr:eq(0)").hasClass("js-sin-contenido")) {
+                        $("#body-products tr:eq(0)").remove();
+                    }
+
+                    $(row).appendTo($("#body-products"));
+
+                    
+                }
+
+            } else {               
+
+                if (ValidacionEgreso()) {
+                    let { productId, nameProduct, marca, modelo, numserie, categoria} = GetDataProduct('select-product');
+                    let cantidad = $("#js-cant-product").val();
+
+
+                    let row = `<tr>
+                                    <td class="d-none">${productId}</td>
+                                    <td>${nameProduct}</td>
+                                    <td>${marca}</td>
+                                    <td>${modelo}</td>
+                                    <td>${numserie}</td>
+                                    <td>${categoria}</td>
+                                    <td>${cantidad}</td>
+                                    <td class="js-col-precio d-none"></td>
+                                    <td class="text-center"><i style="cursor:pointer" onclick="DeletedRow(this)" class="fas fa-trash-alt"></i></td>
+                                </tr>`;
+                    if ($("#body-products tr:eq(0)").hasClass("js-sin-contenido")) {
+                        $("#body-products tr:eq(0)").remove();
+                    }
+                    $(row).appendTo($("#body-products"));
+                }
+            }
+
+        })
+
+        /////Restablece cambios/////////
+        $('#ingreso-egreso-modal').on('hidden.bs.modal', (e) => {
+            $("#js-motive-movement option[value='-1']").prop("selected", true);
+            $("#js-proveedor").val("").attr("data-supplier-id", "");
+            $("#fech-ingreso-egreso").val(today);
+            $("#js-doc-referencia").val("");
+            $("#js-buscar").val("");
+            $("#js-cant-product").val("");
+            $("#js-price-product").val("");
+            $(".border-success").removeClass("border-success");
+            $(".border-danger").removeClass("border-danger");
+            $("#body-products").html('<tr class="js-sin-contenido"><td class="text-center" colspan="8">Sin contenido</td></tr>');
+        })
+
+        $('#transferencia-modal').on('show.bs.modal',  (e) =>{
+            Node(false);
+        })
+        
+        $('#transferencia-modal').on('hidden.bs.modal', (e) => {
+            $("#almacen-local").prop("checked", true);
+            $("#js-select-nodo").prop("disabled", true);
+            $("#sede-origen option[value='-1']").prop("selected", true).trigger("change");
+            $("#sede-destino option[value='-1']").prop("selected", true).trigger("change");
+            $("#js-transfer-product-select").html('<option value="-1">--Seleccionar--</option>');
+            $("#fech-transfer").val(today);
+            $(".border-success").removeClass("border-success");
+            $(".border-danger").removeClass("border-danger");
+            $("#js-transfer-doc-reference").val("");
+            $("#js-transfer-buscar-prod").val("");
+            $("#js-transfer-cantidad-prod").val("");
+            $("#body-transferencias").html('<tr class="sin-transferencias"><td class="text-center" colspan="7">Sin contenido</td></tr>');
+        })
+
+        $('#js-view-proveedor').on('hidden.bs.modal', (e) => {
+            $("#ingreso-egreso-modal").removeClass("d-none");
+            $("#js-sectores option[value='-1']").prop("selected", true);
+            $("#js-razon-social").val("");
+            $("#js-ruc-supplier").val("");
+            $("#take-supplier option[value='-1']").prop("selected", true);
+        })
+        ///////////////////////////////
+
+        $("#js-add-transfer").on('click', _ => {
+
+            if (validarAddTransfer()) {
+                let { productId, nameProduct, marca, modelo, numserie, categoria } = GetDataProduct('js-transfer-product-select');
+
+                let cantidad = $("#js-transfer-cantidad-prod").val();
+
+
+                let row = `<tr>
+                            <td class="d-none">${productId}</td>
+                            <td>${nameProduct}</td>
+                            <td>${marca}</td>
+                            <td>${modelo}</td>
+                            <td>${numserie}</td>
+                            <td>${categoria}</td>
+                            <td class="text-center">${cantidad}</td>
+                            <td class="text-center"><i style="cursor:pointer" onclick="DeletedRow(this)" class="fas fa-trash-alt"></i></td>
+                        </tr>`;
+                if ($("#body-transferencias tr:eq(0)").hasClass("sin-transferencias")) {
+                    $("#body-transferencias tr:eq(0)").remove();
+                }
+                $(row).appendTo($("#body-transferencias"));
+            }
+            
+        })
+
+        $("#btn-view-proveedor").on("click", _ => {
+            $("#ingreso-egreso-modal").addClass("d-none")
+
+            FilterSuppliers();
+        })
+
+        $("#js-btn-procesar").on('click', _ => {
+
+            let localS = localStorage.getItem('ingreso');
+            if (localS == 1) {
+                if (ValidationProccessIntputOutput(true)) {
+                    notificacion({
+                        classTitleAndButtons: "warningTitleAndButtons",
+                        classMessage: "warningMessage",
+                        title: "¡ Confirmación !",
+                        icono: "",
+                        contenido: `¿ Seguro de procesar el Ingreso?`,
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "",
+                        mostrarBtnOk: "no",
+                    });
+
+                    $(".bigBox-Aceptar").on("click", _ => {
+                        $(".bigBox-Cancelar").trigger('click');
+                        ProcesarIngreso();
+                    });
+                }
+                
+            
+            } else {
+                if (ValidationProccessIntputOutput(false)) {
+                    notificacion({
+                        classTitleAndButtons: "warningTitleAndButtons",
+                        classMessage: "warningMessage",
+                        title: "¡ Confirmación !",
+                        icono: "",
+                        contenido: `¿ Seguro de procesar el Egreso?`,
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "",
+                        mostrarBtnOk: "no",
+                    });
+
+                    $(".bigBox-Aceptar").on("click", _ => {
+                        $(".bigBox-Cancelar").trigger('click');
+                        ProcesarEgreso();
+                    });
+                }
+                
+            }
+        });
+
+        $("#generate-transfer").on('click', _ => {
+
+            if (ValidationProccessTransfer()) {
+                notificacion({
+                    classTitleAndButtons: "warningTitleAndButtons",
+                    classMessage: "warningMessage",
+                    title: "¡ Confirmación !",
+                    icono: "",
+                    contenido: `¿ Seguro de procesar la Transferencia?`,
+                    btnAceptar: "Aceptar",
+                    btnCancelar: "Cancelar",
+                    btnOk: "OK",
+                    mostrarBtnAceptarAndCancelar: "",
+                    mostrarBtnOk: "no",
+                });
+
+                $(".bigBox-Aceptar").on("click", _ => {
+                    $(".bigBox-Cancelar").trigger('click');
+
+                    var data = GetListTransfers();
+
+                    $.ajax({
+                        cache: false,
+                        method: 'POST',
+                        dataType: 'json',
+                        data,
+                        url: '/ProductWarehouse/GenerateTransferProducts',
+                        success: json => {
+                            console.log(json);
+                            alertafixed({
+                                type: 'success',
+                                class: 'success-proccess',
+                                title: 'Hecho',
+                                message: `Se hizo la transferencia correctamente.`
+                            })
+                            $('#transferencia-modal').modal('hide');
+                        },
+                        error: err => {
+                            console.error("ERROR: ", err);
+                            alertafixed({
+                                type: 'danger',
+                                class: 'danger-proccess',
+                                title: 'ERROR',
+                                message: `Sucedió un error al conectarse al servidor.`
+                            })
+                        }
+                    })
+                });
+                
+
+            }
+        })
+
+    })
+
+    const validationWarehousesTransfer = (input, location1, location2) => {
+        let warehouseId = $(input).val();
+        if (warehouseId == $("#warehouse-" + location1).val()) {
+            $(input).addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'warning-validation' + location2,
+                title: 'Validación',
+                message: `El almacén ${location2} debe ser distinto al almacén ${location1}`
+            })
+            return;
+        } else {
+            if ($(input).hasClass("border-danger")) {
+                $(input).removeClass("border-danger").addClass("border-success");
+            } else if ($(input).hasClass("border-success")) {
+                $(input).removeClass("border-success");
+            }
+        }
+
+        return true;
+    }
+
+    const configInputOutput = typeMovement => {
+        if (typeMovement == 'INGRESO') {
+
+            $("#cont-proveedor").removeClass("d-none");
+            $("#ingreso-egresoLabel").text('Nuevo movimiento de Ingreso');
+            $("#label-table").text("Productos por Ingersar")
+            $("#cont-producto").removeClass("col-sm-5").addClass("col-sm-3");
+            $("#cont-precio").removeClass("d-none");
+            $(".js-col-precio").removeClass("d-none");
+            localStorage.setItem('ingreso', 1)
+        } else {
+            $("#ingreso-egresoLabel").text('Nuevo movimiento de Egreso');
+            $("#label-table").text("Productos por Egresar");
+            $("#cont-proveedor").addClass("d-none");
+            $("#cont-producto").removeClass("col-sm-3").addClass("col-sm-5");
+            $("#cont-precio").addClass("d-none");
+            $(".js-col-precio").addClass("d-none");
+            localStorage.setItem('ingreso', 0)
+        }
+    }
+
+    const ValidacionIngreso = _ => {
+        //let motivo = $("#js-motive-movement");
+        let producto = $("#select-product");
+        let cantidad = $("#js-cant-product");
+        let precio = $("#js-price-product");
+        
+        if (producto.val() == "-1") {
+            producto.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'js-alert',
+                title: 'Validación',
+                message: 'Debe seleccionar un producto'
+            })
+            return;
+        } else {
+            if (producto.hasClass("border-danger")) {
+                producto.removeClass("border-danger").addClass("border-success");
+            }
+        }
+        if (cantidad.val() == 0 || cantidad.val() == "0") {
+            cantidad.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'js-alert',
+                title: 'Validación',
+                message: 'Ingrese una cantidad correcta.'
+            })
+            return;
+        } else {
+            if (cantidad.hasClass("border-danger")) {
+                cantidad.removeClass("border-danger").addClass("border-success");
+            }
+        }
+        if (cantidad.val() == "") {
+            cantidad.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'js-alert',
+                title: 'Validación',
+                message: 'Debe ingresar una cantidad'
+            })
+            return;
+        } else {
+            if (cantidad.hasClass("border-danger")) {
+                cantidad.removeClass("border-danger").addClass("border-success");
+            }
+        }
+        if (precio.val() == "") {
+            precio.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'js-alert',
+                title: 'Validación',
+                message: 'Debe ingresar un precio'
+            })
+            return;
+        } else {
+            if (precio.hasClass("border-danger")) {
+                precio.removeClass("border-danger").addClass("border-success");
+            }
+        }
+
+
+        return true;
+    }
+
+    const ValidacionEgreso = _ => {
+        let motivo = $("#js-motive-movement");
+        let producto = $("#select-product");    
+        let cantidad = $("#js-cant-product");
+
+        if (producto.val() == "-1") {
+            producto.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'js-alert',
+                title: 'Validación',
+                message: 'Debe seleccionar un producto'
+            })
+            return;
+        } else {
+            if (producto.hasClass("border-danger")) {
+                producto.removeClass("border-danger").addClass("border-success");
+            }
+        }
+        if (cantidad.val() == "") {
+            cantidad.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'js-alert',
+                title: 'Validación',
+                message: 'Debe ingresar una cantidad'
+            })
+            return;
+        } else {
+            if (cantidad.hasClass("border-danger")) {
+                cantidad.removeClass("border-danger").addClass("border-success");
+            }
+        }
+        if (cantidad.val() == 0 || cantidad.val() == "0") {
+            cantidad.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'js-alert',
+                title: 'Validación',
+                message: 'Ingrese una cantidad correcta.'
+            })
+            return;
+        } else {
+            if (cantidad.hasClass("border-danger")) {
+                cantidad.removeClass("border-danger").addClass("border-success");
+            }
+        }
+        let value = $("#select-product").val();
+        let stock = $("#select-product option[value=" + value + "]").attr("data-stock")
+        if (Number(stock) < Number($("#js-cant-product").val())) {
+            cantidad.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'js-alert',
+                title: 'Validación',
+                message: `La cantidad de egreso supera al STOCK(${stock}) actual.`
+            })
+            return false;
+        }
+        return true;
+    }
+
+    const validacionCabecera = object => {
+
+        let { valueOrg, valueWare, valueFechDesde, valueFechHasta } = object;
+
+        if (valueOrg.val() == "-1") {
+            valueOrg.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'warning-message',
+                title: 'Validación',
+                message: 'Debe seleccionar una Empresa'
+            })
+            return false;
+        } else {
+            if (valueOrg.hasClass("border-danger")) {
+                valueOrg.removeClass("border-danger").addClass("border-success");
+            }
+        }
+        if (valueWare.val() == "-1") {
+            valueWare.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'warning-message',
+                title: 'Validación',
+                message: 'Debe seleccionar un Almacén'
+            })
+            return false;
+        } else {
+            if (valueWare.hasClass("border-danger")) {
+                valueWare.removeClass("border-danger").addClass("border-success");
+            }
+
+        }
+
+        if (valueFechDesde.val() > valueFechHasta.val()) {
+            valueFechDesde.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'warning-message',
+                title: 'Validación',
+                message: 'La fecha inicial no puede ser mayor a la fecha final'
+            })
+            return false;
+        } else {
+            if (valueFechDesde.hasClass("border-danger")) {
+                valueFechDesde.removeClass("border-danger").addClass("border-success");
+            }
+
+        }
+
+        return true;
+    }
+
+    const SetAlmacenByOrganizationId = (organizationId, warehouseHtmlId) => {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'organizationId': organizationId },
+            url: '/PatientsAssistance/GetWarehouses',
+            success: function (json) {
+
+                var html = `<option value="-1">--Seleccionar--</option>`;
+                for (var i = 0; i < json.length; i++) {
+                    html += `<option value="${json[i].WareHouseId}">${json[i].Name}</option>`;
+                }
+
+                $("#" + warehouseHtmlId).html(html);
+
+            },
+            error: function (error) {
+                console.log('ERROR:', error);
+            }
+        })
+    }
+
+    const Filter = (index = 1) => {
+        let valueOrg = $("#empresa-sede");
+        let valueWare = $("#warehouseByOrganization");
+        let valueFechDesde = $("#fech-inicial");
+        let valueFechHasta = $("#fech-fin");
+        let MovementType = $("#js-movement-type");
+        let values = {
+            valueOrg,
+            valueWare,
+            valueFechDesde,
+            valueFechHasta
+        }
+
+        if (validacionCabecera(values)) {
+            $("RenderQueryMovement").addClass("loadingGrid");
+            let data = {
+                OrganizationLocationId: valueOrg.val(),
+                WarehouseId: valueWare.val(),
+                StartDate: valueFechDesde.val(),
+                EndDate: valueFechHasta.val(),
+                MovementType: MovementType.val(),
+                Index: index,
+                Take: $("#take").val()
+            };
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                dataType: 'html',
+                data: data,
+                url: '/ProductWarehouse/Filter',
+                success: html => {
+                    $("#RenderQueryMovement").html(html);
+                },
+                error: err => {
+                    console.error("ERROR:", err);
+                }
+
+            })
+            $("RenderQueryMovement").removeClass("loadingGrid");
+        }
+    }
+
+    const GetProductsByWarehouseId = (warehouseId, select_id) => {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: {
+                'warehouseId': warehouseId
+            },
+            url: '/ProductWarehouse/GetProductsWarehouse',
+            success: json => {
+                arrOptions = [];
+                arrOptions.push('<option value="-1">--Seleccionar--</option>');
+                for (let item of json) {
+                    let html = `<option data-category-name="${item.Value2}" data-presentation="${item.Value3}" data-stock="${item.Value4}" value="${item.Id}">${item.Value}</option>`;
+                    arrOptions.push(html);
+                }
+                $("#" + select_id).html(arrOptions.join(" "));
+            },
+            error: err => {
+                console.error("ERROR: ", err);
+            }
+        })
+    }
+
+    const Node = remoto => {
+        let rem = false
+        if (remoto) rem = true;    
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'remoto': rem},
+            url: '/ProductWarehouse/GetNode',
+            success: json => {
+                arrOptions = [];
+                
+                if (!remoto) {
+                    $("#js-name-node").val(json[0].Value);
+                } else {
+                    arrOptions.push('<option value="-1">--Seleccionar--</option>');
+                }
+                for (let item of json) {
+                    let option = `<option value="${item.Id}">${item.Value}</option>`;
+                    arrOptions.push(option);
+                }
+                
+                $("#js-select-nodo").html(arrOptions.join(""));
+                
+            },
+            error: err => {
+                console.error("ERRO: ", err)
+            }
+        });
+    }
+
+    const GetDataProduct = id_select_product => {
+        let productId = $("#" + id_select_product).val();
+        let nameProduct = $("#" + id_select_product + " option[value=" + productId + "]").text().split("/")[0].split(":")[1];
+        let marca = $("#" + id_select_product + " option[value=" + productId + "]").text().split("/")[1].split(":")[1];
+        let modelo = $("#" + id_select_product  + " option[value=" + productId + "]").text().split("/")[2].split(":")[1];
+        let numserie = $("#" + id_select_product  + " option[value=" + productId + "]").text().split("/")[3].split(":")[1];
+        let categoria = $("#" + id_select_product  + " option[value=" + productId + "]").data("category-name");
+
+        return {
+            productId,
+            nameProduct,
+            marca,
+            modelo,
+            numserie,
+            categoria,
+        }
+
+    }
+
+    const soloEnteros = function (evt, input) {
+
+        input.value = input.value.replace(/[^0-9]/, '');
+        if (evt.which == 190 || evt.which == 110) {
+
+            alertafixed({
+                type: 'warning',
+                class: 'js-enteros',
+                title: 'Validación',
+                message: 'Porfavor, igrese solo números enteros'
+
+            })
+        }
+
+    }
+
+    const validarAddTransfer = _ => {
+        let valueSelectProduct = $("#js-transfer-product-select").val();
+        let cantidad = $("#js-transfer-cantidad-prod").val();
+        if (valueSelectProduct == "-1") {
+            $("#js-transfer-product-select").addClass("border-danger")
+            alertafixed({
+                type: 'warning',
+                class: 'validation-select',
+                title: 'Validación',
+                message: 'Debe seleccionar un producto'
+            });
+            return;
+        } else {
+            if ($("#js-transfer-product-select").hasClass("border-danger")) {
+                $("#js-transfer-product-select").removeClass("border-danger").addClass("border-success");
+            } else if ($("#js-transfer-product-select").hasClass("border-success")) {
+                $("#js-transfer-product-select").removeClass("border-success");
+            }
+        }
+        if (cantidad == "" ) {
+            $("#js-transfer-cantidad-prod").addClass("border-danger")
+            alertafixed({
+                type: 'warning',
+                class: 'validation-input-cant',
+                title: 'Validación',
+                message: 'Debe ingresar una cantidad'
+            });
+            return;
+        } else {
+            if ($("#js-transfer-cantidad-prod").hasClass("border-danger")) {
+                $("#js-transfer-cantidad-prod").removeClass("border-danger").addClass("border-success");
+            } else if ($("#js-transfer-cantidad-prod").hasClass("border-success")) {
+                $("#js-transfer-cantidad-prod").removeClass("border-success");
+            }
+        }
+
+        if (cantidad == "0" || cantidad == 0) {
+            $("#js-transfer-cantidad-prod").addClass("border-danger")
+            alertafixed({
+                type: 'warning',
+                class: 'validation-input-cant',
+                title: 'Validación',
+                message: 'Debe ingresar una cantidad mayor a cero'
+            });
+            return;
+        } else {
+            if ($("#js-transfer-cantidad-prod").hasClass("border-danger")) {
+                $("#js-transfer-cantidad-prod").removeClass("border-danger").addClass("border-success");
+            } else if ($("#js-transfer-cantidad-prod").hasClass("border-success")) {
+                $("#js-transfer-cantidad-prod").removeClass("border-success");
+            }
+        }
+
+        var Stock = $("#js-transfer-product-select option[value=" + valueSelectProduct + "]").attr("data-stock");
+        if (Number(Stock) < Number(cantidad)) {
+            $("#js-transfer-cantidad-prod").addClass("border-danger")
+            alertafixed({
+                type: 'warning',
+                class: 'validation-input-cant',
+                title: 'Validación',
+                message: 'La cantidad supera al STOCK(' + Stock + ') actual'
+            });
+            return;
+        } else {
+            if ($("#js-transfer-cantidad-prod").hasClass("border-danger")) {
+                $("#js-transfer-cantidad-prod").removeClass("border-danger").addClass("border-success");
+            } else if ($("#js-transfer-cantidad-prod").hasClass("border-success")) {
+                $("#js-transfer-cantidad-prod").removeClass("border-success");
+            }
+        }
+
+        return true;
+    }
+        
+    const DeletedRow = icon => {
+        $(icon).parent().parent().remove();
+    }
+
+    const ViewDetails = function (rowClicked) {
+        let movementId = $(rowClicked).find('td').eq(0).text();
+        console.log(movementId);
+    }
+
+    const SetValuesInMovementesInput = function (rowClicked) {
+        let idSupplier = $(rowClicked).find('td').eq(0).text();
+        let nameSupplier = $(rowClicked).find('td').eq(1).text();
+        $("#js-proveedor").val(nameSupplier).attr("data-supplier-id", idSupplier);
+        $('#js-view-proveedor').modal('hide');
+    }
+
+    const FilterSuppliers = (index = 1) => {
+        let SectorId = $("#js-sectores").val();
+        let RazonSocial = $("#js-razon-social").val();
+        let RUC = $("#js-ruc-supplier").val();
+
+        $("#board-suppliers").addClass("loadingGrid");
+        let data = {
+            SectorId,
+            RazonSocial,
+            RUC,
+            Index: index,
+            Take: $("#take-supplier").val()
+        };
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'html',
+            data: data,
+            url: '/ProductWarehouse/FilterSupplier',
+            success: html => {
+                $("#board-suppliers").html(html);
+            },
+            error: err => {
+                console.error("ERROR:", err);
+            }
+        });
+        $("#board-suppliers").removeClass("loadingGrid");
+
+    }
+    
+    const ProcesarIngreso = _ => {
+        $("#js-content-input-output").addClass('loadingGrid');
+        let rows = $("#body-products tr");
+        let WarehouseId = $("#warehouseByOrganization").val();
+        let SupplierId = $("#js-proveedor").attr('data-supplier-id');
+        let MovementTypeId = $("#js-motive-movement").val();
+        let Date = $("#fech-ingreso-egreso").val();
+        let ReferenceDocument = $("#js-doc-referencia").val();
+        let arrProducts = [];
+        let data = {
+            WarehouseId,
+            SupplierId,
+            Date,
+            ReferenceDocument,
+            MovementTypeId,
+            ListProducts: arrProducts,
+        }
+
+        for (let i = 0; i < rows.length; i++) {
+            let td = rows.eq(i).find("td");
+            let obj = {
+                ProductId: td.eq(0).text(),
+                Quantity: td.eq(6).text(),
+            }
+            arrProducts.push(obj);
+        }
+
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data: data,
+            url: '/ProductWarehouse/GenerateIngresoProduct',
+            success: json => {
+                $("#js-content-input-output").removeClass('loadingGrid');
+                alertafixed({
+                    type: 'success',
+                    class: 'success-proccess',
+                    title: 'Hecho',
+                    message: `Se generó el ingreso satisfacoriamente.`
+                });
+                $('#ingreso-egreso-modal').modal('hide');
+            },
+            error: err => {
+                console.error("ERROR: ", err);
+                $("#js-content-input-output").removeClass('loadingGrid');
+                alertafixed({
+                    type: 'danger',
+                    class: 'danger-proccess',
+                    title: 'ERROR',
+                    message: `Sucedió un error al conectarse al servidor.`
+                })
+            }
+        })
+        
+    }
+
+    const ProcesarEgreso = _ => {
+        $("#js-content-input-output").addClass('loadingGrid');
+        let rows = $("#body-products tr");
+        let WarehouseId = $("#warehouseByOrganization").val();
+        let MovementTypeId = $("#js-motive-movement").val();
+        let Date = $("#fech-ingreso-egreso").val();
+        let arrProducts = [];
+        let data = {
+            WarehouseId,
+            Date,
+            MovementTypeId,
+            ListProducts: arrProducts,
+        }
+
+        for (let i = 0; i < rows.length; i++) {
+            let td = rows.eq(i).find("td");
+            let obj = {
+                ProductId: td.eq(0).text(),
+                Quantity: td.eq(6).text(),
+            }
+            arrProducts.push(obj);
+        }
+
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data: data,
+            url: '/ProductWarehouse/GenerateEgresoProduct',
+            success: json => {
+                $("#js-content-input-output").removeClass('loadingGrid');
+                alertafixed({
+                    type: 'success',
+                    class: 'success-proccess',
+                    title: 'Hecho',
+                    message: `Se generó el egreso satisfacoriamente.`
+                });
+                $('#ingreso-egreso-modal').modal('hide');
+            },
+            error: err => {
+                console.error("ERROR: ", err);
+                $("#js-content-input-output").removeClass('loadingGrid');
+                alertafixed({
+                    type: 'danger',
+                    class: 'danger-proccess',
+                    title: 'ERROR',
+                    message: `Sucedió un error al conectarse al servidor.`
+                })
+            }
+        })       
+    }
+
+    const ProcesarTransferenciaEntreAlmacenes = _ => {
+        $("#js-content-input-output").addClass('loadingGrid');
+        let rows = $("#body-products tr");
+        let WarehouseId = $("#warehouseByOrganization").val();
+        let MovementTypeId = $("#js-motive-movement").val();
+        let Date = $("#fech-ingreso-egreso").val();
+        let arrProducts = [];
+        let data = {
+            WarehouseId,
+            Date,
+            MovementTypeId,
+            ListProducts: arrProducts,
+        }
+
+        for (let i = 0; i < rows.length; i++) {
+            let td = rows.eq(i).find("td");
+            let obj = {
+                ProductId: td.eq(0).text(),
+                Quantity: td.eq(6).text(),
+            }
+            arrProducts.push(obj);
+        }
+
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data: data,
+            url: '/ProductWarehouse/GenerateEgresoProduct',
+            success: json => {
+                $("#js-content-input-output").removeClass('loadingGrid');
+                alertafixed({
+                    type: 'success',
+                    class: 'success-proccess',
+                    title: 'Hecho',
+                    message: `Se generó el egreso satisfacoriamente.`
+                })
+            },
+            error: err => {
+                console.error("ERROR: ", err);
+                $("#js-content-input-output").removeClass('loadingGrid');
+                alertafixed({
+                    type: 'danger',
+                    class: 'danger-proccess',
+                    title: 'ERROR',
+                    message: `Sucedió un error al conectarse al servidor.`
+                })
+            }
+        })
+    }
+
+    const ValidationProccessIntputOutput = ingreso => {
+        if (ingreso) {
+            let selectMotivo = $("#js-motive-movement");
+            let inputSupplier = $("#js-proveedor");
+            if (selectMotivo.val() == "-1") {
+                selectMotivo.addClass("border-danger");
+                alertafixed({
+                    type: 'warning',
+                    class: 'warning-proccess',
+                    title: 'Validación',
+                    message: `Debe seleccionar el motivo del ingreso.`
+                })
+                return false;
+            } else {
+                if (selectMotivo.hasClass("border-danger")) {
+                    selectMotivo.removeClass("border-danger").addClass("border-success");
+                } else if (selectMotivo.hasClass("border-success")) {
+                    selectMotivo.removeClass("border-success");
+                }
+            }
+
+            if (inputSupplier.val() == "" || inputSupplier.attr("data-supplier-id") === undefined || inputSupplier.attr("data-supplier-id") === "") {
+                inputSupplier.addClass("border-danger");
+                alertafixed({
+                    type: 'warning',
+                    class: 'warning-proccess',
+                    title: 'Validación',
+                    message: `Debe seleccionar un proveedor.`
+                })
+                return false;
+            } else {
+                if (inputSupplier.hasClass("border-danger")) {
+                    inputSupplier.removeClass("border-danger").addClass("border-success");
+                } else if (inputSupplier.hasClass("border-success")) {
+                    inputSupplier.removeClass("border-success");
+                }
+            }
+
+        } else {
+            let selectMotivo = $("#js-motive-movement");
+            if (selectMotivo.val() == "-1") {
+                selectMotivo.addClass("border-danger");
+                alertafixed({
+                    type: 'warning',
+                    class: 'warning-proccess',
+                    title: 'Validación',
+                    message: `Debe seleccionar el motivo del egreso.`
+                })
+                return false;
+            } else {
+                if (selectMotivo.hasClass("border-danger")) {
+                    selectMotivo.removeClass("border-danger").addClass("border-success");
+                } else if (selectMotivo.hasClass("border-success")) {
+                    selectMotivo.removeClass("border-success");
+                }
+            }
+
+            
+        }
+        if ($("#body-products tr").length > 0) {
+            if ($("#body-products tr").eq(0).hasClass('js-sin-contenido')) {
+                alertafixed({
+                    type: 'warning',
+                    class: 'warning-proccess-prod',
+                    title: 'Validación',
+                    message: `Debe ingresar al menos un producto.`
+                })
+                return false;
+            }
+        }
+        return true;
+    }
+
+    const ValidationProccessTransfer = _ => {
+        let selectSedeOrigen = $("#sede-origen");
+        let selectWarehouseOrigen = $("#warehouse-origen");
+
+        let selectSedeDestino = $("#sede-destino");
+        let selectWarehouseDestino = $("#warehouse-destino");
+
+        let selectNodo = $("#js-select-nodo");
+
+        
+
+        if (selectNodo.val() == "-1") {
+            selectNodo.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'warning-proccess',
+                title: 'Validación',
+                message: `Debe seleccionar un nodo.`
+            })
+            return false;
+        } else {
+            if (selectNodo.hasClass("border-danger")) {
+                selectNodo.removeClass("border-danger").addClass("border-success");
+            } else if (selectNodo.hasClass("border-success")) {
+                selectNodo.removeClass("border-success");
+            }
+        }
+
+        if (selectSedeOrigen.val() == "-1") {
+            selectSedeOrigen.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'warning-proccess',
+                title: 'Validación',
+                message: `Debe seleccionar una sede de origen.`
+            })
+            return false;
+        } else {
+            if (selectSedeOrigen.hasClass("border-danger")) {
+                selectSedeOrigen.removeClass("border-danger").addClass("border-success");
+            } else if (selectSedeOrigen.hasClass("border-success")) {
+                selectSedeOrigen.removeClass("border-success");
+            }
+        }
+
+        if (selectSedeDestino.val() == "-1") {
+            selectSedeDestino.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'warning-proccess',
+                title: 'Validación',
+                message: `Debe seleccionar una sede de destino.`
+            })
+            return false;
+        } else {
+            if (selectSedeDestino.hasClass("border-danger")) {
+                selectSedeDestino.removeClass("border-danger").addClass("border-success");
+            } else if (selectSedeDestino.hasClass("border-success")) {
+                selectSedeDestino.removeClass("border-success");
+            }
+        }
+
+        if (selectWarehouseOrigen.val() == "-1") {
+            selectWarehouseOrigen.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'warning-proccess',
+                title: 'Validación',
+                message: `Debe seleccionar una almacén de origen.`
+            })
+            return false;
+        } else {
+            if (selectWarehouseOrigen.hasClass("border-danger")) {
+                selectWarehouseOrigen.removeClass("border-danger").addClass("border-success");
+            } else if (selectWarehouseOrigen.hasClass("border-success")) {
+                selectWarehouseOrigen.removeClass("border-success");
+            }
+        }
+
+        if (selectWarehouseDestino.val() == "-1") {
+            selectWarehouseDestino.addClass("border-danger");
+            alertafixed({
+                type: 'warning',
+                class: 'warning-proccess',
+                title: 'Validación',
+                message: `Debe seleccionar un almacén de destino.`
+            })
+            return false;
+        } else {
+            if (selectWarehouseDestino.hasClass("border-danger")) {
+                selectWarehouseDestino.removeClass("border-danger").addClass("border-success");
+            } else if (selectWarehouseDestino.hasClass("border-success")) {
+                selectWarehouseDestino.removeClass("border-success");
+            }
+        }
+
+
+        if ($("#body-transferencias tr").length > 0) {
+            if ($("#body-transferencias tr").eq(0).hasClass('sin-transferencias')) {
+                alertafixed({
+                    type: 'warning',
+                    class: 'warning-proccess',
+                    title: 'Validación',
+                    message: `Debe transferir al menos un producto.`
+                })
+                return false;
+            }
+            
+        } 
+
+        if ($(".border-danger").length > 0) {
+
+            alertafixed({
+                type: 'warning',
+                class: 'warning-proccess',
+                title: 'Validación',
+                message: `Revise los errores para continuar.`
+            })
+            return false;
+        }
+        return true;
+    }
+
+    const GetListTransfers = _ => {
+        let local = 0;
+        if ($("#almacen-local").prop("checked") == true) {
+            local = 1
+        }
+
+        let rows = $("#body-transferencias tr");
+        let WarehouseIdOrigen = $("#warehouse-origen").val();
+        let WarehouseIdDestino = $("#warehouse-destino").val();
+        let Date = $("#fech-transfer").val();
+        let IsLocallyProcessed = local;
+        let MovementTypeIdOrigen = 2;
+        let MovementTypeIdDestino = 1;
+        let MotiveTypeIdOrigen = 20;
+        let MotiveTypeIdDestino = 10;
+        let ReferenceDocument = $("#js-transfer-doc-reference").val();
+        let arrProducts = [];
+        $("#js-content-input-output").addClass('loadingGrid');
+        for (let i = 0; i < rows.length; i++) {
+
+            let td = rows.eq(i).find("td");
+            let obj = {
+                ProductId: td.eq(0).text(),
+                Quantity: td.eq(6).text(),
+            }
+            arrProducts.push(obj);
+        }
+        console.log(arrProducts);
+        let List = [{
+            WarehouseId: WarehouseIdOrigen,
+            Date,
+            MovementTypeId: MovementTypeIdOrigen,
+            MotiveTypeId: MotiveTypeIdOrigen,
+            ReferenceDocument,
+            ListProducts: arrProducts,
+        },
+        {
+            WarehouseId: WarehouseIdDestino,
+            Date,
+            ReferenceDocument,
+            MovementTypeId: MovementTypeIdDestino,
+            MotiveTypeId: MotiveTypeIdDestino,
+            ListProducts: arrProducts,
+        }];
+        
+        return data = {
+            IsLocallyProcessed,
+            List
+        };
+    }
+</script>
+
+
+

@@ -1,0 +1,2175 @@
+﻿
+<style>
+
+
+    .breadcrumb-1 {
+        height: 35px !important;
+        padding: 4px 5px 2px 5px !important;
+        width: 150px !important;
+    }
+
+    #contAlert {
+        position: fixed;
+        top: 20px;
+        right: 0;
+        width: calc(100% / 4);
+        z-index: 20000;
+    }
+    .form-control{
+        border-radius: 0.3rem;
+    }
+    .close:focus {
+        outline: none;
+    }
+
+
+    .pagination-active span {
+        color: #f39c12 !important;
+    }
+
+    #filtPaciente {
+        opacity: 0;
+    }
+
+    a {
+        outline: none;
+    }
+
+    .iconEdit {
+        color: Black;
+    }
+
+    span .fa-file-pdf {
+        font-size: 15px;
+        color: red;
+    }
+
+    span .fa-file-download {
+        font-size: 15px;
+        color: forestgreen;
+    }
+
+    span .fa-check-circle {
+        font-size: 15px;
+        color: dodgerblue;
+        cursor: default;
+    }
+
+    span .fa-eye {
+        font-size: 15px;
+        color: fuchsia;
+    }
+
+        span .fa-eye:hover {
+            color: hotpink;
+        }
+
+
+    span .fa-file-download:hover {
+        font-size: 15px;
+        color: darkgreen;
+    }
+
+    span .fa-file-pdf:hover {
+        color: darkred;
+    }
+
+    .ColumnNoWrap {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    
+    .bodyRow {
+        overflow: hidden;
+    }
+
+    .modalDialog {
+        margin: 0px auto;
+        max-width: 100%;
+    }
+
+    .View {
+        width: 100%;
+        max-height: 150px;
+        margin: 10px;
+        border: 1px rgba(173, 173,173, 0.1) inset;
+        overflow-y: scroll;
+        overflow-x: scroll;
+    }
+
+        .View::-webkit-scrollbar {
+            max-width: 7px;
+            max-height: 7px;
+        }
+
+        .View::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            background-color: #dddddd;
+            border: 1px solid #c9c9c9;
+        }
+
+    .titleRow {
+        font-family: sans-serif;
+        background-color: #fff;
+        border: 2px solid rgba(173, 173,173, 0.1);
+        color: #3c3c3b;
+        text-align: left;
+        font-weight: 500;
+        background-color: #fcfcfc;
+    }
+
+    .bodyRow {
+        height: 150px;
+    }
+
+    .View .info {
+        color: #3c3c3b;
+        font-family: 'Roboto', sans-serif;
+        font-size: 13px;
+        padding-left: 0px;
+        margin: 1px;
+        border-bottom: 1px rgba(173, 173,173, 0.5) inset;
+        text-align: left;
+    }
+
+    #DivNotices {
+        border-bottom-left-radius: 8px;
+        border: 2px solid rgba(173, 173,173, 0.1);
+    }
+
+    .View .info div {
+        padding-left: 0px;
+    }
+
+    .View .info .result {
+        margin-left: 10px;
+    }
+
+    .View .info a {
+        text-decoration: dotted;
+    }
+
+    .View div:last-child {
+        border-bottom: none;
+    }
+
+    .leyenda {
+        left: 0.01rem;
+        position: sticky;
+    }
+
+    .btnAgendar {
+        position: fixed;
+        z-index: 99000;
+        top: 40px;
+        right: 18px;
+        border-radius: 0;
+        width: 40px;
+        height: 40px !important;
+        outline: none;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        transition: width 0.5s ease
+    }
+
+        .btnAgendar:hover {
+            width: 200px;
+            transition: width 0.5s ease
+        }
+
+    .spnAgenda {
+        font-family: sans-serif;
+        font-weight: normal;
+        font-size: 1rem !important;
+    }
+    .worker-message:hover{
+        background-color: #dddddd;
+    } 
+</style>
+
+<div class="container-fluid pt-2">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-1">
+            <li class="breadcrumb-item active">Servicios Vigilancia</li>
+        </ol>
+    </nav>
+    @*<div class="modal-body " id="RenderNotification">
+        @Html.Partial("_NotificationPartial")
+        <div class="">
+
+        </div>
+    </div>*@
+    <section class="contenedor-main  row">
+        <button type="button" class="d-none btnModalReview btn p-0 m-0" id="btnModalReviewEMO" data-toggle="modal" data-target="#modalReviewEMO"></button>
+        <main class="colMain col-12 col-md-8 mr-0 pr-0">
+            <div class="box box-default mt-2" id="acordion">
+                <div class="box-header with-border" id="heading1">
+                    <h3 class="box-title" style="cursor:pointer;" onclick="ColapseTable('divFilter','heightFilter')"><i class="icon-calendar"></i> Bandeja de Pacientes</h3>
+                </div>
+                <input id="heightFilter" type="hidden" value="">
+                <div id="divFilter" style="overflow:hidden;">
+                    <div class="box-body" aria-labelledby="heading1">
+                        <div class="row">
+                            <div class="col-12 col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <label for="">Paciente / DNI</label>
+                                    <input style="border-radius: 0.3rem;" type="text" id="PacientFullName" class="form-control" maxlength="150" placeholder="Ingrese nombre del paciente" />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-2 col-xl-2">
+                                <div class="form-group">
+                                    <label class="m-0" for="">Vigilancia</label>
+
+                                    <select class="mt-2 m-0 custom-select" id="PlanVigilancia"></select>
+
+
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="">Estado del Trabajador</label>
+                                    <div class="row pt-0 pb-0" style="padding-left:10px; padding-right:10px">
+                                        <div class="col-12 col-md-4 ">
+                                            <label class="xxxx radButton">
+                                                Todos
+                                                <input type="radio" checked="checked" name="radio" id="rbtodos">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <label class="xxxx radButton">
+                                                Activo
+                                                <input type="radio" name="radio" id="rbActivo">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <label class="xxxx radButton">
+                                                Inactivo
+                                                <input type="radio" name="radio" id="rbInactivo">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-3 col-xl-2">
+                                <div class="form-group">
+                                    <label for="" id="filtPaciente" class="d-none d-lg-block">Filtrar</label>
+                                    <button class="btn btn-info boton" onclick="Filter(1)">
+                                        <i class="fa fa-search"></i> Filtrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div id="RenderBoardPatientsAssistancePartial" class="wrapperGrid loadingGrid">
+                @Html.Partial("_BoardPatientsAssistancePartial")
+            </div>
+            <div class="row" style=" margin-left: 0px; margin-right: 0px;">
+                <div class="box box-warning mt-2 col-12" id="acordion" style=" padding-left: 0px; padding-right: 0px;">
+                    <div class="box-header with-border" id="heading1" onclick="ColapseTable('DivCalendar','heightCalendar')">
+                        <h3 class="box-title" style="cursor:pointer;">Agenda de Citas </h3>
+                    </div>
+                    <input id="heightCalendar" type="hidden" value="">
+                    <div id="DivCalendar" style="overflow:hidden;">
+                        <div class="box-body collapse show" aria-labelledby="heading1">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div id="calendar" class="calendar-custom mt-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+        <aside class="col-12 col-md-4 pr-1 colAside" style="padding-right: 0px;">
+
+            <div class="col-12 ml-0 Chart">
+                <div class="row title" onclick="ColapseTable('DivNoticesHoy','heightDivNotices')">
+                    Avisos Diarios
+                </div>
+
+
+                <input id="heightDivNotices" type="hidden" value="">
+                <div id="DivNoticesHoy" style="overflow:hidden">
+                    <div class="row info">
+                        <div class="col-10 " style="color: dimgrey; ">
+                            Controles para el día de hoy:
+                        </div>
+                        <div class="col-2">
+                            <span id="controlsToday" class="label label-success result">0</span>
+                        </div>
+                    </div>
+                    <div class="row info">
+                        
+                        <div class="col-10">
+                            <a class="w-100" href="@Url.Action("Index","Notifications")" style="color: dimgrey; text-decoration:none; outline: none; cursor:pointer">Mensajes de trabajadores:</a>
+                                
+                        </div>
+                        <div class="col-2">
+                            <a href="WorkerMessage/Index" style="color: white; text-decoration:none; outline: none; cursor:pointer"><span class="label label-warning result">10</span></a>
+                            
+                        </div>                       
+                        
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 Chart drop-activo wrapperTopDx ml-0 loadingGrid">
+                <div class="row title " onclick="ColapseTable('divTopDx' , 'heightdivTopDx' )">
+                    Top 10 Dx de <span class="mx-1" id="totalPatient">0</span> evaluaciones ocupacionales. <input type="text" id="RecordsPatient" class="d-none" name="name" value="" />
+                </div>
+                <input id="heightdivTopDx" type="hidden" value="">
+                <div id="divTopDx" class="" style="overflow:hidden">
+                    <div class="row info" id="RenderTopDiagnostic">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item Assistance-tab">
+                                <a class="nav-link active" id="Assistance-tab" data-toggle="tab" role="tab" aria-controls="Assistance" aria-selected="true" onclick="NavTabActiveDx()" href="#Assistance">Asistenciales</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="Occupational-tab" data-toggle="tab" role="tab" aria-controls="Occupational" aria-selected="true" onclick="NavTabActiveDx()" href="#Occupational">Ocupacionales</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="" style="width:100%">
+                            <div class="tab-pane fade" id="Assistance" style="width:100%" role="tabpanel" aria-labelledby="contact-tab"><a href="#" class="table-responsive" data-toggle="modal" data-target="#modal1" onclick="LoadModalTopDiagnostic()">@Html.Partial("_TopDiagnosticPartial")</a></div>
+                            <div class="tab-pane fade" id="Occupational" style="width:100%" role="tabpanel" aria-labelledby="contact-tab"><a href="#" class="table-responsive" data-toggle="modal" data-target="#modal4" onclick="LoadModalTopxOccupational()">@Html.Partial("_TopDxOccupationalPartial")</a></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12 Chart ml-0 wrapperMonthlyControls loadingGrid">
+                <div class="row title " onclick="ColapseTable('divMonthlyCompliance','heightdivMontlhyCompliance')">
+                    Cumplimiento mensual:
+                    <label class="pl-1 lblDate" style="cursor: pointer"></label>
+                </div>
+                <input id="heightdivMontlhyCompliance" type="hidden" value="">
+                <div id="divMonthlyCompliance" style="overflow:hidden">
+                    <div class="row info" id="RenderMonthlyCompliance">
+                        <a href="#" class="table-responsive" data-toggle="modal" data-target="#modal3" onclick="LoadModalMonthlyCompliance()">@Html.Partial("_MonthlyCompliancePartial")</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 Chart ml-0 wrapperMonthlyControls loadingGrid">
+                <div class="row title" onclick="ColapseTable('divMonthlyControls','heightDivMonthlyControls')">
+                    Cumplimiento de controles mensuales
+                </div>
+                <input id="heightDivMonthlyControls" type="hidden" value="">
+                <div id="divMonthlyControls" style="overflow:hidden">
+                    <div class="row info" id="RenderHeightdivMonthlyControls">
+                        <a href="#" class="table-responsive" data-toggle="modal" data-target="#modal2" onclick="LoadModalMonthlyControls()">@Html.Partial("_MonthlyControlsPartial")</a>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </aside>
+    </section>
+
+
+    <!--Modal-->
+    <button type="button" data-toggle="modal" data-target="#modalAgendar" class="btn-modalAgendar d-none"></button>
+    <div class="modal fade" id="modalAgendar" tabindex="-1" role="dialog" aria-labelledby="agendar" aria-hidden="true">
+        <div class="modal-dialog" style="background-color: rgba(0,0,0,0.5)" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb  justify-content-end">
+                            <li class="breadcrumb-item"><a href="/PatientsAssistance">Servicios Vigilancia</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Agendar</li>
+                        </ol>
+                    </nav>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class=" form-group">
+                        <label>Plan de vigilancia</label>
+                        <input disabled id="patientAgendarPlanName" class="form-control" type="text" value="" />
+                    </div>
+                    <div class=" form-group">
+                        <label>Trabajador</label>
+                        <input disabled id="patientAgendarFullName" class="form-control" type="text" value="" />
+                        <input id="patientAgendarId" class="d-none form-control" type="text" value="" />
+                        <input id="VigilanciaId" class="d-none form-control" type="text" value="" />
+
+                    </div>
+                    <div class="form-group">
+                        <label class="m-0" for="">Fecha</label>
+                        <input type="text" class="form-control" id="dateAgendar" />
+                    </div>
+                    <div class=" form-group">
+                        <label>Comentarios/Mensaje de notificación</label>
+                        <textarea id="txtAgendarComentery" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row w-100 m-0 p-0 justify-content-between">
+                        <div class="col-auto  p-0"><button type="button" class="btn btn-modal-agendar-close btn-secondary" data-dismiss="modal">Cancelar</button></div>
+                        <div class="col-auto  p-0">
+                            <button type="button" onclick="enviarAgendarNotificar()" class="btn btn-success">Agendar y Notificar</button>
+                            <button type="button" onclick="enviarAgendar()" class="btn btn-primary">Agendar</button>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="ModalData" tabindex="-1" role="dialog" aria-labelledby="ModalData" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-4"><span>Fecha:</span></div>
+                        <div class="col-8"><div class="form-group"><input type="date" class="form-control date" name="name" value="" /></div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <span>Paciente:</span>
+                        </div>
+                        <div class="col-8">
+                            <div class="form-group">
+                                <input type="text" class="w-100 mbd" id="NamePatient" name="name" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" data-toggle="modal" data-target="#ModalData" class="btnModalData d-none"></button>
+
+    <div class="modal fade p-0 modalFade" id="modal1">
+        <div class="modal-dialog modalDialog d-flex justify-content-center align-items-center modal-dialog-centered">
+            <div class="modal-content modalContent">
+                <div class="modal-header pb-4">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/PatientsAssistance">Servicios Vigilancia</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Top diagnósticos Asistencial</li>
+                        </ol>
+                    </nav>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @Html.Partial("_ModalTopDiagnosticPartial")
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade p-0 modalFade" id="modal2">
+        <div class="modal-dialog modalDialog d-flex justify-content-center align-items-center modal-dialog-centered">
+            <div class="modal-content modalContent">
+                <div class="modal-header pb-4 justify-content-end">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/PatientsAssistance">Servicios Vigilancia</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Cumplimiento Control Mensual</li>
+                        </ol>
+                    </nav>
+                    <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @Html.Partial("_ModalMonthlyControlsPartial")
+            </div>
+        </div>
+    </div>
+    <div class="modal fade p-0 modalFade" id="modal3">
+        <div class="modal-dialog modalDialog d-flex justify-content-center align-items-center modal-dialog-centered">
+            <div class="modal-content modalContent">
+                <div class="modal-header pb-4 justify-content-end">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/PatientsAssistance">Servicios Vigilancia</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Cumplimiento Mensual</li>
+                        </ol>
+                    </nav>
+                    <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @Html.Partial("_ModalMonthlyCompliancePartial")
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade p-0 modalFade" id="modal4">
+        <div class="modal-dialog modalDialog d-flex justify-content-center align-items-center modal-dialog-centered">
+            <div class="modal-content modalContent">
+                <div class="modal-header pb-4 justify-content-end">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/PatientsAssistance">Servicios Vigilancia</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Top diagnósticos ocupacional</li>
+                        </ol>
+                    </nav>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @Html.Partial("_ModalTopxOccupationalPartial")
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade p-0 modalFade" id="modalReviewEMO">
+        <button data-toggle="modal" id="btn-Agendar" data-target="#modalEnviarV" onmouseleave="BtnAgendaHover()" onmouseenter="BtnAgendaHover()" class="btn btn-info btnAgendar d-flex justify-content-start">
+            <i class="fas fa-calendar-check" style="font-size:1.5rem"><span class="mx-2 spnAgenda d-none">Enviar a vigilancia</span></i>
+        </button>
+        <div class="modal-dialog modalDialog d-flex justify-content-center align-items-center modal-dialog-centered">
+            <div class="modal-content modalContent">
+                <div class="modal-header">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/PatientsAssistance">Servicios Vigilancia</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Revisar ESO</li>
+                        </ol>
+                    </nav>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body " id="RenderReviewEMO">
+                    @Html.Partial("_ReviewEMOPartial")
+                    <div class="">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalEnviarV" tabindex="-1" role="dialog" aria-labelledby="enviarVigilancia" aria-hidden="true">
+        <div class="modal-dialog" style="background-color: rgba(0,0,0,0.5)" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="enviarVigilancia">Enviar a Vigilancia</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class=" form-group">
+                        <label>Trabajador</label>
+                        <input disabled id="patientFullName" class="form-control" type="text" value="" />
+                        <input id="patientPVId" class="d-none form-control" type="text" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label class="m-0" for="">Plan de Vigilancia</label>
+
+                        <select class="mt-2 p-0 m-0 form-control" id="PlanVigilancia-modal"></select>
+
+                    </div>
+                    <div class=" form-group">
+                        <label>Comentarios</label>
+                        <textarea id="txtAreComentery" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-modal-close btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" onclick="enviarPlanVigilancia()" class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-notifi" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Enviar notificación</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label>Trabajador</label>
+                    <input type="text" class="form-control" id="name-worker" disabled />
+                    <input type="text" class="d-none" id="id-worker" disabled />
+                    <label class="mt-3">Título</label>
+                    <input type="text" class="form-control" data-validation-input="string" data-length="5-20" id="title-notifi" data-message="Por favor, ingrese entre 5 a 20 caracteres" />
+
+                    <label class="mt-3">Tipo</label>
+                    <div class="row w-100 m-0 p-0">
+                        <div class="col-12 px-0">
+                            <select class="custom-select" id="type-notification">
+                                <option value="-1">--SELECCIONAR--</option>
+                                @{
+                                    foreach (var item in ViewBag.NotificationType)
+                                    {
+                                        <option value="@item.Id">@item.Value</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+                        <div class="col-4 p-0 pl-2 d-none">
+                            <input type="text" class="form-control" id="dateCita" />
+                        </div>
+                    </div>
+
+                    <label class="mt-3">Mensaje</label>
+                    <textarea id="message-notifi" data-validation-input="string" data-length="5-30" data-message="Por favor, ingrese entre 5 a 30 caracteres" class="form-control" style="resize:none"></textarea>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times" style="font-size:1.2rem"></i></button>
+                    <button type="button" class="btn btn-primary"  onclick="EnviarNotificacion(this)"><i class="fas fa-envelope" style="font-size:1.2rem"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contAlert" class="mt-5 mx-0">
+
+    </div>
+
+
+</div>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/Alert.js"></script>
+<link href="~/Content/css/Alert.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/valdiation.js"></script>
+@*<script src="~/Scripts/bootstrap.js"></script>*@
+@section Scripts{
+    @{
+        if (Request.Browser.Browser == "IE" && Convert.ToDouble(Request.Browser.Version) < 9.0)
+        {
+            <script>
+
+            </script>
+        }
+        else
+        {
+            <script src="https://code.highcharts.com/highcharts.js"></script>
+            <script src="~/Scripts/highcharts-3d.js"></script>
+            <script src="~/Scripts/exporting.js"></script>
+            <script src="~/Scripts/offline-exporting.js"></script>
+            <link href="~/Content/css/highcharts.css" rel="stylesheet">
+
+
+        }
+    }
+}
+<script>
+
+    var month = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre")
+    var date = new Date();
+
+
+    $(".lblDate").text(month[date.getMonth()]);
+
+    $(document).ready(function () {
+
+        $("#modalReviewEMO").on('hidden.bs.modal', function () {
+            $("#viewpdf").empty();
+            $(".tbody").empty();
+            $(".tableNotice").empty();
+            $("#chartEspiro").empty();
+            $("#chartPressure").empty();
+            $("#Weight").empty();
+        });
+        $(document).on('hidden.bs.modal', function (event) {
+            if ($('.modal:visible').length) {
+                $('body').addClass('modal-open');
+            }
+        });
+        
+        //SetComboAlmacen(sessionStorage.getItem("organizationId"));
+        $("#cbo-organization").on("change", function () {
+
+            var id = $("#cbo-organization").val();
+            sessionStorage.setItem("organizationId", id);
+            sessionStorage.setItem("warehouseId", "-1");
+            SetComboAlmacen(id);
+            $("#PlanVigilancia").empty();
+            $("#PlanVigilancia-modal").empty();
+            GenerateCalender();
+            
+            LoadTopDxOccupational();
+            LoadTopDiagnostic();
+            MonthlyControls();
+            LoadFirstComboVigilancia();
+            LoadModalComboVigilancia();
+
+            Filter(1);
+
+        });
+        $("#modal-notifi").on('hidden.bs.modal', function () {
+            $("#modal-notifi").find(".row-informacion").remove();
+            $("#type-notification").val("-1");
+            $("#type-notification").parent().removeClass("col-8").addClass("col-12");
+            $("#dateCita").parent().addClass("d-none")
+        })
+        
+        $.datetimepicker.setLocale('es');
+
+        var now = new Date();
+
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var hour = now.getHours();
+        var minutes = now.getMinutes();
+        var today = now.getFullYear() + "-" + (month) + "-" + (day) + " " + hour + ":" + minutes;
+
+        $('#dateAgendar').datetimepicker({ value: today, step: 10 });
+
+        $('#dateCita').datetimepicker({ value: today, step: 10 });
+        GenerateCalender();
+
+        LoadTopDxOccupational();
+        LoadTopDiagnostic();
+        MonthlyControls();
+        LoadFirstComboVigilancia();
+        LoadModalComboVigilancia();
+        $("#take").val(10);
+        Filter(1);
+        $("#NamePatient").keyup(function () { AutoCompleteName() })
+        $("#Assistance-tab").click();
+        $(".provDeudas").attr("href", "/Organization/Index");
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            url: 'PatientsAssistance/GetOptionsContextMenu/',
+            success: json => {
+                let objItemsCtxmOne = {};
+                for (let i = 0; i < json.length; i++) {
+                    objItemsCtxmOne[json[i].path] = { name: json[i].Name };
+                }
+
+                objItemsCtxmOne.sep3 =  "---------" ;
+                objItemsCtxmOne.Salir = { name: "Salir" };
+                console.log(objItemsCtxmOne);
+                $.contextMenu({
+                    selector: '.context-menu-one',
+                    trigger: 'left',
+
+                    callback: function (key, options) {
+                        if (key === "RevisarEMO") {
+                            $('tr.context-menu-active').each(function () {
+                                var patientId = $(this).find('td').eq(1).text();
+                                var patientFullName = $(this).find('td').eq(2).text();
+                                $('#btnModalReviewEMO').click();
+                                $("#patientFullName").val(patientFullName);
+                                $("#patientPVId").val(patientId);
+                                
+                                $("#DivESO").children().addClass("loadingGrid");
+                                $("#DivGraph").addClass("loadingGrid");
+                                //ScrollTop();
+                                LoadAntecedent(patientId, "emo");
+                            });
+                        }
+                        else if (key === "AtenderPaciente") {
+                            $('tr.context-menu-active').each(function () {
+                                var personId = $(this).find('td').eq(1).text();
+                                var serviceId = $(this).find('td').eq(0).text();
+                                var accion = "atender";
+                                LoadMedicalConsultation(personId, serviceId, accion);
+                                //Agendar(personId);
+                            });
+                        }
+                        else if (key === "ViewConsultaMedica") {
+                            $('tr.context-menu-active').each(function () {
+                                var personId = $(this).find('td').eq(1).text();
+                                var serviceId = $(this).find('td').eq(0).text();
+                                GetServiceIdNewMedicalConsultation(personId);
+
+                                //LoadMedicalConsultationJSON(personId);
+                            });
+                        }
+                        else if (key === "AgendarVigilancia") {
+                            $('tr.context-menu-active').each(function () {
+                                var patientId = $(this).find('td').eq(1).text();
+                                var patientFullName = $(this).find('td').eq(2).text();
+                                var planName = $(this).find('td').eq(4).text();
+                                var vigilanciaId = $(this).find('td').eq(7).text();
+                                if (vigilanciaId == "") {
+
+                                    alertafixed({
+                                        type: 'info',
+                                        class: 'js-' + vigilanciaId + '-false',
+                                        title: 'Aviso',
+                                        message: 'Este trabajador no tiene plan de vigilancia.'
+                                    });
+
+                                } else {
+                                    $("#patientAgendarPlanName").val(planName);
+                                    $("#patientAgendarFullName").val(patientFullName);
+                                    $("#patientAgendarId").val(patientId);
+                                    $("#VigilanciaId").val(vigilanciaId);
+                                    $("#txtAgendarComentery").val("");
+                                    var now = new Date();
+
+                                    var day = ("0" + now.getDate()).slice(-2);
+                                    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+                                    var hour = now.getHours();
+                                    var minutes = now.getMinutes();
+                                    var today = now.getFullYear() + "-" + (month) + "-" + (day) + " " + hour + ":" + minutes;
+
+                                    $('#dateAgendar').val(today);
+                                    $(".btn-modalAgendar").click();
+                                }
+
+
+                            });
+                        }
+                        else if (key === "DardeBaja") {
+                            $('tr.context-menu-active').each(function () {
+                                var patientId = $(this).find('td').eq(1).text();
+
+                                dardeBaja(patientId);
+                            });
+                        }
+                        else if (key === "EnviarNotificacion") {
+                            $('tr.context-menu-active').each(function () {
+                                var patientId = $(this).find('td').eq(1).text();
+                                var patientFullName = $(this).find('td').eq(2).text();
+                                $("#id-worker").val(patientId);
+                                $("#name-worker").val(patientFullName);
+                                $("#title-notifi").val("");
+                                $("#message-notifi").val("");
+                                $('#modal-notifi').modal('show')
+
+                                var now = new Date();
+
+                                var day = ("0" + now.getDate()).slice(-2);
+                                var month = ("0" + (now.getMonth() + 1)).slice(-2);
+                                var hour = now.getHours();
+                                var minutes = now.getMinutes();
+                                var today = now.getFullYear() + "-" + (month) + "-" + (day) + " " + hour + ":" + minutes;
+
+                                $('#dateCita').val(today);
+                            });
+                        } else if (key === "EnviarVigilancia") {
+                            $('tr.context-menu-active').each(function () {
+                                var patientId = $(this).find('td').eq(1).text();
+                                var patientFullName = $(this).find('td').eq(2).text();
+                                $('#btnModalReviewEMO').click();
+                                $("#patientFullName").val(patientFullName);
+                                $("#patientPVId").val(patientId);
+
+                                $("#DivESO").children().addClass("loadingGrid");
+                                $("#DivGraph").addClass("loadingGrid");
+                                //ScrollTop();
+
+                                LoadAntecedent(patientId, "all");
+                                
+                            });
+                        }
+                    },
+                    items: objItemsCtxmOne
+                });
+            },
+            error: error => {
+                console.log("ERROR: " , errror)
+            }
+        });       
+    
+        $.contextMenu({
+            selector: '.context-menu-two',
+            trigger: 'left',
+            callback: function (key, options) {
+                if (key === "ConsultaMedica") {
+                    $('tr.context-menu-active').each(function () {
+                        alert($(this).find('td').eq(0).text());
+                    });
+                }
+            },
+            items: {
+                "ConsultaMedica": { name: "Consulta Médica" },
+                "sep1": "---------",
+                "Salir": { name: "Salir" }
+            }
+        });
+
+        $.contextMenu({
+            selector: '.context-menu-three',
+            trigger: 'left',
+            items: {
+
+                "ViewConsultaMedica": { name: "Atender Consulta Médica" },
+                "sep1": "----------",
+                "salir": { name: "Salir" }
+            },
+
+
+            callback: function (key, options) {
+                if (key === "ViewConsultaMedica") {
+                    $('a.context-menu-active').each(function () {
+                        var id = $(this).data("id").split("|");
+                        var personId = id[0];
+                        var serviceId = id[1];
+
+                        LoadMedicalConsultation(personId, serviceId);
+
+                    });
+                }
+            }
+        });
+
+        $.contextMenu({
+            selector: '.context-menu-four',
+            trigger: 'left',
+            items: {
+                "NuevoControl": { name: "Nuevo Control" },
+                "sep1": "----------",
+                "salir": { name: "Salir" }
+            },
+
+
+            callback: function (key, options) {
+                if (key === "NuevoControl") {
+                    $('.fondoModalData').toggleClass("d-none");
+
+                }
+            }
+        });
+    });
+
+    function GetServiceIdNewMedicalConsultation(personId) {
+        notificacion({
+            classTitleAndButtons: "warningTitleAndButtons",
+            classMessage: "warningMessage",
+            title: "¡ Confirmación !",
+            icono: "",
+            contenido: "¿ Desea ver consulta médica ?",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "",
+            mostrarBtnOk: "no",
+        });
+
+        $(".bigBox-Aceptar").on("click", function () {
+            $(".pluginContenedor").remove();
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: { 'personId': personId },
+                url: '/PatientsAssistance/GetServiceIdNewMedicalConsultation',
+                success: function (json) {
+                    LoadMedicalConsultation(personId, json);
+                },
+                error: function (error) {
+                    console.log("ERROR: ", error)
+                }
+            })
+        })
+        
+    };
+
+    function LoadModalComboVigilancia() {
+
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'organizationId': organizationId },
+            url: '/PatientsAssistance/LoadComboVigilancia',
+            success: function (json) {
+
+                opt = `<option value="-1">--SELECCIONAR--</option>`;
+                $(opt).appendTo($("#PlanVigilancia-modal"));
+                for (var i = 0; i < json.length; i++) {
+                    var opt = `<option value="${json[i].Id}">${json[i].Value}</option>`;
+                    $(opt).appendTo($("#PlanVigilancia-modal"));
+                }
+            },
+            error: function (error) {
+                console.log("ERROR", error)
+            }
+        })
+    };
+
+    function LoadFirstComboVigilancia() {
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'organizationId': organizationId },
+            url: '/PatientsAssistance/LoadComboVigilancia',
+            success: function (json) {
+
+                opt = `<option value="-1">--TODOS--</option>`;
+                $(opt).appendTo($("#PlanVigilancia"));
+                for (var i = 0; i < json.length; i++) {
+                    var opt = `<option value="${json[i].Id}">${json[i].Value}</option>`;
+                    $(opt).appendTo($("#PlanVigilancia"));
+                }
+            },
+            error: function (error) {
+                console.log("ERROR", error)
+            }
+        })
+
+
+    };
+
+    function dardeBaja(personId) {
+        notificacion({
+            classTitleAndButtons: "warningTitleAndButtons",
+            classMessage: "warningMessage",
+            title: "¡ Aviso !",
+            icono: "",
+            contenido: "¿ Seguro en dar de baja al paciente ?",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "",
+            mostrarBtnOk: "no",
+        });
+
+        $(".bigBox-Aceptar").on("click", function () {
+            $(".pluginContenedor").remove();
+
+            $.ajax({
+                cache: false,
+                dateType: 'json',
+                data: { 'personId': personId },
+                method: 'GET',
+                url: "/PatientsAssistance/DarDeBaja",
+                success: function (json) {
+                    $('.btn-modal-agendar-close').click();
+
+                    alertafixed({
+                        type: 'success',
+                        class: 'js-' + personId + '-true',
+                        title: 'Hecho',
+                        message: 'Se dió de baja correctamente.'
+                    });
+
+                    Filter(1);
+                },
+                error: function (error) {
+                    notificacion({
+                        classTitleAndButtons: "dangerTitleAndButtons",
+                        classMessage: "dangerMessage",
+                        title: "¡ ERROR !",
+                        icono: "",
+                        contenido: "Sucedió un error al agendar paciente",
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "no",
+                        mostrarBtnOk: "si",
+                    });
+                },
+            })
+        });
+    };
+
+    function enviarAgendar(AgendarNotificar) {
+
+        if ($("#dateAgendar").val().length < 3 || $("#txtAgendarComentery").val().length < 3) {
+
+            alertafixed({
+                type: 'warning',
+                class: 'js-envio-false',
+                title: 'Validación',
+                message: 'Complete los campos.'
+            });
+
+        } else {
+
+            notificacion({
+                classTitleAndButtons: "warningTitleAndButtons",
+                classMessage: "warningMessage",
+                title: "¡ Aviso !",
+                icono: "",
+                contenido: "¿ Seguro de agendar paciente ?",
+                btnAceptar: "Aceptar",
+                btnCancelar: "Cancelar",
+                btnOk: "OK",
+                mostrarBtnAceptarAndCancelar: "",
+                mostrarBtnOk: "no",
+            });
+
+
+
+            $(".bigBox-Aceptar").on("click", function () {
+                $(".bigBox-Cancelar").trigger('click');
+                $("#modalAgendar .modal-dialog").addClass('loadingGrid');
+                var title = $("#patientAgendarFullName").val();
+                var data = {
+                    PersonId: $("#patientAgendarId").val(),
+                    Commentary: $("#txtAgendarComentery").val(),
+                    ScheduleDate: $("#dateAgendar").val(),
+                    VigilanciId: $("#VigilanciaId").val(),
+                }
+
+                $.ajax({
+                    cache: false,
+                    dateType: 'json',
+                    data: {
+                        'oSchedule': data,
+                    },
+                    method: 'POST',
+                    url: "/PatientsAssistance/MedicalConsultationSchedule",
+                    success: function (json) {
+                        $("#modalAgendar .modal-dialog").removeClass('loadingGrid');
+                        $('.btn-modal-agendar-close').click();
+
+                        alertafixed({
+                            type: 'success',
+                            class: 'js-envio-true',
+                            title: 'Hecho',
+                            message: 'Se agendó correctamente.'
+                        });
+
+                        GenerateCalender();
+
+                        if (AgendarNotificar) {
+                            Notificar_AgendarNotificar()
+                        }
+                    },
+                    error: function (error) {
+                        notificacion({
+                            classTitleAndButtons: "dangerTitleAndButtons",
+                            classMessage: "dangerMessage",
+                            title: "¡ ERROR !",
+                            icono: "",
+                            contenido: "Sucedió un error al agendar paciente",
+                            btnAceptar: "Aceptar",
+                            btnCancelar: "Cancelar",
+                            btnOk: "OK",
+                            mostrarBtnAceptarAndCancelar: "no",
+                            mostrarBtnOk: "si",
+                        });
+                    },
+                })
+
+            });
+        }
+       
+    };
+
+    //AMC-EnviarNotificacion
+    $("#type-notification").on("change", function () {
+        if ($(this).val() == 2 || $(this).val() == "2") {
+            $(this).parent().removeClass("col-12").addClass("col-8");
+            $("#dateCita").parent().removeClass("d-none")
+        } else if (!$("#dateCita").parent().hasClass("d-none")) {
+            $(this).parent().removeClass("col-8").addClass("col-12");
+            $("#dateCita").parent().addClass("d-none")
+        }
+    });
+
+    function EnviarNotificacion(button) {
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+        if ($(button).parent().parent().find(".row-validation").length == 0 ) {
+            var NotificationDate = null;
+            if (!$("#dateCita").parent().hasClass("d-none")) {
+                NotificationDate = $("#dateCita").val();
+            }
+
+            var notification = {
+
+                d_ScheduleDate: NotificationDate,
+                v_OrganizationId: organizationId,
+                v_PersonId: $("#id-worker").val(),
+                i_TypeNotificationId: $("#type-notification").val(),
+                v_Title: $("#title-notifi").val(),
+                v_Body: $("#message-notifi").val(),
+            };
+
+            if ($("#title-notifi").val() != "" && $("#message-notifi").val() != "" && $("#type-notification").val() != "-1" ) {
+
+
+                $("#title-notifi").removeClass("border-info");
+                $("#message-notifi").removeClass("border-info");
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'notification': notification
+                    },
+                    url: '/WorkerData/SaveNotification',
+                    success: function (json) {
+                        if (json == "Sin subscripcion") {
+
+                            alertafixed({
+                                type: 'info',
+                                class: 'js-' + notification.v_PersonId + '-true',
+                                title: 'Aviso',
+                                message: 'El trabajador no se encuentra subscrito.'
+                            });
+
+                        } else {
+                            $('#modal-notifi').modal('hide');
+
+                            alertafixed({
+                                type: 'success',
+                                class: 'js-' + notification.v_PersonId + '-true',
+                                title: 'Enviado',
+                                message: 'La notificación se envió correctamente.'
+                            });
+
+                            SendNotification(notification.v_PersonId, json);
+                        }
+                        
+                    },
+                    error: function (error) {
+                        alertafixed({
+                            type: 'danger',
+                            class: 'js-' + notification.v_PersonId + '-false',
+                            title: 'Error',
+                            message: 'Sucedió un error al intentar enviar la notificación.'
+                        });
+                        console.log(error);
+                    }
+                });
+            } else {
+                $("#title-notifi").addClass("border-info")
+                $("#message-notifi").addClass("border-info")
+
+                alertafixed({
+                    type: 'warning',
+                    class: 'js-' + notification.v_PersonId + '-true',
+                    title: 'Validación',
+                    message: 'Complete los campos para continuar.'
+                });
+            }
+
+        }
+        
+    };
+
+    function SendNotification(personId, notificationId) {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: {
+                'personId': personId,
+                'notificationId': notificationId,
+            },
+            url: '/WorkerData/SendNotification',
+            success: function (json) {
+                console.log(json)
+            },
+            error: function (error) {
+                console.log("ERROR: ", error)
+            }
+        })
+    };
+
+    function GenerateCalender() {
+        $('#calendar').fullCalendar('destroy');
+
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+
+        $('#calendar').fullCalendar({
+            events: function (start, end, timezone, callback) {
+                $.ajax({
+                    data: { 'organizationId': organizationId },
+                    url: "/PatientsAssistance/ViewSchceduleVigilancia",
+                    dataType: 'json',
+                    success: function (json) {
+
+                        var now = new Date();
+                        var day = ("0" + now.getDate()).slice(-2);
+                        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+                        var today = String(now.getFullYear() + "-" + (month) + "-" + (day));
+                        var totalHoy = 0;
+
+                        var arrDates = [];
+                        for (var i = 0; i < json.length; i++) {
+                            var obj = {
+                                id: json[i].PersonId + "|" + json[i].ServiceId,
+                                title: json[i].Trabajador,
+                                start: json[i].DateSchedule,
+
+                            };
+                            if (json[i].DateSchedule.split(" ")[0] == today) {
+                                totalHoy = totalHoy + 1;
+                            }
+                            arrDates.push(obj);
+
+                        }
+                        $("#controlsToday").text(totalHoy);
+                        callback(arrDates);
+                    }
+                });
+            },
+            eventClick: function (calEvent, jsEvent, view) {
+
+                //('Event: ' + calEvent.id);
+                // change the border color just for fun
+
+                $(this).addClass("context-menu-three");
+
+                $(this).attr("data-id", calEvent.id);
+
+            },
+            lang: 'es',
+            contentHeight: 600,
+            defaultDate: new Date(),
+            timeFormat: 'h(:mm)a',
+            header: {
+                left: 'prev,next,today',
+                center: 'title',
+                right: 'month,basicWeek,basicDay,agenda'
+            },
+
+            eventColor: '#378006',
+        });
+
+    };
+
+    function Closemodal() {
+
+        $(".fondoModalData").toggleClass("d-none");
+    };
+
+    function LoadAntecedent(patientId, permit) {
+        if (permit == "emo") {
+            $("#btn-Agendar").remove();
+        }
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+        $.ajax({
+            url: '/PatientsAssistance/GetAntecedent?patientId=' + patientId + '&organizationId=' + organizationId,
+            type: 'GET',
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    $("#RenderReviewEMO").html(html);
+                    LoadIndicators(patientId);
+                    $("#DivGraph").removeClass("loadingGrid");
+                    if (permit == "emo") {                       
+                        $("#sugerenciaVigilancia").addClass("d-none");
+                        $(".sugerenciaVigilancia").addClass("d-none");
+                    } else {                      
+                        $("#sugerenciaVigilancia").removeClass("d-none");
+                        $(".sugerenciaVigilancia").removeClass("d-none");
+                    }
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                console.log(error);
+            }
+        });
+    };
+
+    function LoadTopDiagnostic() {
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+        $('.wrapperTopDx').addClass('loadingGrid');
+        $.ajax({
+            cache: false,
+            dataType: 'html',
+            method: 'GET',
+            data: { 'organizationId': organizationId },
+            async: true,
+            url: '/PatientsAssistance/TopDiagnostic',
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    $('.wrapperTopDx').removeClass('loadingGrid');
+                    Load(html);
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                $('.wrapperTopDx').removeClass('loadingGrid');
+                console.log(error);
+            }
+        });
+    };
+
+    function LoadTotal(total) {
+        document.getElementById('RecordsPatient').value = total;
+        document.getElementById('totalPatient').innerHTML = total;
+    };
+
+    function LoadTopDxOccupational() {
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+        $('.wrapperTopDx').addClass('loadingGrid');
+        $.ajax({
+            cache: false,
+            dataType: 'html',
+            method: 'GET',
+            data: { 'organizationId': organizationId },
+            async: true,
+            url: '/PatientsAssistance/TopDiagnosticOcupational',
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    $('.wrapperTopDx').removeClass('loadingGrid');
+                    var total = $("#RecordsPatient").val();
+                    LoadDxOccupational(html, total);
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                $('.wrapperTopDx').removeClass('loadingGrid');
+                console.log(error);
+            }
+        });
+    };
+
+    function LoadModalTopDiagnostic() {
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+        $.ajax({
+            cache: false,
+            dataType: 'html',
+            method: 'GET',
+            async: true,
+            data: { 'organizationId': organizationId },
+            url: '/PatientsAssistance/TopDiagnostic',
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    LoadModalTop(html);
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                console.log(error);
+            }
+        });
+    };
+
+    function LoadModalTopxOccupational() {
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+        $.ajax({
+            cache: false,
+            dataType: 'html',
+            method: 'GET',
+            async: true,
+            data: { 'organizationId': organizationId },
+            url: '/PatientsAssistance/TopDiagnosticOcupational',
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    LoadDxOccupationalModal(html);
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                console.log(error);
+            }
+        });
+    };
+
+    function MonthlyControls() {
+        $('.wrapperMonthlyControls').addClass('loadingGrid');
+        $.ajax({
+            cache: false,
+            dataType: 'html',
+            method: 'GET',
+            async: true,
+            url: '/PatientsAssistance/MonthlyControls',
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    $('.wrapperMonthlyControls').removeClass('loadingGrid');
+                    LoadMonContr(html);
+                    LoadMonthlyCompliance(html);
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                $('.wrapperMonthlyControls').removeClass('loadingGrid');
+                console.log(error);
+            }
+        });
+    };
+
+    function LoadModalMonthlyControls() {
+        $.ajax({
+            cache: false,
+            dataType: 'html',
+            method: 'GET',
+            async: true,
+            url: '/PatientsAssistance/MonthlyControls',
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    LoadModalMonContr(html);
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                console.log(error);
+            }
+        });
+    };
+
+    function LoadModalMonthlyCompliance() {
+        $.ajax({
+            cache: false,
+            dataType: 'html',
+            method: 'GET',
+            async: true,
+            url: '/PatientsAssistance/MonthlyControls',
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    ModalMonthlyCompliance(html);
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                console.log(error);
+            }
+        });
+    };
+
+    function Agendar(personId) {
+
+        console.log(personId);
+        var width = $(window).width();
+        var height = $(window).height();
+
+        notificacion({
+            classTitleAndButtons: "infoTitleAndButtons",
+            classMessage: "infoMessage",
+            title: "¡ Aviso !",
+            icono: "",
+            contenido: "¿ Desea Agendar ?",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "",
+            mostrarBtnOk: "no",
+        })
+
+        $(".bigBox-Aceptar").on("click", function () {
+            $(".pluginContenedor").remove();
+            $("#Loading").show().css("width", width + "px").css("height", height + "px");
+            $("#Loading > img").css("margin-left", ((width - 200) / 2) + "px").css("margin-top", ((height - 266) / 2) + "px");
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'POST',
+                url: '/PatientsAssistance/ScheduleMedicalConsultation?personId=' + personId,
+                success: function (json) {
+                    $("#Loading").hide();
+                    if (json) {
+                        LoadMedicalConsultation(personId);
+                    } else {
+                        notificacion({
+                            classTitleAndButtons: "infoTitleAndButtons",
+                            classMessage: "infoMessage",
+                            title: "Error",
+                            icono: "",
+                            contenido: "No se pudo grabar",
+                            btnAceptar: "Aceptar",
+                            btnCancelar: "Cancelar",
+                            btnOk: "OK",
+                            mostrarBtnAceptarAndCancelar: "no",
+                            mostrarBtnOk: "",
+                        })
+                    }
+                },
+                error: function (error) {
+                    notificacion({
+                        classTitleAndButtons: "infoTitleAndButtons",
+                        classMessage: "infoMessage",
+                        title: "Error",
+                        icono: "",
+                        contenido: "Sucedió un error al conectarse al servidor",
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "no",
+                        mostrarBtnOk: "",
+                    })
+                    $("#Loading").hide();
+                    console.log(error);
+                }
+            })
+        })
+
+
+    };
+
+    function LoadMedicalConsultation(personId, serviceId, accion) {
+        console.log(serviceId);
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+        var url = '/PatientsAssistance/MedicalConsultation?id=' + personId + '&serviceId=' + serviceId + '&organizationId=' + organizationId;
+        var anchorElement = document.createElement("a");
+        anchorElement.style = "display: none";
+        anchorElement.href = url;
+        document.body.appendChild(anchorElement);
+        anchorElement.click();
+        document.body.removeChild(anchorElement);
+        $("#Loading").hide();
+
+    };
+
+    function Filter(index) {
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+        $('.wrapperGrid').addClass('loadingGrid');
+
+        var workerstatus = -1;
+
+        if (rbtodos.checked) {
+            workerstatus = -1;
+        } else if (rbActivo.checked) {
+            workerstatus = 1;
+        } else {
+            workerstatus = 2;
+        }
+
+
+        var data = {
+            Patient: $("#PacientFullName").val(),
+            Workerstatus: workerstatus,
+            PlanVigilanciaId: $("#PlanVigilancia").val(),
+            OrganizationId: organizationId,
+            Index: index,
+            Take: $("#take").val()
+        };
+        $.ajax({
+            cache: false,
+            dataType: 'html',
+            method: 'POST',
+            async: true,
+            data: data,
+            url: '/PatientsAssistance/FilterPacient',
+            success: function (html) {
+                if (html.indexOf("IniciarSesion") == -1) {
+                    $('.wrapperGrid').removeClass('loadingGrid');
+                    $("#RenderBoardPatientsAssistancePartial").html(html);
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                $('.wrapperGrid').removeClass('loadingGrid');
+                console.log(error);
+            }
+        });
+
+    };
+
+    function Test() {
+        console.log("hola soy solamanente test ");
+        $.ajax({
+            cache: false,
+            async: true,
+            dataType: 'html',
+            method: 'GET',
+            url: '/PatientsAssistance/Test',
+            success: function (html) {
+                console.log(html)
+                if (html.indexOf("IniciarSesion") == -1) {
+                    $("#Valuetest").html(html);
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                console.log(error);
+            }
+        });
+    };
+
+    function Test2() {
+        console.log("hola soy test 2");
+        $.ajax({
+            cache: false,
+            async: true,
+            dataType: 'html',
+            method: 'GET',
+            url: '/PatientsAssistance/Test2',
+            success: function (html) {
+                console.log(html)
+                if (html.indexOf("IniciarSesion") == -1) {
+                    $("#Valuetest2").html(html);
+                } else {
+                    location.href = "/";
+                }
+            },
+            error: function (error) {
+                alerta("Sucedió un error al conectarse al servidor", "rojo");
+                console.log(error);
+            }
+        });
+    };
+
+    function DownloadPdf(patientId) {
+        data = {
+            patientId: patientId
+        };
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            data: data,
+            //url: 'http://vigilanciasanlorenzo.dyndns-web.com:8081/PatientsAssistance/DownloadFile',
+            url: '/PatientsAssistance/DownloadFile',
+            success: function (response) {
+                var base64 = JSON.parse(response);
+                var binaryString = window.atob(base64._buffer);
+
+                var binaryLen = binaryString.length;
+                var bytes = new Uint8Array(binaryLen);
+                for (var i = 0; i < binaryLen; i++) {
+                    var ascii = binaryString.charCodeAt(i);
+                    bytes[i] = ascii;
+                }
+                var d = new Date();
+                var fileName = patientId + ".pdf";
+                var blob = new Blob([bytes], { type: 'application/pdf' });
+
+                if (window.navigator.msSaveOrOpenBlob)      // If Internet Explorer
+                {
+
+                    window.navigator.msSaveOrOpenBlob(blob, fileName);
+
+                } else if (window.navigator.userAgent.indexOf("Firefox") > 0) {
+
+                    var url = window.URL.createObjectURL(blob);
+
+                    var anchorElem = document.createElement("a");
+                    anchorElem.style = "display: none";
+                    anchorElem.href = url;
+                    anchorElem.download = fileName;
+
+                    document.body.appendChild(anchorElem);
+                    anchorElem.click();
+
+                    document.body.removeChild(anchorElem);
+
+                    // On Edge, revokeObjectURL should be called only after
+                    // a.click() has completed, atleast on EdgeHTML 15.15048
+                    setTimeout(function () {
+                        window.URL.revokeObjectURL(url);
+                    }, 1000);
+
+                } else { // tested on chrome and Opera
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = fileName;
+                    link.click();
+                }
+            },
+
+            error: function (error) {
+                console.log(error);
+            }
+        })
+    };
+
+    function NavTabActiveDx() {
+        $("ul li a").removeClass("active");
+        $(this).toggleClass("active");
+    };
+
+    function RevisedStatusEMO(serviceId, iterador) {
+        var width = $(window).width();
+        var height = $(window).height();
+        notificacion({
+            classTitleAndButtons: "warningTitleAndButtons",
+            classMessage: "warningMessage",
+            title: "¡ Aviso !",
+            icono: "",
+            contenido: "¿Seguro de marcar como revisado? ",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "",
+            mostrarBtnOk: "no",
+        })
+        $(".bigBox-Aceptar").on("click", function () {
+            var status = true;
+            $(".pluginContenedor").remove();
+            $("#Loading").show().css("width", width + "px").css("height", height + "px");
+            $("#Loading > img").css("margin-left", ((width - 200) / 2) + "px").css("margin-top", ((height - 266) / 2) + "px");
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'POST',
+                url: '/PatientsAssistance/RevisedStatusEMO?serviceId=' + serviceId + '&status=' + status,
+                success: function (json) {
+                    $("#Loading").hide();
+
+                    if (json) {
+                        $(".row-" + iterador).removeClass("fas fa-info-circle").addClass("far fa-check-circle");
+                        $(".row-" + iterador).removeAttr("onclick");
+
+                        alertafixed({
+                            type: 'success',
+                            class: 'js-revisado-true',
+                            title: 'Hecho',
+                            message: 'Se marcó como revisado.'
+                        });
+
+                        $("#txtAreComentery").val("");
+                        Filter(1);
+
+                    } else {
+                        notificacion({
+                            classTitleAndButtons: "infoTitleAndButtons",
+                            classMessage: "infoMessage",
+                            title: "Error",
+                            icono: "",
+                            contenido: "No se pudo grabar",
+                            btnAceptar: "Aceptar",
+                            btnCancelar: "Cancelar",
+                            btnOk: "OK",
+                            mostrarBtnAceptarAndCancelar: "no",
+                            mostrarBtnOk: "",
+                        })
+                        //alerta("No se pudo eliminar el proveedor", "rojo");
+                    }
+                },
+                error: function (error) {
+                    //alerta("Sucedió un error al conectarse al servidor", "rojo");
+                    notificacion({
+                        classTitleAndButtons: "infoTitleAndButtons",
+                        classMessage: "infoMessage",
+                        title: "Error",
+                        icono: "",
+                        contenido: "Sucedió un error al conectarse al servidor",
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "no",
+                        mostrarBtnOk: "",
+                    })
+                    $("#Loading").hide();
+                    console.log(error);
+                }
+            })
+        })
+
+
+    };
+
+    function BtnAgendaHover() {
+        $(".spnAgenda").toggleClass("d-none");
+    };
+
+    function AutoCompleteName() {
+
+        //jQuery.noConflict();
+
+        $.ajax(
+            {
+                url: '/PatientsAssistance/GetNamePatient?value=' + $('#NamePatient').val(),
+                type: 'GET',
+                success: function (availableTags) {
+                    $("#NamePatient").autocomplete({
+                        source: availableTags
+                    });
+
+                },
+                error: function () {
+                    alert('error');
+                }
+            })
+    };
+
+    function ScrollTop() {
+        $("html, body").animate({
+            scrollTop: 0
+        }, 100)
+    };
+
+    function enviarPlanVigilancia() {
+        
+        var session = sessionStorage.getItem("organizationId");
+        var organizationId = $("#cbo-organization").val();
+        if (session != null && session != undefined && session != "") {
+            organizationId = session;
+        }
+
+        if ($("#PlanVigilancia-modal").val() == -1 || $("#txtAreComentery").val().length < 3) {
+            alertafixed({
+                type: 'warning',
+                class: 'js-regist-true',
+                title: 'Validación',
+                message: 'Complete el registro.'
+            });
+
+        } else {
+
+            notificacion({
+                classTitleAndButtons: "warningTitleAndButtons",
+                classMessage: "warningMessage",
+                title: "¡ Advertencia !",
+                icono: "",
+                contenido: "¿Seguro de enviar a vigilancia? ",
+                btnAceptar: "Aceptar",
+                btnCancelar: "Cancelar",
+                btnOk: "OK",
+                mostrarBtnAceptarAndCancelar: "si",
+                mostrarBtnOk: "no",
+            });
+            $(".bigBox-Aceptar").on("click", function () {
+                $("#modalEnviarV .modal-dialog .modal-content").addClass('loadingGrid');
+                $(".pluginContenedor").remove();
+                var data = {
+                    v_PersonId: $("#patientPVId").val(),
+                    v_PlanVigilanciaId: $("#PlanVigilancia-modal").val(),
+                    v_Commentary: $("#txtAreComentery").val(),
+                }
+                $.ajax({
+                    cache: false,
+                    method: "POST",
+                    dateType: "json",
+                    data: { 'oVigilancia': data },
+                    url: "/PatientsAssistance/SendVigilancia",
+                    success: function (json) {
+                        $("#modalEnviarV .modal-dialog .modal-content").removeClass('loadingGrid');
+                        if (json == "El trabajador ya tiene un plan iniciado") {
+
+                            alertafixed({
+                                type: 'info',
+                                class: 'js-envio-true',
+                                title: 'Aviso',
+                                message: json + '.'
+                            });
+
+                        } else {
+                            SendMedicalAlert(data.v_PersonId, $('#PlanVigilancia-modal option[value=' + $("#PlanVigilancia-modal").val() + ']').text(), organizationId);
+                            $('.btn-modal-close').click();
+
+                            alertafixed({
+                                type: 'success',
+                                class: 'js-envio-true',
+                                title: 'Hecho',
+                                message: 'Se guardó correctamente.'
+                            });
+
+                            $("#txtAreComentery").val("");
+                            Filter(1);
+                        }
+                        
+                    },
+                    error: function (error) {
+                        notificacion({
+                            classTitleAndButtons: "dangerTitleAndButtons",
+                            classMessage: "dangerMessage",
+                            title: "¡ ERROR !",
+                            icono: "",
+                            contenido: "Sucedió un error al guardar",
+                            btnAceptar: "Aceptar",
+                            btnCancelar: "Cancelar",
+                            btnOk: "OK",
+                            mostrarBtnAceptarAndCancelar: "no",
+                            mostrarBtnOk: "si",
+                        });
+                    },
+                });
+            });
+
+
+        }
+
+    };
+
+    $(".btnAgendar").on("click", function () {
+
+        $("#txtAreComentery").val("");
+        $("#PlanVigilancia-modal").val(-1);
+    });
+
+    function LoadIndicators(patientId) {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'patientId': patientId },
+            url: '/PatientsAssistance/Indicators',
+            success: function (json) {
+
+                LoadWeight(json);
+                LoadBloodPressure(json);
+                LoadCvf(json);
+                $("#DivESO").children().removeClass("loadingGrid");
+            },
+            error: function (error) {
+                console.log("ERROR", erorr);
+            }
+
+        });
+
+    };
+
+    $(".ViewerPdf").on("click", function () {
+        $(".ViewerPdf").parent().parent().css("background-color", "transparent");
+        $(this).parent().parent().css("background-color", "#dddddd");
+    });
+
+    function ViewPdf(patientId) {
+
+        var viewer = $('#viewpdf');
+        PDFObject.embed('http://vigilanciasanlorenzo.dyndns-web.com:8081/ESO/' + patientId + '.pdf', viewer);
+        
+
+    };
+
+    function SendMedicalAlert(personId, planVigilancia, organizationId) {
+
+
+        var oNotificationAlert = {
+            personId: personId,
+            organizationId: organizationId,
+            planVigilancia: planVigilancia,
+
+        };
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data: oNotificationAlert,
+            url: '/WorkerData/SendMedicalAlert',
+            success: function (json) {
+                if (json != null) {
+                    SendNotification(personId, json);
+                }
+                
+            },
+            error: function (error) {
+
+                alertafixed({
+                    type: 'info',
+                    class: 'js-envio-false',
+                    title: 'Notificación no enviada:',
+                    message: 'Este trabajador no está subscrito a la aplicación.'
+                });
+
+            }
+        });
+    };
+
+    function Notificar_AgendarNotificar() {
+        if ($("#txtAgendarComentery").val() != "") {
+            var session = sessionStorage.getItem("organizationId");
+            var organizationId = $("#cbo-organization").val();
+            if (session != null && session != undefined && session != "") {
+                organizationId = session;
+            }
+            var notification = {
+
+                d_ScheduleDate: $("#dateAgendar").val(),
+                v_OrganizationId: organizationId,
+                v_PersonId: $("#patientAgendarId").val(),
+                i_TypeNotificationId: 2,
+                v_Body: $("#txtAgendarComentery").val(),
+            };
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    'notification': notification
+                },
+                url: '/WorkerData/SaveNotification',
+                success: function (json) {
+                    $('#modal-notifi').modal('hide');
+
+                    alertafixed({
+                        type: 'success',
+                        class: 'js-' + notification.v_PersonId + '-true',
+                        title: 'Enviado',
+                        message: 'La notificación se envió correctamente.'
+                    });
+
+                    SendNotification(notification.v_PersonId, json);
+                },
+                error: function (error) {
+
+                    alertafixed({
+                        type: 'danger',
+                        class: 'js-' + notification.v_PersonId + '-false',
+                        title: 'Error',
+                        message: 'Sucedió un error al intentar enviar la notificación.'
+                    });
+                    console.log(error);
+                }
+            });
+        }
+    };
+
+    function enviarAgendarNotificar() {
+        enviarAgendar(true);         
+    };
+</script>

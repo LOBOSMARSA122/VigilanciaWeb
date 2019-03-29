@@ -1,0 +1,12 @@
+{
+  "name": "sigesoftweb",
+  "version": "1.0.0",
+  "main": "serviceworker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate-vapid": "web-push generate-vapid-keys --json > ./Vapids/vapid.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

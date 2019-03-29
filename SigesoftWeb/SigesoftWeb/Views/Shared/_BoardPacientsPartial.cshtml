@@ -1,0 +1,242 @@
+﻿@{
+    int Take = 0;
+    int Total = 0;
+    int Primer = 0;
+    int Ultimo = 0;
+    int Index = 0;
+
+    if (ViewBag.Pacients != null)
+    {
+        Take = ViewBag.Pacients.Take;
+        Index = ViewBag.Pacients.Index;
+        Total = ViewBag.Pacients.TotalRecords;
+        Primer = ((Index - 1) * Take) + 1;
+        Ultimo = Primer + (ViewBag.Pacients.List.Count - 1);
+
+        Primer = Primer < 0 ? 0 : Primer;
+        Ultimo = Ultimo < 0 ? 0 : Ultimo;
+    }
+    else
+    {
+        Take = 0;
+    }
+}
+<style>
+    th {
+        text-align: center;
+    }
+
+
+</style>
+<div class="container-fluid" style="padding:0px;">
+    <div class="box box-default mt-2" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;" onclick="ColapsarTabla('table-responsive')"><i class="icon-list-numbered"></i> Listado de Pacientes </h3>
+        </div>
+    </div>
+</div>
+<div>
+    <span class="informacion">Mostrando desde N° @Primer hasta @Ultimo de un total de @Total entradas</span>
+    <div class="float-lg-right informacion">
+        Total de registros:
+        <select id="take" onchange="Filtrar(1)">
+            <option value="10" @(Take == 10 ? "selected" : "")>10</option>
+            <option value="25" @(Take == 25 ? "selected" : "")>25</option>
+            <option value="50" @(Take == 50 ? "selected" : "")>50</option>
+            <option value="0" @(Take == 0 ? "selected" : "")>TODOS</option>
+        </select>
+    </div>
+</div>
+<div class="box box-info mt-2">
+    <div class="table-responsive">
+        <table class="table table-hover" id="TablaAExportar">
+            <thead>
+                <tr>
+                    <th>Paciente</th>
+                    <th>Tipo de documento</th>
+                    <th>N° de documento</th>
+                    <th>Telefono</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    if (ViewBag.Pacients == null)
+                    {
+                        <tr><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+                    }
+                    else if (ViewBag.Pacients.List.Count == 0)
+                    {
+                        <tr><td colspan="7" class="text-center">No hay resultados</td></tr>
+                    }
+                    else
+                    {
+                        foreach (var item in ViewBag.Pacients.List)
+                        {
+                            <tr>
+                                <td>@item.PacientFullName</td>
+                                <td>@item.DocType</td>
+                                <td class="text-center">@item.DocNumber</td>
+                                <td class="text-center">@item.TelephoneNumber</td>
+                                <td><a class="iconEdit"  href="@Url.Action("CreatePacient", "Pacient", new { id = item.PacientId })"><span class="d-flex justify-content-center iconEdit align-items-center"><i style="font-size: 1.1rem;" class="far fa-edit"></i></span></a></td>
+                                <td><a class="eliminar" onclick='Delete("@item.PacientId")'><span class="d-flex justify-content-center align-items-center iconEdit"><i style="font-size: 1.1rem;" class="far fa-trash-alt"></i></span></a></td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="paginacion-tabla d-flex justify-content-center">
+            <div>
+                <ul class="pagination">
+                    @{
+                        if (Index > 1)
+                        {
+                            <li class="page-item" onclick="Filtrar(@(Index - 1))">
+                                <span class="page-link" aria-hidden="true">Anterior</span>
+                            </li>
+                        }
+                        int pagina = 0;
+                        if (Take > 0)
+                        {
+                            for (int i = 0; i < Total; i = i + Take)
+                            {
+                                pagina++;
+                                if ((pagina > (Index - 5)) && pagina < (Index + 5))
+                                {
+                                    <li @(pagina == Index ? "class=pagination-active" : "onclick=Filtrar(" + pagina + ")")><span class="page-link" aria-hidden="true">@pagina</span></li>
+                                }
+
+                            }
+                        }
+                        if (pagina > Index)
+                        {
+                            <li class="page-item" onclick="Filtrar(@(Index + 1))">
+                                <span class="page-link" aria-hidden="true">Siguiente</span>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/Alert.js"></script>
+<script src="~/Scripts/TweenMax.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+<link href="~/Content/css/fontello.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/css/Alert.css" rel="stylesheet" type="text/css" />
+
+<script>
+    $("tbody tr").on("click", function () {
+        console.log("click fila");
+        $("tbody tr").removeClass("classRowsClick");
+        $(this).toggleClass("classRowsClick");
+    });
+    function Delete(id) {
+        ScrollTop();
+        var width = $(window).width();
+        var height = $(window).height();
+
+        //Nombre de Clases de notificaciones
+
+        //Encabezado y Botones Danger = "dangerTitleAndButtons"
+        //Texto Danger = "dangerMessage"
+
+        //Encabezado y Botones Success = "successTitleAndButtons"
+        //Texto Success = "successMessage"
+
+        //Encabezado y Botones Warning = "waningTitleAndButtons"
+        //Texto Warning = "warningMessage"
+
+        //Encabezado y Botones Info = "infoTitleAndButtons"
+        //Texto Info = "infoMessage"
+        notificacion({
+            classTitleAndButtons: "dangerTitleAndButtons",
+            classMessage: "dangerMessage",
+            title: "¡ Advertencia !",
+            icono: "",
+            contenido: "¿Seguro de eliminar el registro? ",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "",
+            mostrarBtnOk: "no",
+        })
+
+        $(".bigBox-Aceptar").on("click", function () {
+
+            $(".pluginContenedor").remove();
+            $("#Loading").show().css("width", width + "px").css("height", height + "px");
+            $("#Loading > img").css("margin-left", ((width - 200) / 2) + "px").css("margin-top", ((height - 266) / 2) + "px");
+
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'POST',
+                data: { id: id },
+                url: '/Pacient/DeletePacient',
+                success: function (json) {
+                    $("#Loading").hide();
+                    if (json) {
+                        notificacion({
+                            classTitleAndButtons: "successTitleAndButtons",
+                            classMessage: "successMessage",
+                            title: "Hecho",
+                            icono: "",
+                            contenido: "Registro Eliminado",
+                            btnAceptar: "Aceptar",
+                            btnCancelar: "Cancelar",
+                            btnOk: "OK",
+                            mostrarBtnAceptarAndCancelar: "no",
+                            mostrarBtnOk: "",
+                        })                        
+                        Filtrar(1);
+                    } else {
+                        notificacion({
+                            classTitleAndButtons: "infoTitleAndButtons",
+                            classMessage: "infoMessage",
+                            title: "Error",
+                            icono: "",
+                            contenido: "No se pudo eliminar el registro",
+                            btnAceptar: "Aceptar",
+                            btnCancelar: "Cancelar",
+                            btnOk: "OK",
+                            mostrarBtnAceptarAndCancelar: "no",
+                            mostrarBtnOk: "",
+                        })
+                        //alerta("No se pudo eliminar el proveedor", "rojo");
+                    }
+                },
+                error: function (error) {
+                    //alerta("Sucedió un error al conectarse al servidor", "rojo");
+                    notificacion({
+                        classTitleAndButtons: "infoTitleAndButtons",
+                        classMessage: "infoMessage",
+                        title: "Error",
+                        icono: "",
+                        contenido: "Sucedió un error al conectarse al servidor",
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "no",
+                        mostrarBtnOk: "",
+                    })
+                    $("#Loading").hide();
+                    console.log(error);
+                }
+            })
+            }) 
+
+            
+    }
+    function ScrollTop() {
+        $("html, body").animate({
+            scrollTop: 0
+        }, 100)
+    }
+</script>
+
+

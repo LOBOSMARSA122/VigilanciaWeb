@@ -1,0 +1,126 @@
+﻿@{
+    /**/
+    var Organizations = ViewBag.USER.Organizations;
+    int Take = 0;
+    int Total = 0;
+    int Primer = 0;
+    int Ultimo = 0;
+    int Index = 0;
+
+    if (ViewBag.Result != null && ViewBag.Result.List.Count != 0)
+    {
+        Take = ViewBag.Result.Take;
+        Index = ViewBag.Result.Index;
+        Total = ViewBag.Result.TotalRecords;
+        Primer = ((Index - 1) * Take) + 1;
+        Ultimo = Primer + (ViewBag.Result.List.Count - 1);
+
+        Primer = Primer < 0 ? 0 : Primer;
+        Ultimo = Ultimo < 0 ? 0 : Ultimo;
+    }
+    else
+    {
+        Take = 0;
+    }
+}
+
+
+<div id="Table" style="overflow:hidden">
+    <div>
+        <span class="informacion mr-md-5">Mostrando desde N° @Primer hasta @Ultimo de un total de @Total entradas</span>
+        <div class="float-lg-right informacion">
+            Total de registros:
+            <select id="take" onchange="Filter(1)">
+                <option value="10" @(Take == 10 ? "selected" : "")>10</option>
+                <option value="25" @(Take == 25 ? "selected" : "")>25</option>
+                <option value="50" @(Take == 50 ? "selected" : "")>50</option>
+                <option value="0" @(Take == 0 ? "selected" : "")>TODOS</option>
+            </select>
+        </div>
+    </div>
+    <div class="box box-info mt-2">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="d-none">ConfigDxId</th>
+                        <th class="d-none">DiseasesId</th>
+                        <th>Dx</th>
+                        <th class="d-none">ProductId</th>
+                        <th>Medicamento</th>
+                        <th>P.A</th>
+                        <th>Eliminar</th>
+                        <th class="d-none">RecordStatus</th>
+                        <th class="d-none">RecordType</th>
+                    </tr>
+                </thead>
+                <tbody id="body-DiseasesMedicines">
+                        @{
+                        if (ViewBag.Result == null)
+                        {
+                            <tr id="sin-resultados" ><td colspan="9" class="text-center">Error al conectarse al servidor</td></tr>
+                        }
+                        else if (ViewBag.Result.List.Count == 0)
+                        {
+                            <tr id="sin-resultados" ><td colspan="9" class="text-center">No hay resultados</td></tr>
+                        }
+                        else
+                        {
+                            foreach (var item in ViewBag.Result.List)
+                            {
+
+                            <tr class="">
+                                <td class="d-none">@item.v_ConfigDxId</td>
+                                <td class="d-none">@item.v_DiseaseId</td>
+                                <td>@item.v_DiseaseName</td>
+                                <td class="d-none">@item.v_ProductId</td>
+                                <td>@item.v_ProductName</td>
+                                <td></td>
+                                <td class="text-center"><i onclick="DeleteRow(this)" class="fas fa-trash-alt"></i></td>
+                                <td class="d-none">@item.RecordStatus</td>
+                                <td class="d-none">@item.RecordType</td>
+                            </tr>
+                            }
+                        }
+                        }
+                    </tbody>
+                </table>
+
+                <div class="paginacion-tabla d-flex justify-content-center">
+                    <nav class="col-12 d-flex justify-content-center">
+                        <ul class="pagination">
+                            @{
+                                if (Index > 1)
+                                {
+                                    <li class="page-item" onclick="Filter(@(Index - 1))">
+                                        <span class="page-link" aria-hidden="true"><i class="text-info fas fa-caret-left"></i></span>
+                                    </li>
+                                }
+                                int pagina = 0;
+                                if (Take > 0)
+                                {
+                                    for (int i = 0; i < Total; i = i + Take)
+                                    {
+                                        pagina++;
+                                        if ((pagina > (Index - 5)) && pagina < (Index + 5))
+                                        {
+                                            <li @(pagina == Index ? "class=pagination-active" : "onclick=Filter(" + pagina + ")")><span class="page-link" aria-hidden="true">@pagina</span></li>
+                                        }
+
+
+                                    }
+                                }
+                                if (pagina > Index)
+                                {
+                                    <li class="page-item" onclick="Filter(@(Index + 1))">
+                                        <span class="page-link" aria-hidden="true"><i class="text-info fas fa-caret-right"></i></span>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,97 @@
+﻿
+    <div class="" id="reporte11"  style="width:100%">
+        <div id="chart1" class="chart "></div>
+    </div>  
+
+    @{
+
+        if (Request.Browser.Browser == "IE" && Convert.ToDouble(Request.Browser.Version) < 9.0)
+        {
+        }
+        else
+        {
+<script>
+    function Load(data) {
+        var obj = JSON.parse(data);
+
+        if (obj.length !=0) {
+            var arrName = new Array();
+            var arrCant = new Array();
+            var total = 0
+            if (obj.length != 0) {
+                total = obj[0].count;
+            }
+
+            for (var i = 0; i < obj.length; i++) {
+                arrName.push(obj[i].name)
+                arrCant.push(obj[i].y);
+            }
+            Highcharts.chart('chart1', {
+                navigation: {
+                    buttonOptions: {
+                        enabled: false
+                    }
+                },
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ' '
+                },
+                xAxis: {
+                    type: 'category',
+                    categories: arrName,
+                },
+                yAxis: {
+                    title: {
+                        text: 'Cantidad de casos'
+                    }
+
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    series: {
+                        enableMouseTracking: false,
+                        borderWidth: 0,
+                        dataLabels: [{
+                            enabled: true,
+                            inside: true,
+                            formatter: function () {
+                                var pcnt = (this.y / (total)) * 100;
+                                return Highcharts.numberFormat(pcnt) + '%';
+                            }
+                        },
+                        {
+                            enabled: true,
+                            inside: false,
+                            format: '({point.y})',
+                            color: 'red'
+
+                        }],
+
+                    }
+                },
+
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                },
+
+                series: [
+                    {
+
+                        name: "Browsers",
+                        colorByPoint: true,
+                        data: arrCant,
+                    }
+                ]
+            });
+
+        }
+
+            }
+</script>
+        }
+    }

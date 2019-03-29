@@ -1,0 +1,312 @@
+.ui-droppable-hover {
+    border: 2px dashed #00c0ef;
+}
+
+.containerDinamic {
+    padding-top: 20px;
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+    position: relative;
+}
+#DivMedicalConsultation{
+    position:relative;
+    overflow:hidden;
+}
+.lista-examen:hover {
+    cursor: pointer;
+    background-color: #b2b2b2;
+    color: #ffffff;
+}
+.bg-info-rgb {
+    background: rgba(57, 163, 198,0.3);
+}
+
+.bg-dark-rgb {
+    background: rgba(0, 0, 0,0.4);
+}
+#nav-tabContent {
+    max-height: 600px !important;
+    overflow-y: scroll;
+    
+}
+
+
+    #nav-tabContent::-webkit-scrollbar {
+        max-width: 7px;
+        max-height: 7px;
+    }
+
+    #nav-tabContent::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #dddddd;
+        border: 1px solid #c9c9c9;
+    }
+#ulDinamic {
+    max-height: 600px !important;
+    position:relative;
+    overflow-y: scroll;
+}
+
+
+    #ulDinamic::-webkit-scrollbar {
+        max-width: 7px;
+        max-height: 7px;
+    }
+
+    #ulDinamic::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #dddddd;
+        border: 1px solid #c9c9c9;
+    }
+.navDinamic > ul > li > a {
+    text-decoration: none;
+    color: black;
+    display: block;
+    padding: 15px;
+    font-size: 0.8rem !important;
+}
+
+.list-group-item-action {
+    border-radius: 0px !important;
+}
+
+.navDinamic > ul {
+    position: relative;
+    list-style: none;
+    padding: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+    .navDinamic > ul > li > a:hover {
+        text-decoration: none;
+    }
+
+.navDinamic {
+
+    padding-top: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.js-anchor-tag.active {
+    color: #fff;
+    background-color: #afafaf;
+    border-color: #afafaf;
+}
+
+.culminado {
+    background: -moz-linear-gradient(left, rgba(254,187,187,0.7) 0%, rgba(244,156,156,0.7) 100%, rgba(255,191,191,0.7) 100%);
+    background: -webkit-linear-gradient(left, rgba(254,187,187,0.7) 0%, rgba(244,156,156,0.7) 100%, rgba(255,191,191,0.7) 100%);
+    background: linear-gradient(left, rgba(254,187,187,0.7) 0%, rgba(244,156,156,0.7) 100%, rgba(255,191,191,0.7) 100%);
+    /*background-color: #f7c3d3 !important;*/
+    color: #fff !important;
+    border-color: rgba(244, 141, 173, 0.5);
+}
+    .culminado.active {
+        background: -moz-linear-gradient(to right, rgba(254,187,187,0.7) 0%,rgba(244,156,156,0.7) 0%,rgba(255,191,191,0.7) 100%) !important;
+        background: -webkit-linear-gradient(to right, rgba(254,187,187,0.7) 0%,rgba(244,156,156,0.7) 0%,rgba(255,191,191,0.7) 100%) !important;
+        background: linear-gradient(to right, rgba(254,187,187,0.7) 0%,rgba(244,156,156,0.7) 0%,rgba(255,191,191,0.7) 100%) !important;
+        /*background-color: #f7c3d3 !important;*/
+        color: #fff !important;
+        border-color: #ff5b8e !important;
+    }
+.contRows {
+    padding: 20px 20px 20px 20px;
+    margin-top: 20px;
+    position: relative;
+    border: 1px #afafaf solid !important;
+}
+
+.lblName {
+    left: 10px;
+    top: -15px;
+    position: absolute;
+
+    background: #fff;
+}
+
+
+
+input[type="radio"],
+input[type="checkbox"] {
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.width {
+    width: auto !important;
+}
+
+label , .input-dinamic {
+    padding: 2px !important;
+    font-size: 0.8rem;
+    font-family: sans-serif;
+}
+
+
+.alert {
+    position: fixed;
+    top: calc(100% / 2);
+    z-index: 1000;
+    right: 0;
+}
+
+
+.row-scroll {
+    min-width: 930px !important;
+}
+.j-tabPane-examen{
+    min-width: 1000px !important;
+}
+
+.input-dinamic {
+    max-width: 130px !important;
+
+}
+.lbl-dinamic {
+    font-size: 0.7rem !important;
+}
+.row-cont-subgroup {
+    width: auto !important;
+
+}
+
+.row-subgroup {
+    width: 100% !important;
+
+    position: relative !important;
+    overflow-x: scroll;
+}
+
+
+    .row-subgroup::-webkit-scrollbar {
+        max-width: 7px;
+        max-height: 7px;
+    }
+
+    .row-subgroup::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #dddddd;
+        border: 1px solid #c9c9c9;
+    }
+
+.col-fields-1 {
+    width: calc(100% / 1) !important;
+}
+
+.col-fields-2 {
+    width: calc(100% / 2) !important;
+}
+
+.col-fields-3 {
+    width: calc(100% / 3) !important;
+}
+
+.col-fields-4 {
+    width: calc(100% / 4) !important;
+}
+
+.col-fields-5 {
+    width: calc(100% / 5) !important;
+}
+
+.col-fields-6 {
+    width: calc(100% / 6) !important;
+}
+
+.col-fields-7 {
+    width: calc(100% / 7) !important;
+}
+
+.col-fields-8 {
+    width: calc(100% / 8) !important;
+}
+
+.col-fields-9 {
+    width: calc(100% / 9) !important;
+}
+
+.col-fields-10 {
+    width: calc(100% / 10) !important;
+}
+
+.col-fields-11 {
+    width: calc(100% / 11) !important;
+}
+
+.col-fields-12 {
+    width: calc(100% / 12) !important;
+}
+
+.lbl-evaluacion {
+    font-size: 0.75rem;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+.lbl-rango {
+    font-size: 0.85rem;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+.css-textarea {
+    width: 150px;
+    height: 60px !important;
+    resize: none;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px;
+}
+
+    .css-textarea::-webkit-scrollbar {
+        max-width: 7px;
+        max-height: 7px;
+    }
+
+    .css-textarea::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #dddddd;
+        border: 1px solid #c9c9c9;
+    }
+
+.bor-top {
+    border-top: 1px solid #dddddd;
+}
+
+.bor-bot {
+    border-bottom: 1px solid #dddddd;
+}
+
+.bor-le-ri {
+    border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
+}
+
+.bor-left {
+    border-left: 1px solid #dddddd;
+}
+
+.js-input-aptitud {
+    padding: 0px;
+    padding-left: 3px;
+}
+
+.js-input-rango {
+    padding: 0px;
+    padding-left: 3px;
+}
+
+.total-suma {
+    padding: 0px;
+}
+
+.total-suma-rango {
+    padding: 0px;
+}
+@media only screen and (max-width: 600px) {
+    #contAlert {
+        width: calc(100% / 2);
+    }
+}

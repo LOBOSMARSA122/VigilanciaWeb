@@ -1,0 +1,95 @@
+﻿
+
+
+<div class="" id="reporte11" style="width:100%">
+    <div id="ChartGlucoses" class="chart table-responsive"></div>
+</div>
+
+<div>
+
+
+</div>
+@{
+
+    if (Request.Browser.Browser == "IE" && Convert.ToDouble(Request.Browser.Version) < 9.0)
+    {
+    }
+    else
+    {
+        <script>
+            function LoadGlucose(data) {
+
+                var GlucosesDate = [];
+                var Glucoses = [];
+
+                for (let i = 0; i < data.Glucoses.length; i++) {
+                    Glucoses.push(Number(data.Glucoses[i].y));
+                    GlucosesDate.push(data.Glucoses[i].Date);
+
+                };
+        Highcharts.chart('ChartGlucoses', {
+
+                title: {
+                    text: 'Historial'
+                },
+
+                subtitle: {
+                    text: ''
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'mg/dl'
+                    }
+                },
+                legend: {
+                    layout: 'horizontal',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                plotOptions: {
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        },
+                        //pointStart: '2018-10-07'
+                    }
+                },
+                xAxis: {
+
+                    categories: GlucosesDate,
+                    labels: {
+                        skew3d: true,
+                        style: {
+                            fontSize: '16px'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Glucosa',
+                    data: Glucoses,
+                }],
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+
+            });
+
+        }
+        </script>
+    }
+}
+

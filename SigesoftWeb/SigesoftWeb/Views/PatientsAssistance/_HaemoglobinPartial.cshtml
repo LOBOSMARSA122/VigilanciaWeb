@@ -1,0 +1,88 @@
+﻿
+<div class="" id="reporte11" style="width:100%">
+    <div id="ChartHaemoglobin" class="chart table-responsive"></div>
+</div>
+
+
+@{
+
+    if (Request.Browser.Browser == "IE" && Convert.ToDouble(Request.Browser.Version) < 9.0)
+    {
+    }
+    else
+    {
+        <script>
+            function LoadHaemoglobin(data) {
+
+                var HaemoglobinsDate = [];
+                var Haemoglobins = [];
+                for (let i = 0; i < data.Haemoglobins.length; i++) {
+                    Haemoglobins.push(parseFloat(data.Haemoglobins[i].y));
+                    HaemoglobinsDate.push(data.Haemoglobins[i].Date);
+                };
+        Highcharts.chart('ChartHaemoglobin', {
+
+                title: {
+                    text: 'Historial'
+                },
+
+                subtitle: {
+                    text: ''
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'd/dl'
+                    }
+                },
+                legend: {
+                    layout: 'horizontal',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                plotOptions: {
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        },
+                        //pointStart: '2018-10-07'
+                    }
+                },
+                xAxis: {
+
+                    categories: HaemoglobinsDate,
+                    labels: {
+                        skew3d: true,
+                        style: {
+                            fontSize: '16px'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Hemoglobina',
+                    data: Haemoglobins,
+                }],
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+
+            });
+
+        }
+        </script>
+    }
+}
+
