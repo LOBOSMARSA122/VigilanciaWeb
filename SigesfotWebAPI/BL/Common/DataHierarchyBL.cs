@@ -18,12 +18,55 @@ namespace BL.Common
             var isDeleted = (int)Enumeratores.SiNo.No;
             List<Dropdownlist> result = (from a in ctx.DataHierarchy
                                          where a.i_IsDeleted == isDeleted && a.i_GroupId == grupoId
-                                         orderby a.i_Sort ascending
+                                         
                                          select new Dropdownlist
                                          {
                                              Id = a.i_ItemId,
                                              Value = a.v_Value1
-                                         }).OrderBy(a => a.Value).ToList();
+                                         }).ToList();
+            return result;
+        }
+
+        public List<Dropdownlist> GetDistritos(string name)
+        {
+            var isDeleted = (int)Enumeratores.SiNo.No;
+            List<Dropdownlist> result = (from a in ctx.DataHierarchy
+                                         where a.i_IsDeleted == isDeleted && a.i_GroupId == 113 && a.v_Value1 == name
+                                         orderby a.i_ParentItemId descending
+                                         select new Dropdownlist
+                                         {
+                                             Id = a.i_ParentItemId.Value,
+                                             Value = a.v_Value1
+                                         }).ToList();
+            return result;
+        }
+
+        public List<Dropdownlist> GetProvincia(int idDistrito)
+        {
+            var isDeleted = (int)Enumeratores.SiNo.No;
+            List<Dropdownlist> result = (from a in ctx.DataHierarchy
+                                         where a.i_IsDeleted == isDeleted && a.i_GroupId == 113 && a.i_ItemId == idDistrito
+                                         orderby a.i_ParentItemId descending
+                                         select new Dropdownlist
+                                         {
+                                             Id = a.i_ItemId,
+                                             Value = a.v_Value1,
+                                             Value2 = a.i_ParentItemId.Value
+                                         }).ToList();
+            return result;
+        }
+
+        public List<Dropdownlist> GetDepartamento(int idProvincia)
+        {
+            var isDeleted = (int)Enumeratores.SiNo.No;
+            List<Dropdownlist> result = (from a in ctx.DataHierarchy
+                                         where a.i_IsDeleted == isDeleted && a.i_GroupId == 113 && a.i_ItemId == idProvincia
+
+                                         select new Dropdownlist
+                                         {
+                                             Id = a.i_ItemId,
+                                             Value = a.v_Value1
+                                         }).ToList();
             return result;
         }
         #endregion

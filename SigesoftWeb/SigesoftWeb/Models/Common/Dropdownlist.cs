@@ -9,5 +9,6 @@ namespace SigesoftWeb.Models.Common
     {
         public string Id { get; set; }        
         public string Value { get; set; }
+        public string v_Id { get; set; }
     }
 }

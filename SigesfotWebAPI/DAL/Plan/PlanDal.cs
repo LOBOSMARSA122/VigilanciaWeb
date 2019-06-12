@@ -61,6 +61,7 @@ namespace DAL.Plan
 
             return list;
         }
+
         public PlanVigilanciaCustom GetId(string planVigianciaId)
         {
             
@@ -248,6 +249,19 @@ namespace DAL.Plan
                 objEntitySource.i_UpdateUserId = oPlanVigilanciaCustom.SystemUserId;
                 //_ctx.PlanVigilancia.Add(objEntitySource);
                 _ctx.SaveChanges();
+            }
+        }
+
+        public List<PlanBE> GetPlans(string protocolId, string UnidadProductiva)
+        {
+            try
+            {
+                var List = _ctx.Plan.Where(x => x.v_ProtocoloId == protocolId && x.v_IdUnidadProductiva == UnidadProductiva).ToList();
+                return List;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
     }

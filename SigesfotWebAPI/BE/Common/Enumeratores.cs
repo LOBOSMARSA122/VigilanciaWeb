@@ -8,6 +8,41 @@ namespace BE.Common
 {
    public class Enumeratores
     {
+        public enum ActionType
+        {
+            Create = 1,
+            Edit = 2
+        }
+
+        public enum Currency
+        {
+            Soles = 1,
+            Dolares = 2,
+            Todas = -1
+        }
+
+        public enum Result
+        {
+            Ok = 0,
+            NoResul = 1,
+            ErrorCapcha = 2,
+            Error = 3,
+        }
+
+        public enum TipoDeMovimiento
+        {
+            NotadeIngreso = 1,
+            NotadeSalida = 2,
+            Transferencia = 3,
+            Inicial = 5,
+        }
+
+        public enum StatusHttp
+        {
+            Ok = 200,
+            BadRequest = 500,
+        }
+
         public enum TypeForm
         {
             Windows = 1,
@@ -56,6 +91,10 @@ namespace BE.Common
             NoTemporal = 2
         }
 
+        public enum MasterServiceType
+        {
+            Empresarial = 1
+        }
         public enum masterService
         {
             Ocupational = 2,
@@ -145,6 +184,12 @@ namespace BE.Common
         {
             Interno = 1,
             Externo = 2
+        }
+
+        public enum FlagCall
+        {
+            NoseLlamo = 0,
+            Sellamo = 1
         }
 
         public enum QueueStatusId

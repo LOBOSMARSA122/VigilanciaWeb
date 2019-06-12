@@ -20,7 +20,7 @@ namespace BE.Service
         public DateTime? d_EntryTimeCM { get; set; }
         public int? i_ServiceTypeId { get; set; }
         public int? i_CalendarStatusId { get; set; }
-        public int i_ServiceId { get; set; }
+        public int? i_ServiceId { get; set; }
         public string v_ProtocolId { get; set; }
         public int? i_NewContinuationId { get; set; }
         public int? i_LineStatusId { get; set; }

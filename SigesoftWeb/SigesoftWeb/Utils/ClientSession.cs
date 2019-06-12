@@ -15,7 +15,7 @@ namespace SigesoftWeb.Utils
         public byte[] PersonImage { get; set; }
         public string SystemUserByOrganizationId { get; set; }
         public int NodeId { get; set; }
-
+        public string RucEmpresa { get; set; }
         public List<Permission> Permissions { get; set; }
         public List<OrganizationSystemUser> Organizations { get; set; }
         public List<Option> Options { get; set; }

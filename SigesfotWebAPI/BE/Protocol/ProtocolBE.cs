@@ -13,7 +13,6 @@ namespace BE.Protocol
     {
         [Key]
         public string v_ProtocolId { get; set; }
-
         public string v_Name { get; set; }
         public string v_EmployerOrganizationId { get; set; }
         public string v_EmployerLocationId { get; set; }
@@ -36,5 +35,10 @@ namespace BE.Protocol
         public int? i_UpdateUserId { get; set; }
         public DateTime? d_UpdateDate { get; set; }
         public string v_AseguradoraOrganizationId { get; set; }
+        public string v_ComentaryUpdate { get; set; }
+        public double? r_PriceFactor { get; set; }
+        public double? r_MedicineDiscount { get; set; }
+        public double? r_HospitalBedPrice { get; set; }
+        public double? r_DiscountExam { get; set; }
     }
 }

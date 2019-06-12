@@ -1,0 +1,97 @@
+﻿
+@{
+    int Take = 0;
+    int Total = 0;
+    int Primer = 0;
+    int Ultimo = 0;
+    int Index = 0;
+
+    if (ViewBag.Pacients != null)
+    {
+        Take = ViewBag.Products.Take;
+        Index = ViewBag.Products.Index;
+        Total = ViewBag.Products.TotalRecords;
+        Primer = ((Index - 1) * Take) + 1;
+        Ultimo = Primer + (ViewBag.Products.List.Count - 1);
+
+        Primer = Primer < 0 ? 0 : Primer;
+        Ultimo = Ultimo < 0 ? 0 : Ultimo;
+    }
+    else
+    {
+        Take = 0;
+    }
+}
+
+<div class="container-fluid" style="padding:0px;">
+    <div class="box box-info mt-2" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>Lista de Pacientes</h3>
+        </div>
+    </div>
+</div>
+<input id="heightBoardProd" type="hidden" value="">
+<div id="contBoardVenta" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+    <div>
+        <span class="informacion">Mostrando desde N° @Primer hasta @Ultimo de un total de @Total entradas</span>
+        <div class="float-lg-right informacion">
+            Total de registros:
+            <select id="take" onchange="Filtrar(1)">
+                <option value="10" @(Take == 10 ? "selected" : "")>10</option>
+                <option value="25" @(Take == 25 ? "selected" : "")>25</option>
+                <option value="50" @(Take == 50 ? "selected" : "")>50</option>
+                <option value="0" @(Take == 0 ? "selected" : "")>TODOS</option>
+            </select>
+        </div>
+    </div>
+    <div class="box box-info mt-2">
+        <div class="scroll-css" style="overflow:scroll">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th nowrap scope="col">Id</th>
+                        <th nowrap scope="col">ApePaterno</th>
+                        <th nowrap scope="col">ApeMaterno</th>
+                        <th nowrap scope="col">Nombres</th>
+                        <th nowrap scope="col">Dirección</th>
+                        <th nowrap scope="col">Teléfono</th>
+                        <th nowrap scope="col">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        if (ViewBag.Pacients == null)
+                        {
+                            <tr><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+                        }
+                        else if (ViewBag.Pacients.List.Count == 0)
+                        {
+                            <tr><td colspan="7" class="text-center">No hay resultados</td></tr>
+                        }
+                        else
+                        {
+                            foreach (var item in ViewBag.Pacients.List)
+                            {
+                                <tr>
+                                    <td>@item.PacientFullName</td>
+                                    <td>@item.DocType</td>
+                                    <td class="text-center">@item.DocNumber</td>
+                                    <td class="text-center">@item.TelephoneNumber</td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+

@@ -1,4 +1,54 @@
 ﻿/*BODY - HTML*/
+
+.group-box{
+    border: 1px solid;
+    border-radius: 0.3rem;
+    border-color: #b2afaf;
+    padding: 15px;
+    position:relative;
+}
+
+.row-active{
+    background-color: #d7d7d7;
+}
+.group-box.box-content{
+    border: 0px;
+}
+.label-group-box {
+    background-color: #fff;
+    color: #4b4a4a;
+    margin-top: -25px;
+    margin-left: 5px;
+    position: absolute;
+    font-size: 0.8rem;
+    z-index: 2;
+}
+.box-content {
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: -3px 3px 10px #888888;
+}
+.table-wrapper-scroll {
+    display: block;
+    width: 100%;
+    border: 0px;
+    overflow: scroll;
+}
+.scroll-css::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+}
+.scroll-css::-webkit-scrollbar-thumb {
+    background: #9b9b9b;
+}
+    /* Handle on hover */
+.scroll-css::-webkit-scrollbar-thumb:hover {
+    background: #7e7a7a;
+}
+
+.label-little{
+    font-size: 0.6rem;
+}
 body {
     margin: 0;
     padding: 0;

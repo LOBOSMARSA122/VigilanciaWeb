@@ -53,6 +53,8 @@ namespace BL.Security
                 join per in ctx.Person on sys.v_PersonId equals per.v_PersonId
                 join pro in ctx.Professional on per.v_PersonId equals pro.v_PersonId into proJoin
                 from pro in proJoin.DefaultIfEmpty()
+                join org in ctx.Organization on sys.v_SystemUserByOrganizationId equals org.v_OrganizationId into orgJoin
+                from org in orgJoin.DefaultIfEmpty()
                 where sys.v_UserName == userName &&
                       sys.v_Password == password &&
                       sys.i_IsDeleted == isDeleted
@@ -62,6 +64,7 @@ namespace BL.Security
                     FullName = per.v_FirstName + " " + per.v_FirstLastName,
                     PersonImage = per.b_PersonImage,
                     UserName = sys.v_UserName,
+                    RucEmpresa = org.v_IdentificationNumber,
                     SystemUserId = sys.i_SystemUserId.Value,
                     SystemUserTypeId = sys.i_SystemUserTypeId.Value,
                     SystemUserByOrganizationId = sys.v_SystemUserByOrganizationId

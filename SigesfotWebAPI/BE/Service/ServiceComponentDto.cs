@@ -34,7 +34,7 @@ namespace BE.Service
         public string v_Comment { get; set; }
         public int? i_Iscalling { get; set; }
         public int? i_IsApprovedId { get; set; }
-
+        public int? i_ConCargoA { get; set; }
         public int? i_IsDeleted { get; set; }
         public int? i_InsertUserId { get; set; }
         public DateTime? d_InsertDate { get; set; }
@@ -59,8 +59,8 @@ namespace BE.Service
         public int? i_AuditorUpdateUserId { get; set; }
         public DateTime? d_AuditorUpdateUser { get; set; }
         public string v_IdUnidadProductiva { get; set; }
-        public DateTime? d_SaldoPaciente { get; set; }
-        public DateTime? d_SaldoAseguradora { get; set; }
+        public decimal? d_SaldoPaciente { get; set; }
+        public decimal? d_SaldoAseguradora { get; set; }
         public int? i_MedicoTratanteId { get; set; }
         public int? i_SystemUserEspecialistaId { get; set; }
         public int? i_ExternalInternalId { get; set; }

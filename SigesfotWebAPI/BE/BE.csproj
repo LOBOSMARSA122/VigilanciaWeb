@@ -47,6 +47,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calendar\CalendarCustom.cs" />
+    <Compile Include="RUC\ControlResultadosRUC.cs" />
+    <Compile Include="Z-CommonSAMBHS\ClienteBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\ClienteDireccionesBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\DataHierarchyBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\DocumentoBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\EstablecimientoDetalleBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\LineaBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\MovimientoBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\MovimientoDetalleBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\ProductoAlmacenBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\ProductoBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\ProductoDetalleBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\SystemParameterBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\SystemUserBE.cs" />
+    <Compile Include="Z-CommonSAMBHS\VendedorBE.cs" />
     <Compile Include="Common\AplicationHierarchyBE.cs" />
     <Compile Include="Common\AttentionInAreaBE.cs" />
     <Compile Include="Common\AttentionInAreaComponentBE.cs" />
@@ -59,6 +75,9 @@
     <Compile Include="Common\Dropdownlist.cs" />
     <Compile Include="Common\EmailBE.cs" />
     <Compile Include="Common\Enumeratores.cs" />
+    <Compile Include="Common\HolidaysBE.cs" />
+    <Compile Include="Common\HospitalizacionBE.cs" />
+    <Compile Include="Common\HospitalizacionServiceBE.cs" />
     <Compile Include="Common\KeyValueDTO.cs" />
     <Compile Include="Common\LogBE.cs" />
     <Compile Include="Common\MasterRecommendationRestricctionDto.cs" />
@@ -73,6 +92,7 @@
     <Compile Include="Common\PacientBE.cs" />
     <Compile Include="Common\PacientMultimediaDataBE.cs" />
     <Compile Include="Common\PersonDto.cs" />
+    <Compile Include="Common\PlanBE.cs" />
     <Compile Include="Common\ProfessionalBE.cs" />
     <Compile Include="Common\RecommendationDto.cs" />
     <Compile Include="Common\RestrictionDto.cs" />
@@ -110,6 +130,7 @@
     <Compile Include="MedicalAssistance\ReviewEMO.cs" />
     <Compile Include="MedicalAssistance\Schedule.cs" />
     <Compile Include="MedicalAssistance\TopDiagnostic.cs" />
+    <Compile Include="Message\MessageCustom.cs" />
     <Compile Include="Notification\Boards.cs" />
     <Compile Include="Notification\NotificationAlertBE.cs" />
     <Compile Include="Notification\NotificationDto.cs" />
@@ -124,12 +145,15 @@
     <Compile Include="Organization\OccupationBE.cs" />
     <Compile Include="Organization\OrganizationBE.cs" />
     <Compile Include="Organization\OrganizationPersonBE.cs" />
+    <Compile Include="Pacient\PacientCustom.cs" />
     <Compile Include="Plan\Boards.cs" />
+    <Compile Include="Plan\PlanCustom.cs" />
     <Compile Include="Plan\PlanVigilanciaDto.cs" />
     <Compile Include="ProductWarehouse\Boards.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol\ProtocolBE.cs" />
     <Compile Include="Protocol\ProtocolComponentDto.cs" />
+    <Compile Include="Protocol\ProtocolCustom.cs" />
     <Compile Include="Protocol\ProtocolSystemUserBE.cs" />
     <Compile Include="Common\SecuentialBE.cs" />
     <Compile Include="ReportManager\ComponentsByServiceBe.cs" />
@@ -149,6 +173,7 @@
     <Compile Include="Service\DiagnosticRepositoryDto.cs" />
     <Compile Include="Service\ServiceComponentBe.cs" />
     <Compile Include="Service\ServiceComponentTemp.cs" />
+    <Compile Include="Service\ServiceCustom.cs" />
     <Compile Include="Service\ServiceDto.cs" />
     <Compile Include="Service\ServiceComponentDto.cs" />
     <Compile Include="Service\ServiceComponentFieldsBE.cs" />
@@ -186,6 +211,8 @@
     <Compile Include="Worker\ServiceWorkerBE.cs" />
     <Compile Include="Worker\VapidBe.cs" />
     <Compile Include="Worker\WorkerPwa.cs" />
+    <Compile Include="Z-SAMBHSCUSTOM\Clientes\ClienteCustom.cs" />
+    <Compile Include="Z-SAMBHSCUSTOM\Productos\ProductCustomSAMBHS.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

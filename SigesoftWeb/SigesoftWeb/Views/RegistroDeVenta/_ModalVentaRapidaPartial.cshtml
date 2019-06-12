@@ -1,0 +1,211 @@
+﻿<div class="modal fade px-0" id="modalVentaRapida" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nueva Venta Rapida</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="col-12 col-lg-5">
+                        <label class="small">Documento:</label>
+                        <div class="row w-100 mx-0 justify-content-between">
+                            <select disabled class="custom-select custom-select-sm w-25">
+                                <option value="-1">--Seleccionar--</option>
+                                <option selected value="1">Opción1</option>
+                                <option value="2">Opción2</option>
+                            </select>
+                            <input type="text" class="form-control form-control-sm mx-0 w-25">
+                            <input type="text" disabled class="form-control form-control-sm w-50">
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-5">
+                        <label class="small">Documento Ref:</label>
+                        <div class="row w-100 mx-0 justify-content-between">
+                            <select disabled class="custom-select custom-select-sm w-25">
+                                <option selected value="-1">--Seleccionar--</option>
+                                <option value="1">Opción1</option>
+                                <option value="2">Opción2</option>
+                            </select>
+                            <input type="text" disabled class="form-control form-control-sm mx-0 w-25">
+                            <input type="text" disabled class="form-control form-control-sm w-50">
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-2">
+                        <label class="small">Fecha Vcto:</label>
+                        <input type="date" class="form-control form-control-sm w-100">
+                    </div>
+                    <div class="col-12 col-lg-8">
+                        <label class="small">Cliente:</label>
+                        <div class="row w-100 mx-0 justify-content-between">
+                            <input type="text" class="form-control form-control-sm mx-0" style="width:27%">
+                            <button class="btn btn-sm btn-outline-info mx-2" style="width:9%"><i class="fas fa-search"></i></button>
+                            <input type="text" disabled class="form-control form-control-sm" style="width:60%">
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-2">
+                        <label class="small">Moneda:</label>
+                        <select class="custom-select custom-select-sm">
+                            <option value="-1">--Seleccionar--</option>
+                            <option value="1">Dolares</option>
+                            <option selected value="2">Soles</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-2">
+                        <label class="small">Tipo Cambio:</label>
+                        <input type="text" disabled class="form-control form-control-sm w-100">
+                    </div>
+
+                    <div class="col-12 col-lg-3">
+                        <label class="small">Vendedor:</label>
+                        <select disabled class="custom-select custom-select-sm">
+                            <option value="-1">--Seleccionar--</option>
+                            <option selected value="1">Opción1</option>
+                            <option value="2">Opción2</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-2">
+                        <label class="small">Fecha Vcto:</label>
+                        <input type="date" disabled class="form-control form-control-sm w-100">
+                    </div>
+                    <div class="col-11 col-lg-6">
+                        <label class="small">Codigo:</label>
+                        <input type="text" disabled class="form-control form-control-sm w-auto">
+                    </div>
+                    <div class="col-1 pt-2 d-flex justify-content-end">
+                        <button class="btn mt-4 btn-sm btn-outline-info"><i class="fas fa-keyboard"></i></button>
+                    </div>
+                    <div class="col-12 col-lg-2">
+                        <label class="small">Saldo:</label>
+                        <input type="text" disabled class="form-control form-control-sm w-100">
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <label class="small">Cond. de Pago:</label>
+                        <select class="custom-select custom-select-sm">
+                            <option value="-1">--Seleccionar--</option>
+                            <option selected value="1">Opción1</option>
+                            <option value="2">Opción2</option>
+                        </select>
+                    </div>
+                    <div class="col-7 col-lg-3">
+                        <label class="small" style="opacity:0;">Solo contado:</label>
+                        <select class="custom-select custom-select-sm">
+                            <option value="-1">--Seleccionar--</option>
+                            <option selected value="1">Efectivo Soles</option>
+                            <option value="2">MasterCad</option>
+                        </select>
+                    </div>
+                    <div class="col-5 col-lg-1 pt-2">
+                        <label class="badge mt-4 badge-secondary">Nro. Operación:</label>
+                    </div>
+                    <div class="col-12 px-2 col-lg-3">
+                        <label class="small">Tipo Servicio:</label>
+                        <select class="custom-select custom-select-sm">
+                            <option selected value="-1">--Seleccionar--</option>
+                            <option value="1">Empresarial</option>
+                            <option value="2">Particular</option>
+                            <option value="3">Farmacia</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="container-fluid" style="padding:0px;">
+                    <div class="box box-success mt-2" id="acordion">
+                        <div class="box-header with-border" id="heading1">
+                            <h3 class="box-title" style="cursor:pointer;"><i class="fas fa-people-carry mr-2"></i>Productos</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row w-100 mx-0">
+                    <div class="col-12 col-xl-10">
+                        <div class="scroll-css" style="overflow:scroll">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th nowrap scope="col">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" onchange="checkedAllCheckBoxes()" id="checkedAll">
+                                                <label class="custom-control-label" for="checkedAll">Selec</label>
+                                            </div>
+                                        </th>
+                                        <th nowrap scope="col">Cod. Producto</th>
+                                        <th nowrap scope="col">Descripción Producto</th>
+                                        <th nowrap scope="col">Cantidad</th>
+                                        <th nowrap scope="col">UM.</th>
+                                        <th nowrap scope="col">Pre. U.</th>
+                                        <th nowrap scope="col">% Desc</th>
+                                        <th nowrap scope="col">Valor V.</th>
+                                        <th nowrap scope="col">IGV</th>
+                                        <th nowrap scope="col">Precio V.</th>
+                                        <th nowrap scope="col">Prec. Contraparte</th>
+                                        <th nowrap scope="col" class="d-none">RecordStatus</th>
+                                        <th nowrap scope="col" class="d-none">RecordType</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="body-venta-rapida">
+                                </tbody>
+                            </table>
+                        </div>                       
+                    </div>
+                    <div class="col-12 col-xl-2 d-flex justify-content-end d-xl-block">
+                        <button class="btn btn-sm m-1 btn-success" id="agregar-detalle-venta-rapida"><i class="fas fa-plus mr-1"></i>Agregar Detalle</button>
+                        <button class="btn btn-sm m-1 btn-danger" id="eliminar-detalle-venta-rapida"><i class="fas fa-minus mr-1"></i>Eliminar Detalle</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer w-100 row mx-0 justify-content-between">
+
+                <div class="col-12 p-0 pt-2">
+                    <div class="group-box custom-control-inline row w-100 mx-0 justify-content-between">
+                        <label class="label-group-box">Tipo Facturación</label>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" checked id="rdoOcupacional" name="tipoFacturacion" class="custom-control-input">
+                            <label class="custom-control-label" for="rdoOcupacional">Ocupacional</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="rdoAsistencial" name="tipoFacturacion" class="custom-control-input">
+                            <label class="custom-control-label" for="rdoAsistencial">Asistencial</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="rdAseguradorao" name="tipoFacturacion" class="custom-control-input">
+                            <label class="custom-control-label" for="rdAseguradorao">Aseguradora</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="rdoHospitalizacin" name="tipoFacturacion" class="custom-control-input">
+                            <label class="custom-control-label" for="rdoHospitalizacin">Hospitalización</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 pt-2">
+                    <div class="custom-control-inline row w-100 mx-0 align-content-center justify-content-between">
+                        <label class="small" style="width:10%">V. Venta</label>
+                        <input type="text" class="form-control form-control-sm" style="width:20%" />
+                        <label class="small" style="width:10%">I.G.V</label>
+                        <input type="text" class="form-control form-control-sm" style="width:20%" />
+                        <label class="small bold" style="width:10%">Total</label>
+                        <input type="text" class="form-control form-control-sm" style="width:20%" />
+                    </div>
+                </div>
+                <div class="col-4 col-md-2 mx-0 pt-2">
+                    <button class="btn btn-sm btn-primary"><i class="fas fa-save mr-1"></i>Guardar</button>
+                </div>
+                <div class="col-4 col-md-2 mx-0 pt-2">
+                    <button class="btn btn-sm btn-secondary"><i class="fas fa-print mr-1"></i>Imprimir</button>
+                </div>
+                <div class="col-4 col-md-2 mx-0 pt-2">
+                    <button class="btn btn-sm btn-secondary"><i class="fas fa-concierge-bell mr-1"></i>Servicios</button>
+                </div>
+                <div class="col-4 col-md-2 mx-0 pt-2">
+                    <button class="btn btn-sm btn-secondary" id="btnFarmacia" data-toggle="modal" data-target="#modalMedicamentos"><i class="fas fa-pills mr-1"></i>Farmacia</button>
+                </div>
+                <div class="col-4 col-md-2 mx-0 pt-2">
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-sign-out-alt mr-2"></i>Salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

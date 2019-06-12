@@ -21,6 +21,16 @@ namespace DAL.Organizarion
             return query;
         }
 
+        public string GetGroupOcupation(string locationId, string gesoName)
+        {
+            var query = ctx.GroupOccupation.Where(x => x.v_LocationId == locationId && x.v_Name == gesoName).FirstOrDefault();
+            if (query != null)
+            {
+                return query.v_GroupOccupationId;
+            }
+            return null;
+        }
+
         public List<OrganizationWareHouse> GetWareHouses(string organizationId)
         {
             var query = (from A in ctx.NodeOrganizationLocationWarehouseProfile

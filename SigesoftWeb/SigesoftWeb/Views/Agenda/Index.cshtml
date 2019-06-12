@@ -1,0 +1,2347 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<div class="container-fluid">
+    <article class="group-box box-content mt-3">
+        <label class="label-group-box">Filtro</label>
+        <div class="form-row bg-light p-2">
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+                <label class="small my-1 mr-2">Fecha Inicio:</label>
+                <input type="date" class="form-control form-control-sm" id="filter-FechaInicio">
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
+                <label class="small my-1 mr-2">Tipo Servicio</label>
+                <select class="custom-select custom-select-sm" id="filter-ServiceType">
+                    <option value="-1">--Todos--</option>
+                    @{
+                        foreach (var item in ViewBag.TypeService)
+                        {
+                            <option value="@item.Id">@item.Value</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
+                <label class="small my-1 mr-2">Cola:</label>
+                <select class="custom-select custom-select-sm" id="filter-Cola">
+                    <option value="-1">--Todos--</option>
+                    @{
+                        foreach (var item in ViewBag.LineStatus)
+                        {
+                            <option value="@item.Id">@item.Value</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+                <label class="small my-1 mr-2">Paciente:</label>
+                <input type="text" class="form-control form-control-sm" id="filter-PacientName">
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+                <label class="small my-1 mr-2">Fecha Fin:</label>
+                <input type="date" class="form-control form-control-sm" id="filter-FechaFin">
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
+                <label class="small my-1 mr-2">Servicio</label>
+                <select class="custom-select custom-select-sm" id="filter-MasterService">
+                    <option value="-1">--Todos--</option>
+                </select>
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
+                <label class="small my-1 mr-2">VIP:</label>
+                <select class="custom-select custom-select-sm" id="filter-Vip">
+                    <option value="-1">--Todos--</option>
+                    @{
+                        foreach (var item in ViewBag.Vip)
+                        {
+                            <option value="@item.Id">@item.Value</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+                <label class="small my-1 mr-2">Nro Doc:</label>
+                <input type="text" class="form-control form-control-sm" id="filter-DocNumber">
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
+                <label class="small my-1 mr-2">Modalidad:</label>
+                <select class="custom-select custom-select-sm" id="filter-Modalidad">
+                    <option value="-1">--Todos--</option>
+                    @{
+                        foreach (var item in ViewBag.Modalidad)
+                        {
+                            <option value="@item.Id">@item.Value</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
+                <label class="small my-1 mr-2">Estado Cita:</label>
+                <select class="custom-select custom-select-sm" id="filter-EstadoCita">
+                    <option value="-1">--Todos--</option>
+                    @{
+                        foreach (var item in ViewBag.CalendarStatus)
+                        {
+                            <option value="@item.Id">@item.Value</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3">
+                <button class="btn btn-sm btn-info" id="filtrar-agenda"><i class="fas fa-search mr-2"></i>Filtrar</button>
+            </div>
+        </div>
+    </article>
+    <section class="row w-100 mx-0">
+        <div class="col-12 py-1 px-0 col-lg-7">
+            <div id="cont-table-calendar">
+                @Html.Partial("_BoardCalendarPartial")
+            </div>
+
+            <div class="row w-100 mx-0 justify-content-start justify-content-lg-between p-2">
+                <button class="btn btn-sm m-1 btn-primary" id="btn-nueva-agenda"><i class="fas fa-calendar-alt mr-1"></i>Nuevo</button>
+                <button class="btn btn-sm m-1 btn-secondary" id="btn-facturar"><i class="fas fa-file-invoice-dollar mr-1"></i>Facturar</button>
+                <button class="btn btn-sm m-1 btn-info" id="editar-trabajador"><i class="fas fa-user-edit mr-1"></i>Editar Trabajador</button>
+                <button class="btn btn-sm m-1 btn-success" id="editar-protocolo"><i class="fas fa-exchange-alt mr-1"></i>Cambiar Protocolo</button>
+                <button class="btn btn-sm m-1 btn-secondary" id="solicitud-carta"><i class="fas fa-envelope-open-text mr-1"></i>Solicitud/Carta</button>
+                <button class="btn btn-sm m-1 btn-danger" id="btn-fusionar-servicios"><i class="fas fa-user-shield mr-1"></i>Fusionar Servicios</button>
+            </div>
+        </div>
+        <div class="col-12 py-2 px-0 col-lg-5">
+            <div class="row w-100 mx-0">
+                <div class="col-12 col-md-8">
+                    <input type="text" class="form-control form-control-sm inputLabelFloat mt-3" value="" id="pacient-Paciente" />
+                    <label class="has-float-label">Trabajador</label>
+                    <input type="text" class="form-control form-control-sm inputLabelFloat mt-3" value="" id="pacient-NombreEmpresa" />
+                    <label class="has-float-label">Empresa Trabajo</label>
+                    <input type="text" class="form-control form-control-sm inputLabelFloat mt-3" value="" id="pacient-Protocolo" />
+                    <label class="has-float-label">Protocolo</label>
+                    <input type="text" class="form-control form-control-sm inputLabelFloat mt-3" value="" id="pacient-Servicio" />
+                    <label class="has-float-label">Servicio</label>
+                    <input type="text" class="form-control form-control-sm inputLabelFloat mt-3" value="" id="pacient-TipoEso" />
+                    <label class="has-float-label">Tipo ESO</label>
+                </div>
+                <div class="col-12 pt-3 col-md-4" id="cont-person-image">
+                    <div class="row w-100 mx-0 justify-content-center pt-lg-0 pt-2">
+                        <figure class="img-thumbnail" style="max-width:250px; max-height: 350px">
+                            <img src="https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png" class="img img-fluid" id="img-pacient" alt="Imagen" />
+                        </figure>
+                    </div>
+                    <input type="text" class="form-control form-control-sm inputLabelFloat mt-3" id="huella-pacient" value="" />
+                    <label class="has-float-label">Huella</label>
+                    <input type="text" class="form-control form-control-sm inputLabelFloat mt-3" id="firma-pacient" value="" />
+                    <label class="has-float-label">Firma</label>
+                </div>
+            </div>
+            <div class="container-fluid" style="padding:0px;">
+                <div class="box box-info mt-2" id="acordion">
+                    <div class="box-header with-border" id="heading1">
+                        <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>Exámenes</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="box box-info mt-2">
+                <div class="scroll-css" style="overflow:scroll">
+                    <table class="table table-sm table-hover box-content" style="border:0px">
+                        <thead>
+                            <tr>
+                                <th nowrap scope="col">Nombre Categoria</th>
+                                <th nowrap scope="col">Estatus</th>
+                                <th nowrap scope="col">Estado del Servicio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td nowrap></td>
+                                <td nowrap></td>
+                                <td nowrap></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+@*////Modals////*@
+
+@*Para facturar*@
+@*@Html.Partial("_ModalFindProductPartial")*@
+
+@*Para facturar*@
+@Html.Partial("_ModalVentaRapidaPartial")
+
+@*Para una nueva agenda*@
+@Html.Partial("_NewSchedullePersonPartial")
+
+@*Para registrar un nuevo cliente*@
+@Html.Partial("_ModalNuevoCliente")
+
+@*Cambiar de Protocolo*@
+<div class="modal fade" id="modalCambiarProtocolo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size: 1.2rem">Actualizar Protocolo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-12 col-lg-12">
+                        <div class="group-box">
+                            <label class="label-group-box">Datos de Protocolo</label>
+                            <div class="row w-100 mx-0">
+
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Tipo Servicio:</label>
+                                        <select disabled class="custom-select custom-select-sm" id="change-tiposervicio">
+                                            <option value="-1">--Seleccionar--</option>
+                                            @{
+                                                foreach (var item in ViewBag.TypeService)
+                                                {
+                                                    <option value="@item.Id">@item.Value</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Servicio:</label>
+                                        <select disabled class="custom-select custom-select-sm" id="change-servicio">
+                                            <option value="-1">--Seleccionar--</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Protocolo:</label>
+                                        <select class="custom-select custom-select-sm" id="change-protocolo" style="max-width: 100%">
+                                            <option value="-1">--Seleccionar--</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">GESO:</label>
+                                        <select disabled class="custom-select custom-select-sm" id="change-geso">
+                                            <option value="-1">--Seleccionar--</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Tipo Eso:</label>
+                                        <select disabled class="custom-select custom-select-sm" id="change-tipoeso">
+                                            <option value="-1">--Seleccionar--</option>
+                                            @{
+                                                foreach (var item in ViewBag.TipoEso)
+                                                {
+                                                    <option value="@item.Id">@item.Value</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 d-none">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label disabled class="small">RUC Empleadora:</label>
+                                        <input type="text" disabled class="form-control form-control-sm" value="" id="change-ruc" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Centro de Costo:</label>
+                                        <select class="custom-select custom-select-sm" id="change-centrocosto" style="max-width: 100%">
+                                            <option value="-1">--Seleccionar--</option>
+                                            @{
+                                                foreach (var item in ViewBag.CentroCosto)
+                                                {
+                                                    <option value="@item.v_Id">@item.Value</option>
+                                                }
+                                            }
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Emp. Cliente:</label>
+                                        <select disabled class="custom-select custom-select-sm" id="change-empresacliente" style="max-width: 100%">
+                                            <option value="-1">--Seleccionar--</option>
+                                            @{
+                                                foreach (var item in ViewBag.Empresa)
+                                                {
+                                                    <option value="@item.v_Id">@item.Value</option>
+                                                }
+                                            }
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Emp. Trabajo:</label>
+                                        <select disabled class="custom-select custom-select-sm" id="change-empresatrabajo" style="max-width: 100%">
+                                            <option value="-1">--Seleccionar--</option>
+                                            @{
+                                                foreach (var item in ViewBag.Empresa)
+                                                {
+                                                    <option value="@item.v_Id">@item.Value</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-sm btn-primary" id="guardar-cambios-protocolo">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*//Modal Solicitud/carta*@
+<div class="modal fade" id="modalSolicitudCarta" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="cont-modal-solicitud">
+            <div class="modal-header">
+                <h5 class="modal-title">Solicituda/Carta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label class="small">Solicituda/Carta Garant:</label>
+                <input type="text" id="numero-solicitud" class="form-control form-control-sm" value="" />
+            </div>
+            <div class="modal-footer row w-100 mx-0 justify-content-between px-2">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btn-enviar-solicitud">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal  para los clientes*@
+<div class="modal fade" id="modalClientes" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Clientes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-9 d-flex">
+                        <input type="text" class="form-control form-control-sm" placeholder="Buscar Cliente" aria-label="Buscar Cliente" aria-describedby="btn-cliente" id="cliente-find">
+                        <div class="input-group-append">
+                            <button class="btn btn-sm btn-outline-info" type="button" id="btn-cliente"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-sm btn-outline-success" type="button" id="btn-nuevo-cliente" data-toggle="modal" data-target="#modalRegistroCliente"><i class="fas fa-plus"></i>Nuevo</button>
+                    </div>
+                </div>
+                <div id="render-board-client">
+                    @Html.Partial("_BoardClientsPartial")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal  para los productos*@
+<div class="modal fade" id="modalProductos" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Productos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-9 d-flex">
+                        <input type="text" class="form-control form-control-sm" placeholder="Buscar Producto" aria-label="Buscar Producto" aria-describedby="btn-producto" id="product-find">
+                        <div class="input-group-append">
+                            <button class="btn btn-sm btn-outline-info" type="button" id="btn-producto"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div id="render-board-product">
+                    @Html.Partial("_BoardProducts")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/FloatLabel.js"></script>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<link href="~/Content/css/Alert.css" rel="stylesheet" />
+<script src="~/Scripts/Alert.js"></script>
+<style>
+    .modal {
+        overflow-y: auto !important;
+    }
+</style>
+<script>
+
+    $(document).ready(function () {
+
+        localStorage.setItem("TipoServicio", "");
+        localStorage.setItem("Clean", 'true');
+        SetDateTimeNow();
+        localStorage.setItem("AbrirRegistroVenta", 'true');
+        $("#reload-captcha").on("click", function () {
+            GetCaptcha();
+        })
+        $("#find-personbyruc").on("click", function () {
+            $("#cont-captcha").removeClass("d-none");
+            GetCaptcha();
+        })
+
+        $("#find-captcha").on("click", function () {
+            if ($("#new-clientruc").val().length == 11 || $("#new-clientruc").val().length == 8) {
+                $("#new-clientruc").removeClass("border-danger");
+
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    url: '/Agenda/GetDataContribuyenteByRuc?numDoc=' + $("#new-clientruc").val() + "&textCaptcha=" + $("#new-textcaptcha").val(),
+                    success: function (json) {
+                        console.log(json);
+                        //if (!json.success) {
+                        //    alertafixed({
+                        //        title: 'AVISO',
+                        //        message: json.mensaje,
+                        //        class: 'info-servidor',
+                        //        type: 'info',
+                        //    })
+                        //} else {
+                        //    if (json.contribuyente_tipo === "PERSONA NATURAL SIN NEGOCIO") {
+                        //        var arrNombres = json.razon_social.split(" ");
+                        //        console.log(arrNombres);
+                        //        $("#new-firstname").val(arrNombres[2]);
+                        //        $("#new-secondname").val(arrNombres[3]);
+                        //        $("#new-firstlastname").val(arrNombres[0]);
+                        //        $("#new-secondlastname").val(arrNombres[1]);
+                        //    } else{
+                        //        ("#new-firstname").val(json.razon_social);
+                        //    }
+                        //}
+                    },
+                    error: function (err) {
+                        alertafixed({
+                            title: 'ERROR: ' + err.status,
+                            message: 'Sucedió un error al conectarse al servidor.',
+                            class: 'error-servidor',
+                            type: 'danger',
+                        })
+                    }
+
+                })
+
+            } else {
+                alertafixed({
+                    type: 'warning',
+                    class: 'valdiacion',
+                    title: 'VALIDACIÓN',
+                    message: 'Por favor, ingrese un numero de documento valido.'
+                })
+                $("#new-clientruc").addClass("border-danger");
+            }
+        })
+
+        $("#modalRegistroCliente").on("show.bs.modal", function () {
+            localStorage.setItem("AbrirRegistroVenta", 'false');
+            $("#modalClientes").modal("hide");
+
+        })
+
+        $("#modalRegistroCliente").on("hidden.bs.modal", function () {
+            localStorage.setItem("AbrirRegistroVenta", 'true');
+            $("#modalClientes").modal("show");
+
+        })
+
+        $("#ruc-client").on("keyup", function (e) {
+            var tecla = (document.all) ? e.keyCode : e.which;
+            if (tecla == 13) {
+                FindClientByCodClient($(this).val(), $(this));
+            }
+        })
+
+        $("#btn-buscar-cliente").on("click", function () {
+            $("#modalVentaRapida").modal("hide");
+            $("#modalClientes").modal("show");
+
+            FiltrarClientes();
+        })
+
+        $("#btn-cliente").on("click", function () {
+            FiltrarClientes();
+        })
+
+        $("#cliente-find").on("keyup", function (e) {
+            var tecla = (document.all) ? e.keyCode : e.which;
+            if (tecla == 13) {
+                FiltrarClientes();
+            }
+        })
+
+        $("#modalClientes").on("hidden.bs.modal", function () {
+            if (localStorage.getItem("AbrirRegistroVenta") == 'true') {
+                $("#modalVentaRapida").modal("show");
+            }
+        })
+
+        $("#select-condicion-pago").on("change", function () {
+
+            if ($(this).val() != "1") {
+                $("#cont-solo-contado").addClass("d-none");
+            } else {
+                $("#cont-solo-contado").removeClass("d-none");
+            }
+        })
+
+        $("#btn-codigo").on("click", function () {
+
+            $("#codigo-fac").prop("disabled", !$("#codigo-fac").attr("disabled"));
+        })
+
+        $("#btn-facturar").on("click", function () {
+            $("#modalVentaRapida").modal("show");
+        })
+
+        $("#agregar-detalle-venta-rapida").on("click", function () {
+            AgregarFilaVentaRapida();
+        })
+
+        $("#eliminar-detalle-venta-rapida").on("click", function () {
+            EliminarFilaVenta("checkbox-venta-rapida");
+        })
+
+        $("#modalTitular").on("hidden.bs.modal", function () {
+            $("#modalNuevaAgenda").modal("show");
+            localStorage.setItem("Clean", 'true');
+            LimpiarDataTitular();
+        })
+
+        $("#modalTitular").on("show.bs.modal", function () {
+            localStorage.setItem("Clean", 'false');
+            $("#modalNuevaAgenda").modal("hide");
+
+        })
+
+        $("#btn-fusionar-servicios").on("click", function () {
+
+            let chk = $(".checkbox-agenda:checked");
+            if (ValidacionFusionarServicios(chk)) {
+
+
+                let arrServices = [];
+                for (var i = 0; i < chk.length; i++) {
+                    var row = chk.eq(i).parent().parent().parent();
+                    var serviceId = row.find("td").eq(26).text();
+                    arrServices.push(serviceId);
+                }
+                notificacion({
+                    classTitleAndButtons: "infoTitleAndButtons",
+                    classMessage: "infoMessage",
+                    title: "¡ Confirmación !",
+                    icono: "",
+                    contenido: "¿ Desea fusionar los servicios ?",
+                    btnAceptar: "Aceptar",
+                    btnCancelar: "Cancelar",
+                    btnOk: "OK",
+                    mostrarBtnAceptarAndCancelar: "",
+                    mostrarBtnOk: "no",
+                });
+                $(".bigBox-Aceptar").on("click", function () {
+                    $("#contBoardCalendar").addClass("loadingGrid");
+                    $(".bigBox-Cancelar").click();
+                    $.ajax({
+                        cache: false,
+                        method: 'POST',
+                        dataType: 'json',
+                        data: { 'ListserviceId': JSON.stringify(arrServices) },
+                        url: '/Agenda/FusionarServicios',
+                        success: function (json) {
+                            if (!json.Error) {
+                                MessageSuccess(json);
+                                $("#modalSolicitudCarta").modal("hide");
+                            } else {
+                                MessageError(json);
+                            }
+
+                            $("#contBoardCalendar").removeClass("loadingGrid");
+                        },
+                        error: function (err) {
+                            alertafixed({
+                                class: 'error-servidor',
+                                type: 'danger',
+                                title: 'ERROR: ' + err.status,
+                                message: 'Sucedió un error al conectarse al servidor, por favor vuelva a intentar.'
+                            })
+                            $("#contBoardCalendar").removeClass("loadingGrid");
+                        }
+                    })
+                })
+
+            }
+
+        })
+
+        $("#solicitud-carta").on("click", function () {
+            let chk = $(".checkbox-agenda:checked");
+
+            if (ValidacionEditPacient(chk)) {
+                $("#modalSolicitudCarta").modal("show");
+            }
+        })
+
+        $("#btn-enviar-solicitud").on("click", function () {
+
+            let solicitud = $("#numero-solicitud");
+            let chk = $(".checkbox-agenda:checked");
+            let row = chk.parent().parent().parent();
+            let serviceId = row.find("td").eq(26).text();
+            if (solicitud.val() == "") {
+                solicitud.addClass("border-danger").removeClass("border-succes");
+                alertafixed({
+                    type: 'warning',
+                    class: 'validacion',
+                    title: 'VALIDACIÓN',
+                    message: 'El campo es necesario.'
+                })
+            } else {
+                solicitud.removeClass("border-danger").addClass("border-succes");
+                $("#cont-modal-solicitud").addClass("loadingGrid");
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: { 'serviceId': serviceId, 'solicitud': solicitud.val() },
+                    url: '/Agenda/RegistrarCarta',
+                    success: function (json) {
+                        if (!json.Error) {
+                            MessageSuccess(json);
+                            $("#modalSolicitudCarta").modal("hide");
+                        } else {
+                            MessageError(json);
+                        }
+                        $("#cont-modal-solicitud").removeClass("loadingGrid");
+                    },
+                    error: function (err) {
+                        alertafixed({
+                            class: 'error-servidor',
+                            type: 'danger',
+                            title: 'ERROR: ' + err.status,
+                            message: 'Sucedió un error al conectarse al servidor, por favor vuelva a intentar.'
+                        })
+                        $("#cont-modal-solicitud").removeClass("loadingGrid");
+                    }
+
+                })
+            }
+        })
+
+        $("#modalSolicitudCarta").on("hidden.bs.modal", function () {
+            $("#numero-solicitud").val("");
+        })
+
+        $("#guardar-cambios-protocolo").on("click", function () {
+            let chk = $(".checkbox-agenda:checked");
+            let row = chk.parent().parent().parent();
+
+            let ServiceId = row.find("td").eq(26).text();
+            console.log(ServiceId);
+            let ProtocolId = $("#change-protocolo").val();
+            let CentroCosto = $("#change-centrocosto option[value='" + $("#change-centrocosto").val() + "']").text();
+            let MasterServiceId = $("#change-servicio").val();
+            let MasterServiceTypeId = $("#change-tiposervicio").val();
+            var data = {
+                ProtocolId,
+                CentroCosto,
+                MasterServiceId,
+                MasterServiceTypeId,
+                ServiceId
+            }
+
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                dataType: 'json',
+                data,
+                url: '/Agenda/UpdateServiceForProtocol',
+                success: function (json) {
+                    if (!json.Error) {
+                        MessageSuccess(json);
+                    } else {
+                        MessageError(json);
+                    }
+
+                },
+                error: function (err) {
+                    alertafixed({
+                        class: 'error-servidor',
+                        type: 'danger',
+                        title: 'ERROR: ' + err.status,
+                        message: 'Sucedió un error al conectarse al servidor, por favor vuelva a intentar.'
+                    })
+                }
+            })
+        })
+
+        $("#editar-protocolo").on("click", function () {
+
+            let chk = $(".checkbox-agenda:checked");
+
+            if (ValidacionEditPacient(chk)) {
+                let row = chk.parent().parent().parent();
+
+                let RucEmpFact = row.find("td").eq(24).text();
+                let _masterServiceId = row.find("td").eq(22).text();
+                $("#change-ruc").val(RucEmpFact);
+
+                let ServiceType = 2;
+                console.log(ServiceType);
+                if (_masterServiceId == 10 || _masterServiceId == 15 ||
+                    _masterServiceId == 16 || _masterServiceId == 17 ||
+                    _masterServiceId == 18 || _masterServiceId == 19 ||
+                    _masterServiceId == 29) {
+                    ServiceType = 9;
+                }
+                else if (_masterServiceId == 12 || _masterServiceId == 13) {
+                    ServiceType = 11;
+                }
+                else {
+                    ServiceType = 1;
+                }
+                $("#change-tiposervicio").val(ServiceType).trigger("change");
+
+
+                $("#modalCambiarProtocolo").modal("show");
+            }
+        });
+
+        $("#change-tiposervicio").on("change", function () {
+            let chk = $(".checkbox-agenda:checked");
+            let row = chk.parent().parent().parent();
+            row.addClass("row-active");
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'GET',
+                data: { 'TypeService': $(this).val() },
+                url: '/Agenda/GetMasterServiceId',
+                success: function (json) {
+
+                    let html = "<option value='-1'>--Seleccionar--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
+                    }
+
+                    $("#change-servicio").html(html);
+                    let MasterServiceId = row.find("td").eq(22).text();
+                    $("#change-servicio").val(MasterServiceId).trigger("change");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        })
+
+        $("#change-servicio").on("change", function () {
+            let Service = $(this).val();
+            let ServiceType = $("#change-tiposervicio").val();
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: {
+                    'Service': Service,
+                    'ServiceType': ServiceType
+                },
+                url: '/Agenda/GetProtocolsForCombo',
+                success: function (json) {
+                    let html = "<option value='-1'>--Seleccionar--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].v_Id}'>${json[i].Value}</option>`;
+                    }
+                    $("#change-protocolo").html(html);
+
+                    let chk = $(".checkbox-agenda:checked");
+                    let row = chk.parent().parent().parent();
+                    let ProtocolId = row.find("td").eq(25).text();
+                    $("#change-protocolo").val(ProtocolId).trigger("change");
+
+                },
+                error: function (err) {
+                    alertafixed({
+                        class: 'error-protocol',
+                        type: 'danger',
+                        title: 'ERROR' + err.status,
+                        message: 'Sucedió un error con el servidor.'
+                    })
+                    console.log(err);
+                }
+            })
+        })
+
+        $("#change-protocolo").on("change", function () {
+            let protocoloId = $(this).val();
+            if (protocoloId != "-1") {
+
+                $.ajax({
+                    cache: false,
+                    method: 'GET',
+                    dataType: 'json',
+                    data: { 'protocolId': protocoloId },
+                    url: '/Protocol/GetDataProtocol',
+                    success: function (json) {
+                        console.log(json);
+                        GetGesoProt(json.v_EmployerOrganizationId, json.v_EmployerLocationId, json.v_GroupOccupationId);
+                        $("#change-empresacliente").val(json.EmpresaCliente).trigger("change");
+                        $("#change-empresatrabajo").val(json.EmpresaTrabajo).trigger("change");
+                        $("#change-tipoeso").val(json.i_EsoTypeId).trigger("change");
+
+                    },
+                    error: function (err) {
+                        alertafixed({
+                            class: 'error-server',
+                            type: 'danger',
+                            title: 'ERROR ' + err.status,
+                            message: 'Sucedió un error con el servidor.'
+                        })
+                        console.log(error);
+                    }
+                })
+
+            } else {
+                $("#empresa-cliente-id").val("-1");
+                $("#empresa-trabajo-id").val("-1");
+                //$("#contratista-id option[value='-1']").attr("selected", true);
+            }
+        })
+
+        $("#radParticular").on("change", function () {
+            $("#group-facturacion").addClass("d-none");
+            $("#tipo-servicio").val("9").trigger("change").attr("disabled", true);
+            $("#cont-geso").addClass("d-none");
+            $("#cont-tipoeso").addClass("d-none");
+            $("#cont-ruc").addClass("d-none");
+            $("#cont-empleadora").addClass("d-none");
+            $("#cont-centrocosto").addClass("d-none");
+            $("#cont-empresacliente").addClass("d-none");
+            $("#cont-empresatrabajo").addClass("d-none");
+            $("#cont-nivelestudio").addClass("d-none");
+            $("#cont-gruposanguineo").addClass("d-none");
+            $("#cont-factorsanguineo").addClass("d-none");
+            $("#cont-tiemporesidencia").addClass("d-none");
+            $("#cont-tiposeguro").addClass("d-none");
+            $("#cont-hijosvivos").addClass("d-none");
+            $("#cont-hijosmuertos").addClass("d-none");
+            $("#cont-nrohermanos").addClass("d-none");
+            $("#cont-residelugar").addClass("d-none");
+            $("#cont-puestopostula").addClass("d-none");
+            $("#cont-altitudlabor").addClass("d-none");
+            $("#cont-lugarlabor").addClass("d-none");
+            $("#cont-mineralesexplotados").addClass("d-none");
+            $("#cont-parentesco").removeClass("d-none");
+            $("#cont-nombretitular").removeClass("d-none");
+            localStorage.setItem("TipoServicio", "particular")
+        });
+
+        $("#radOcupacional").on("change", function () {
+
+            $("#group-facturacion").removeClass("d-none");
+            $("#tipo-servicio").val("1").trigger("change").attr("disabled", true);
+            $("#cont-geso").removeClass("d-none");
+            $("#cont-tipoeso").removeClass("d-none");
+            $("#cont-ruc").removeClass("d-none");
+            $("#cont-empleadora").removeClass("d-none");
+            $("#cont-centrocosto").removeClass("d-none");
+            $("#cont-empresacliente").removeClass("d-none");
+            $("#cont-empresatrabajo").removeClass("d-none");
+            $("#cont-nivelestudio").removeClass("d-none");
+            $("#cont-gruposanguineo").removeClass("d-none");
+            $("#cont-factorsanguineo").removeClass("d-none");
+            $("#cont-tiemporesidencia").removeClass("d-none");
+            $("#cont-tiposeguro").removeClass("d-none");
+            $("#cont-hijosvivos").removeClass("d-none");
+            $("#cont-hijosmuertos").removeClass("d-none");
+            $("#cont-nrohermanos").removeClass("d-none");
+            $("#cont-residelugar").removeClass("d-none");
+            $("#cont-puestopostula").removeClass("d-none");
+            $("#cont-altitudlabor").removeClass("d-none");
+            $("#cont-lugarlabor").removeClass("d-none");
+            $("#cont-mineralesexplotados").removeClass("d-none");
+            $("#cont-parentesco").addClass("d-none");
+            $("#cont-nombretitular").addClass("d-none");
+
+            localStorage.setItem("TipoServicio", "ocupacional")
+        });
+
+        $("#radSeguro").on("change", function () {
+            $("#group-facturacion").addClass("d-none");
+            $("#tipo-servicio").val("11").trigger("change").attr("disabled", true);
+            $("#cont-geso").addClass("d-none");
+            $("#cont-tipoeso").addClass("d-none");
+            $("#cont-ruc").addClass("d-none");
+            $("#cont-empleadora").addClass("d-none");
+            $("#cont-centrocosto").addClass("d-none");
+            $("#cont-empresacliente").addClass("d-none");
+            $("#cont-empresatrabajo").addClass("d-none");
+            $("#cont-nivelestudio").addClass("d-none");
+            $("#cont-gruposanguineo").addClass("d-none");
+            $("#cont-factorsanguineo").addClass("d-none");
+            $("#cont-tiemporesidencia").addClass("d-none");
+            $("#cont-tiposeguro").addClass("d-none");
+            $("#cont-hijosvivos").addClass("d-none");
+            $("#cont-hijosmuertos").addClass("d-none");
+            $("#cont-nrohermanos").addClass("d-none");
+            $("#cont-residelugar").addClass("d-none");
+            $("#cont-puestopostula").addClass("d-none");
+            $("#cont-altitudlabor").addClass("d-none");
+            $("#cont-lugarlabor").addClass("d-none");
+            $("#cont-mineralesexplotados").addClass("d-none");
+            $("#cont-parentesco").removeClass("d-none");
+            $("#cont-nombretitular").removeClass("d-none");
+            localStorage.setItem("TipoServicio", "seguro")
+
+        });
+
+        $("#modalNuevaAgenda").on("hidden.bs.modal", function () {
+            if (localStorage.getItem("Clean") == 'true') {
+                LimpiarDataSchedule();
+            }
+        })
+
+        $("#modalNuevaAgenda").on("show.bs.modal", function () {
+            if (localStorage.getItem("Clean") == 'true') {
+                $("#radOcupacional").click();
+            }
+
+        })
+
+        $("#distrito-paciente").on("change", function () {
+            if ($(this).val() == "-1") {
+                return;
+            }
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: { 'name': $("#distrito-paciente option[value = '" + $(this).val() + "']").text() },
+                url: '/Agenda/GetProvincia',
+                success: function (json) {
+                    console.log(json);
+                    if (json.length == 0) {
+                        $("#provincia-paciente").val("-1");
+                        $("#departamento-paciente").val("-1");
+                        return;
+                    }
+                    let html = "<option value='-1'>--Seleccionar--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
+                    }
+                    $("#provincia-paciente").html(html);
+                    $("#provincia-paciente option[value = '" + json[0].Id + "']").attr("selected", true).trigger("change");
+                },
+                error: function (err) {
+                    alertafixed({
+                        class: 'error-protocol',
+                        type: 'danger',
+                        title: 'ERROR' + err.status,
+                        message: 'Sucedió un error con el servidor.'
+                    })
+                    console.log(err);
+                }
+            })
+        })
+
+        $("#provincia-paciente").on("change", function () {
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: { 'id': $(this).val() },
+                url: '/Agenda/GetDepartamento',
+                success: function (json) {
+                    if (json.length == 0) {
+                        $("#departamento-paciente").val("-1");
+                        return;
+                    }
+                    let html = "<option value='-1'>--Seleccionar--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
+                    }
+                    $("#departamento-paciente").html(html);
+                    $("#departamento-paciente option[value = '" + json[0].Id + "']").attr("selected", true).trigger("change");
+                },
+                error: function (err) {
+                    alertafixed({
+                        class: 'error-protocol',
+                        type: 'danger',
+                        title: 'ERROR' + err.status,
+                        message: 'Sucedió un error con el servidor.'
+                    })
+                    console.log(err);
+                }
+            })
+        })
+
+        $("#servicio-id").on("change", function () {
+            let Service = $(this).val();
+            let ServiceType = $("#tipo-servicio").val();
+
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: {
+                    'Service': Service,
+                    'ServiceType': ServiceType
+                },
+                url: '/Agenda/GetProtocolsForCombo',
+                success: function (json) {
+                    let html = "<option value='-1'>--Seleccionar--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].v_Id}'>${json[i].Value}</option>`;
+                    }
+                    $("#protocolo-id").html(html);
+                },
+                error: function (err) {
+                    alertafixed({
+                        class: 'error-protocol',
+                        type: 'danger',
+                        title: 'ERROR' + err.status,
+                        message: 'Sucedió un error con el servidor.'
+                    })
+                    console.log(err);
+                }
+            })
+        })
+
+        $("#protocolo-id").on("change", function () {
+            let protocoloId = $(this).val();
+            if (protocoloId != "-1") {
+
+                $.ajax({
+                    cache: false,
+                    method: 'GET',
+                    dataType: 'json',
+                    data: { 'protocolId': protocoloId },
+                    url: '/Protocol/GetDataProtocol',
+                    success: function (json) {
+
+                        GetGeso(json.v_EmployerOrganizationId, json.v_EmployerLocationId, json.v_GroupOccupationId);
+                        $("#empresa-cliente-id option[value='" + json.EmpresaCliente + "']").attr("selected", true);
+                        $("#empresa-trabajo-id option[value='" + json.EmpresaTrabajo + "']").attr("selected", true);
+                        $("#contratista-id option[value='" + json.EmpresaEmpleadora + "']").attr("selected", true);
+                        $("#tipo-eso-id option[value='" + json.i_EsoTypeId + "']").attr("selected", true);
+
+                    },
+                    error: function (err) {
+                        alertafixed({
+                            class: 'error-server',
+                            type: 'danger',
+                            title: 'ERROR ' + err.status,
+                            message: 'Sucedió un error con el servidor.'
+                        })
+                        console.log(error);
+                    }
+                })
+
+            } else {
+                $("#empresa-cliente-id option[value='-1']").attr("selected", true);
+                $("#empresa-trabajo-id option[value='-1']").attr("selected", true);
+                $("#contratista-id option[value='-1']").attr("selected", true);
+            }
+        })
+
+        $("#filter-ServiceType").on("change", function () {
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'GET',
+                data: { 'TypeService': $(this).val() },
+                url: '/Agenda/GetMasterServiceId',
+                success: function (json) {
+
+                    let html = "<option value='-1'>--Todos--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
+                    }
+                    $("#filter-MasterService").html(html);
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        })
+
+        $("#tipo-servicio").on("change", function () {
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'GET',
+                data: { 'TypeService': $(this).val() },
+                url: '/Agenda/GetMasterServiceId',
+                success: function (json) {
+
+                    let html = "<option value='-1'>--Seleccionar--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
+                    }
+
+                    $("#servicio-id").html(html);
+                    if ($("#tipo-servicio").val() == "1") {
+                        $("#servicio-id").attr("disabled", true);
+                        $("#servicio-id option[value='2']").attr("selected", true).trigger("change");
+
+                    } else {
+                        $("#servicio-id").attr("disabled", false);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        })
+
+        $("#doc-number-find").on("keyup", function (e) {
+
+            var tecla = (document.all) ? e.keyCode : e.which;
+            if (tecla == 13) {
+                FindPersonByDocNumber($(this).val(), $(this));
+            }
+        })
+
+        $("#btn-trabajador").on("click", function () {
+            var input = $("#doc-number-find");
+            FindPersonByDocNumber(input.val(), input);
+        })
+
+        $("#editar-trabajador").on("click", function () {
+            let chk = $(".checkbox-agenda:checked");
+            if (ValidacionEditPacient(chk)) {
+                $("#doc-number-find").attr("disabled", true);
+                $("#btn-trabajador").attr("disabled", true);
+
+                let row = chk.parent().parent().parent();
+                let PersonId = row.find("td").eq(2).text();
+
+                $.ajax({
+                    cache: false,
+                    method: 'GET',
+                    dataType: 'json',
+                    data: { 'personId': PersonId },
+                    url: '/Pacientes/GetPacientByPersonId',
+                    success: function (json) {
+                        $("#datos-protocolo").addClass("d-none");
+                        SetValuePacient(json);
+                        $("#modalNuevaAgenda").modal('show');
+                    }
+                })
+
+            }
+
+        })
+
+        $("#btn-nueva-agenda").on("click", function () {
+            $("#doc-number-find").attr("disabled", false);
+            $("#btn-trabajador").attr("disabled", false);
+            $("#datos-protocolo").removeClass("d-none");
+            $("#footer-new-agenda").removeClass("d-none");
+            $("#modalNuevaAgenda").modal('show');
+        })
+
+        $("#btn-guardar-agenda").on("click", function () {
+            $(this).attr("disabled", true);
+            if (!ErrorValidacionAgendar()) {
+
+                var data = {
+                    ProtocolId: $("#protocolo-id").val(),
+                    OrganizationId: $("#empresa-facturacion").val(),
+                    PersonId: $("#paciente-id").val(),
+                    MasterServiceId: $("#servicio-id").val(),
+                    ServiceStatusId: 2,
+                    AptitudeStatusId: 1,
+                    MasterServiceTypeId: $("#tipo-servicio").val(),
+                    FlagAgentId: 1,
+                    Motive: "",
+                    FechaNacimiento: $("#fecha-nacimiento").val(),
+                    GeneroId: $("#genero-paciente").val(),
+                    MedicoTratanteId: $("#medico-tratante-id").val(),
+                    CentroCosto: $("#centro-costo-id option[value='" + $("#centro-costo-id").val() + "']").text(),
+                    DataProtocol: {
+                        EmpresaEmpleadora: $("#contratista-id").val(),
+                        EmpresaCliente: $("#empresa-cliente-id").val(),
+                        EmpresaTrabajo: $("#empresa-trabajo-id").val(),
+                        i_MasterServiceTypeId: $("#tipo-servicio").val(),
+                        i_MasterServiceId: $("#servicio-id").val(),
+                        Geso: $("#geso-id option[value='" + $("#geso-id ").val() + "']").text(),
+                        i_EsoTypeId: $("#tipo-eso-id").val(),
+                        v_ProtocolId: $("#protocolo-id").val(),
+                        EmpresaEmpleadoraName: $("#contratista-id option[value='" + $("#contratista-id").val() + "']").text(),
+                        ProtocolName: $("#protocolo-id option[value='" + $("#protocolo-id ").val() + "']").text(),
+                        v_CostCenter: "",
+                        i_HasVigency: 1,
+                        i_ValidInDays: null,
+                        i_IsActive: 1,
+                        v_NombreVendedor: ""
+                    }
+                }
+
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data,
+                    url: '/Agenda/AgendarPaciente',
+                    success: function (json) {
+                        console.log(json);
+                        if (json.Error) {
+                            MessageError(json);
+                        } else {
+                            MessageSuccess(json);
+                            $("#modalNuevaAgenda").modal("hide");
+                            Filter();
+                        }
+                        $(this).attr("disabled", false);
+                    },
+                    error: function (err) {
+                        alertafixed({
+                            class: 'error-servidor',
+                            type: 'danger',
+                            title: 'ERROR: ' + err.status,
+                            message: 'Sucedió un error al conectarse al servidor, por favor comuníquese con el área correspondiente.'
+                        })
+                        $(this).attr("disabled", false);
+                    }
+                })
+            } else {
+                $(this).attr("disabled", false);
+            }
+
+        })
+
+        $("#guardar-paciente").on("click", function () {
+            $("#modal-content-agenda").addClass("loadingGrid");
+            let data = {
+                v_PersonId: $("#paciente-id").val(),
+                v_FirstName: $("#nombres-paciente").val(),
+                v_FirstLastName: $("#apepat-paciente").val(),
+                v_SecondLastName: $("#apemat-paciente").val(),
+                i_DocTypeId: $("#tipo-documento").val(),
+                v_DocNumber: $("#numero-documento").val(),
+                d_Birthdate: $("#fecha-nacimiento").val(),
+                i_SexTypeId: $("#genero-paciente").val(),
+
+                i_MaritalStatusId: $("#estado-civil").val(),
+                i_LevelOfId: $("#nivel-estudios").val(),
+                v_BirthPlace: $("#lugar-nacimiento").val(),
+                i_BloodGroupId: $("#grupo-sanguineo").val(),
+                i_DistrictId: $("#distrito-paciente").val(),
+                i_BloodFactorId: $("#factor-sanguineo").val(),
+                i_ProvinceId: $("#provincia-paciente").val(),
+                v_ResidenceTimeInWorkplace: $("#tiempo-residencia").val(),
+                i_DepartmentId: $("#departamento-paciente").val(),
+                i_TypeOfInsuranceId: $("#tipo-seguro").val(),
+                i_ResidenceInWorkplaceId: $("#reside-trabajo").val(),
+                i_NumberLiveChildren: $("#hijos-vivos").val(),
+                i_NumberDeadChildren: $("#hijos-muertos").val(),
+                i_NroHermanos: $("#numero-hermanos").val(),
+                v_Mail: $("#email-paciente").val(),
+                v_TelephoneNumber: $("#telefono-paciente").val(),
+                v_AdressLocation: $("#direccion-paciente").val(),
+                v_CurrentOccupation: $("#puesto-postula").val(),
+                i_AltitudeWorkId: $("#altitud-labor").val(),
+                i_PlaceWorkId: $("#lugar-labor").val(),
+                v_ExploitedMineral: $("#mineral-explotado").val(),
+                v_ResidenciaAnterior: $("#residencia-anterior").val(),
+                v_Nacionalidad: $("#nacionalidad-paciente").val(),
+                v_Religion: $("#religion-paciente").val(),
+                i_Relationship: $("#parentesco-paciente").val()
+            }
+            let arrId = ["#nombres-paciente", "#apepat-paciente", "#apemat-paciente", "#numero-documento", "#tipo-documento", "#genero-paciente", "#fecha-nacimiento|date"];
+            if (!ErrorValidatePacient(arrId)) {
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: data,
+                    url: '/Pacientes/UpdateCreatePacient',
+                    success: function (json) {
+                        $("#paciente-id").val(json.Id);
+                        alertafixed({
+                            title: "HECHO",
+                            message: json.Message,
+                            type: "success",
+                            class: "error-interno"
+                        })
+                        $("#modal-content-agenda").removeClass("loadingGrid");
+                    },
+                    error: function (err) {
+                        ViewErrorResponse(err);
+                        $("#modal-content-agenda").removeClass("loadingGrid");
+                    }
+                })
+            }
+
+        })
+
+        $("#filtrar-agenda").on("click", function () {
+            Filter();
+        })
+
+        $("#btn-buscar-titular").on("click", function () {
+            GetAnSetDataTitular($("#doc-number-find-titular").val());
+            console.log("click");
+        });
+
+        $("#doc-number-find-titular").on("keyup", function (e) {
+            console.log("key");
+            var tecla = (document.all) ? e.keyCode : e.which;
+            if (tecla == 13) {
+                GetAnSetDataTitular($(this).val());
+            }
+
+        })
+
+        $("#guardar-titular").on("click", function () {
+            if (!ErrorValidateTitular()) {
+                $("#doc-number-find-titular").removeClass("border-danger");
+                let data = {
+                    v_PersonId: $("#titular-id").val(),
+                    v_FirstName: $("#nombres-titular").val(),
+                    v_FirstLastName: $("#apepat-titular").val(),
+                    v_SecondLastName: $("#apemat-titular").val(),
+                    i_DocTypeId: $("#tipo-doc-titular").val(),
+                    v_DocNumber: $("#numero-doc-titular").val(),
+                    d_Birthdate: $("#fecha-titular").val(),
+                    i_SexTypeId: $("#genero-titular").val(),
+                }
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: data,
+                    url: '/Pacientes/UpdateCreatePacient',
+                    success: function (json) {
+                        if (json.Error) {
+                            alertafixed({
+                                title: "ERROR",
+                                message: json.Message,
+                                type: "danger",
+                                class: "error-interno"
+                            })
+                        } else {
+                            alertafixed({
+                                title: "HECHO",
+                                message: json.Message,
+                                type: "success",
+                                class: "error-interno"
+                            })
+                        }
+
+                        $("#modal-content-agenda").removeClass("loadingGrid");
+                    },
+                    error: function (err) {
+                        ViewErrorResponse(err);
+                        $("#modal-content-agenda").removeClass("loadingGrid");
+                    }
+                })
+            }
+        })
+
+        $("#modalCambiarProtocolo").on("hidden.bs.modal", function () {
+            $("#change-empresacliente").val("-1");
+            $("#change-empresatrabajo").val("-1");
+            $("#change-tipoeso").val("-1").trigger("change");
+
+            Filter();
+        })
+
+        $("#modalProductos").on("hidden.bs.modal", function () {
+            $("#modalVentaRapida").modal("show");
+        })
+    })
+
+
+
+    const GetCaptcha = function () {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            url: '/Agenda/CargarImagen',
+            success: function (json) {
+                var html = `<img src="data:image/jpeg;base64,${json}" alt="ImagenCaptcha" />`;
+                $("#figure-captcha").html(html);
+            },
+            error: function (err) {
+                console.log("ERROR: ", err)
+            }
+        })
+    }
+
+    const BuscarProductoSAMBHS = function (row) {
+        $("#modalVentaRapida").modal("hide");
+        $("#modalProductos").modal("show");
+        FindProducts();
+    }
+
+    const calcValues = function (input) {
+        var row = $(input).parent().parent();
+        let cant = Number($(input).val());
+        let precUnit = Number(row.find("td").eq(6).find("input").val());
+        let precioTotal = cant * precUnit;
+        console.log(precioTotal);
+    }
+
+    const ElegirProductoSAMBHS = function (row) {
+        let productId = $(row).find("td").eq(0).text();
+        let codigoProducto = $(row).find("td").eq(1).text();
+        let descripcionProducto = $(row).find("td").eq(2).text();
+        let unidadMedida = $(row).find("td").eq(7).text();
+        let precioUnitario = $(row).find("td").eq(6).text();
+
+        let rows = $("#body-venta-rapida").find("tr");
+        var inserto = false;
+        if (rows.length > 0) {
+            for (var i = 0; i < rows.length; i++) {
+                let valueInput = rows.eq(i).find("td").eq(1).find("input").eq(0).val();
+                if (valueInput === "") {
+                    rows.eq(i).find("td").eq(1).find("input").eq(0).val(productId);//Id del producto
+                    rows.eq(i).find("td").eq(2).find("input").eq(0).val(codigoProducto);//Codigo del producto
+                    rows.eq(i).find("td").eq(3).find("input").eq(0).val(descripcionProducto);//Descripcion del producto
+                    rows.eq(i).find("td").eq(4).find("input").eq(0).attr("disabled", false);//Descripcion del producto
+                    rows.eq(i).find("td").eq(5).find("input").eq(0).val(unidadMedida);//Unidad de medida del producto
+                    rows.eq(i).find("td").eq(6).find("input").eq(0).val(precioUnitario);//Precio unitario del producto
+
+                    inserto = true;
+                    rows.eq(i).removeAttr("ondblclick");
+                    break;
+                }
+            }
+        } else {
+            alertafixed({
+                type: 'warning',
+                class: 'warning',
+                title: 'VALIDACIÓN',
+                message: 'Ingrese una fila por favor.'
+            })
+        }
+
+        if (!inserto) {
+            alertafixed({
+                type: 'warning',
+                class: 'warning',
+                title: 'VALIDACIÓN',
+                message: 'Ingrese una nueva fila por favor.'
+            })
+        } else {
+            $("#modalVentaRapida").modal("show");
+            $("#modalProductos").modal("hide");
+        }
+
+    }
+
+    function obtenerDatosSUNAT(ruc) {
+        //Init
+        var url = "https://cors-anywhere.herokuapp.com/wmtechnology.org/Consultar-RUC/?modo=1&btnBuscar=Buscar&nruc=" + ruc,
+            existente = document.getElementById("existente"),
+            xhr = false;
+        if (window.XMLHttpRequest) //Crear XHR
+            xhr = new XMLHttpRequest();
+        else if (window.ActiveXObject)
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        else return false;
+        //handler para respuesta
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) { //200 OK
+                var doc = document.implementation.createHTMLDocument()
+                    .documentElement,
+                    res = "",
+                    txt, campos,
+                    ok = false;
+
+                doc.innerHTML = xhr.responseText;
+                //Sólo el texto de las clases que nos interesa
+                campos = doc.querySelectorAll(".list-group-item");
+                if (campos.length) {
+                    for (txt of campos)
+                        res += txt.innerText + "\n";
+                    //eliminar blancos por demás
+                    res = res.replace(/^\s+\n*|(:) *\n| +$/gm, "$1");
+                    //buscar si está el texto "ACTIVO" en el estado
+                    ok = /^Estado: *ACTIVO *$/m.test(res);
+                } else
+                    res = "RUC: " + ruc + "\nNo existe.";
+
+                //mostrar el texto formateado
+                if (ok)
+                    existente.classList.add("ok");
+                else
+                    existente.classList.remove("ok");
+                existente.innerText = res;
+            }
+        } //falta verificar errores en conexión
+        xhr.open("POST", url, true);
+        xhr.send(null);
+    }
+
+    const FindProducts = function (index = 1) {
+        let data = {
+            ProductName: $("#product-find").val(),
+            Index: index,
+            ConStock: true,
+            Take: $("#take-product").val()
+        };
+        $("#cont-table-board-product").addClass("loadingGrid");
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'html',
+            data,
+            url: '/Agenda/GetProductsSAMBHS',
+            success: function (html) {
+                $("#render-board-product").html(html);
+                $("#cont-table-board-product").removeClass("loadingGrid");
+            },
+            error: function (err) {
+                alertafixed({
+                    class: "error",
+                    type: "danger",
+                    title: "ERROR: " + err.status,
+                    message: "Sucedió un error en el servidor, porfavor vuelva a intentar."
+                })
+                $("#cont-table-board-product").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const FindClientByCodClient = function (value, input) {
+        $("#cliente-find").val(value);
+        $("#modalVentaRapida").modal("hide");
+        $("#modalClientes").modal("show");
+        FiltrarClientes();
+
+    }
+
+    const EnviarDataClient = function (row) {
+        let clientId = $(row).find("td").eq(0).text();
+        let rucClient = $(row).find("td").eq(1).text();
+        let razonSocial = $(row).find("td").eq(2).text();
+        $("#client-id").val(clientId);
+        $("#ruc-client").val(rucClient);
+        $("#razonsocial-client").val(razonSocial);
+        $("#modalClientes").modal("hide");
+    }
+
+    const FiltrarClientes = function (index = 1) {
+        let data = {
+            Name: $("#cliente-find").val(),
+            Index: index,
+            Take: $("#take-client").val()
+        };
+        $("#cont-table-board-client").addClass("loadingGrid");
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'html',
+            data,
+            url: '/Agenda/GetClientes',
+            success: function (html) {
+                $("#render-board-client").html(html);
+                $("#cont-table-board-client").removeClass("loadingGrid");
+            },
+            error: function (err) {
+                alertafixed({
+                    class: "error",
+                    type: "danger",
+                    title: "ERROR: " + err.status,
+                    message: "Sucedió un error en el servidor, porfavor vuelva a intentar."
+                })
+                $("#cont-table-board-client").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const EliminarFilaVenta = function (className) {
+
+        let chk = $("." + className + ":checked");
+
+        for (var i = 0; i < chk.length; i++) {
+            let row = chk.eq(i).parent().parent().parent();
+            let rowStatus = row.find("td.RecordStatus");
+            console.log(rowStatus.text);
+            if (rowStatus.text() == "2") {
+                row.remove();
+            } else {
+                row.addClass("d-none");
+                rowStatus.text(4);
+            }
+
+        }
+
+    }
+
+    const AgregarFilaVentaRapida = function () {
+        let html = `
+                    <tr onclick="PintarFila(this)"  ondblclick="BuscarProductoSAMBHS(this)">
+                        <td nowrap>
+                            <div class="custom-control venta-checked custom-checkbox">
+                                <input type="checkbox" class="custom-control-input checkbox-venta-rapida">
+                                <label class="custom-control-label" onclick="checkedCheckBox(this)"></label>
+                            </div>
+                        </td>
+                        <td nowrap class="d-none"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input disabled type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input disabled type="text" class="form-control form-control-sm" value="" style="min-width:300px" /></td>
+                        <td nowrap class="text-center"><input disabled onkeyup="calcValues(this)" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" type="text" class="form-control form-control-sm" value="1" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" type="text" class="form-control form-control-sm" value="" style="min-width:70px" /></td>
+                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td class="d-none RecordStatus" nowrap>2</td>
+                        <td class="d-none RecordType" nowrap>1</td>
+                    </tr>
+                   `;
+
+        $(html).appendTo($("#body-venta-rapida"));
+    }
+
+    
+
+    const ValidacionFusionarServicios = function (chk) {
+        if (chk.length <= 1) {
+            alertafixed({
+                class: 'validacion',
+                type: 'warning',
+                title: 'VALIDACIÓN',
+                message: 'Debe seleccionar dos servicios como mínimo.'
+            })
+            return false;
+        } else if (chk.length > 1) {
+            let arrPersonId = [];
+            for (var i = 0; i < chk.length; i++) {
+                let row = chk.eq(i).parent().parent().parent();
+                let personId = row.find("td").eq(2).text();
+                let found = arrPersonId.find(function (res) {
+                    return res != personId;
+                });
+                if (found != undefined) {
+                    alertafixed({
+                        class: 'validacion',
+                        type: 'warning',
+                        title: 'VALIDACIÓN',
+                        message: 'Los servicios deben pertenecer a la misma persona.'
+                    })
+                    return false;
+                }
+                arrPersonId.push(personId)
+            }
+
+        }
+
+        return true;
+    }
+
+    const GetGesoProt = function (organizationId, locationId, v_GroupOccupationId) {
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: { 'organizationId': organizationId, 'locationId': locationId },
+            url: '/Agenda/GetGESO',
+            success: function (json) {
+                let html = "<option value='-1'>--Seleccionar--</option>";
+                for (var i = 0; i < json.length; i++) {
+                    html += `<option value="${json[i].v_Id}">${json[i].Value}</option>`;
+                }
+                $("#change-geso").html(html);
+
+                $("#change-geso option[value='" + v_GroupOccupationId + "']").attr("selected", true);
+            },
+            error: function (err) {
+                alertafixed({
+                    class: 'error-protocol',
+                    type: 'danger',
+                    title: 'ERROR' + err.status,
+                    message: 'Sucedió un error con el servidor.'
+                })
+                console.log(err);
+            }
+        })
+    }
+
+    const MessageSuccess = function (json) {
+        alertafixed({
+            class: 'success-servidor',
+            type: 'success',
+            title: 'HECHO: ' + json.Status,
+            message: json.Message
+        })
+    }
+
+    const MessageError = function (json) {
+        alertafixed({
+            class: 'error-servidor',
+            type: 'danger',
+            title: 'ERROR: ' + json.Status,
+            message: json.Message
+        })
+    }
+
+    const ErrorValidateTitular = function () {
+        let nombre = $("#nombres-titular");
+        let apepat = $("#apepat-titular");
+        let apemat = $("#apemat-titular");
+        let fechnac = $("#fecha-titular");
+        let tipodoc = $("#tipo-doc-titular");
+        let nrodoc = $("#numero-doc-titular");
+        let genero = $("#genero-titular");
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        let error = false;
+        if (nombre.val() == "") {
+            nombre.addClass("border-danger").removeClass("border-success");
+            error = true;
+        } else {
+            nombre.addClass("border-success").removeClass("border-danger");
+        }
+        if (apepat.val() == "") {
+            apepat.addClass("border-danger").removeClass("border-success");
+            error = true;
+        } else {
+            apepat.addClass("border-success").removeClass("border-danger");
+        }
+        if (apemat.val() == "") {
+            apemat.addClass("border-danger").removeClass("border-success");
+            error = true;
+        } else {
+            apemat.addClass("border-success").removeClass("border-danger");
+        }
+        if (fechnac.val() >= today) {
+            fechnac.addClass("border-danger").removeClass("border-success");
+            error = true;
+        } else {
+            fechnac.addClass("border-success").removeClass("border-danger");
+        }
+        if (tipodoc.val() == "-1") {
+            tipodoc.addClass("border-danger").removeClass("border-success");
+            error = true;
+        } else {
+            tipodoc.addClass("border-success").removeClass("border-danger");
+        }
+        if (nrodoc.val() == "" || nrodoc.val().length < 8) {
+            nrodoc.addClass("border-danger").removeClass("border-success");
+            error = true;
+        } else {
+            nrodoc.addClass("border-success").removeClass("border-danger");
+        }
+        if (genero.val() == "-1") {
+            genero.addClass("border-danger").removeClass("border-success");
+            error = true;
+        } else {
+            genero.addClass("border-success").removeClass("border-danger");
+        }
+        if (error) {
+            alertafixed({
+                class: 'validacion',
+                type: 'warning',
+                title: 'VALIDACIÓN',
+                message: 'Revise los cuadros marcados en rojo para continuar.'
+            })
+        }
+        return error;
+    }
+
+    const GetAnSetDataTitular = function (value) {
+        $("#modalTitular").addClass("loadingGrid");
+        if ($("#doc-number-find-titular").val() == "") {
+
+            alertafixed({
+                title: "VALIDACIÓN",
+                message: "Ingrese un número de documento por favor.",
+                type: "warning",
+                class: "validacin-interno"
+            })
+            $("#doc-number-find-titular").addClass('border-danger');
+            $("#modalTitular").removeClass("loadingGrid");
+            return;
+        } else {
+            $("#doc-number-find-titular").removeClass('border-danger');
+        }
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'docNumber': value },
+            url: '/Pacientes/GetPacientByDocNumber',
+            success: function (json) {
+                console.log(json);
+                if (json.Error) {
+                    ValidacionInputFindPacient(json, $("#doc-number-find-titular"));
+                    $("#modalTitular").removeClass("loadingGrid");
+                } else {
+                    console.log(json);
+                    $("#nombres-titular").val(json.v_FirstName);
+                    $("#apepat-titular").val(json.v_FirstLastName);
+                    $("#apemat-titular").val(json.v_SecondLastName);
+                    $("#fecha-titular").val(getDateFromAspNetFormat(json.d_Birthdate));
+                    $("#tipo-doc-titular").val(json.i_DocTypeId);
+                    $("#numero-doc-titular").val(json.v_DocNumber);
+                    $("#genero-titular").val(json.i_SexTypeId);
+                    $("#titular-id").val(json.v_PersonId);
+                    $("#doc-number-find-titular").removeClass('border-danger');
+
+                }
+                $("#modalTitular").removeClass("loadingGrid");
+            },
+            error: function (error) {
+                ViewErrorResponse(error);
+                $("#modalTitular").removeClass("loadingGrid");
+                LimpiarDataTitular();
+            }
+        });
+    }
+
+    const LimpiarDataTitular = function () {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        $("#nombres-titular").val("");
+        $("#apepat-titular").val("");
+        $("#apemat-titular").val("");
+        $("#fecha-titular").val(today);
+        $("#tipo-doc-titular").val("-1");
+        $("#numero-doc-titular").val("");
+        $("#genero-titular").val("-1");
+        $("#titular-id").val("");
+        $("#doc-number-find-titular").removeClass('border-danger');
+    }
+
+    const ErrorValidacionAgendar = function () {
+        let error = false;
+        let errores = "";
+
+        if ($("#radOcupacional:checked").length == 1) {
+            if ($("#empresa-facturacion").val() == "-1") {
+                $("#empresa-facturacion").addClass("border-danger").removeClass("border-success");
+                error = true;
+                errores += "Facturacion, ";
+            } else {
+                $("#empresa-facturacion").removeClass("border-danger").addClass("border-success");
+            }
+            if ($("#tipo-servicio").val() == "-1") {
+                error = true;
+                errores += "Tipo Servicio. ";
+                $("#tipo-servicio").addClass("border-danger").removeClass("border-success");
+            } else {
+                $("tipo-servicio").removeClass("border-danger").removeClass("border-success");
+            }
+        }
+
+
+        if ($("#paciente-id").val() == "" || $("#paciente-id").val() == null) {
+            $("#paciente-id").addClass("border-danger").removeClass("border-success");
+            error = true;
+            errores += "Paciente, ";
+        } else {
+            $("#paciente-id").removeClass("border-danger").addClass("border-success");
+        }
+        if ($("#protocolo-id").val() == "-1") {
+            $("#protocolo-id").addClass("border-danger").removeClass("border-success");
+            error = true;
+            errores += "Protocolo, ";
+        } else {
+            if ($("#protocolo-id").val() == "9") {
+                if ($("#medico-tratante-id").val() == "-1") {
+                    error = true;
+                    errores += "Medico, ";
+                    $("#medico-tratante-id").addClass("border-danger").removeClass("border-success");
+                } else {
+                    $("#medico-tratante-id").removeClass("border-danger").removeClass("border-success");
+                }
+            } else if ($("#protocolo-id").val() == "11") {
+                if ($("#parentesco-paciente").val() == "-1") {
+                    error = true;
+                    errores += "Parentesco, ";
+                    $("#parentesco-paciente").addClass("border-danger").removeClass("border-success");
+                } else {
+                    $("parentesco-paciente").removeClass("border-danger").removeClass("border-success");
+                }
+                if ($("#titular-paciente").val() == "-1") {
+                    error = true;
+                    errores += "Titular, ";
+                    $("#titular-paciente").addClass("border-danger").removeClass("border-success");
+                } else {
+                    $("titular-paciente").removeClass("border-danger").removeClass("border-success");
+                }
+            }
+            $("#protocolo-id").removeClass("border-danger").removeClass("border-success");
+        }
+
+
+        if (error) {
+            alertafixed({
+                class: 'error-val',
+                type: 'warning',
+                title: 'VALIDACIÓN',
+                message: 'Por favor, revise los cuadros marcados en rojo.' + errores
+            })
+            return error;
+        }
+
+        return false;
+    }
+
+    const GetGeso = function (organizationId, locationId, v_GroupOccupationId) {
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: { 'organizationId': organizationId, 'locationId': locationId },
+            url: '/Agenda/GetGESO',
+            success: function (json) {
+                let html = "<option value='-1'>--Seleccionar--</option>";
+                for (var i = 0; i < json.length; i++) {
+                    html += `<option value="${json[i].v_Id}">${json[i].Value}</option>`;
+                }
+                $("#geso-id").html(html);
+
+                $("#geso-id option[value='" + v_GroupOccupationId + "']").attr("selected", true);
+            },
+            error: function (err) {
+                alertafixed({
+                    class: 'error-protocol',
+                    type: 'danger',
+                    title: 'ERROR' + err.status,
+                    message: 'Sucedió un error con el servidor.'
+                })
+                console.log(err);
+            }
+        })
+    }
+
+    const ValidacionEditPacient = function (chk) {
+
+        if (chk.length === 0) {
+            alertafixed({
+                class: 'validacion',
+                type: 'warning',
+                title: 'VALIDACIÓN',
+                message: 'Debe seleccionar a un paciente para continuar.'
+            })
+            return false;
+        } else if (chk.length > 1) {
+            alertafixed({
+                class: 'validacion',
+                type: 'warning',
+                title: 'VALIDACIÓN',
+                message: 'Debe seleccionar a un solo paciente para continuar.'
+            })
+            return false;
+        }
+
+        return true;
+    }
+
+    const Filter = function (index = 1) {
+        if ($("#filter-ServiceType").val() == '-1') {
+            $("#filter-ServiceType").addClass("border-danger");
+            alertafixed({
+                class: 'validacion-filtro',
+                type: 'warning',
+                title: 'VALIDACIÓN',
+                message: 'Seleccione un tipo de servicio para continuar'
+            })
+            return;
+        } else {
+            $("#filter-ServiceType").removeClass("border-danger").addClass("border-success");
+        }
+        $("#cont-table-calendar").addClass("loadingGrid");
+
+        var data = {
+            FechaInicio: $("#filter-FechaInicio").val(),
+            FechaFin: $("#filter-FechaFin").val(),
+            DocNumber: $("#filter-DocNumber").val(),
+            PacientName: $("#filter-PacientName").val(),
+            ServiceType: $("#filter-ServiceType").val(),
+            MasterService: $("#filter-MasterService").val(),
+            Modalidad: $("#filter-Modalidad").val(),
+            Cola: $("#filter-Cola").val(),
+            Vip: $("#filter-Vip").val(),
+            EstadoCita: $("#filter-EstadoCita").val(),
+            Index: index,
+            Take: $("#take").val()
+        };
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'html',
+            data,
+            url: '/Agenda/GetDataCalendar',
+            success: function (html) {
+                $("#cont-table-calendar").html(html);
+                $("#cont-table-calendar").removeClass("loadingGrid");
+            },
+            error: function (err, as, asd) {
+                alertafixed({
+                    class: "error",
+                    type: "danger",
+                    title: "ERROR: " + err.status,
+                    message: "Sucedió un error en el servidor, porfavor vuelva a intentar."
+                })
+                console.log(err);
+                console.log(as);
+                console.log(asd);
+                $("#cont-table-calendar").removeClass("loadingGrid");
+            }
+        })
+
+    }
+
+    const FindPersonByDocNumber = function (value, input) {
+        $("#modal-content-agenda").addClass("loadingGrid");
+        if (input.val() == "") {
+
+            alertafixed({
+                title: "VALIDACIÓN",
+                message: "Ingrese un número de documento por favor.",
+                type: "warning",
+                class: "validacin-interno"
+            })
+            input.addClass('border-danger');
+
+            $("#modal-content-agenda").removeClass("loadingGrid");
+            return;
+        } else {
+            input.removeClass('border-danger');
+        }
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'docNumber': value },
+            url: '/Pacientes/GetPacientByDocNumber',
+            success: function (json) {
+                if (json.Error) {
+                    ValidacionInputFindPacient(json, input);
+                } else {
+                    SetValuePacient(json);
+                    input.removeClass('border-danger');
+
+                }
+                $("#modal-content-agenda").removeClass("loadingGrid");
+            },
+            error: function (error) {
+                LimpiarDataSchedule();
+                ViewErrorResponse(error);
+                $("#modal-content-agenda").removeClass("loadingGrid");
+            }
+        });
+
+    }
+
+    const SetValuePacient = function (json) {
+
+        $("#paciente-id").val(json.v_PersonId).next();
+        $("#nombres-paciente").val(json.v_FirstName).next().addClass("static");
+        $("#apepat-paciente").val(json.v_FirstLastName).next().addClass("static");
+        $("#apemat-paciente").val(json.v_SecondLastName).next().addClass("static");
+        $("#tipo-documento").val(json.i_DocTypeId);
+        $("#numero-documento").val(json.v_DocNumber).next().addClass("static");
+        $("#fecha-nacimiento").val(getDateFromAspNetFormat(json.d_Birthdate));
+        $("#genero-paciente").val(json.i_SexTypeId);
+        $("#estado-civil").val(json.i_MaritalStatusId);
+        $("#nivel-estudios").val(json.i_LevelOfId);
+        $("#lugar-nacimiento").val(json.v_BirthPlace);
+        $("#grupo-sanguineo").val(json.i_BloodGroupId);
+        $("#distrito-paciente").val(json.i_DistrictId).trigger("change");
+        $("#factor-sanguineo").val(json.i_BloodFactorId);
+        $("#provincia-paciente").val(json.i_ProvinceId);
+        $("#tiempo-residencia").val(json.v_ResidenceTimeInWorkplace);
+        $("#departamento-paciente").val(json.i_DepartmentId);
+        $("#tipo-seguro").val(json.i_TypeOfInsuranceId);
+        $("#reside-trabajo").val(json.i_ResidenceInWorkplaceId);
+        $("#hijos-vivos").val(json.i_NumberLiveChildren);
+        $("#hijos-muertos").val(json.i_NumberDeadChildren);
+        $("#numero-hermanos").val(json.i_NroHermanos);
+        $("#email-paciente").val(json.v_Mail);
+        $("#telefono-paciente").val(json.v_TelephoneNumber);
+        $("#direccion-paciente").val(json.v_AdressLocation);
+        $("#puesto-postula").val(json.v_CurrentOccupation);
+        $("#altitud-labor").val(json.i_AltitudeWorkId);
+        $("#lugar-labor").val(json.i_PlaceWorkId);
+        $("#mineral-explotado").val(json.v_ExploitedMineral);
+        $("#residencia-anterior").val(json.v_ResidenciaAnterior);
+        $("#nacionalidad-paciente").val(json.v_Nacionalidad);
+        $("#religion-paciente").val(json.v_Religion);
+        $("#parentesco-paciente").val(json.i_Relationship);
+
+        if (json.PersonImage != null) {
+            $("#img-pacient-modal").attr('src', 'data:image/jpeg;base64,' + json.PersonImage);
+        } else {
+            $("#img-pacient-modal").attr('src', 'https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png');
+        }
+
+    }
+
+    const SetDateTimeNow = _ => {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        $("input[type='date']").val(today);
+    }
+
+    const ErrorValidatePacient = function (arrId) {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
+
+        let error = false;
+
+        for (var i = 0; i < arrId.length; i++) {
+
+            let id = arrId[i].split('|');
+            if (id.length > 1) {
+                if (id[1] == "date") {
+                    if ($(id[0]).val() == "" || Date.parse($(id[0]).val()) >= Date.parse(today)) {
+                        $(id[0]).addClass("border-danger");
+                        error = true;
+                    } else {
+                        $(id[0]).removeClass("border-danger").addClass("border-success");
+                    }
+                }
+            } else {
+                if ($(arrId[i]).val() == "") {
+                    $(arrId[i]).addClass("border-danger");
+                    error = true;
+                } else {
+                    $(arrId[i]).removeClass("border-danger").addClass("border-success");
+                }
+            }
+
+        }
+
+        if (error) {
+            alertafixed({
+                type: 'warning',
+                title: 'VALIDACIÓN',
+                class: 'error-validate',
+                message: 'Por favor, verifique las casillas en rojo y vuelva a intentar.'
+            })
+        }
+
+        return error;
+    }
+
+    const PintarDataPerson = function (fila) {
+
+        $("#cont-person-image").addClass("loadingGrid");
+
+        if ($(".row-active").length > 0) {
+            $(".row-active").removeClass("row-active");
+        }
+        $(fila).addClass("row-active");
+
+        let Servicio = $(fila).find("td").eq(17).text();
+        let Protocolo = $(fila).find("td").eq(18).text();
+        let Paciente = $(fila).find("td").eq(19).text();
+        let NombreEmpresa = $(fila).find("td").eq(20).text();
+        let TipoEso = $(fila).find("td").eq(21).text();
+        let PersonId = $(fila).find("td").eq(2).text();
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'personId': PersonId },
+            url: '/Pacientes/GetPacientByPersonId',
+            success: function (json) {
+
+                if (json.PersonImage != null) {
+                    $("#img-pacient").attr('src', 'data:image/jpeg;base64,' + json.PersonImage);
+                } else {
+                    $("#img-pacient").attr('src', 'https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png');
+                }
+
+                $("#huella-pacient").val(json.TieneRegistroHuella).next().addClass("static");
+                $("#firma-pacient").val(json.TieneRegistroFirma).next().addClass("static");
+
+                $("#cont-person-image").removeClass("loadingGrid");
+            },
+            error: function (err, asd, as) {
+                console.log(err);
+                console.log(asd);
+                console.log(as);
+                $("#cont-person-image").removeClass("loadingGrid");
+            }
+        })
+
+        $("#pacient-Servicio").val(Servicio).next().addClass("static");
+        $("#pacient-Protocolo").val(Protocolo).next().addClass("static");
+        $("#pacient-Paciente").val(Paciente).next().addClass("static");
+        $("#pacient-NombreEmpresa").val(NombreEmpresa).next().addClass("static");
+        $("#pacient-TipoEso").val(TipoEso).next().addClass("static");
+    }
+
+    const ValidacionInputFindPacient = function (json, input) {
+        input.addClass('border-danger');
+        alertafixed({
+            title: "ERROR " + json.Status,
+            message: json.Message,
+            type: "danger",
+            class: "error-interno"
+        })
+    }
+
+    const ViewErrorResponse = function (err) {
+        let message = "";
+        if (err.status == 404) {
+            message = "No se encontró la URL, comunicarse con el area de sistemas."
+        } else if (err.status == 500) {
+            message = "Sucedió un error en el servidor, comunicarse con el area de sistemas."
+        } else {
+            message = "No se encontró al paciente.";
+            alertafixed({
+                title: "INFORMACIÓN: " + err.status,
+                message,
+                type: "info",
+                class: "error-interno"
+            })
+            return;
+        }
+        alertafixed({
+            title: "ERROR " + err.status,
+            message,
+            type: "danger",
+            class: "error-interno"
+        })
+    }
+
+    const getDateFromAspNetFormat = function (date) {
+        const re = /-?\d+/;
+        const m = re.exec(date);
+
+        var fecha = new Date(parseInt(m[0], 10));
+        var dd = String(fecha.getDate()).padStart(2, '0');
+        var mm = String(fecha.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fecha.getFullYear();
+
+        fecha = yyyy + '-' + mm + '-' + dd;
+        return fecha;
+    }
+
+    const checkedCheckBox = function (chk) {
+        $(chk).parent().find("input").click();
+    }
+
+    const LimpiarDataSchedule = function () {
+        $("#paciente-id").val();
+        $("#nombres-paciente").val("");
+        $("#apepat-paciente").val("");
+        $("#apemat-paciente").val("");
+        $("#tipo-documento").val("-1");
+        $("#numero-documento").val("");
+        $("#fecha-nacimiento").val("");
+        $("#genero-paciente").val("-1");
+        $("#estado-civil").val("-1");
+        $("#nivel-estudios").val("-1");
+        $("#lugar-nacimiento").val("");
+        $("#grupo-sanguineo").val("-1");
+        $("#distrito-paciente").val("-1");
+        $("#factor-sanguineo").val("-1");
+        $("#provincia-paciente").val("-1");
+        $("#tiempo-residencia").val("");
+        $("#departamento-paciente").val("-1");
+        $("#tipo-seguro").val("-1");
+        $("#reside-trabajo").val("-1");
+        $("#hijos-vivos").val("");
+        $("#hijos-muertos").val("");
+        $("#numero-hermanos").val("");
+        $("#email-paciente").val("");
+        $("#telefono-paciente").val("");
+        $("#direccion-paciente").val("");
+        $("#puesto-postula").val("-1");
+        $("#altitud-labor").val("-1");
+        $("#lugar-labor").val("-1");
+        $("#mineral-explotado").val("");
+        $("#residencia-anterior").val("");
+        $("#nacionalidad-paciente").val("");
+        $("#religion-paciente").val("");
+        $("#parentesco-paciente").val("-1");
+
+        $("#tipo-servicio").val("1");
+        $("#servicio-id").val("2");
+        $("#protocolo-id").val("-1");
+        $("#geso-id").val("-1");
+        $("#tipo-eso-id").val("-1");
+        $("#ruc-empleadora").val("");
+        $("#contratista-id").val("-1");
+        $("#centro-costo-id").val("-1");
+
+        $("#empresa-cliente-id").val("-1");
+        $("#empresa-trabajo-id").val("-1");
+        $("#doc-number-find").val("");
+    }
+
+    const checkedAllCheckBoxes = function (className = "checkbox-agenda") {
+        for (var i = 0; i < $("." + className).length; i++) {
+            $("." + className).eq(i).click();
+        }
+    }
+
+    const PintarFila = function (fila) {
+        if ($(".row-active").length > 0) {
+            $(".row-active").removeClass("row-active");
+        }
+        $(fila).addClass("row-active");
+    }
+
+
+</script>

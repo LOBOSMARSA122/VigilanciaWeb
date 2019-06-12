@@ -47,7 +47,9 @@ html {
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
-
+.modal {
+    overflow-y: auto;
+}
 article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
     display: block;
 }
@@ -121,7 +123,9 @@ dd {
     margin-bottom: .5rem;
     margin-left: 0;
 }
-
+.border-50 {
+    border-radius: 50%;
+}
 blockquote {
     margin: 0 0 1rem;
 }
@@ -132,7 +136,7 @@ strong {
 }
 
 small {
-    font-size: 80%;
+    font-size: 60%;
 }
 
 sub,

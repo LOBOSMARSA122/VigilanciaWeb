@@ -1,0 +1,649 @@
+﻿
+<div class="modal fade" id="modalNuevaAgenda" tabindex="-1" role="dialog" aria-labelledby="agendarPersona" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content" id="modal-content-agenda">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:1.2rem" id="agendarPersona">Agendar Trabajador</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row w-100 mx-0">
+                <div class="col-12 pb-3">
+                    <div class="group-box">
+                        <label class="label-group-box">Tipo de Servicio</label>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="radOcupacional" name="tipoServicio" class="custom-control-input">
+                            <label class="custom-control-label" for="radOcupacional">Ocupacional</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="radParticular" name="tipoServicio" class="custom-control-input">
+                            <label class="custom-control-label" for="radParticular">Particular</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="radSeguro" name="tipoServicio" class="custom-control-input">
+                            <label class="custom-control-label" for="radSeguro">Seguro</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 py-2 col-lg-5">
+                    <div class="group-box">
+                        <label class="label-group-box">Búsqueda</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" placeholder="Trabajador" aria-label="Trabajador" aria-describedby="btn-trabajador" id="doc-number-find">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-info" type="button" id="btn-trabajador"><i class="fas fa-search mr-1"></i>Buscar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 py-2 col-lg-7" id="group-facturacion">
+                    <div class="group-box">
+                        <label class="label-group-box">Empresa de Facturación</label>
+                        <select class="custom-select custom-select-sm" id="empresa-facturacion">
+                            <option value="-1">--Seleccionar--</option>
+                            @{
+                                foreach (var item in ViewBag.EmpresaFacturacion)
+                                {
+                                    <option value="@item.v_Id">@item.Value</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 py-2">
+                    <div class="group-box">
+                        <label class="label-group-box">Datos Obligatorios para crear Agenda</label>
+                        <div class="row w-100 mx-0">
+                            <div class="col-12 col-lg-3">
+                                <input type="text" class="form-control form-control-sm inputLabelFloat" value="" id="nombres-paciente" />
+                                <label class="has-float-label">Nombres</label>
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <input type="text" class="form-control form-control-sm inputLabelFloat" value="" id="apepat-paciente" />
+                                <label class="has-float-label">Ap. Paterno</label>
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <input type="text" class="form-control form-control-sm inputLabelFloat" value="" id="apemat-paciente" />
+                                <label class="has-float-label">Ap. Materno</label>
+                            </div>
+                            <div class="col-12 col-lg-3 mt-2">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">Fech.Nac:</label>
+                                    <input type="date" class="form-control form-control-sm" id="fecha-nacimiento" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small"> Tipo Doc:</label>
+                                    <select class="custom-select custom-select-sm" id="tipo-documento">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @{
+                                            foreach (var item in ViewBag.TipoDocumento)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" class="form-control form-control-sm inputLabelFloat" value="" id="numero-documento" />
+                                <label class="has-float-label">Nro. Doc</label>
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">Género:</label>
+                                    <select class="custom-select custom-select-sm" id="genero-paciente">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @{
+                                            foreach (var item in ViewBag.Genero)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 py-2">
+                    <div class="group-box">
+                        <label class="label-group-box">Datos Generales del Paciente</label>
+                        <div class="row w-100 mx-0">
+                            <div class="col-12 p-0 col-lg-9">
+                                <div class="row w-100 mx-0">
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Estado Civil:</label>
+                                            <select class="custom-select custom-select-sm" id="estado-civil">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.EstadoCivil)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-nivelestudio">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Nivel Estudios:</label>
+                                            <select class="custom-select custom-select-sm" id="nivel-estudios">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.NivelEstudios)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Lugar Nac.:</label>
+                                            <input type="text" class="form-control form-control-sm" value="" id="lugar-nacimiento" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-gruposanguineo">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Gr. Sanguineo:</label>
+                                            <select class="custom-select custom-select-sm" id="grupo-sanguineo">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.GrupoSanguineo)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Distrito:</label>
+                                            <select class="custom-select custom-select-sm" id="distrito-paciente">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.Distrito)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-factorsanguineo">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Fr. Sanguineo:</label>
+                                            <select class="custom-select custom-select-sm" id="factor-sanguineo">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.FactorSanguineo)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Provincia:</label>
+                                            <select disabled class="custom-select custom-select-sm" id="provincia-paciente">
+                                                <option value="-1">--Seleccionar--</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-tiemporesidencia">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Tiempo Residencia:</label>
+                                            <input type="text" class="form-control form-control-sm" name="name" value="" id="tiempo-residencia" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Departamento:</label>
+                                            <select disabled class="custom-select custom-select-sm" id="departamento-paciente">
+                                                <option value="-1">--Seleccionar--</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-tiposeguro">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Tipo de Seguro:</label>
+                                            <select class="custom-select custom-select-sm" id="tipo-seguro">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.TipoSeguro)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-residelugar">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Reside Lugar Trabajo?:</label>
+                                            <select class="custom-select custom-select-sm" id="reside-trabajo">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.ResideLugar)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-hijosvivos">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Hijos Vivos:</label>
+                                            <input type="text" class="form-control form-control-sm" value="" id="hijos-vivos" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-hijosmuertos">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Hijos Muertos:</label>
+                                            <input type="text" class="form-control form-control-sm" value="" id="hijos-muertos" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-nrohermanos">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Nro Hermanos:</label>
+                                            <input type="text" class="form-control form-control-sm" value="" id="numero-hermanos" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Email:</label>
+                                            <input type="text" class="form-control form-control-sm" value="" id="email-paciente" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Teléfono:</label>
+                                            <input type="text" class="form-control form-control-sm" value="" id="telefono-paciente" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Dirección</label>
+                                            <input type="text" class="form-control form-control-sm w-75" value="" id="direccion-paciente" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12" id="cont-puestopostula">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Puesto(Actual/Postula):</label>
+                                            <select class="custom-select custom-select-sm w-75" id="puesto-postula">
+                                                <option selected value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.PuestoActuPostu)
+                                                    {
+                                                        <option value="@item.Value">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-altitudlabor">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Altitud Labor:</label>
+                                            <select class="custom-select custom-select-sm" id="altitud-labor">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.AltitudLabor)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-lugarlabor">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Lugar Labor:</label>
+                                            <select class="custom-select custom-select-sm" id="lugar-labor">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.LugarLabor)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-mineralesexplotados">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Minerales Explotados:</label>
+                                            <input type="text" class="form-control form-control-sm" value="" id="mineral-explotado" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Residencia Anterior:</label>
+                                            <input type="text" class="form-control form-control-sm" value="" id="residencia-anterior" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Nacionalidad:</label>
+                                            <input type="text" class="form-control form-control-sm" value="" id="nacionalidad-paciente" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Religión:</label>
+                                            <input type="text" class="form-control form-control-sm" value="" id="religion-paciente" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-parentesco">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Parentesco:</label>
+                                            <select class="custom-select custom-select-sm w-50" id="parentesco-paciente">
+                                                <option selected value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.Parentesco)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6" id="cont-nombretitular">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Titular:</label>
+                                            <select class="custom-select custom-select-sm w-50" id="titular-paciente">
+                                                <option selected value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.Titulares)
+                                                    {
+                                                        <option value="@item.v_Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <button class="btn btn-sm btn-info" title="Buscar Titular" id="btn-titular" data-toggle="modal" data-target="#modalTitular"><i class="fas fa-user-tie"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <div class="row w-100 mx-0 justify-content-center pt-lg-0 pt-2">
+                                    <figure class="img-thumbnail" style="max-width:250px; max-height: 350px">
+                                        <img src="https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png" class="img img-fluid" id="img-pacient-modal" alt="Imagen" />
+                                    </figure>
+                                </div>
+                                <div class="row w-100 mx-0 justify-content-between">
+                                    <button class="btn btn-sm btn-primary m-1 w-100" id="guardar-paciente"><i class="fas fa-save mr-1"></i>Guardar Paciente</button>
+                                    <input type="text" class="d-none" disabled value="" id="paciente-id" />
+                                    <input type="text" class="d-none" disabled value="" id="agenda-id" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 py-2" id="datos-protocolo">
+                    <div class="group-box">
+                        <label class="label-group-box">Datos de Protocolo</label>
+
+                        <div class="row w-100 mx-0">
+                            <div class="col-12 col-lg-3">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">Tipo Servicio:</label>
+                                    <select class="custom-select custom-select-sm w-50" id="tipo-servicio">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @{
+                                            foreach (var item in ViewBag.TypeService)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">Servicio:</label>
+                                    <select disabled class="custom-select custom-select-sm w-75" id="servicio-id">
+                                        <option value="-1">--Seleccionar--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">Nombre Protocolo:</label>
+                                    <select class="custom-select custom-select-sm w-50" id="protocolo-id" style="max-width: 100%">
+                                        <option selected value="-1">--Seleccionar--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4" id="cont-geso">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">GESO:</label>
+                                    <select class="custom-select custom-select-sm w-75" id="geso-id">
+                                        <option selected value="-1">--Seleccionar--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4" id="cont-tipoeso">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">Tipo ESO:</label>
+                                    <select class="custom-select custom-select-sm w-75" id="tipo-eso-id">
+                                        <option selected value="-1">--Seleccionar--</option>
+                                        @{
+                                            foreach (var item in ViewBag.TipoEso)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4" id="cont-ruc">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">RUC Empleadora:</label>
+                                    <input type="text" class="form-control form-control-sm" value="" id="ruc-empleadora" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6" id="cont-empleadora">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">Emp. Empleadora(Contratista):</label>
+                                    <select class="custom-select custom-select-sm w-50" id="contratista-id">
+                                        <option selected value="-1">--Seleccionar--</option>
+                                        @{
+                                            foreach (var item in ViewBag.Empresa)
+                                            {
+                                                <option value="@item.v_Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6" id="cont-centrocosto">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">C. Costo:</label>
+                                    <select class="custom-select custom-select-sm w-75" id="centro-costo-id">
+                                        <option selected value="-1">--Seleccionar--</option>
+                                        @{
+                                            foreach (var item in ViewBag.CentroCosto)
+                                            {
+                                                <option value="@item.v_Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6" id="cont-empresacliente">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">Emp. Cliente:</label>
+                                    <select disabled class="custom-select custom-select-sm w-75" id="empresa-cliente-id" style="max-width: 100%">
+                                        <option selected value="-1">--Seleccionar--</option>
+                                        @{
+                                            foreach (var item in ViewBag.Empresa)
+                                            {
+                                                <option value="@item.v_Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6" id="cont-empresatrabajo">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">Emp Trabajo:</label>
+                                    <select disabled class="custom-select custom-select-sm w-75" id="empresa-trabajo-id" style="max-width: 100%">
+                                        <option selected value="-1">--Seleccionar--</option>
+                                        @{
+                                            foreach (var item in ViewBag.Empresa)
+                                            {
+                                                <option value="@item.v_Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6" id="cont-medicotratante">
+                                <div class="form-inline mt-2 justify-content-between">
+                                    <label class="small">Medico Tratante:</label>
+                                    <select class="custom-select custom-select-sm w-50" id="medico-tratante-id">
+                                        <option selected value="-1">--Seleccionar--</option>
+                                        @{
+                                            foreach (var item in ViewBag.Users)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer row w-100 mx-0 py-2 px-4 justify-content-between" id="footer-new-agenda">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btn-guardar-agenda">Agendar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalTitular" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size: 1.2rem">Nuevo Titular</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-12 col-lg-8">
+                        <div class="group-box mb-3">
+                            <label class="label-group-box">Búsqueda</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" placeholder="Titular" aria-label="Titular" aria-describedby="btn-titular" id="doc-number-find-titular">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info" type="button" id="btn-buscar-titular"><i class="fas fa-search mr-1"></i>Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group-box">
+                            <label class="label-group-box">Datos Generales</label>
+                            <div class="row w-100 mx-0">
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Nombres:</label>
+                                        <input type="text" class="form-control form-control-sm" value="" id="nombres-titular" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Tipo Doc:</label>
+                                        <select class="custom-select custom-select-sm" id="tipo-doc-titular">
+                                            <option value="-1">--Seleccionar--</option>
+                                            @{
+                                                foreach (var item in ViewBag.TipoDocumento)
+                                                {
+                                                    <option value="@item.Id">@item.Value</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Ape. Paterno:</label>
+                                        <input type="text" class="form-control form-control-sm" value="" id="apepat-titular" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Nro Doc.:</label>
+                                        <input type="text" class="form-control form-control-sm" value="" id="numero-doc-titular" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Ape. Materno:</label>
+                                        <input type="text" class="form-control form-control-sm" value="" id="apemat-titular" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Género:</label>
+                                        <select class="custom-select custom-select-sm" id="genero-titular">
+                                            <option value="-1">--Seleccionar--</option>
+                                            @{
+                                                foreach (var item in ViewBag.Genero)
+                                                {
+                                                    <option value="@item.Id">@item.Value</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Fec. Nacimiento:</label>
+                                        <input type="date" class="form-control form-control-sm" value="" id="fecha-titular" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 d-none">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">titular id:</label>
+                                        <input type="text" class="form-control form-control-sm" value="" id="titular-id" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <div class="row w-100 mx-0 justify-content-center pt-lg-0 pt-2">
+                            <figure class="img-thumbnail" style="max-width:250px; max-height: 350px">
+                                <img src="https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png" class="img img-fluid" id="img-pacient-modal" alt="Imagen" />
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" id="guardar-titular">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

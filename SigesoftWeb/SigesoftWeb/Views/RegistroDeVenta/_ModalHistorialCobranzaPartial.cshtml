@@ -1,0 +1,105 @@
+﻿<div class="modal fade" id="modalHistorialCobranzas" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Historial de Cobranzas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="group-box">
+                    <label class="label-group-box">Detalle de la Venta</label>
+                    <div class="form-row">
+                        <div class="col-12 col-lg-6">
+                            <label class="small">Cliente:</label>
+                            <input type="text" disabled class="form-control form-control-sm w-100">
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            <label class="small">RUC/DNI:</label>
+                            <input type="text" disabled class="form-control form-control-sm w-100">
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            <label class="small">Moneda:</label>
+                            <input type="text" disabled class="form-control form-control-sm w-100">
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            <label class="small">Fecha Emisión:</label>
+                            <input type="date" disabled class="form-control form-control-sm w-100">
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <label class="small">Documento:</label>
+                            <div class="row w-100 mx-0 ">
+
+                                <input type="text" disabled class="form-control form-control-sm mx-0" style="width:100px">
+                                <label>-</label>
+                                <input type="text" disabled class="form-control form-control-sm" style="width:auto">
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            <label class="small">Total de Venta:</label>
+                            <input type="text" disabled class="form-control form-control-sm w-100">
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            <label class="small">Saldo:</label>
+                            <input type="text" disabled class="form-control form-control-sm w-100">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid" style="padding:0px;">
+                    <div class="box box-success mt-2" id="acordion">
+                        <div class="box-header with-border" id="heading1">
+                            <h3 class="box-title" style="cursor:pointer;"><i class="fas fa-coins mr-2"></i>Pagos</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-start pl-3">
+                    <label class="badge badge-secondary" style="font-size:1.2rem">Cobranza Total: 734.96</label>
+                </div>
+                <div class="scroll-css" style="overflow:scroll">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th nowrap scope="col">Ver</th>
+                                <th nowrap scope="col">Emisión</th>
+                                <th nowrap scope="col">Tipo Documento</th>
+                                <th nowrap scope="col">Nro. Documento</th>
+                                <th nowrap scope="col">Glosa</th>
+                                <th nowrap scope="col">T/C</th>
+                                <th nowrap scope="col">Moneda</th>
+                                <th nowrap scope="col">Cobranza</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td nowrap class="bg-info text-center text-white"><i class="fas fa-eye"></i></td>
+                                <td nowrap>01/06/2019</td>
+                                <td nowrap>CJS</td>
+                                <td nowrap>05-01000007</td>
+                                <td nowrap>Cobranza del Día 31/05/2019</td>
+                                <td nowrap>3.3170</td>
+                                <td nowrap>Soles</td>
+                                <td nowrap>734.96</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                
+            </div>
+            <div class="modal-footer row w-100 mx-0">
+                <div class="col-12 col-lg-6 mb-2 mx-0 d-flex justify-content-center justify-content-lg-start">
+                    <button type="button" class="btn btn-sm btn-primary mr-2"><i class="fas fa-calculator mr-2"></i>Recalcular Saldo</button>
+                    <label class="my-0">Notas de Crédito Activas: --</label>
+                </div>
+                <div class="col-12 col-lg-6 mb-2  mx-0 d-flex justify-content-center justify-content-lg-end">
+                    <button type="button" class="btn btn-sm btn-success mr-2"><i class="fas fa-money-check-alt mr-2"></i>Cobrar</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"><i class="fas fa-sign-out-alt mr-2"></i>Salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

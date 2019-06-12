@@ -8,6 +8,9 @@ namespace BE.Common
 {
     public class Constants
     {
+        public const string OK_RESULT = "La operación se realizó correctamente.";
+        public const string BAD_REQUEST = "Sucedió un error al procesar la información, por favor vuelva a intentar.";
+        public const string RucWortec = "20505310072";
         public const string COLESTEROL_TOTAL_Colesterol_Total_Id = "N009-MF000001086";
         public const string PERFIL_LIPIDICO_Colesterol_Total_Id = "N009-MF000001904";
 

@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calendar\CalendarBL.cs" />
     <Compile Include="Calendar\ScheduleBl.cs" />
     <Compile Include="Common\DataHierarchyBL.cs" />
     <Compile Include="Common\PacientBL.cs" />
@@ -62,19 +63,25 @@
     <Compile Include="Common\SystemParameterBL.cs" />
     <Compile Include="Component\CompornentBl.cs" />
     <Compile Include="ConfigDx\ConfigDxBl.cs" />
+    <Compile Include="RUC\RucDataBL.cs" />
+    <Compile Include="z-ClientesSAMBHS\ClientesBL.cs" />
+    <Compile Include="z-DataHierarchySAMBHS\DataHierarchyBL.cs" />
     <Compile Include="DiagnosticBl.cs" />
     <Compile Include="Diagnostic\DiagnosticBl.cs" />
+    <Compile Include="z-DocumentoSAMBHS\DocumentoBL.cs" />
     <Compile Include="Eso\EsoBl.cs" />
     <Compile Include="Eso\RecipesMedical.cs" />
     <Compile Include="MedicalAssistance\FilterWorkersBl.cs" />
     <Compile Include="MedicalAssistance\PatientsAssistanceBL.cs" />
     <Compile Include="Node\NodeBl.cs" />
     <Compile Include="Notification\NotificationBl.cs" />
+    <Compile Include="Pacient\PacientBL.cs" />
     <Compile Include="PlanVigilancia\PlanVigilanciaBl.cs" />
     <Compile Include="ProductWarehouse\InputOutputBl.cs" />
     <Compile Include="ProductWarehouse\SupplierBl.cs" />
     <Compile Include="Product\ProductBl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\ProtocolBL.cs" />
     <Compile Include="ReportManager\ReportManagerBl.cs" />
     <Compile Include="Reports\AccidentesTrabajo_F1.cs" />
     <Compile Include="Reports\AccidentesTrabajo_F2.cs" />
@@ -86,6 +93,7 @@
     <Compile Include="Vigilancia\VigilanciaBl.cs" />
     <Compile Include="WareHouse\WarehouseBl.cs" />
     <Compile Include="WorkerPwa\WorkerPwaBl.cs" />
+    <Compile Include="z-ProductsSAMBHS\ProductSAMBHSBL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BE\BE.csproj">

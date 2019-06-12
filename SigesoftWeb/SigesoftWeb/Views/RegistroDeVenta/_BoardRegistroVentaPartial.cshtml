@@ -1,0 +1,119 @@
+﻿
+@{
+    int Take = 0;
+    int Total = 0;
+    int Primer = 0;
+    int Ultimo = 0;
+    int Index = 0;
+
+    if (ViewBag.Products != null)
+    {
+        Take = ViewBag.Products.Take;
+        Index = ViewBag.Products.Index;
+        Total = ViewBag.Products.TotalRecords;
+        Primer = ((Index - 1) * Take) + 1;
+        Ultimo = Primer + (ViewBag.Products.List.Count - 1);
+
+        Primer = Primer < 0 ? 0 : Primer;
+        Ultimo = Ultimo < 0 ? 0 : Ultimo;
+    }
+    else
+    {
+        Take = 0;
+    }
+}
+
+<div class="container-fluid" style="padding:0px;">
+    <div class="box box-default mt-2" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;" onclick="ColapseTable('contBoardVenta','heightBoardProd')"><i class="fas fa-truck-loading"></i> Listado de Ventas </h3>
+        </div>
+    </div>
+</div>
+<input id="heightBoardProd" type="hidden" value="">
+<div id="contBoardVenta" class="overflow-hidden" style="width:100% !important">
+    <div>
+        <span class="informacion">Mostrando desde N° @Primer hasta @Ultimo de un total de @Total entradas</span>
+        <div class="float-lg-right informacion">
+            Total de registros:
+            <select id="take" onchange="Filtrar(1)">
+                <option value="10" @(Take == 10 ? "selected" : "")>10</option>
+                <option value="25" @(Take == 25 ? "selected" : "")>25</option>
+                <option value="50" @(Take == 50 ? "selected" : "")>50</option>
+                <option value="0" @(Take == 0 ? "selected" : "")>TODOS</option>
+            </select>
+        </div>
+    </div>
+    <div class="box box-info mt-2">
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered table-wrapper-scroll scroll-css">
+                <thead>
+                    <tr>
+                        <th nowrap scope="col">N° Registro</th>
+                        <th nowrap scope="col">Tipo Doc.</th>
+                        <th nowrap scope="col">Documento</th>
+                        <th nowrap scope="col">Fecha Registro</th>
+                        <th nowrap scope="col">CodigoCliente</th>
+                        <th nowrap scope="col">Nombre Cliente</th>
+                        <th nowrap scope="col">Moneda</th>
+                        <th nowrap scope="col">Sunat</th>
+                        <th nowrap scope="col">Total</th>
+                        <th nowrap scope="col">Saldo</th>
+                        <th nowrap scope="col">Con Guía</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td nowrap>123456</td>
+                        <td nowrap>asd123</td>
+                        <td nowrap>AMOXICILINA AMOXICILINA AMOXICILINA AMOXICILINA AMOXICILINA AMOXICILINA AMOXICILINA </td>
+                        <td nowrap>SERVICIOS</td>
+                        <td nowrap>MEDIFARM</td>
+                        <td nowrap>TABLETA</td>
+                        <td nowrap>MERCADERIA</td>
+                        <td nowrap>SERVICIOS</td>
+                        <td nowrap>MEDIFARM</td>
+                        <td nowrap>TABLETA</td>
+                        <td nowrap>MERCADERIA</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="paginacion-tabla d-flex justify-content-center">
+                <div>
+                    <ul class="pagination">
+                        @{
+                            if (Index > 1)
+                            {
+                                <li class="page-item" onclick="Filtrar(@(Index - 1))">
+                                    <span class="page-link" aria-hidden="true">Anterior</span>
+                                </li>
+                            }
+                            int pagina = 0;
+                            if (Take > 0)
+                            {
+                                for (int i = 0; i < Total; i = i + Take)
+                                {
+                                    pagina++;
+                                    if ((pagina > (Index - 5)) && pagina < (Index + 5))
+                                    {
+                                        <li @(pagina == Index ? "class=pagination-active" : "onclick=Filtrar(" + pagina + ")")><span class="page-link" aria-hidden="true">@pagina</span></li>
+                                    }
+
+                                }
+                            }
+                            if (pagina > Index)
+                            {
+                                <li class="page-item" onclick="Filtrar(@(Index + 1))">
+                                    <span class="page-link" aria-hidden="true">Siguiente</span>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

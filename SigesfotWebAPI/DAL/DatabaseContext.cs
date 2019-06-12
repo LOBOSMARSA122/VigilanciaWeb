@@ -83,6 +83,9 @@ namespace DAL
         public DbSet<ProtocolSystemUserBE> ProtocolSystemUser { get; set; }
         public DbSet<SecuentialBE> Secuential { get; set; }
 
+        public DbSet<HospitalizacionBE> Hospitalizacion { get; set; }
+        public DbSet<HospitalizacionServiceBE> HospitalizacionService { get; set; }
+
         public DbSet<CalendarDto> Calendar { get; set; }
         public DbSet<DiagnosticRepositoryDto> DiagnosticRepository { get; set; }
         public DbSet<ServiceDto> Service { get; set; }
@@ -108,6 +111,7 @@ namespace DAL
         public DbSet<OrganizationPersonBE> OrganizationPerson { get; set; }
 
         public DbSet<PlanVigilanciaDto> PlanVigilancia { get; set; }
+        public DbSet<PlanBE> Plan { get; set; }
         public DbSet<PlanVigilanciaDiseasesDto> PlanVigilanciaDiseases { get; set; }
         public DbSet<VigilanciaDto> Vigilancia { get; set; }
         public DbSet<VigilanciaServiceDto> VigilanciaService { get; set; }
@@ -118,7 +122,7 @@ namespace DAL
         public DbSet<NotificationDto> Notification { get; set; }
 
         public DbSet<ConfigDxDto> ConfigDx { get; set; }
-
+        public DbSet<HolidaysBE> Holiday { get; set; }
         //----------------Dtos TEST---------------------
         public DbSet<TestConcurrenceDto> TestConcurrenc { get; set; }
     }

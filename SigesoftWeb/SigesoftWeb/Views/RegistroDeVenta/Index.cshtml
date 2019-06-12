@@ -1,0 +1,296 @@
+﻿
+@{
+    ViewBag.Title = "Registro de Ventas";
+}
+<section class="row w-100 mx-0 px-3 mt-3">
+    <article class="group-box box-content w-100 p-3">
+        <label class="label-group-box">Filtro de Busqueda</label>
+        <aside class="col-12 form-inline mb-3">
+            <div class="input-group input-group-sm m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="tipoDocumento">Tipo de Dcumento</span>
+                </div>
+                <select class="custom-select" aria-label="TipoDocumento" aria-describedby="tipoDocumento">
+                    <option value="-1">--Seleccionar--</option>
+                    <option value="1">Opción 1</option>
+                    <option value="2">Opción 2</option>
+                </select>
+            </div>
+            <input type="text" disabled class="form-control form-control-sm m-2" style="width:80px" />
+            <label class=" m-2">-</label>
+            <input type="text" disabled class="form-control form-control-sm m-2" style="width:160px" />
+            <div class="input-group input-group-sm m-2">
+                <div class="input-group-prepend">
+                    <button class="btn btn-sm btn-outline-primary" type="button" id="buscarCliente">Buscar Cliente</button>
+                </div>
+                <input type="text" class="form-control" disabled aria-describedby="buscarCliente" style="width: 400px">
+                <div class="input-group-append">
+                    <span class="input-group-text bg-info text-white"><i class="fas fa-user"></i></span>
+                </div>
+            </div>
+        </aside>
+        <aside class="col-12 form-inline">
+            <div class="input-group input-group-sm m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Fecha registro Del:</span>
+                </div>
+                <input type="date" class="form-control" id="fechaRegistro">
+            </div>
+
+            <div class="input-group input-group-sm m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Hasta:</span>
+                </div>
+                <input type="date" class="form-control" id="fechaHasta">
+            </div>
+
+            <div class="input-group input-group-sm m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="tipoMoneda">Moneda</span>
+                </div>
+                <select class="custom-select" aria-label="TipoDocumento" aria-describedby="tipoMoneda">
+                    <option value="-1">--Seleccionar--</option>
+                    <option value="1">Opción 1</option>
+                    <option value="2">Opción 2</option>
+                </select>
+            </div>
+
+            <div class="input-group input-group-sm m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="tipoOperacion">Tipo de Operación</span>
+                </div>
+                <select class="custom-select" aria-label="TipoDocumento" aria-describedby="tipoOperacion">
+                    <option value="-1">--Seleccionar--</option>
+                    <option value="1">Opción 1</option>
+                    <option value="2">Opción 2</option>
+                </select>
+            </div>
+
+            <div class="input-group input-group-sm m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="tipoServicio">Tipo de Servicio</span>
+                </div>
+                <select class="custom-select" aria-label="TipoDocumento" aria-describedby="tipoServicio">
+                    <option value="-1">--Seleccionar--</option>
+                    <option value="1">Opción 1</option>
+                    <option value="2">Opción 2</option>
+                </select>
+            </div>
+            <button class="btn btn-sm btn-info" id="btnBuscar"><i class="fas fa-search mr-2"></i>Buscar</button>
+        </aside>
+    </article>
+    <div class="box-content row mx-0 w-100 mt-3" style="border:0px;">
+        @Html.Partial("_BoardRegistroVentaPartial")
+
+        <div class="row w-100 mx-0 justify-content-end">
+            <button class="col-12 m-1 col-lg-auto btn btn-sm btn-info" disabled>Cuadre de Caja</button>
+            <button class="col-12 m-1 col-lg-auto btn btn-sm btn-info" data-toggle="modal" data-target="#modalHistorialCobranzas">Ver Historial de Cobranzas</button>
+            <button class="col-12 m-1 col-lg-auto btn btn-sm btn-success" data-toggle="modal" data-target="#modalVentaRapida">Nueva Venta Rapida</button>
+            <button class="col-12 m-1 col-lg-auto btn btn-sm btn-success" data-toggle="modal" data-target="#modalNuevaVenta">Nueva Venta</button>
+            <button class="col-12 m-1 col-lg-auto btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalNuevaVenta" id="btn-editar-venta">Editar Venta</button>
+            <button class="col-12 m-1 col-lg-auto btn btn-sm btn-danger">Eliminar Venta</button>
+        </div>
+
+    </div>
+
+</section>
+
+
+@*Modals Venta Rapida*@
+@Html.Partial("_ModalVentaRapidaPartial")
+
+@*Modals Historial de cobranza*@
+@Html.Partial("_ModalHistorialCobranzaPartial")
+
+@*Modal Farmacia*@
+@Html.Partial("_ModalMedicamentosPartial")
+
+@*Modal Venta*@
+@Html.Partial("_ModalNuevaVentaPartial")
+
+
+
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+
+<script>
+    $(document).ready(function () {
+        SetDateTimeNow();
+
+        $("#modalMedicamentos").on("show.bs.modal", _ => {
+            $("#modalVentaRapida").addClass("d-none");
+        })
+
+        $("#modalMedicamentos").on("hidden.bs.modal", _ => {
+            $("#modalVentaRapida").removeClass("d-none");
+        })
+
+        $("#agregar-detalle").on("click", function () {
+            AgregarFilaVenta();
+        })
+
+        $("#eliminar-detalle").on("click", function () {
+            EliminarFilaVenta("checkbox");
+        })
+
+        $("#agregar-detalle-venta-rapida").on("click", function () {
+            AgregarFilaVentaRapida();
+        })
+
+        $("#eliminar-detalle-venta-rapida").on("click", function () {
+            EliminarFilaVenta("checkbox-venta-rapida");
+        })
+
+
+
+
+
+
+        //Reestablece cambios de los modals
+        $("#modalVentaRapida").on("show.bs.modal", function () {
+            let oldHtml = $(this).html();
+            $("#modalVentaRapida").on("hidden.bs.modal", function () {
+                $(this).html(oldHtml);
+            })
+        })
+        $("#modalNuevaVenta").on("show.bs.modal", function () {
+            let oldHtml = $(this).html();
+            $("#modalNuevaVenta").on("hidden.bs.modal", function () {
+                $(this).html(oldHtml);
+            })
+        })
+        $("#modalMedicamentos").on("show.bs.modal", function () {
+            let oldHtml = $(this).html();
+            $("#modalMedicamentos").on("hidden.bs.modal", function () {
+                $(this).html(oldHtml);
+            })
+        })
+        $("#modalHistorialCobranzas").on("show.bs.modal", function () {
+            let oldHtml = $(this).html();
+            $("#modalHistorialCobranzas").on("hidden.bs.modal", function () {
+                $(this).html(oldHtml);
+            })
+        })
+    })
+
+    const SetDateTimeNow = _ => {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        $("input[type='date']").val(today);
+    }
+
+    const EliminarFilaVenta = function (className) {
+
+        let chk = $("." + className +":checked");
+
+        for (var i = 0; i < chk.length; i++) {
+            let row = chk.eq(i).parent().parent().parent();
+            let rowStatus = row.find("td.RecordStatus");
+            console.log(rowStatus.text);
+            if (rowStatus.text() == "2") {
+                row.remove();
+            } else {
+                row.addClass("d-none");
+                rowStatus.text(4);
+            }
+
+        }
+
+    }
+
+    const AgregarFilaVenta = function () {
+        let html = `
+                    <tr onclick="PintarFila(this)">
+
+                        <td nowrap>
+                            <div class="custom-control venta-checked custom-checkbox">
+                                <input type="checkbox" class="custom-control-input checkbox">
+                                <label class="custom-control-label" onclick="checkedCheckBox(this)"></label>
+                            </div>
+                        </td>
+                        <td nowrap></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap>
+                            <select class="custom-select custom-select-sm" style="min-width:150px">
+                                <option value="-1">--Seleccionar--</option>
+                            </select>
+                        </td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap>10|OPERACIÓN ONEROSA</td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" style="min-width:150px" /></td>
+                        <td nowrap><input type="date" class="form-control form-control-sm" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td class="d-none RecordStatus" nowrap>2</td>
+                        <td class="d-none RecordType" nowrap>1</td>
+                    </tr>
+                   `;
+
+        $(html).appendTo($("#body-ventas"));
+    }
+
+    const PintarFila = function (fila) {
+        if ($(".row-active").length > 0) {
+            $(".row-active").removeClass("row-active");           
+        }
+        $(fila).addClass("row-active");
+    }
+
+    const checkedAllCheckBoxes = function () {
+        for (var i = 0; i < $(".checkbox").length; i++) {
+            $(".checkbox").eq(i).click();
+        }
+    }
+
+    const AgregarFilaVentaRapida = function () {
+        let html = `
+                    <tr onclick="PintarFila(this)">
+                        <td nowrap>
+                            <div class="custom-control venta-checked custom-checkbox">
+                                <input type="checkbox" class="custom-control-input checkbox-venta-rapida">
+                                <label class="custom-control-label" onclick="checkedCheckBox(this)"></label>
+                            </div>
+                        </td>
+                        <td nowrap><input disabled type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap>
+                            <select class="custom-select custom-select-sm" style="min-width:150px">
+                                <option value="-1">--Seleccionar--</option>
+                            </select>
+                        </td>
+                        <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td class="d-none RecordStatus" nowrap>2</td>
+                        <td class="d-none RecordType" nowrap>1</td>
+                    </tr>
+                   `;
+
+        $(html).appendTo($("#body-venta-rapida"));
+    }
+
+    const checkedCheckBox = function (chk) {
+        $(chk).parent().find("input").click();
+    }
+
+</script>

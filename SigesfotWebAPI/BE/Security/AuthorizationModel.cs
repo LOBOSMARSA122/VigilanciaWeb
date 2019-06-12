@@ -11,6 +11,7 @@ namespace BE.Security
     {
         public int SystemUserId { get; set; }
         public string PersonId { get; set; }
+        public string RucEmpresa { get; set; }
         public string UserName { get; set; }
         public string FullName { get; set; }
         public byte[] PersonImage { get; set; }

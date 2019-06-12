@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+
 
 namespace SigesoftWeb.Models.Common
 {
@@ -23,5 +21,7 @@ namespace SigesoftWeb.Models.Common
         public string Field { get; set; }
 
         public int IdI { get; set; }
+
+        public bool Value6 { get; set; }
     }
 }

@@ -642,7 +642,8 @@ namespace SigesoftWeb.Controllers.MedicalAssistance
         }
 
         [GeneralSecurity(Rol = "PatientsAssistance-MedicalConsultation")]
-        public JsonResult GetWarehouses(string organizationId) {
+        public JsonResult GetWarehouses(string organizationId)
+        {
             var organizations = ViewBag.User.Organizations;
             List<OrganizationWareHouse> result = new List<OrganizationWareHouse>();
             foreach (var item in organizations)
@@ -653,7 +654,7 @@ namespace SigesoftWeb.Controllers.MedicalAssistance
                     break;
                 }
             }
-            
+
             return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 

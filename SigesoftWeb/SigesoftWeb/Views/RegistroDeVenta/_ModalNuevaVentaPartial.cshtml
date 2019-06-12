@@ -1,0 +1,278 @@
+﻿<div class="modal fade" id="modalNuevaVenta" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registro de Venta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row bg-light p-2">
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-4 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Periodo:</label>
+                        <input type="text" disabled class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-4 d-flex justify-content-start">
+                        <label class="small my-1 mr-2" style="width:180px">Nro. Registro:</label>
+                        <input type="text" disabled class="form-control form-control-sm" style="max-width:80px">
+                        <label class="small my-1 mx-1">-</label>
+                        <input type="text" disabled class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-4 d-flex justify-content-start justify-content-md-end">
+                        <label class="small my-1 mr-2">IGV.</label>
+                        <select class="custom-select custom-select-sm" style="max-width:100px">
+                            <option value="-1">--Seleccionar--</option>
+                            <option value="1">18.00</option>
+                            <option selected value="2">19.00</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row p-2">
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-5 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Documento:</label>
+                        <select class="custom-select custom-select-sm" style="max-width:120px">
+                            <option value="-1">--Seleccionar--</option>
+                            <option value="1">FAC</option>
+                            <option selected value="2">BOL</option>
+                        </select>
+                        <input type="text" disabled class="form-control form-control-sm ml-2" style="max-width:80px">
+                        <label class="small my-1 mx-1">-</label>
+                        <input type="text" disabled class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-4 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">DocRef:</label>
+                        <select class="custom-select custom-select-sm" style="max-width:120px">
+                            <option value="-1">--Seleccionar--</option>
+                            <option value="1">FAC</option>
+                            <option selected value="2">BOL</option>
+                        </select>
+                        <input type="text" disabled class="form-control form-control-sm ml-2" style="max-width:80px">
+                        <label class="small my-1 mx-1">-</label>
+                        <input type="text" disabled class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2" style="width:150px">Fecha Ref:</label>
+                        <input type="date" disabled class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="group-box">
+                    <label class="label-group-box">Cliente</label>
+                    <div class="form-row p-2">
+                        <div class="col-12 mb-2 mb-lg-0 col-lg-2 d-flex justify-content-start">
+                            <label class="small my-1 mr-2">RUC:</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" placeholder="Buscar Ruc" aria-label="Recipient's username" aria-describedby="btnBuscarEmpresa">
+                                <div class="input-group-append input-group-sm">
+                                    <button class="btn btn-sm btn-outline-info" type="button" id="btnBuscarEmpresa" style="max-height:31px; font-size:0.9rem"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-2 mb-lg-0 col-lg-4 d-flex justify-content-start">
+                            <label class="small my-1 mr-2">Codigo Cliente:</label>
+                            <input type="text" disabled class="form-control form-control-sm">
+                        </div>
+                        <div class="col-12 mb-2 mb-lg-0 col-lg-6 d-flex justify-content-start">
+                            <label class="small my-1 mr-2">Nombre/Razón Social:</label>
+                            <input type="text" disabled class="form-control form-control-sm">
+                        </div>
+                        <div class="col-12 mb-2 mb-lg-0 col-lg-6 d-flex justify-content-start">
+                            <label class="small my-1 mr-2">Dirección:</label>
+                            <input type="text" disabled class="form-control form-control-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row p-2">
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Fecha Emisión:</label>
+                        <input type="date" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-2 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Tipo Cambio:</label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-2 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Nro. Días:</label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">F. Vencimiento:</label>
+                        <input type="date" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-2 d-flex justify-content-start">
+                        <label class="small my-1 mr-2" style="opacity:0">Combobox:</label>
+                        <select class="custom-select custom-select-sm">
+                            <option value="-1">--Selec--</option>
+                            <option value="1">PerCepción: SI</option>
+                            <option value="2">PerCepción: NO</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Cond. de Pago:</label>
+                        <select class="custom-select custom-select-sm">
+                            <option value="-1">--Selec--</option>
+                            <option value="1">CONTADO</option>
+                            <option value="2">CHEQUE</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-6 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Concepto:</label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Placa Vehículo:</label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12 mb-2 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Moneda:</label>
+                        <select class="custom-select custom-select-sm">
+                            <option value="-1">--Selec--</option>
+                            <option value="1">SOLES</option>
+                            <option value="2">DOLARES</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mb-2 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Estado:</label>
+                        <select class="custom-select custom-select-sm">
+                            <option value="-1">--Selec--</option>
+                            <option value="1">ACTIVO</option>
+                            <option value="2">ANULADO</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mb-2 col-lg-2 d-flex justify-content-start">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="rdoIncluyeIgv">
+                            <label class="custom-control-label" for="rdoIncluyeIgv">Prec. Incluyen IGV</label>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-2 col-lg-2 d-flex justify-content-start">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="rdoDeducAnticipo">
+                            <label class="custom-control-label" for="rdoDeducAnticipo">Deduc. Anticipo</label>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-2 col-lg-2 d-flex justify-content-start">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="rdoGratuito">
+                            <label class="custom-control-label" for="rdoGratuito">Gratuito</label>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Vendedor:</label>
+                        <select class="custom-select custom-select-sm">
+                            <option value="-1">--Selec--</option>
+                            <option value="1">vendedor1</option>
+                            <option value="2">Vendedor2</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mb-2 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Vendedor:</label>
+                        <select class="custom-select custom-select-sm">
+                            <option value="-1">--Selec--</option>
+                            <option value="1">Opción1</option>
+                            <option value="2">Opción2</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mb-2 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Dscto:</label>
+                        <input type="text" class="form-control form-control-sm" />
+                        <label>%</label>
+                    </div>
+                    <div class="col-12 mb-2 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Comisión:</label>
+                        <input type="text" class="form-control form-control-sm" />
+                        <label>%</label>
+                    </div>
+                    <div class="col-12 mb-2 col-lg-3 d-flex justify-content-start">
+                        <label class="small my-1 mr-2">Tipo Venta:</label>
+                        <select class="custom-select custom-select-sm">
+                            <option value="-1">--Selec--</option>
+                            <option value="1">Opción1</option>
+                            <option value="2">Opción2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="group-box">
+                    <label class="label-group-box">Pedido</label>
+                    <div class="row w-100 mx-0">
+                        <div class="col-12 col-lg-3 d-flex justify-content-start">
+                            <label class="small m-0 py-2">Nro.Pedido:</label>
+                            <input type="text" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-12 col-lg-3 d-flex justify-content-start">
+                            <label class="small m-0 py-2">G.Remisión:</label>
+                            <input type="text" class="form-control form-control-sm" style="width:60px" />
+                            <label class="small m-0 py-1">-</label>
+                            <input type="text" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-12 col-lg-2 d-flex justify-content-start">
+                            <label class="small m-0 py-2">Ord.Compra:</label>
+                            <input type="text" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-12 col-lg-4 d-flex justify-content-start">
+                            <label class="small m-0 py-2">Fch.Ord.Compra:</label>
+                            <input type="date" class="form-control form-control-sm" />
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid" style="padding:0px;">
+                    <div class="box box-info mt-2" id="acordion">
+                        <div class="box-header with-border" id="heading1">
+                            <h3 class="box-title" style="cursor:pointer;">Detalle de la Venta</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-css" style="overflow:scroll">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th nowrap scope="col">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" onchange="checkedAllCheckBoxes()" id="checkedAll">
+                                        <label class="custom-control-label" for="checkedAll">Selec</label>
+                                    </div>
+                                </th>
+                                <th nowrap scope="col">Alm.</th>
+                                <th nowrap scope="col">Cod. Producto</th>
+                                <th nowrap scope="col">Descripción Producto</th>
+                                <th nowrap scope="col">Cantidad</th>
+                                <th nowrap scope="col">UM.</th>
+                                <th nowrap scope="col">P. Unit.</th>
+                                <th nowrap scope="col">Valor</th>
+                                <th nowrap scope="col">Dscto %</th>
+                                <th nowrap scope="col">Dscto</th>
+                                <th nowrap scope="col">Valor Venta</th>
+                                <th nowrap scope="col">IGV</th>
+                                <th nowrap scope="col">P. Vent.</th>
+                                <th nowrap scope="col">C. C.</th>
+                                <th nowrap scope="col">T. Oper</th>
+                                <th nowrap scope="col">Nro. Unidades</th>
+                                <th nowrap scope="col">% Comisión</th>
+                                <th nowrap scope="col">Observaciones</th>
+                                <th nowrap scope="col">Anexo</th>
+                                <th nowrap scope="col">Nro. Lote</th>
+                                <th nowrap scope="col">Fec. Vencimiento</th>
+                                <th nowrap scope="col">Nro. Serie</th>
+                                <th nowrap scope="col" class="d-none">RecordStatus</th>
+                                <th nowrap scope="col" class="d-none">RecordType</th>
+                            </tr>
+                        </thead>
+                        <tbody id="body-ventas">
+
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="row w-100 mx-0 justify-content-end">
+                    <button class="btn btn-sm btn-primary mx-1" id="agregar-detalle">Agregar Detalle</button>
+                    <button class="btn btn-sm btn-danger mx-1" id="eliminar-detalle">Eliminar Detalle</button>
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 justify-content-end">
+                <button class="btn btn-sm btn-primary">Guardar</button>
+                <button class="btn btn-sm btn-secondary">Imprimir</button>
+                <button class="btn btn-sm btn-secondary" data-dismiss="modal"><i class="fas fa-sign-out-alt mr-2"></i>Salir</button>
+            </div>
+        </div>
+    </div>
+</div>

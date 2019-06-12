@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "Pacientes";
+}
+
+<div class="container-fluid">
+    <div class="row w-100 mx-0">
+        <div class="col-12 col-lg-6">
+            <div class="form-inline mt-2 justify-content-between">
+                <label class="small">Nombres/Apellidos/Nro Documento:</label>
+                <input type="text" class="form-control form-control-sm w-50" value="" />
+                <button class="btn btn-sm btn-info"><i class="fas fa-search mr-1"></i>Filtrar</button>
+            </div>
+        </div>
+        <div class="col-12 col-lg-9">
+            @Html.Partial("_BoardPacientPartial")
+        </div>
+        <div class="col-12 col-lg-3">
+            <div class="row w-100 mx-0 justify-content-center pt-lg-0 pt-2">
+                <figure class="img-thumbnail" style="max-width:250px; max-height: 350px">
+                    <img src="https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png" class="img img-fluid" alt="Imagen" />
+                </figure>
+                <div class="row w-100 mx-0">
+                    <div class="col-12 p-0">
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <label class="has-float-label static">Nro Documento</label>
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <label class="has-float-label static">Dirección</label>
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <label class="has-float-label static">Gr. Fr. Sanguineo</label>
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <label class="has-float-label static">Email</label>
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <label class="has-float-label static">Puesto Actual</label>
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <label class="has-float-label static">Fecha Nacimiento</label>
+                    </div>
+                </div>
+                <div class="row w-100 mx-0 py-2 justify-content-between">
+                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalNuevoPaciente"><i class="fas fa-plus mr-1"></i>Nuevo</button>
+                    <button class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalNuevoPaciente"><i class="fas fa-user-edit mr-1"></i>Editar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_CreatePacientPartial")
+
+<script src="~/Scripts/FloatLabel.js"></script>
+<link href="~/Content/css/FloatLabel.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+
+<link href="~/Content/css/Alert.css" rel="stylesheet" />
+<script src="~/Scripts/Alert.js"></script>

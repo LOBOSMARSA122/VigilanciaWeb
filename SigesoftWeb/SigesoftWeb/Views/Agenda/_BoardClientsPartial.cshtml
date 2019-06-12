@@ -1,0 +1,128 @@
+﻿
+@{
+    int Take = 0;
+    int Total = 0;
+    int Primer = 0;
+    int Ultimo = 0;
+    int Index = 0;
+
+    if (ViewBag.Clients != null)
+    {
+        Take = ViewBag.Clients.Take;
+        Index = ViewBag.Clients.Index;
+        Total = ViewBag.Clients.TotalRecords;
+        Primer = ((Index - 1) * Take) + 1;
+        Ultimo = Primer + (ViewBag.Clients.List.Count - 1);
+
+        Primer = Primer < 0 ? 0 : Primer;
+        Ultimo = Ultimo < 0 ? 0 : Ultimo;
+    }
+    else
+    {
+        Take = 10;
+    }
+}
+
+<div class="container-fluid" style="padding:0px;">
+    <div class="box box-info mt-2" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>Lista de Clientes</h3>
+        </div>
+    </div>
+</div>
+<input id="heightBoardProd" type="hidden" value="">
+<div id="contBoardClients" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+    <div>
+        <span class="informacion">Mostrando desde N° @Primer hasta @Ultimo de un total de @Total entradas</span>
+        <div class="float-lg-right informacion">
+            Total de registros:
+            <select id="take-client" onchange="FiltrarClientes()">
+                <option value="10" @(Take == 10 ? "selected" : "")>10</option>
+                <option value="25" @(Take == 25 ? "selected" : "")>25</option>
+                <option value="50" @(Take == 50 ? "selected" : "")>50</option>
+                <option value="0" @(Take == 0 ? "selected" : "")>TODOS</option>
+            </select>
+        </div>
+    </div>
+    <div class="box box-info mt-2" id="cont-table-board-client">
+        <div class="scroll-css" style="overflow:scroll; max-height: 325px;" >
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th nowrap scope="col" class="d-none">ClientsId</th>
+                        <th nowrap scope="col">Cod. Cliente</th>
+                        <th nowrap scope="col">Nombre / Razón social</th>
+                        <th nowrap scope="col">Tipo Doc.</th>
+                        <th nowrap scope="col">Nro. Documento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+
+                        if (ViewBag.Clients == null)
+                        {
+                            <tr><td colspan="16" class="text-center">Error al conectarse al servidor</td></tr>
+                        }
+                        else if (ViewBag.Clients.List.Count == 0)
+                        {
+                            <tr><td colspan="16" class="text-center">No hay resultados</td></tr>
+                        }
+                        else
+                        {
+                            foreach (var item in ViewBag.Clients.List)
+                            {
+                                <tr ondblclick="EnviarDataClient(this)">
+                                    <td nowrap class="d-none">@item.v_IdCliente</td>
+                                    <td nowrap>@item.v_CodCliente</td>
+                                    <td nowrap>@item.v_RazonSocial</td>
+                                    <td nowrap>@item.TipoDocumento</td>
+                                    <td nowrap>@item.v_NroDocIdentificacion</td>
+                                </tr>
+                            }
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="paginacion-tabla d-flex justify-content-center">
+            <nav class="col-12 d-flex justify-content-center">
+                <ul class="pagination">
+                    @{
+                        if (Index > 1)
+                        {
+                            <li class="page-item" onclick="FiltrarClientes(@(Index - 1))">
+                                <span class="page-link" aria-hidden="true"><i class="text-info fas fa-caret-left"></i></span>
+                            </li>
+                        }
+                        int pagina = 0;
+                        if (Take > 0)
+                        {
+                            for (int i = 0; i < Total; i = i + Take)
+                            {
+                                pagina++;
+                                if ((pagina > (Index - 5)) && pagina < (Index + 5))
+                                {
+                                    <li @(pagina == Index ? "class=pagination-active" : "onclick=FiltrarClientes(" + pagina + ")")><span class="page-link" aria-hidden="true">@pagina</span></li>
+                                }
+
+
+                            }
+                        }
+                        if (pagina > Index)
+                        {
+                            <li class="page-item" onclick="FiltrarClientes(@(Index + 1))">
+                                <span class="page-link" aria-hidden="true"><i class="text-info fas fa-caret-right"></i></span>
+                            </li>
+                        }
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+
+

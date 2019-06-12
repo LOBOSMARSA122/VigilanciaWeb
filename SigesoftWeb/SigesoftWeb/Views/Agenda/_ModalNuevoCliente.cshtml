@@ -1,0 +1,141 @@
+﻿<div class="modal fade" id="modalRegistroCliente" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size: 1.2rem">Registro Rápido de Cliente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="group-box">
+                    <label class="label-group-box">Principal</label>
+                    <div class="row w-100 mx-0">
+                        <div class="col-12 pt-2 col-lg-8">
+                            <div class="form-inline my-1  justify-content-between justify-content-between">
+                                <label class="small w-25">Codigo Anexo:</label>
+                                <input type="text" class="form-control form-control-sm w-75" id="new-codigoanexo">
+                            </div>
+                            <div class="form-inline my-1  justify-content-between">
+                                <label class="small w-25">Tipo Persona:</label>
+                                <select class="custom-select custom-select-sm w-75" id="new-tipopersona">
+                                    <option value="-1">--Seleccionar--</option>
+
+                                </select>
+                            </div>
+                            <div class="form-inline my-1  justify-content-between">
+                                <label class="small w-25">Tipo Doc:</label>
+                                <select class="custom-select custom-select-sm w-75" id="new-tipodocumento">
+                                    <option value="-1">--Seleccionar--</option>
+
+                                </select>
+                            </div>
+                            <div class="form-inline my-1  justify-content-between">
+                                <label class="small w-25">Nro. Documento:</label>
+                                <div class="input-group input-group-sm w-75">
+                                    <input type="text" class="form-control form-control-sm" aria-describedby="find-personbyruc" id="new-clientruc">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-outline-info" type="button" id="find-personbyruc"><i class="fas fa-globe"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-inline my-1  justify-content-center d-none" id="cont-captcha">
+                                <figure id="figure-captcha">
+                                    
+                                </figure>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control form-control-sm" aria-describedby="find-personbyruc" id="new-textcaptcha">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-outline-info" type="button" id="find-captcha">Buscar</button>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-sm btn-outline-primary" type="button" id="reload-captcha"><i class="fas fa-sync-alt"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-inline my-1  justify-content-between">
+                                <label class="small w-25">Primer Nombre:</label>
+                                <input type="text" class="form-control form-control-sm w-75" id="new-firstname">
+                            </div>
+                            <div class="form-inline my-1  justify-content-between">
+                                <label class="small w-25">Segundo Nombre:</label>
+                                <input type="text" class="form-control form-control-sm w-75" id="new-secondname">
+                            </div>
+                            <div class="form-inline my-1  justify-content-between">
+                                <label class="small w-25">Primer Apellido:</label>
+                                <input type="text" class="form-control form-control-sm w-75" id="new-firstlastname">
+                            </div>
+                            <div class="form-inline my-1  justify-content-between">
+                                <label class="small w-25">Segundo Apellido:</label>
+                                <input type="text" class="form-control form-control-sm w-75" id="new-secondlastname">
+                            </div>
+                        </div>
+                        <div class="col-12 pt-2 col-lg-4">
+                            <div class="group-box">
+                                <label class="label-group-box">Ubicación</label>
+                                <div class="form-group">
+                                    <label class="small">País:</label>
+                                    <select class="custom-select custom-select-sm" id="new-pais">
+                                        <option value="-1">--Seleccionar--</option>
+
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="small">Departamento:</label>
+                                    <select class="custom-select custom-select-sm" id="new-departamento">
+                                        <option value="-1">--Seleccionar--</option>
+
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="small">Provincia:</label>
+                                    <select class="custom-select custom-select-sm" id="new-provincia">
+                                        <option value="-1">--Seleccionar--</option>
+
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="small">Distrito:</label>
+                                    <select class="custom-select custom-select-sm" id="new-distrito">
+                                        <option value="-1">--Seleccionar--</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-group my-1">
+                                <label class="small">Email:</label>
+                                <input type="text" class="form-control form-control-sm" id="new-email">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group my-1">
+                                <label class="small">Dirección:</label>
+                                <input type="text" class="form-control form-control-sm" id="new-direccion">
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group my-1">
+                                <label class="small">Teléfono Fijo:</label>
+                                <input type="text" class="form-control form-control-sm" id="new-telefono">
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group my-1">
+                                <label class="small">Celular:</label>
+                                <input type="text" class="form-control form-control-sm" id="new-celular">
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 p-2 justify-content-between">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

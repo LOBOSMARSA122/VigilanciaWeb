@@ -1,0 +1,82 @@
+﻿<div class="modal fade bd-example-modal-lg" id="modalMedicamentos" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buscar Medicamento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="group-box">
+                    <label class="label-group-box">Filtros de Búsqueda</label>
+                    <div class="row w-100 mx-0 justify-content-between">
+                        <div class="col-12 col-lg-3">
+                            <label class="small">Fecha de Atención</label>
+                            <input type="date" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            <label class="small">Hasta</label>
+                            <input type="date" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            <label class="small">DNI</label>
+                            <input type="text" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-12 col-lg-3">
+                            <label style="opacity:0">RadiosButton</label>
+                            <div class="custom-control-inline">
+                                <div class="custom-control custom-radio mx-1">
+                                    <input type="radio" id="rdoReceta" name="tipoFarmacia" class="custom-control-input">
+                                    <label class="custom-control-label" for="rdoReceta">Asistencial</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="rdoTicket mx-1" name="tipoFarmacia" class="custom-control-input">
+                                    <label class="custom-control-label" for="rdoTicket">Aseguradora</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            <label style="opacity:0">FiltroSSSS</label>
+                            <button class="btn btn-sm btn-info"><i class="fas fa-search mr-1"></i>Filtrar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid" style="padding:0px;">
+                    <div class="box box-info mt-2" id="acordion">
+                        <div class="box-header with-border" id="heading1">
+                            <h3 class="box-title" style="cursor:pointer;">Receta por Diagnóstico</h3>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-sm table-bordered table-wrapper-scroll scroll-css">
+                    <thead>
+                        <tr>
+                            <th nowrap scope="col">Seleccionar</th>
+                            <th nowrap scope="col">IdReceta</th>
+                            <th nowrap scope="col">IdDiagnosticRepository</th>
+                            <th nowrap scope="col">Medicamento</th>
+                            <th nowrap scope="col">Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td nowrap class="text-center"><input type="checkbox" checked /></td>
+                            <td nowrap>PRUEBA</td>
+                            <td nowrap>PRUEBA</td>
+                            <td nowrap>PRUEBA</td>
+                            <td nowrap>PRUEBA</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer row w-100 mx-0 justify-content-end">
+                <button class="btn btn-sm btn-secondary">Impirimir Receta</button>
+                <button class="btn btn-sm btn-secondary">Confirmar Despacho</button>
+                <button class="btn btn-sm btn-secondary" data-dismiss="modal"><i class="fas fa-sign-out-alt mr-2"></i>Salir</button>
+            </div>
+        </div>
+    </div>
+</div>
+

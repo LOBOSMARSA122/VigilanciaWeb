@@ -69,6 +69,9 @@
     <Reference Include="Gnostice.XtremeImageEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=67e9a3a7c22f1690, processorArchitecture=MSIL">
       <HintPath>..\packages\XtremeDocumentStudio.NETHTML.18.2.0\lib\net40\Gnostice.XtremeImageEngine.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\..\FACT_ELECT\ExternalLibraries\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Ionic.Zip.Reduced, Version=1.9.1.5, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <HintPath>..\packages\XtremeDocumentStudio.NETHTML.18.2.0\lib\net40\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
@@ -96,6 +99,9 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ScrapperReniecSunat">
+      <HintPath>..\..\..\FACT_ELECT\ExternalLibraries\ScrapperReniecSunat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -235,22 +241,30 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Calendar\AgendaController.cs" />
     <Compile Include="Controllers\Common\PacientController.cs" />
     <Compile Include="Controllers\ConfiguradorDx\ConfiguradorDxController.cs" />
     <Compile Include="Controllers\GeneralsController.cs" />
     <Compile Include="Controllers\MedicalAssistance\PatientsAssistanceController.cs" />
     <Compile Include="Controllers\Notifications\NotificationsController.cs" />
     <Compile Include="Controllers\Organization\OrganizationController.cs" />
+    <Compile Include="Controllers\Pacientes\PacientesController.cs" />
     <Compile Include="Controllers\PlanVigilancia\PlanVigilanciaController.cs" />
     <Compile Include="Controllers\ProductWarehouse\ProductWarehouseController.cs" />
+    <Compile Include="Controllers\Product\ProductController.cs" />
+    <Compile Include="Controllers\Protocol\ProtocolController.cs" />
     <Compile Include="Controllers\Report\ReportController.cs" />
+    <Compile Include="Controllers\RUC\RucController.cs" />
     <Compile Include="Controllers\Schedule\Schedules.cs" />
     <Compile Include="Controllers\Security\GeneralSecurityAttributeController.cs" />
+    <Compile Include="Controllers\Ventas\RegistroDeVentaController.cs" />
     <Compile Include="Controllers\WorkerPwa\WorkerDataController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\API.cs" />
+    <Compile Include="Models\Calendar\CalendarCustom.cs" />
+    <Compile Include="Models\Clients\ClienteCustom.cs" />
     <Compile Include="Models\Common\Boards.cs" />
     <Compile Include="Models\Common\Dropdownlist.cs" />
     <Compile Include="Models\Common\Enumeratores.cs" />
@@ -266,19 +280,25 @@
     <Compile Include="Models\MedicalAssistance\ReviewEMO.cs" />
     <Compile Include="Models\MedicalAssistance\Schedule.cs" />
     <Compile Include="Models\MedicalAssistance\TopDiagnostic.cs" />
+    <Compile Include="Models\Message\MessageCustom.cs" />
     <Compile Include="Models\Notification\BoardNotification.cs" />
     <Compile Include="Models\Notification\Notification.cs" />
     <Compile Include="Models\Notification\NotificationAlert.cs" />
     <Compile Include="Models\Notification\ReNotify.cs" />
     <Compile Include="Models\Notification\SendNotificationBE.cs" />
     <Compile Include="Models\Organization\Boards.cs" />
+    <Compile Include="Models\Pacient\PacientCustom.cs" />
     <Compile Include="Models\Plan\Boards.cs" />
     <Compile Include="Models\ProductWarehouse\Boards.cs" />
+    <Compile Include="Models\Product\ProductCustomSAMBHS.cs" />
+    <Compile Include="Models\Protocol\ProtocolCustom.cs" />
     <Compile Include="Models\ReportManager\ReportManagerBe.cs" />
+    <Compile Include="Models\RUC\ControlResultadosRUC.cs" />
     <Compile Include="Models\Schedule\ScheduleCustom.cs" />
     <Compile Include="Models\Security\AuthorizationModel.cs" />
     <Compile Include="Models\ServiceComponent\ServiceComponentBe.cs" />
     <Compile Include="Models\Service\ServiceComponent.cs" />
+    <Compile Include="Models\Service\ServiceCustom.cs" />
     <Compile Include="Models\Service\ServiceStatusBE.cs" />
     <Compile Include="Models\Service\TimeLine.cs" />
     <Compile Include="Models\Vigilancia\Vigilancia.cs" />
@@ -753,6 +773,7 @@
     <Content Include="Content\bootstrap-reboot.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Scripts\exporting.js" />
+    <Content Include="Scripts\FloatLabel.js" />
     <Content Include="Scripts\FormValidateFile.js" />
     <Content Include="Scripts\FormValidateSecurity.js" />
     <Content Include="Scripts\fullcalendar.js" />
@@ -961,9 +982,9 @@
     <Content Include="Views\Pacient\CreatePacient.cshtml" />
     <Content Include="Views\Shared\_HeaderPartial.cshtml" />
     <Content Include="Views\Shared\_SideBarPartial.cshtml" />
-    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Product\BackIndex.cshtml" />
     <Content Include="Views\Shared\_BoardProductsPartial.cshtml" />
-    <Content Include="Views\Product\CreateProduct.cshtml" />
+    <Content Include="Views\Product\BackCreateProduct.cshtml" />
     <Content Include="Views\PatientsAssistance\Index.cshtml" />
     <Content Include="Views\PatientsAssistance\_BoardPatientsAssistancePartial.cshtml" />
     <Content Include="Views\PatientsAssistance\MedicalConsultation.cshtml" />
@@ -1007,6 +1028,24 @@
     <Content Include="Views\ProductWarehouse\_BoardQueryMovementPartial.cshtml" />
     <Content Include="Views\ProductWarehouse\_ModalsMovementsPartial.cshtml" />
     <Content Include="Views\ProductWarehouse\_BoardQuerySupplierPartial.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Product\_BoardProductsPartial.cshtml" />
+    <Content Include="Views\RegistroDeVenta\Index.cshtml" />
+    <Content Include="Views\RegistroDeVenta\_BoardRegistroVentaPartial.cshtml" />
+    <Content Include="Views\Agenda\Index.cshtml" />
+    <Content Include="Views\Agenda\_BoardCalendarPartial.cshtml" />
+    <Content Include="Views\Agenda\_NewSchedullePersonPartial.cshtml" />
+    <Content Include="Views\Pacientes\Index.cshtml" />
+    <Content Include="Views\Pacientes\_BoardPacientPartial.cshtml" />
+    <Content Include="Views\Pacientes\_CreatePacientPartial.cshtml" />
+    <Content Include="Views\RegistroDeVenta\_ModalVentaRapidaPartial.cshtml" />
+    <Content Include="Views\RegistroDeVenta\_ModalHistorialCobranzaPartial.cshtml" />
+    <Content Include="Views\RegistroDeVenta\_ModalMedicamentosPartial.cshtml" />
+    <Content Include="Views\RegistroDeVenta\_ModalNuevaVentaPartial.cshtml" />
+    <Content Include="Views\Agenda\_ModalVentaRapidaPartial.cshtml" />
+    <Content Include="Views\Agenda\_BoardClientsPartial.cshtml" />
+    <Content Include="Views\Agenda\_ModalNuevoCliente.cshtml" />
+    <Content Include="Views\Agenda\_BoardProducts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1014,6 +1053,8 @@
     <Folder Include="ESO\" />
     <Folder Include="Scripts\treeview\" />
     <Folder Include="Views\Default\" />
+    <Folder Include="Views\Protocol\" />
+    <Folder Include="Views\Ruc\" />
     <Folder Include="Views\Schedule\" />
     <Folder Include="Views\Security\" />
   </ItemGroup>

@@ -1,0 +1,93 @@
+﻿
+@{
+    int Take = 0;
+    int Total = 0;
+    int Primer = 0;
+    int Ultimo = 0;
+    int Index = 0;
+
+    if (ViewBag.Products != null)
+    {
+        Take = ViewBag.Products.Take;
+        Index = ViewBag.Products.Index;
+        Total = ViewBag.Products.TotalRecords;
+        Primer = ((Index - 1) * Take) + 1;
+        Ultimo = Primer + (ViewBag.Products.List.Count - 1);
+
+        Primer = Primer < 0 ? 0 : Primer;
+        Ultimo = Ultimo < 0 ? 0 : Ultimo;
+    }
+    else
+    {
+        Take = 0;
+    }
+}
+
+<div class="container-fluid" style="padding:0px;">
+    <div class="box box-default mt-2" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;" onclick="ColapseTable('contBoardVenta','heightBoardProd')"><i class="icon-list-numbered"></i> Listado de Productos </h3>
+        </div>
+    </div>
+</div>
+<input id="heightBoardProd" type="hidden" value="">
+<div id="contBoardVenta"  class="overflow-hidden" style="width:100% !important">
+    <div>
+        <span class="informacion">Mostrando desde N° @Primer hasta @Ultimo de un total de @Total entradas</span>
+        <div class="float-lg-right informacion">
+            Total de registros:
+            <select id="take" onchange="Filtrar(1)">
+                <option value="10" @(Take == 10 ? "selected" : "")>10</option>
+                <option value="25" @(Take == 25 ? "selected" : "")>25</option>
+                <option value="50" @(Take == 50 ? "selected" : "")>50</option>
+                <option value="0" @(Take == 0 ? "selected" : "")>TODOS</option>
+            </select>
+        </div>
+    </div>
+    <div class="box box-info mt-2">
+        <div class="scroll-css" style="overflow:scroll">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th nowrap scope="col">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" onchange="checkedAllCheckBoxes()" id="checkedAll">
+                                <label class="custom-control-label" for="checkedAll">Selec</label>
+                            </div>
+                        </th>
+                        <th nowrap scope="col">ProductId</th>
+                        <th nowrap scope="col">Código Interno</th>
+                        <th nowrap scope="col">Descripción</th>
+                        <th nowrap scope="col">Línea</th>
+                        <th nowrap scope="col">Marca</th>
+                        <th nowrap scope="col">Modelo</th>
+                        <th nowrap scope="col">Tipo Producto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="PintarFila(this)">
+                        <td nowrap>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input checkbox-product">
+                                <label class="custom-control-label" onclick="checkedCheckBox(this)"></label>
+                            </div>
+                        </td>
+                        <td nowrap>123456</td>
+                        <td nowrap>asd123</td>
+                        <td nowrap>AMOXICILINA</td>
+                        <td nowrap>SERVICIOS</td>
+                        <td nowrap>MEDIFARM</td>
+                        <td nowrap>TABLETA</td>
+                        <td nowrap>MERCADERIA</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+
+
+
+

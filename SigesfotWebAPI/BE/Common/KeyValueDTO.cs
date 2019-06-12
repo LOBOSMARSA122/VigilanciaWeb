@@ -24,6 +24,8 @@ namespace BE.Common
         public string Field { get; set; }
 
         public int IdI { get; set; }
+
+        public bool Value6 { get; set; }
     }
 
 }

@@ -35,6 +35,7 @@ namespace BE.Protocol
     public class ProtocolComponentCustom
     {
         public string ProtocolComponentId { get; set; }
+        public string ComponentName { get; set; }
         public string ProtocolId { get; set; }
         public string ComponentId { get; set; }
         public float Price { get; set; }
@@ -52,5 +53,6 @@ namespace BE.Protocol
         public int? UIIsVisibleId { get; set; }
         public int? UIIndex { get; set; }
         public string IdUnidadProductiva { get; set; }
+        public string Porcentajes { get; set; }
     }
 }

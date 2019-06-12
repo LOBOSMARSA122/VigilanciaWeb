@@ -97,6 +97,7 @@ namespace SigesoftWeb.Controllers
                 PersonId = ViewBag.USER.PersonId,
                 FullName = ViewBag.USER.FullName,
                 PersonImage = ViewBag.USER.PersonImage,
+                RucEmpresa = ViewBag.USER.RucEmpresa,
                 SystemUserByOrganizationId = ViewBag.USER.SystemUserByOrganizationId,
                 Permissions = ViewBag.USER.Permissions,
                 Organizations = ViewBag.USER.Organizations,
