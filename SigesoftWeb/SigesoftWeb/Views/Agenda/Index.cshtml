@@ -539,6 +539,28 @@
 
         $("#eliminar-detalle-venta-rapida").on("click", function () {
             EliminarFilaVenta("checkbox-venta-rapida");
+            let rows = $("#body-venta-rapida").find("tr");
+            let total = 0;
+            let totalValorventa = 0;
+            let totalIgv = 0;
+            for (var i = 0; i < rows.length; i++) {
+
+                let cant = Number(rows.eq(i).find("td").eq(4).find("input").eq(0).val());
+                let precUnit = Number(rows.eq(i).find("td").eq(6).find("input").eq(0).val());
+                let desct = Number(rows.eq(i).find("td").eq(7).find("input").val());
+                let valorVenta = (cant * precUnit) / 1.18;
+                valorVenta = valorVenta - (valorVenta * (desct / 100))
+                let igv = valorVenta * 0.18;
+                let conIgvTotal = valorVenta + igv;
+
+                total += conIgvTotal;
+                totalValorventa += valorVenta;
+                totalIgv += igv;
+            }
+
+            $("#total-valorventa").val(totalValorventa.toFixed(2));
+            $("#total-igv").val(totalIgv.toFixed(2));
+            $("#total-total").val(total.toFixed(2));
         })
 
         $("#modalTitular").on("hidden.bs.modal", function () {
@@ -1415,12 +1437,74 @@
         FindProducts();
     }
 
-    const calcValues = function (input) {
-        var row = $(input).parent().parent();
-        let cant = Number($(input).val());
-        let precUnit = Number(row.find("td").eq(6).find("input").val());
-        let precioTotal = cant * precUnit;
-        console.log(precioTotal);
+    const calcValues = function (input, tipoInput = "CANTIDAD") {
+        if (tipoInput == "CANTIDAD") {
+
+            var row = $(input).parent().parent();
+            let cant = Number($(input).val());
+            let precUnit = Number(row.find("td").eq(6).find("input").val());
+            let descuento = Number(row.find("td").eq(7).find("input").val());
+            let valorVenta = (cant * precUnit) / 1.18;
+            valorVenta = valorVenta - (valorVenta * descuento/100)
+            let igv = valorVenta * 0.18;
+            let conIgvTotal = valorVenta + igv;
+            row.find("td").eq(8).find("input").eq(0).val(valorVenta.toFixed(2));
+            row.find("td").eq(9).find("input").eq(0).val(igv.toFixed(2));
+            row.find("td").eq(10).find("input").eq(0).val(conIgvTotal.toFixed(2));
+
+        } else if (tipoInput == "DESCUENTO") {
+
+            var row = $(input).parent().parent();
+            let cant = Number(row.find("td").eq(4).find("input").eq(0).val());
+            let precUnit = Number(row.find("td").eq(6).find("input").val());
+            let descuento = Number(row.find("td").eq(7).find("input").val());
+            let valorVenta = (cant * precUnit) / 1.18;
+            valorVenta = valorVenta - (valorVenta * (descuento/100))
+            let igv = valorVenta * 0.18;
+            let conIgvTotal = valorVenta + igv;
+            row.find("td").eq(8).find("input").eq(0).val(valorVenta.toFixed(2));
+            row.find("td").eq(9).find("input").eq(0).val(igv.toFixed(2));
+            row.find("td").eq(10).find("input").eq(0).val(conIgvTotal.toFixed(2));
+
+        } else if (tipoInput == "PRECIOUNITARIO") {
+
+            var row = $(input).parent().parent();
+            let cant = Number(row.find("td").eq(4).find("input").eq(0).val());
+            let precUnit = Number($(input).val());
+            let descuento = Number(row.find("td").eq(7).find("input").val());
+            let valorVenta = (cant * precUnit) / 1.18;
+            valorVenta = valorVenta - (valorVenta * (descuento / 100))
+            let igv = valorVenta * 0.18;
+            let conIgvTotal = valorVenta + igv;
+            row.find("td").eq(8).find("input").eq(0).val(valorVenta.toFixed(2));
+            row.find("td").eq(9).find("input").eq(0).val(igv.toFixed(2));
+            row.find("td").eq(10).find("input").eq(0).val(conIgvTotal.toFixed(2));
+
+        } 
+
+
+        let rows = $("#body-venta-rapida").find("tr");
+        let total = 0;
+        let totalValorventa = 0;
+        let totalIgv = 0;
+        for (var i = 0; i < rows.length; i++) {
+
+            let cant = Number(rows.eq(i).find("td").eq(4).find("input").eq(0).val());
+            let precUnit = Number(rows.eq(i).find("td").eq(6).find("input").eq(0).val());
+            let desct = Number(rows.eq(i).find("td").eq(7).find("input").val());
+            let valorVenta = (cant * precUnit) / 1.18;
+            valorVenta = valorVenta - (valorVenta * (desct / 100))
+            let igv = valorVenta * 0.18;
+            let conIgvTotal = valorVenta + igv;
+
+            total += conIgvTotal;
+            totalValorventa += valorVenta;
+            totalIgv += igv;
+        }
+
+        $("#total-valorventa").val(totalValorventa.toFixed(2));
+        $("#total-igv").val(totalIgv.toFixed(2));
+        $("#total-total").val(total.toFixed(2));
     }
 
     const ElegirProductoSAMBHS = function (row) {
@@ -1442,9 +1526,38 @@
                     rows.eq(i).find("td").eq(4).find("input").eq(0).attr("disabled", false);//Descripcion del producto
                     rows.eq(i).find("td").eq(5).find("input").eq(0).val(unidadMedida);//Unidad de medida del producto
                     rows.eq(i).find("td").eq(6).find("input").eq(0).val(precioUnitario);//Precio unitario del producto
-
+                    let precUnit = Number(precioUnitario);
+                    let valorVenta = (1 * precUnit) / 1.18;
+                    let igv = valorVenta * 0.18;
+                    let conIgvTotal = valorVenta + igv;
+                    rows.eq(i).find("td").eq(8).find("input").eq(0).val(valorVenta.toFixed(2));
+                    rows.eq(i).find("td").eq(9).find("input").eq(0).val(igv.toFixed(2));
+                    rows.eq(i).find("td").eq(10).find("input").eq(0).val(conIgvTotal.toFixed(2));
                     inserto = true;
                     rows.eq(i).removeAttr("ondblclick");
+
+                    let rows2 = $("#body-venta-rapida").find("tr");
+                    let total = 0;
+                    let totalValorventa = 0;
+                    let totalIgv = 0;
+                    for (var x = 0; x < rows2.length; x++) {
+
+                        let cant = Number(rows2.eq(x).find("td").eq(4).find("input").eq(0).val());
+                        let precUnit = Number(rows2.eq(x).find("td").eq(6).find("input").eq(0).val());
+                        let desct = Number(rows2.eq(x).find("td").eq(7).find("input").val());
+                        let valorVenta = (cant * precUnit) / 1.18;
+                        valorVenta = valorVenta - (valorVenta * (desct / 100))
+                        let igv = valorVenta * 0.18;
+                        let conIgvTotal = valorVenta + igv;
+
+                        total += conIgvTotal;
+                        totalValorventa += valorVenta;
+                        totalIgv += igv;
+                    }
+
+                    $("#total-valorventa").val(totalValorventa.toFixed(2));
+                    $("#total-igv").val(totalIgv.toFixed(2));
+                    $("#total-total").val(total.toFixed(2));
                     break;
                 }
             }
@@ -1625,11 +1738,11 @@
                         <td nowrap><input disabled type="text" class="form-control form-control-sm" value="" style="min-width:300px" /></td>
                         <td nowrap class="text-center"><input disabled onkeyup="calcValues(this)" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" type="text" class="form-control form-control-sm" value="1" style="min-width:150px" /></td>
                         <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
-                        <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
-                        <td nowrap class="text-center"><input oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" type="text" class="form-control form-control-sm" value="" style="min-width:70px" /></td>
-                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:150px" /></td>
-                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:150px" /></td>
-                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input onkeyup="calcValues(this, 'PRECIOUNITARIO')" type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap class="text-center"><input onkeyup="calcValues(this, 'DESCUENTO')" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" type="text" class="form-control form-control-sm" value="0" style="min-width:70px" /></td>
+                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:100px" /></td>
+                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:100px" /></td>
+                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:100px" /></td>
                         <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
                         <td class="d-none RecordStatus" nowrap>2</td>
                         <td class="d-none RecordType" nowrap>1</td>
