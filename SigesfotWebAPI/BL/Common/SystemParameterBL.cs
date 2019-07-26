@@ -21,8 +21,9 @@ namespace BL.Common
                                          select new Dropdownlist
                                          {
                                              Id = a.i_ParameterId,
-                                             Value = a.v_Value1
-                                         }).ToList();
+                                             Value = a.v_Value1,
+                                             Field = a.v_Field
+                                         }).OrderBy(x => x.Id).ToList();
             return result;
         }
 
@@ -97,6 +98,19 @@ namespace BL.Common
             return result;
         }
 
+        public List<Dropdownlist> GetGeso(string organizationId)
+        {
+            List<Dropdownlist> result = (from gro in ctx.GroupOccupation
+                                         join loc in ctx.Location on gro.v_LocationId equals loc.v_LocationId
+                                         join org in ctx.Organization on loc.v_OrganizationId equals org.v_OrganizationId
+                                         where gro.i_IsDeleted == 0  && org.v_OrganizationId == organizationId
+                                         select new Dropdownlist
+                                         {
+                                             v_Id = gro.v_GroupOccupationId,
+                                             Value = gro.v_Name
+                                         }).OrderBy(x => x.Value).ToList();
+            return result;
+        }
         public List<Dropdownlist> GetProtocolsForCombo(int Service, int ServiceType)
         {
             List<Dropdownlist> result = (from pro in ctx.Protocol
@@ -106,6 +120,31 @@ namespace BL.Common
                                              v_Id = pro.v_ProtocolId,
                                              Value = pro.v_Name
                                          }).OrderBy(x => x.Value).ToList();
+            return result;
+        }
+
+        public List<Dropdownlist> GetProtocolsForComboEspeciality(int Service, int ServiceType)
+        {
+
+            List<Dropdownlist> result = (from pro in ctx.Protocol
+                                         where pro.i_IsDeleted == 0 && pro.i_MasterServiceTypeId == ServiceType && pro.i_MasterServiceId == Service
+                                         select new Dropdownlist
+                                         {
+                                             v_Id = pro.v_ProtocolId,
+                                             Value = pro.v_Name                                             
+                                         }).OrderBy(x => x.Value).ToList();
+
+            foreach (var item in result)
+            {
+                var listProtComp = ctx.ProtocolComponent.Where(x => x.v_ProtocolId == item.v_Id).ToList();
+                if (listProtComp.Count > 0)
+                {
+                    var precioTotal = listProtComp.Sum(x => x.r_Price);
+                    item.Field = precioTotal.ToString("N2");
+                }
+
+            }   
+
             return result;
         }
 
@@ -141,7 +180,7 @@ namespace BL.Common
                                          where sys.i_IsDeleted == 0 
                                          select new Dropdownlist
                                          {
-                                             Id = sys.i_SystemUserId.Value,
+                                             Id = sys.i_SystemUserId,
                                              Value = per.v_FirstLastName + " " + per.v_SecondLastName + ", " + per.v_FirstName,
                                          }).OrderBy(x => x.Value).ToList();
             return result;
@@ -171,5 +210,32 @@ namespace BL.Common
                                          }).OrderBy(x => x.Value).Distinct().ToList();
             return result;
         }
+
+        public List<Dropdownlist> GetOrganizationForCombo()
+        {
+            //mon.IsActive = true;
+            try
+            {
+                DatabaseContext dbContext = new DatabaseContext();
+                List<Dropdownlist> DataComponentList;
+                DataComponentList = (from a in dbContext.Organization
+                                     where a.i_IsDeleted == 0 && a.i_OrganizationTypeId == 4
+                                     select a).AsEnumerable()
+                                           .Select(x => new Dropdownlist
+                                           {
+                                               Value = x.v_Name,
+                                               v_Id = x.v_OrganizationId
+                                           }).OrderBy(x => x.Value).ToList();
+
+
+                return DataComponentList;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
     }
 }

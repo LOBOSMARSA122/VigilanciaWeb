@@ -18,17 +18,26 @@ namespace SigesoftWeb.Utils
             CategoryProd = 103,
             MeasurementUnit = 150,
             Sector = 104,
+            Profesion = 101,
             NivelEstudio = 108,
             CondicionPago = 23,
             Moneda = 18,
             TipoPago = 46,
         }
 
+        public enum ExternalUserFunctionalityType
+        {
+            PermisosOpcionesUsuarioExternoWeb = 1,
+            NotificacionesUsuarioExternoWeb = 2,
+            PermisosVigilancia = 3
+        }
+
         public enum SystemParameter
         {
             OrgType = 103,
             TypeMovement = 109,
-            Gender = 100,         
+            Gender = 100,
+            GenderAll = 130,
             MotiveMovement = 110,
             AuditType = 127,
             EstateEso = 125,
@@ -49,6 +58,8 @@ namespace SigesoftWeb.Utils
             AltitudLabor = 208,
             LugarLabor = 204,
             TipoEso = 118,
+            Operador = 117,
+            GrupoEtario = 254,
             Parentesco = 207
         }
 

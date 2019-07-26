@@ -22,38 +22,38 @@
                     <tbody id="diagnosticos">
                         @{
 
-                            if (ViewBag.Results == null)
-                            {
-                                <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
-                            }
-                            else if (ViewBag.Results.Count == 0)
-                            {
-                                <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center ">No hay resultados</td></tr>
-                            }
-                            else
-                            {
-                                var Results = ViewBag.Results;
+                        if (ViewBag.Results == null)
+                        {
+                        <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+                        }
+                        else if (ViewBag.Results.Count == 0)
+                        {
+                        <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center ">No hay resultados</td></tr>
+                        }
+                        else
+                        {
+                        var Results = ViewBag.Results;
 
-                                for (var item = 0; item < Results.Count; item++)
-                                {
+                        for (var item = 0; item < Results.Count; item++)
+                        {
 
-                                    <tr onclick="RowClick('diagnosticos', this)" class="bd-data" id="@Results[item].DiseaseId" data-diseasesid="@Results[item].DiseaseId" data-diagnostic-repository="@Results[item].DiagnosticRepositoryId">
-                                        <td class="d-none"><input  type="text"  value="@Results[item].DiseaseId" /></td>
-                                        <td><input class="form-control form-control-sm"  autocomplete="off" type="text" onkeyup="AutocompleteDisease(event, this)" id="DS-@Results[item].DiseaseId" value="@Results[item].DiseaseName" style="width: 330px !important; border-radius: 0.3rem !important" disabled /></td>
-                                        <td>
-                                            <input type="hidden" class="componentid-for-select" value="@Results[item].ComponentId" />
-                                            <div class="cont-dinamic-select border-danger contenedor-select-@item">
-                                                <div id="select-category" onclick="selectCategory(this)" class="disabled border-danger row m-0 px-3 justify-content-between align-items-center drop-down-cont">
-                                                    <label class="m-0 lbl-category" style="overflow:hidden; max-height:17px">--SELECCIONAR--</label><i class="fas fa-sort-down"></i>
-                                                </div>
-                                            </div>
-                                        </td> 
-                                        <td><input class="form-control form-control-sm" type="text" value="@Results[item].Cie10" style="width: 230px !important; border-radius: 0.3rem !important" disabled /></td>
-                                        <td class="d-none"><input type="text" value="@Results[item].RecordStatus" /></td>
-                                        <td class="d-none"><input type="text" value="@Results[item].RecordType" /></td>
-                                    </tr>
-                                }
-                            }
+                        <tr onclick="RowClick('diagnosticos', this)" class="bd-data" id="@Results[item].DiseaseId" data-diseasesid="@Results[item].DiseaseId" data-diagnostic-repository="@Results[item].DiagnosticRepositoryId">
+                            <td class="d-none"><input type="text" value="@Results[item].DiseaseId" /></td>
+                            <td><input class="form-control form-control-sm" autocomplete="off" type="text" onkeyup="AutocompleteDisease(event, this)" id="DS-@Results[item].DiseaseId" value="@Results[item].DiseaseName" style="width: 330px !important; border-radius: 0.3rem !important" disabled /></td>
+                            <td>
+                                <input type="hidden" class="componentid-for-select" value="@Results[item].ComponentId" />
+                                <div class="cont-dinamic-select border-danger contenedor-select-@item">
+                                    <div id="select-category" onclick="selectCategory(this)" class="disabled border-danger row m-0 px-3 justify-content-between align-items-center drop-down-cont">
+                                        <label class="m-0 lbl-category" style="overflow:hidden; max-height:17px">--SELECCIONAR--</label><i class="fas fa-sort-down"></i>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><input class="form-control form-control-sm" type="text" value="@Results[item].Cie10" style="width: 230px !important; border-radius: 0.3rem !important" disabled /></td>
+                            <td class="d-none"><input type="text" value="@Results[item].RecordStatus" /></td>
+                            <td class="d-none"><input type="text" value="@Results[item].RecordType" /></td>
+                        </tr>
+                        }
+                        }
                         }
                     </tbody>
                 </table>
@@ -98,49 +98,49 @@
                     <tbody id="dx-recomendaciones">
                         @{
 
-                            if (ViewBag.Results == null)
-                            {
-                                <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
-                            }
-                            else if (ViewBag.Results.Count == 0)
-                            {
-                                <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center">No hay resultados</td></tr>
-                            }
-                            else
-                            {
+                        if (ViewBag.Results == null)
+                        {
+                        <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+                        }
+                        else if (ViewBag.Results.Count == 0)
+                        {
+                        <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center">No hay resultados</td></tr>
+                        }
+                        else
+                        {
 
-                                var Results = ViewBag.Results;
-                                var Rows = 0;
-                                for (var i = 0; i < Results.Count; i++)
-                                {
-                                    if (Results[i].Recommendations.Count != 0)
-                                    {
-                                        var Recomendaciones = Results[i].Recommendations;
+                        var Results = ViewBag.Results;
+                        var Rows = 0;
+                        for (var i = 0; i < Results.Count; i++)
+                        {
+                        if (Results[i].Recommendations.Count != 0)
+                        {
+                        var Recomendaciones = Results[i].Recommendations;
 
-                                        for (int x = 0; x < Recomendaciones.Count; x++)
-                                        {
-                                            <tr onclick="RowClick('dx-recomendaciones', this )" class="@Recomendaciones[x].DiseaseId" id="@Recomendaciones[x].RecommendationId" data-master-id="@Recomendaciones[x].MasterRecommendationId">
-                                                <td class="d-none"><input type="text" id="RS-RM-@Recomendaciones[x].RecommendationId" value="@Recomendaciones[x].RecommendationId" /></td>
-                                                <td><textarea onkeyup="AutocompleteRestricRecomen(event, this)" data-tipo="1" class="form-control form-control-sm" type="text" style="width: 330px !important; max-height: 50px !important; border-radius: 0.3rem !important" disabled>@Recomendaciones[x].RecommendationName</textarea> </td>
-                                                <td>
-                                                    <select class="form-control set-combo custom-select js-@Recomendaciones[x].DiseaseId" onchange="selectDiasease(this)" id="select-dx-recomendaciones-@Recomendaciones[x].RecommendationId" style="position: relative !important; width: 230px !important; border-radius: 0.3rem !important" disabled>
-                                                        <option value="@Recomendaciones[x].DiseaseId">@Recomendaciones[x].DiseaseName</option>
-                                                    </select>
-                                                </td>
-                                                <td class="d-none"><input type="text" value="@Recomendaciones[x].RecordStatus" /></td>
-                                                <td class="d-none"><input type="text" value="@Recomendaciones[x].RecordType" /></td>
-                                            </tr>
-                                        }
-                                        Rows++;
-                                    }
+                        for (int x = 0; x < Recomendaciones.Count; x++)
+                        {
+                        <tr onclick="RowClick('dx-recomendaciones', this )" class="@Recomendaciones[x].DiseaseId" id="@Recomendaciones[x].RecommendationId" data-master-id="@Recomendaciones[x].MasterRecommendationId">
+                            <td class="d-none"><input type="text" id="RS-RM-@Recomendaciones[x].RecommendationId" value="@Recomendaciones[x].RecommendationId" /></td>
+                            <td><textarea onkeyup="AutocompleteRestricRecomen(event, this)" data-tipo="1" class="form-control form-control-sm" type="text" style="width: 330px !important; max-height: 50px !important; border-radius: 0.3rem !important" disabled>@Recomendaciones[x].RecommendationName</textarea> </td>
+                            <td>
+                                <select class="form-control set-combo custom-select js-@Recomendaciones[x].DiseaseId" onchange="selectDiasease(this)" id="select-dx-recomendaciones-@Recomendaciones[x].RecommendationId" style="position: relative !important; width: 230px !important; border-radius: 0.3rem !important" disabled>
+                                    <option value="@Recomendaciones[x].DiseaseId">@Recomendaciones[x].DiseaseName</option>
+                                </select>
+                            </td>
+                            <td class="d-none"><input type="text" value="@Recomendaciones[x].RecordStatus" /></td>
+                            <td class="d-none"><input type="text" value="@Recomendaciones[x].RecordType" /></td>
+                        </tr>
+                        }
+                        Rows++;
+                        }
 
 
-                                }
-                                if (Rows == 0)
-                                {
-                                    <tr id="sin-recomendaciones" class="sin-resultados"><td colspan="7" class="text-center">No hay resultados</td></tr>
-                                }
-                            }
+                        }
+                        if (Rows == 0)
+                        {
+                        <tr id="sin-recomendaciones" class="sin-resultados"><td colspan="7" class="text-center">No hay resultados</td></tr>
+                        }
+                        }
                         }
                     </tbody>
                 </table>
@@ -184,46 +184,46 @@
                     <tbody id="dx-restricciones">
                         @{
 
-                            if (ViewBag.Results == null)
-                            {
-                                <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
-                            }
-                            else if (ViewBag.Results.Count == 0)
-                            {
-                                <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center">No hay resultados</td></tr>
-                            }
-                            else
-                            {
-                                var Results = ViewBag.Results;
-                                var Rows = 0;
-                                for (var i = 0; i < Results.Count; i++)
-                                {
-                                    if (Results[i].Restrictions.Count != 0)
-                                    {
-                                        var Restricciones = Results[i].Restrictions;
-                                        for (int x = 0; x < Restricciones.Count; x++)
-                                        {
-                                            <tr onclick="RowClick('dx-restricciones', this )" class="@Restricciones[x].DiseaseId" id="@Restricciones[x].RestrictionId" data-master-id="@Restricciones[x].RestrictionId">
-                                                <td class="d-none"><input type="text" value="@Restricciones[x].RestrictionId" /></td>
-                                                <td><textarea rows="3" onkeyup="AutocompleteRestricRecomen(event, this)" data-tipo="2" class="form-control form-control-sm" type="text" style="width: 330px !important;  max-height: 50px !important; border-radius: 0.3rem !important" disabled>@Restricciones[x].RestrictionName</textarea></td>
-                                                <td>
-                                                    <select class="form-control set-combo custom-select js-@Restricciones[x].DiseaseId"  onchange="selectDiasease(this)"  id="select-dx-restricciones-@Restricciones[x].RestrictionId" style="width: 230px !important; position: relative !important; border-radius: 0.3rem !important" disabled>
-                                                        <option value="@Restricciones[x].DiseaseId">@Restricciones[x].DiseaseName</option>
-                                                    </select>
-                                                </td>
-                                                <td class="d-none"><input type="text" value="@Restricciones[x].RecordStatus" /></td>
-                                                <td class="d-none"><input type="text" value="@Restricciones[x].RecordType" /></td>
-                                            </tr>
-                                        }
-                                        Rows++;
-                                    }
+                        if (ViewBag.Results == null)
+                        {
+                        <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+                        }
+                        else if (ViewBag.Results.Count == 0)
+                        {
+                        <tr id="tdError" class="sin-resultados"><td colspan="7" class="text-center">No hay resultados</td></tr>
+                        }
+                        else
+                        {
+                        var Results = ViewBag.Results;
+                        var Rows = 0;
+                        for (var i = 0; i < Results.Count; i++)
+                        {
+                        if (Results[i].Restrictions.Count != 0)
+                        {
+                        var Restricciones = Results[i].Restrictions;
+                        for (int x = 0; x < Restricciones.Count; x++)
+                        {
+                        <tr onclick="RowClick('dx-restricciones', this )" class="@Restricciones[x].DiseaseId" id="@Restricciones[x].RestrictionId" data-master-id="@Restricciones[x].RestrictionId">
+                            <td class="d-none"><input type="text" value="@Restricciones[x].RestrictionId" /></td>
+                            <td><textarea rows="3" onkeyup="AutocompleteRestricRecomen(event, this)" data-tipo="2" class="form-control form-control-sm" type="text" style="width: 330px !important;  max-height: 50px !important; border-radius: 0.3rem !important" disabled>@Restricciones[x].RestrictionName</textarea></td>
+                            <td>
+                                <select class="form-control set-combo custom-select js-@Restricciones[x].DiseaseId" onchange="selectDiasease(this)" id="select-dx-restricciones-@Restricciones[x].RestrictionId" style="width: 230px !important; position: relative !important; border-radius: 0.3rem !important" disabled>
+                                    <option value="@Restricciones[x].DiseaseId">@Restricciones[x].DiseaseName</option>
+                                </select>
+                            </td>
+                            <td class="d-none"><input type="text" value="@Restricciones[x].RecordStatus" /></td>
+                            <td class="d-none"><input type="text" value="@Restricciones[x].RecordType" /></td>
+                        </tr>
+                        }
+                        Rows++;
+                        }
 
-                                }
-                                if (Rows == 0)
-                                {
-                                    <tr id="sin-restricciones" class="sin-resultados"><td colspan="7" class="text-center">No hay resultados</td></tr>
-                                }
-                            }
+                        }
+                        if (Rows == 0)
+                        {
+                        <tr id="sin-restricciones" class="sin-resultados"><td colspan="7" class="text-center">No hay resultados</td></tr>
+                        }
+                        }
                         }
                     </tbody>
                 </table>
@@ -242,7 +242,7 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 <div class="row w-100 mx-0 mt-2 justify-content-end">
     <div class="col-12 p-0 col-md-2">

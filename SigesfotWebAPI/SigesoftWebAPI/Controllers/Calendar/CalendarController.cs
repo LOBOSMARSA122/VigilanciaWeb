@@ -1,9 +1,13 @@
 ﻿using BE.Calendar;
 using BE.Common;
+using BE.Component;
 using BE.Message;
 using BE.Service;
+using BL.AdditionalExam;
 using BL.Calendar;
+using BL.Component;
 using BL.Service;
+using DAL.Component;
 using DAL.Protocol;
 using Newtonsoft.Json;
 using System;
@@ -129,6 +133,77 @@ namespace SigesoftWebAPI.Controllers.Calendar
             var result = new ServiceBl().FusionarServicios(ServicesId, data.Int1, data.Int2);
             return Ok(result);
         }
+        [HttpGet]
+        public IHttpActionResult GetListSaldosPaciente(string serviceId)
+        {
+            var result = new ServiceBl().GetListSaldosPaciente(serviceId);
+            return Ok(result);
+        }
 
+        [HttpPost]
+        public IHttpActionResult GetPacientInLineByComponentId(MultiDataModel data)
+        {
+            var ListComponent = new ComponentDal().GetAllComponents();
+            List<string> Components = new List<string>();
+            if (data.Int3 == -1)
+            {
+                Components.Add(data.String2);
+            }
+            else
+            {
+                Components = ListComponent.FindAll(p => p.Value4 == data.Int2)
+                                                .Select(s => s.Value2)
+                                                .OrderBy(p => p).ToList();
+            }
+
+            var dateTime = DateTime.Parse(data.String1);
+            var result = new CalendarBL().GetPacientInLineByComponentId(dateTime, Components,  data.Int1);
+            return Ok(result);
+        }
+
+
+        [HttpPost]
+        public IHttpActionResult GetPacientInLineByComponentId_Atx(MultiDataModel data)
+        {
+            var ListComponent = new ComponentDal().GetAllComponents();
+            List<string> Components = new List<string>();
+            if (data.Int3 == -1)
+            {
+                Components.Add(data.String2);
+            }
+            else
+            {
+                Components = ListComponent.FindAll(p => p.Value4 == data.Int2)
+                                                .Select(s => s.Value2)
+                                                .OrderBy(p => p).ToList();
+            }
+
+            var dateTime = DateTime.Parse(data.String1);
+            var result = new CalendarBL().GetPacientInLineByComponentId_ATX(dateTime, Components, data.Int1, data.Int3);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public IHttpActionResult IniciarCircuito(MultiDataModel data)
+        {
+            var result = new CalendarBL().CircuitStart(data.String1, data.Int1);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetExamenesAdicionales(string ServiceId)
+        {
+            var result = new AdditionalExamBL().GetAdditionalExamByServiceId(ServiceId);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public IHttpActionResult SaveAdditionalExamsForCalendar(MultiDataModel data)
+        {
+            List<AdditionalExamCreate> dataAdd = JsonConvert.DeserializeObject<List<AdditionalExamCreate>>(data.String1);
+
+            var result = new CalendarBL().SaveAdditionalExamsForCalendar(dataAdd, data.Int1, data.Int2);
+            return Ok(result);
+        }
     }
 }

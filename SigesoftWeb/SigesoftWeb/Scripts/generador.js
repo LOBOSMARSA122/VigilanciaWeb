@@ -132,7 +132,7 @@ function construirInfo(datos, personId, serviceId = "Sin service") {
                         input = dataFields[z].i_ControlWidth == 1 ? "d-none" : "d-inline-block";
 
                         switch (dataFields[z].i_ControlId) {
-                            
+
                             case 1:
                                 if (dataGroupId.attr('id') == 'N009-MF000004145' || dataGroupId.attr('id') == 'N009-MF000004177') {
 
@@ -248,7 +248,7 @@ function construirInfo(datos, personId, serviceId = "Sin service") {
                                 var defaultSelect = dataFields[z].v_DefaultText;
 
                                 //Son campos pequeños, por eso se les da un texto 'Slct'
-                                
+
                                 if (dataGroupId.attr('id') == 'N009-MF000004145' || dataGroupId.attr('id') == 'N009-MF000004177') {
 
                                     dataFields[z].i_Column = 8;
@@ -284,7 +284,7 @@ function construirInfo(datos, personId, serviceId = "Sin service") {
                                 var defaultSelect = dataFields[z].v_DefaultText;
 
                                 if (dataGroupId.attr('id') == 'N009-MF000004145' || dataGroupId.attr('id') == 'N009-MF000004177') {
-                                    
+
                                     dataFields[z].i_Column = 8;
                                     dataFields[z].i_LabelWidth = 100;
                                     dataFields[z].i_ControlWidth = 60;
@@ -547,13 +547,17 @@ function construirInfo(datos, personId, serviceId = "Sin service") {
             };
         };
 
+        var tabsAdicionales = `
 
+                               
+                            `;
+
+        $(tabsAdicionales).appendTo(contCategory);
     }
     cargar();
-
     ListOfAdditionalExams();
     setCategoryComboDiag();
-    
+
 }
 
 function cargar() {
@@ -718,7 +722,7 @@ function GenerateSaveExam(idLi) {
 
                 }
                 values.push(objValue);
-            }; 
+            };
             if ($("#tab_" + examen + " input").eq(i).hasClass('enviar-este')) {
                 idField = input.attr("name");
                 var inputVal = input.data('value');
@@ -737,10 +741,10 @@ function GenerateSaveExam(idLi) {
 
                 }
                 values.push(objValue);
-            } 
+            }
 
-            
-            
+
+
 
 
 
@@ -756,7 +760,7 @@ function GenerateSaveExam(idLi) {
             var idField = 'evaluacion';
 
             idField = txtArea.attr("id").split("_")[1];
-            
+
 
             let objValue = {
                 v_ServiceComponentId: serviceComponentId,
@@ -857,6 +861,7 @@ function GenerateSaveExam(idLi) {
         });
     }
 }
+
 
 function SaveExam(evt, idLi) {
     if ($("#EstadoAuditoria").val() == 3) {
@@ -2224,7 +2229,7 @@ function generateEvaluacionM(componentId) {
 
 function SumaAptitudes(input) {
     var name = $(input).attr('name');
-    
+
     $('input[name=' + name + ']').removeClass('enviar-este');
     $(input).addClass('enviar-este');
 
@@ -2298,6 +2303,6 @@ function setUserInputs() {
     };
 
 
-    
+
 }
 

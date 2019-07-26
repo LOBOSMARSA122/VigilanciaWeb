@@ -6,13 +6,13 @@
 
 /* Toolbar, Left Pane Header, Right Pane Header */
 .git-docviewer-toolbar {
-    background-image: url('Images/texture.png'), linear-gradient(rgba(81, 81, 81, 0.99), rgba(68, 68, 68, 0.95));
+    background-image: url('Images/texture.png'), linear-gradient(rgba(8081, 8081, 8081, 0.99), rgba(68, 68, 68, 0.95));
     box-shadow: 1px 0px 0px rgba(255, 255, 255, 0.08) inset, 0px 1px 1px rgba(0, 0, 0, 0.15) inset, 0px -1px 0px rgba(255, 255, 255, 0.05) inset, 0px 1px 0px rgba(0, 0, 0, 0.15), 0px 1px 1px rgba(0, 0, 0, 0.1);
     background-color: #424242;
 }
 
 .git-viewer-leftpane-header, .git-viewer-rightpane-header {
-    background-image: url('Images/texture.png'), linear-gradient(rgba(81, 81, 81, 0.99), rgba(68, 68, 68, 0.95));
+    background-image: url('Images/texture.png'), linear-gradient(rgba(8081, 8081, 8081, 0.99), rgba(68, 68, 68, 0.95));
     box-shadow: 1px 0px 0px rgba(255, 255, 255, 0.08) inset, 0px 1px 1px rgba(0, 0, 0, 0.15) inset, 0px -1px 0px rgba(255, 255, 255, 0.05) inset, 0px 1px 0px rgba(0, 0, 0, 0.15), 0px 1px 1px rgba(0, 0, 0, 0.1);
     background-color: #424242;
 }
@@ -51,7 +51,7 @@ ul.jqtree-tree .jqtree-title {
     height: 34px;
     background-image: url('Images/texture.png');
     box-shadow: 1px 0px 0px rgba(255, 255, 255, 0.08) inset, 0px 1px 1px rgba(0, 0, 0, 0.15) inset, 0px -1px 0px rgba(255, 255, 255, 0.05) inset, 0px 1px 0px rgba(0, 0, 0, 0.15), 0px 1px 1px rgba(0, 0, 0, 0.1);
-    background: -webkit-linear-gradient(rgba(81, 81, 81, 0.99), rgba(68, 68, 68, 0.95));
+    background: -webkit-linear-gradient(rgba(8081, 8081, 8081, 0.99), rgba(68, 68, 68, 0.95));
     background-color: #474747;
 }
 

@@ -13,64 +13,64 @@ namespace DAL.Diagnostic
         public delegate void DiagnosticHandler(List<DiagnosticRepositoryDto> diagnosticRepositoryDtos, int nodeId, int systemUserId);
 
         private static readonly DatabaseContext Ctx = new DatabaseContext();
-    
+
         public List<DiagnosticCustom> GetDiagnosticsByServiceId(string serviceId)
         {
-            var query = (from  a in Ctx.DiagnosticRepository
-                join b in Ctx.Diseases on a.v_DiseasesId equals b.v_DiseasesId
-                join c in Ctx.SystemParameter on new {a = a.i_AutoManualId.Value, b = 136}
-                    equals new {a = c.i_ParameterId, b = c.i_GroupId}
-                join d in Ctx.SystemParameter on new {a = a.i_PreQualificationId.Value, b = 137}
-                    equals new {a = d.i_ParameterId, b = d.i_GroupId}
-                join e in Ctx.SystemParameter on new {a = a.i_FinalQualificationId.Value, b = 138}
-                    equals new {a = e.i_ParameterId, b = e.i_GroupId}
-                join f in Ctx.SystemParameter on new {a = a.i_DiagnosticTypeId.Value, b = 139}
-                    equals new {a = f.i_ParameterId, b = f.i_GroupId}
-                where a.v_ServiceId == serviceId
-                      && a.i_IsDeleted == (int)Enumeratores.SiNo.No
-                select new DiagnosticCustom
-                {
-                    DiagnosticRepositoryId = a.v_DiagnosticRepositoryId,
-                    DiseaseId = a.v_DiseasesId,
-                    DiseaseName = b.v_Name,
-                    AutoManual = c.v_Value1,
-                    PreQualificationId = a.i_PreQualificationId,
-                    FinalQualificationId = a.i_FinalQualificationId,
-                    DiagnosticTypeId = a.i_DiagnosticTypeId,
-                    PreQualificationName = d.v_Value1,
-                    FinalQualificationName = e.v_Value1,
-                    DiagnosticTypeName = f.v_Value1,
-                    Cie10 = b.v_CIE10Id,    
-                    ComponentId = a.v_ComponentId,
-                    RecordStatus = (int) RecordStatus.Grabado,
-                    RecordType = (int) RecordType.NoTemporal,
-                    Recommendations = (from RecommendationDto s1A in Ctx.Recommendation
-                        join s1B in Ctx.MasterRecommendationRestricction on s1A.v_MasterRecommendationId equals s1B
-                            .v_MasterRecommendationRestricctionId
-                        where s1A.v_ServiceId == serviceId && s1A.v_DiagnosticRepositoryId == a.v_DiagnosticRepositoryId && s1A.i_IsDeleted == (int)Enumeratores.SiNo.No
-                        select new Recommendation
-                        {
-                            DiseaseId = a.v_DiseasesId,
-                            DiseaseName = b.v_Name,
-                            RecommendationId = s1A.v_RecommendationId,
-                            RecommendationName = s1B.v_Name,
-                            RecordStatus = (int)RecordStatus.Grabado,
-                            RecordType = (int)RecordType.NoTemporal,
-                        }).ToList(),
-                    Restrictions = (from RestrictionDto s2A in Ctx.Restriction
-                        join s2B in Ctx.MasterRecommendationRestricction on s2A.v_MasterRestrictionId equals s2B
-                            .v_MasterRecommendationRestricctionId
-                        where s2A.v_ServiceId == serviceId && s2A.v_DiagnosticRepositoryId == a.v_DiagnosticRepositoryId && s2B.i_IsDeleted == (int)Enumeratores.SiNo.No
-                        select new Restriction
-                        {
-                            DiseaseId = a.v_DiseasesId,
-                            DiseaseName = b.v_Name,
-                            RestrictionId = s2A.v_RestrictionId,
-                            RestrictionName = s2B.v_Name,
-                            RecordStatus = (int)RecordStatus.Grabado,
-                            RecordType = (int)RecordType.NoTemporal,
-                        }).ToList()
-                }).ToList();
+            var query = (from a in Ctx.DiagnosticRepository
+                         join b in Ctx.Diseases on a.v_DiseasesId equals b.v_DiseasesId
+                         join c in Ctx.SystemParameter on new { a = a.i_AutoManualId.Value, b = 136 }
+                             equals new { a = c.i_ParameterId, b = c.i_GroupId }
+                         join d in Ctx.SystemParameter on new { a = a.i_PreQualificationId.Value, b = 137 }
+                             equals new { a = d.i_ParameterId, b = d.i_GroupId }
+                         join e in Ctx.SystemParameter on new { a = a.i_FinalQualificationId.Value, b = 138 }
+                             equals new { a = e.i_ParameterId, b = e.i_GroupId }
+                         join f in Ctx.SystemParameter on new { a = a.i_DiagnosticTypeId.Value, b = 139 }
+                             equals new { a = f.i_ParameterId, b = f.i_GroupId }
+                         where a.v_ServiceId == serviceId
+                               && a.i_IsDeleted == (int)Enumeratores.SiNo.No
+                         select new DiagnosticCustom
+                         {
+                             DiagnosticRepositoryId = a.v_DiagnosticRepositoryId,
+                             DiseaseId = a.v_DiseasesId,
+                             DiseaseName = b.v_Name,
+                             AutoManual = c.v_Value1,
+                             PreQualificationId = a.i_PreQualificationId,
+                             FinalQualificationId = a.i_FinalQualificationId,
+                             DiagnosticTypeId = a.i_DiagnosticTypeId,
+                             PreQualificationName = d.v_Value1,
+                             FinalQualificationName = e.v_Value1,
+                             DiagnosticTypeName = f.v_Value1,
+                             Cie10 = b.v_CIE10Id,
+                             ComponentId = a.v_ComponentId,
+                             RecordStatus = (int)RecordStatus.Grabado,
+                             RecordType = (int)RecordType.NoTemporal,
+                             Recommendations = (from RecommendationDto s1A in Ctx.Recommendation
+                                                join s1B in Ctx.MasterRecommendationRestricction on s1A.v_MasterRecommendationId equals s1B
+                                                    .v_MasterRecommendationRestricctionId
+                                                where s1A.v_ServiceId == serviceId && s1A.v_DiagnosticRepositoryId == a.v_DiagnosticRepositoryId && s1A.i_IsDeleted == (int)Enumeratores.SiNo.No
+                                                select new Recommendation
+                                                {
+                                                    DiseaseId = a.v_DiseasesId,
+                                                    DiseaseName = b.v_Name,
+                                                    RecommendationId = s1A.v_RecommendationId,
+                                                    RecommendationName = s1B.v_Name,
+                                                    RecordStatus = (int)RecordStatus.Grabado,
+                                                    RecordType = (int)RecordType.NoTemporal,
+                                                }).ToList(),
+                             Restrictions = (from RestrictionDto s2A in Ctx.Restriction
+                                             join s2B in Ctx.MasterRecommendationRestricction on s2A.v_MasterRestrictionId equals s2B
+                                                 .v_MasterRecommendationRestricctionId
+                                             where s2A.v_ServiceId == serviceId && s2A.v_DiagnosticRepositoryId == a.v_DiagnosticRepositoryId && s2B.i_IsDeleted == (int)Enumeratores.SiNo.No
+                                             select new Restriction
+                                             {
+                                                 DiseaseId = a.v_DiseasesId,
+                                                 DiseaseName = b.v_Name,
+                                                 RestrictionId = s2A.v_RestrictionId,
+                                                 RestrictionName = s2B.v_Name,
+                                                 RecordStatus = (int)RecordStatus.Grabado,
+                                                 RecordType = (int)RecordType.NoTemporal,
+                                             }).ToList()
+                         }).ToList();
 
             return query;
         }
@@ -115,7 +115,7 @@ namespace DAL.Diagnostic
 
                 throw;
             }
-            
+
         }
 
         public void EditNonTemporalDiagnostics(List<DiagnosticRepositoryDto> diagnostics, int nodeId, int systemUserId)
@@ -123,8 +123,8 @@ namespace DAL.Diagnostic
             foreach (var dto in diagnostics)
             {
                 var objEntitySource = (from a in Ctx.DiagnosticRepository
-                    where a.v_DiagnosticRepositoryId == dto.v_DiagnosticRepositoryId
-                    select a).FirstOrDefault();
+                                       where a.v_DiagnosticRepositoryId == dto.v_DiagnosticRepositoryId
+                                       select a).FirstOrDefault();
 
                 if (objEntitySource == null) continue;
                 objEntitySource.i_AutoManualId = dto.i_AutoManualId;
@@ -154,8 +154,8 @@ namespace DAL.Diagnostic
             foreach (var dto in diagnostics)
             {
                 var objEntitySource = (from a in Ctx.DiagnosticRepository
-                    where a.v_DiagnosticRepositoryId == dto.v_DiagnosticRepositoryId
-                    select a).FirstOrDefault();
+                                       where a.v_DiagnosticRepositoryId == dto.v_DiagnosticRepositoryId
+                                       select a).FirstOrDefault();
 
                 if (objEntitySource == null) continue;
                 objEntitySource.d_UpdateDate = DateTime.Now;
@@ -168,11 +168,11 @@ namespace DAL.Diagnostic
         public List<string> Searchmasterrecommendationrestricction(string name, int typeId)
         {
             var query = (from a in Ctx.MasterRecommendationRestricction
-                where a.v_Name.Contains(name) && a.i_IsDeleted == (int)SiNo.No && a.i_TypifyingId == typeId
+                         where a.v_Name.Contains(name) && a.i_IsDeleted == (int)SiNo.No && a.i_TypifyingId == typeId
                          select new
-                {
-                    value = a.v_Name + "|" + a.v_MasterRecommendationRestricctionId
-                }).ToList();
+                         {
+                             value = a.v_Name + "|" + a.v_MasterRecommendationRestricctionId
+                         }).ToList();
 
             return query.Select(p => p.value).ToList();
 
@@ -263,7 +263,7 @@ namespace DAL.Diagnostic
                                 objEntitySource.i_FinalQualificationId = dr.FinalQualificationId;
 
 
-                            
+
                             objEntitySource.i_DiagnosticTypeId = (int)TipoDx.Enfermedad_Comun;//dr.DiagnosticTypeId;
                             objEntitySource.i_IsSentToAntecedent = dr.IsSentToAntecedent;
                             objEntitySource.d_ExpirationDateDiagnostic = dr.ExpirationDateDiagnostic;
@@ -399,10 +399,37 @@ namespace DAL.Diagnostic
             }
             catch (Exception ex)
             {
-                
+
             }
-            
+
         }
 
-    }
+        public string AddDiagnosticRepository(DiagnosticCustom dataDiagnostic, int nodeId, int systemUserId)
+        {
+            try
+            {
+                DatabaseContext ctx = new DatabaseContext();
+                DiagnosticRepositoryDto objDiag = new DiagnosticRepositoryDto();
+                var id = new Common.Utils().GetPrimaryKey(nodeId, 29, "DR");
+                objDiag.v_DiagnosticRepositoryId = id;
+                objDiag.v_ServiceId = dataDiagnostic.ServiceId;
+                objDiag.v_DiseasesId = dataDiagnostic.DiseaseId;
+                objDiag.v_ComponentId = dataDiagnostic.ComponentId;
+                objDiag.i_AutoManualId = (int)AutoManual.Manual;// dr.AutoManualId;
+                objDiag.i_PreQualificationId = (int)PreQualification.Aceptado;// dr.PreQualificationId;
+                objDiag.i_FinalQualificationId = (int)FinalQualification.Definitivo;// dr.FinalQualificationId;
+                objDiag.i_DiagnosticTypeId = (int)TipoDx.Enfermedad_Comun;// dr.DiagnosticTypeId;
+                objDiag.i_IsDeleted = 0;
+                objDiag.i_InsertUserId = systemUserId;
+                objDiag.d_InsertDate = DateTime.Now;
+                ctx.DiagnosticRepository.Add(objDiag);
+                ctx.SaveChanges();
+                return id;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+    }   
 }

@@ -1,0 +1,35 @@
+﻿
+
+@if (ViewBag.RecipesForService == null)
+{
+    <tr><td colspan="7" class="text-center sin-resultados">Sucedió un error en el servidor</td></tr>
+}
+else if (ViewBag.RecipesForService.Count == 0)
+{
+    <tr><td colspan="7" class="text-center sin-resultados">No hay resultado</td></tr>
+}
+else
+{
+    foreach (var recipe in ViewBag.RecipesForService)
+    {
+
+        <tr>
+            <td>@recipe.DiseaseName</td>
+            <td>@recipe.ProductName</td>
+            <td><textarea style="max-height:38px; resize:none" class="form-control">@recipe.Posologia</textarea></td>
+            <td><input class="form-control" type="text" value="@recipe.Duration" /></td>
+            <td><input style="width:70px" type="text" onkeyup="onlyInteger(this)" class="js-cantidad form-control p-1" value="@recipe.d_Quantity" /></td>
+            <td class="d-none"><input style="width:70px" type="number" class="form-control p-1" value="" /></td>
+            <td>@recipe.StockActual</td>
+            <td><input type="text" disabled class="form-control form-control-sm" value="@recipe.FechaFin.ToShortDateString()" /></td>
+            <td><i onclick="deleteRowRecipe(@recipe.RecetaId)" class="fas fa-trash-alt"></i></td>
+            <td class="d-none">@recipe.ProductId</td>
+            <td class="d-none">@recipe.DiseaseId</td>
+            <td class="d-none">@recipe.ComponentId</td>
+            <td class="d-none">@recipe.ProductoDetalleId</td>
+            <td class="d-none">@recipe.IdLinea</td>
+            <td class="d-none">@recipe.Price</td>
+            <td class="d-none">@recipe.RecetaId</td>
+        </tr>
+    }
+}

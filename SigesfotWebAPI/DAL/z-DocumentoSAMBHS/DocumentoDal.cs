@@ -9,6 +9,7 @@ namespace SAMBHSDAL.Documento
 {
     public class DocumentoDal
     {
+        public DatabaseSAMBHSContext cnx = new DatabaseSAMBHSContext();
         public List<KeyValueDTO> GetDocumentsForCombo(int pintUsadoCompras, int pintUsadoVentas)
         {
             try
@@ -52,6 +53,22 @@ namespace SAMBHSDAL.Documento
             {
                 return null;
             }
+        }
+
+        public string GetSeriesDocumento(int IdEstablecimiento, int documentoId)
+        {
+            var _Serie = (from n in cnx.EstablecimientoDetalle
+                          where n.i_IdEstablecimiento == IdEstablecimiento
+                                && n.i_IdTipoDocumento == documentoId && n.i_DocumentoPredeterminado == 1
+                                && n.i_Eliminado == 0
+                          select new { n.v_Serie }).FirstOrDefault();
+
+            if (_Serie != null)
+            {
+                string Serie = _Serie.v_Serie.Trim();
+                return Serie;
+            }
+            return string.Empty;
         }
 
     }

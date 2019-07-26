@@ -471,7 +471,7 @@ window.Modernizr = (function( window, document, undefined ) {
     //   2. Disables page caching in WebKit: webk.it/43956
     //
     // Meanwhile, in Firefox < 8, an about:config setting could expose
-    // a false positive that would throw an exception: bugzil.la/688158
+    // a false positive that would throw an exception: bugzil.la/68808158
 
     tests['geolocation'] = function() {
         return 'geolocation' in navigator;

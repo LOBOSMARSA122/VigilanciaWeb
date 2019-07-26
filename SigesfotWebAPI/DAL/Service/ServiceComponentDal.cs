@@ -4,9 +4,12 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using BE.Categoria;
 using BE.Common;
 using BE.Protocol;
+using BE.ProtocolComponent;
 using BE.Service;
+using BE.Sigesoft;
 using DAL.Common;
 using DAL.Plan;
 using static BE.Common.Enumeratores;
@@ -436,7 +439,7 @@ namespace DAL.Service
                                     oServiceComponentDto.i_IsRequiredId = (int)SiNo.No;
                                 }
                             }
-                            else if (componentId == "N009-ME000000404") //AdultoMayor
+                            else if (componentId == "N009-ME000000404") //AdultoMayorCustom
                             {
                                 if ((int)oGrupoEtario == -1)
                                 {
@@ -748,6 +751,194 @@ namespace DAL.Service
             }
         }
 
+        public List<ServiceComponentList> GetServiceComponents(string pstrServiceId)
+        {
+
+
+            int isDeleted = (int)SiNo.No;
+            int isRequired = (int)SiNo.Si;
+
+            try
+            {
+                DatabaseContext dbContext = new DatabaseContext();
+
+                var query = (from A in dbContext.ServiceComponent
+                             join B in dbContext.SystemParameter on new { a = A.i_ServiceComponentStatusId.Value, b = 127 }
+                                      equals new { a = B.i_ParameterId, b = B.i_GroupId }
+                             join C in dbContext.Component on A.v_ComponentId equals C.v_ComponentId
+                             join D in dbContext.SystemParameter on new { a = A.i_QueueStatusId.Value, b = 128 }
+                                      equals new { a = D.i_ParameterId, b = D.i_GroupId }
+                             join E in dbContext.Service on A.v_ServiceId equals E.v_ServiceId
+                             join F in dbContext.SystemParameter on new { a = C.i_CategoryId, b = 116 }
+                                      equals new { a = F.i_ParameterId, b = F.i_GroupId } into F_join
+                             from F in F_join.DefaultIfEmpty()
+
+                             where A.v_ServiceId == pstrServiceId &&
+                                   A.i_IsDeleted == isDeleted &&
+                                   A.i_IsRequiredId == isRequired
+
+                             select new ServiceComponentList
+                             {
+                                 v_ComponentId = A.v_ComponentId,
+                                 v_ComponentName = C.v_Name,
+                                 i_ServiceComponentStatusId = A.i_ServiceComponentStatusId.Value,
+                                 v_ServiceComponentStatusName = B.v_Value1,
+                                 d_StartDate = A.d_StartDate.Value,
+                                 d_EndDate = A.d_EndDate.Value,
+                                 i_QueueStatusId = A.i_QueueStatusId.Value,
+                                 v_QueueStatusName = D.v_Value1,
+                                 ServiceStatusId = E.i_ServiceStatusId.Value,
+                                 v_Motive = E.v_Motive,
+                                 i_CategoryId = C.i_CategoryId,
+                                 v_CategoryName = C.i_CategoryId == -1 ? C.v_Name : F.v_Value1,
+                                 v_ServiceId = E.v_ServiceId,
+                                 v_ServiceComponentId = A.v_ServiceComponentId,
+                             });
+
+                var objData = query.AsEnumerable()
+                             .Where(s => s.i_CategoryId != -1)
+                             .GroupBy(x => x.i_CategoryId)
+                             .Select(group => group.First());
+
+                List<ServiceComponentList> obj = objData.ToList();
+
+                obj.AddRange(query.Where(p => p.i_CategoryId == -1));
+
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+        public static List<Categoria> GetAllComponentsByService(string pstrString)
+        {
+
+            int isDeleted = (int)SiNo.No;
+            int isRequired = (int)SiNo.Si;
+            try
+            {
+
+                // Acá traigo toda mi data que nececeito... mas que todo para los padres
+                var query = (from A in ctx.ServiceComponent
+                             join B in ctx.SystemParameter on new { a = A.i_ServiceComponentStatusId.Value, b = 127 }
+                                      equals new { a = B.i_ParameterId, b = B.i_GroupId }
+                             join C in ctx.Component on A.v_ComponentId equals C.v_ComponentId
+                             join D in ctx.SystemParameter on new { a = A.i_QueueStatusId.Value, b = 128 }
+                                      equals new { a = D.i_ParameterId, b = D.i_GroupId }
+                             join E in ctx.Service on A.v_ServiceId equals E.v_ServiceId
+                             join F in ctx.SystemParameter on new { a = C.i_CategoryId, b = 116 }
+                                      equals new { a = F.i_ParameterId, b = F.i_GroupId } into F_join
+                             from F in F_join.DefaultIfEmpty()
+
+                                 // Usuario Medico Evaluador / Medico Aprobador ****************************
+                             join me in ctx.SystemUser on A.i_ApprovedUpdateUserId equals me.i_SystemUserId into me_join
+                             from me in me_join.DefaultIfEmpty()
+
+                             join pme in ctx.Professional on me.v_PersonId equals pme.v_PersonId into pme_join
+                             from pme in pme_join.DefaultIfEmpty()
+
+
+                             where A.v_ServiceId == pstrString &&
+                                   A.i_IsDeleted == isDeleted &&
+                                   A.i_IsRequiredId == isRequired
+
+                             select new ServiceComponentList
+                             {
+                                 v_ComponentId = A.v_ComponentId,
+                                 v_ComponentName = C.v_Name,
+                                 i_ServiceComponentStatusId = A.i_ServiceComponentStatusId.Value,
+                                 v_ServiceComponentStatusName = B.v_Value1,
+                                 d_StartDate = A.d_StartDate.Value,
+                                 d_EndDate = A.d_EndDate.Value,
+                                 i_QueueStatusId = A.i_QueueStatusId.Value,
+                                 v_QueueStatusName = D.v_Value1,
+                                 ServiceStatusId = E.i_ServiceStatusId.Value,
+                                 v_Motive = E.v_Motive,
+                                 i_CategoryId = C.i_CategoryId,
+                                 v_CategoryName = C.i_CategoryId == -1 ? C.v_Name : F.v_Value1,
+                                 v_ServiceId = E.v_ServiceId,
+                                 v_ServiceComponentId = A.v_ServiceComponentId,
+                                 ApprovedUpdateUser = me.v_UserName
+                             });
+
+                // acá lleno mi entidad padre con la consulta de arriba
+                List<Categoria> xxx = new List<Categoria>();
+                Categoria oCategoria = null;
+                foreach (var item in query)
+                {
+                    oCategoria = new Categoria();
+                    oCategoria.v_ComponentId = item.v_ComponentId;
+                    oCategoria.v_ComponentName = item.v_ComponentName;
+                    oCategoria.i_CategoryId = item.i_CategoryId;
+                    oCategoria.v_CategoryName = item.v_CategoryName;// item.i_CategoryId.Value == -1 ? item.v_CategoryName : item.v_ServiceComponentStatusName;
+                    oCategoria.v_ServiceComponentStatusName = item.v_ServiceComponentStatusName;
+                    oCategoria.v_QueueStatusName = item.v_QueueStatusName;
+                    oCategoria.i_ServiceComponentStatusId = item.i_ServiceComponentStatusId.Value;
+                    oCategoria.ApprovedUpdateUser = item.ApprovedUpdateUser;
+                    xxx.Add(oCategoria);
+                }
+
+                //en mi caso hago un groupby porque mi data se repite
+                var objData = xxx.AsEnumerable()
+                        .Where(s => s.i_CategoryId != -1)
+                        .GroupBy(x => x.i_CategoryId)
+                        .Select(group => group.First());
+
+                List<Categoria> obj = objData.ToList();
+
+                Categoria objCategoriaList;
+                List<Categoria> Lista = new List<Categoria>();
+
+                //acá recorreo los padres para poder llenar los hijos
+                for (int i = 0; i < obj.Count(); i++)
+                {
+                    objCategoriaList = new Categoria();
+
+                    objCategoriaList.i_CategoryId = obj[i].i_CategoryId.Value;
+                    objCategoriaList.v_CategoryName = obj[i].v_CategoryName;
+                    objCategoriaList.v_ServiceComponentStatusName = obj[i].v_ServiceComponentStatusName;
+                    objCategoriaList.v_QueueStatusName = obj[i].v_QueueStatusName;
+                    objCategoriaList.i_ServiceComponentStatusId = obj[i].i_ServiceComponentStatusId;
+                    objCategoriaList.ApprovedUpdateUser = obj[i].ApprovedUpdateUser;
+                    // en esta variable x obtengo los hijos de un padre (cada bucle me da un padre y con ese id busco sus hijos)
+                    var x = query.ToList().FindAll(p => p.i_CategoryId == obj[i].i_CategoryId.Value);
+
+                    x.Sort((z, y) => z.v_ComponentName.CompareTo(y.v_ComponentName));
+                    ComponentDetailList objComponentDetailList;
+                    List<ComponentDetailList> ListaComponentes = new List<ComponentDetailList>();
+                    //recorro los hijos y los agrego dentro del padre
+                    foreach (var item in x)
+                    {
+                        objComponentDetailList = new ComponentDetailList();
+
+                        objComponentDetailList.v_ComponentId = item.v_ComponentId;
+                        objComponentDetailList.v_ComponentName = item.v_ComponentName;
+                        objComponentDetailList.v_ServiceComponentId = item.v_ServiceComponentId;
+                        objComponentDetailList.StatusComponentId = item.i_ServiceComponentStatusId.Value;
+                        objComponentDetailList.ApprovedUpdateUser = item.ApprovedUpdateUser;
+                        objComponentDetailList.StatusComponent = item.v_ServiceComponentStatusName;
+                        ListaComponentes.Add(objComponentDetailList);
+                    }
+                    objCategoriaList.Componentes = ListaComponentes;
+
+                    Lista.Add(objCategoriaList);
+
+                }
+
+
+                //retorno lista jerarquizada
+
+                return Lista;
+            }
+            catch (Exception ex)
+            {
+
+                return null;
+            }
+        }
 
     }
 }

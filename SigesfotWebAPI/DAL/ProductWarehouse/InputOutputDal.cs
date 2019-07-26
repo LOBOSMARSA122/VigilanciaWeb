@@ -177,12 +177,12 @@ namespace DAL.ProductWarehouse
                 var query = (from mov in Ctx.Movement
                                  // SystemUsers (LEFT JOIN) - i_InsertUserId
 
-                             join sys in Ctx.SystemUser on new { i_InsertUserId = mov.i_InsertUserId }
+                             join sys in Ctx.SystemUser on new { i_InsertUserId = mov.i_InsertUserId.Value }
                                                      equals new { i_InsertUserId = sys.i_SystemUserId } into sys_join
                              from sys in sys_join.DefaultIfEmpty()
 
                                  // SystemUsers (LEFT JOIN) - i_UpdateUserId
-                             join sys2 in Ctx.SystemUser on new { i_UpdateUserId = mov.i_UpdateUserId }
+                             join sys2 in Ctx.SystemUser on new { i_UpdateUserId = mov.i_UpdateUserId.Value }
                                                      equals new { i_UpdateUserId = sys2.i_SystemUserId } into sys2_join
                              from sys2 in sys2_join.DefaultIfEmpty()
 

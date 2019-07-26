@@ -49,5 +49,12 @@ namespace SigesoftWebAPI.Controllers.Common
             List<Dropdownlist> result = new SAMBHSBL.DataHierarchy.DataHierarchyBL().GetVendedor();
             return Ok(result);
         }
+
+        [HttpGet]
+        public IHttpActionResult GetExternalPermisionForChekedListByTypeId(int ExternalUserFunctionalityTypeId)
+        {
+            List<Dropdownlist> result = oDataHierarchyBL.GetExternalPermisionForChekedListByTypeId(ExternalUserFunctionalityTypeId);
+            return Ok(result);
+        }
     }
 }

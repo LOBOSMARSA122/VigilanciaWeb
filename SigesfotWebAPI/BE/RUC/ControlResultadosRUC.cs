@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BE.Message;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,9 @@ namespace BE.RUC
 {
     public class RootObject
     {
-        public bool success { get; set; }
-        public string mensaje { get; set; }
+        public bool Error { get; set; }
+        public string Message { get; set; }
+        public bool Sunat { get; set; }
         public ControlResultadosRUC result { get; set; }
     }
     public class ControlResultadosRUC
@@ -31,5 +33,21 @@ namespace BE.RUC
         public string fecha_inscripcion_ple { get; set; }
         public string Oficio { get; set; }
         public string fecha_baja { get; set; }
+    }
+
+    public class RootObjectSIS : MessageCustom
+    {
+        public bool BaseDatos { get; set; }
+        public ResultSIS Result { get; set; }
+    }
+
+    public class ResultSIS
+    {
+        public string NroAfiliacion { get; set; }
+        public string ApellidoPaterno { get; set; }
+        public string ApellidoMaterno { get; set; }
+        public string Nombres { get; set; }
+        public string TipoAsegurado { get; set; }
+        public string Estado { get; set; }
     }
 }

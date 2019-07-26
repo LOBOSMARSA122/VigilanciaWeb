@@ -24,6 +24,7 @@ namespace BE.Component
         public int? i_UpdateUserId { get; set; }
         public DateTime? d_UpdateDate { get; set; }
         public string v_IdUnidadProductiva { get; set; }
+        public string v_CodigoSegus { get; set; }   
         public int? i_PriceIsRecharged { get; set; }
     }
 }

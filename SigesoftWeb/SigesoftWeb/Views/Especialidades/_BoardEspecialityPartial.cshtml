@@ -1,0 +1,134 @@
+﻿
+@{
+    int Take = 0;
+    int Total = 0;
+    int Primer = 0;
+    int Ultimo = 0;
+    int Index = 0;
+
+    if (ViewBag.Especiality != null)
+    {
+        Take = ViewBag.Especiality.Take;
+        Index = ViewBag.Especiality.Index;
+        Total = ViewBag.Especiality.TotalRecords;
+        Primer = ((Index - 1) * Take) + 1;
+        Ultimo = Primer + (ViewBag.Especiality.List.Count - 1);
+
+        Primer = Primer < 0 ? 0 : Primer;
+        Ultimo = Ultimo < 0 ? 0 : Ultimo;
+    }
+    else
+    {
+        Take = 0;
+    }
+}
+
+<div class="container-fluid" style="padding:0px;">
+    <div class="box box-info mt-2" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>Lista de Pacientes</h3>
+        </div>
+    </div>
+</div>
+<input id="heightBoardProd" type="hidden" value="">
+<div id="contBoardVenta" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+    <div>
+        <span class="informacion">Mostrando desde N° @Primer hasta @Ultimo de un total de @Total entradas</span>
+        <div class="float-lg-right informacion">
+            Total de registros:
+            <select id="take" onchange="Filter(1)">
+                <option value="10" @(Take == 10 || Take == 0 ? "selected" : "")>10</option>
+                <option value="25" @(Take == 25 ? "selected" : "")>25</option>
+                <option value="50" @(Take == 50 ? "selected" : "")>50</option>
+                <option value="0">TODOS</option>
+            </select>
+        </div>
+    </div>
+    <div class="box box-info mt-2">
+        <div class="scroll-css" id="loadingTable" style="overflow:scroll; height: 450px">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="d-none" nowrap scope="col">Id</th>
+                        <th nowrap scope="col">Especialidad</th>
+                        <th nowrap scope="col">Descripción</th>
+                        <th nowrap scope="col">Tiempo de Atención</th>
+                        <th nowrap scope="col">Costo</th>
+                        <th nowrap scope="col">Horario</th>
+                        <th nowrap scope="col">Horario Adicional</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        if (ViewBag.Especiality == null)
+                        {
+                            <tr><td colspan="7" class="text-center">Error al conectarse al servidor</td></tr>
+                        }
+                        else if (ViewBag.Especiality.List.Count == 0)
+                        {
+                            <tr><td colspan="7" class="text-center">No hay resultados</td></tr>
+                        }
+                        else
+                        {
+                            foreach (var item in ViewBag.Especiality.List)
+                            {
+                                <tr onclick="PintarFila(this)">
+                                    <td nowrap class="d-none">@item.v_EspecialityId</td>
+                                    <td nowrap>@item.v_EspecialityName</td>
+                                    <td nowrap>@item.v_Description</td>
+                                    <td nowrap>@item.t_TimeForAttention</td>
+                                    <td nowrap>@item.r_Cost</td>
+                                    <td nowrap>@item.t_StartTime / @item.t_EndTime</td>
+                                    <td nowrap>@item.t_StartTime2 / @item.t_EndTime2</td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+
+        </div>
+        <div class="paginacion-tabla d-flex justify-content-center">
+            <nav class="col-12 d-flex justify-content-center">
+                <ul class="pagination">
+                    @{
+                        if (Index > 1)
+                        {
+                            <li class="page-item" onclick="Filter(@(Index - 1))">
+                                <span class="page-link" aria-hidden="true"><i class="text-info fas fa-caret-left"></i></span>
+                            </li>
+                        }
+                        int pagina = 0;
+                        if (Take > 0)
+                        {
+                            for (int i = 0; i < Total; i = i + Take)
+                            {
+                                pagina++;
+                                if ((pagina > (Index - 5)) && pagina < (Index + 5))
+                                {
+                                    <li @(pagina == Index ? "class=pagination-active" : "onclick=Filter(" + pagina + ")")><span class="page-link" aria-hidden="true">@pagina</span></li>
+                                }
+
+
+                            }
+                        }
+                        if (pagina > Index)
+                        {
+                            <li class="page-item" onclick="Filter(@(Index + 1))">
+                                <span class="page-link" aria-hidden="true"><i class="text-info fas fa-caret-right"></i></span>
+                            </li>
+                        }
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

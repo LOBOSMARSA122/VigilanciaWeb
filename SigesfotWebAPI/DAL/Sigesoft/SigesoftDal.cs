@@ -78,11 +78,11 @@ namespace DAL.Sigesoft
 
                 var components = (from aaa in dbContext.ServiceComponent
                                   join bbb in dbContext.Component on aaa.v_ComponentId equals bbb.v_ComponentId
-                                  join J1 in dbContext.SystemUser on new { i_InsertUserId = aaa.i_InsertUserId }
+                                  join J1 in dbContext.SystemUser on new { i_InsertUserId = aaa.i_InsertUserId.Value }
                                                   equals new { i_InsertUserId = J1.i_SystemUserId } into J1_join
                                   from J1 in J1_join.DefaultIfEmpty()
 
-                                  join J2 in dbContext.SystemUser on new { i_UpdateUserId = aaa.i_UpdateUserId }
+                                  join J2 in dbContext.SystemUser on new { i_UpdateUserId = aaa.i_UpdateUserId.Value }
                                                                   equals new { i_UpdateUserId = J2.i_SystemUserId } into J2_join
                                   from J2 in J2_join.DefaultIfEmpty()
 

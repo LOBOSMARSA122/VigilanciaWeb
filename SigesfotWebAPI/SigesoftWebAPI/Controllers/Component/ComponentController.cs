@@ -19,5 +19,18 @@ namespace SigesoftWebAPI.Controllers.Component
             return Ok(result);
         }
 
+        [HttpGet]
+        public IHttpActionResult GetAllComponent(int nodeId, int roleNodeId)
+        {
+            var result = _oComponentBl.GetAllComponent(nodeId, roleNodeId);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetMedicalExam(string componentName)
+        {
+            var result = _oComponentBl.GetMedicalExam(componentName);
+            return Ok(result);
+        }
     }
 }

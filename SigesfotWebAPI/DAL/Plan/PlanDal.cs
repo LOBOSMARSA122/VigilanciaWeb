@@ -4,6 +4,8 @@ using System.Linq;
 using BE.Common;
 using static BE.Common.Enumeratores;
 using BE.Plan;
+using static BE.Eso.RecipesCustom;
+using SAMBHSDAL;
 
 namespace DAL.Plan
 {
@@ -262,6 +264,125 @@ namespace DAL.Plan
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        public List<PlanBE> GetPlan(string serviceId, string lineaId)
+        {
+            try
+            {
+                DatabaseContext ctx = new DatabaseContext();
+                var Lista = (from pl in ctx.Plan
+                             join ser in ctx.Service on pl.v_ProtocoloId equals ser.v_ProtocolId
+                             where ser.v_ServiceId == serviceId && pl.v_IdUnidadProductiva == lineaId
+                             select pl).ToList();
+                Lista.GroupBy(x => x.i_PlanId).Select(x => x.First());
+                return Lista;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }    
+        }
+
+        public List<PlanBE> GetPlanForImporte(string serviceId, string diagnosticRespository)
+        {
+            try
+            {
+                DatabaseContext ctx = new DatabaseContext();
+                var Lista = (from pl in ctx.Plan
+                             join ser in ctx.Service on pl.v_ProtocoloId equals ser.v_ProtocolId
+                             join pro in ctx.Protocol on ser.v_ProtocolId equals pro.v_ProtocolId
+                             join src in ctx.ServiceComponent on pl.v_IdUnidadProductiva equals src.v_IdUnidadProductiva
+                             join dgr in ctx.DiagnosticRepository on src.v_ComponentId equals dgr.v_ComponentId
+                             where ser.v_ServiceId == serviceId && dgr.v_DiagnosticRepositoryId == diagnosticRespository
+                             select pl).ToList();
+                Lista.GroupBy(x => x.i_PlanId).Select(x => x.First());
+                return Lista;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static bool SavePlan(PlanBE entityPlan)
+        {
+            try
+            {
+                _ctx.Plan.Add(entityPlan);
+                _ctx.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public static bool ExistPlan(PlanBE data)
+        {
+            try
+            {
+                var result = _ctx.Plan.Where(x => x.v_OrganizationSeguroId == data.v_OrganizationSeguroId && x.v_ProtocoloId == data.v_ProtocoloId && x.v_IdUnidadProductiva == data.v_IdUnidadProductiva).FirstOrDefault();
+
+                return result != null; 
+
+            }
+            catch (Exception ex)
+            {
+                return true;
+            }
+        }
+
+        public static List<PlanCustom> GetPlanByProtocolId(string protocolId)
+        {
+            try
+            {
+
+                var listPlan = (from pl in _ctx.Plan
+                                where pl.v_ProtocoloId == protocolId
+                                select new PlanCustom
+                                {
+                                    i_PlanId = pl.i_PlanId,
+                                    v_IdUnidadProductiva = pl.v_IdUnidadProductiva,
+                                    d_Importe = pl.d_Importe,
+                                    d_ImporteCo = pl.d_ImporteCo,
+                                    i_EsCoaseguro = pl.i_EsCoaseguro,
+                                    i_EsDeducible = pl.i_EsDeducible
+                                }).ToList();
+
+                DatabaseSAMBHSContext samb = new DatabaseSAMBHSContext();
+
+                foreach (var item in listPlan)
+                {
+                    var result = samb.Linea.Where(x => x.v_IdLinea == item.v_IdUnidadProductiva).FirstOrDefault();
+                    if (result != null)
+                    {
+                        item.v_IdUnidadProductivaName = result.v_Nombre;
+                    }
+                }
+
+                return listPlan;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static bool DeletedPlan(int planId)
+        {
+            try
+            {
+                var objPlan = _ctx.Plan.Where(x => x.i_PlanId == planId).FirstOrDefault();
+                _ctx.Plan.Remove(objPlan);
+                _ctx.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
     }

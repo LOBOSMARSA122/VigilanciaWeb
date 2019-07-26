@@ -16,6 +16,7 @@ namespace SigesoftWeb.Models.Protocol
         public string EmpresaTrabajo { get; set; }
         public string EmpresaClienteName { get; set; }
         public string EmpresaEmpleadoraName { get; set; }
+        public string EmpresaEmpleadoraAdress { get; set; }
         public string EmpresaTrabajoName { get; set; }
         public string ProtocolName { get; set; }
         public int i_EsoTypeId { get; set; }
@@ -24,7 +25,7 @@ namespace SigesoftWeb.Models.Protocol
         public string v_GroupOccupationId { get; set; }
         public string v_CustomerOrganizationId { get; set; }
         public string v_CustomerLocationId { get; set; }
-
+        public string EmpresaClienteAdress { get; set; }
         public string v_WorkingOrganizationId { get; set; }
         public string v_WorkingLocationId { get; set; }
         public int i_MasterServiceId { get; set; }
@@ -35,5 +36,6 @@ namespace SigesoftWeb.Models.Protocol
         public int i_IsActive { get; set; }
         public string v_NombreVendedor { get; set; }
         public int i_OrganizationTypeId { get; set; }
+        public string v_ContacName { get; set; }
     }
 }

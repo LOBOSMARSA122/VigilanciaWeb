@@ -59,6 +59,7 @@
                         <th nowrap scope="col">UM</th>
                         <th nowrap scope="col">¿Af. detracción?</th>
                         <th nowrap scope="col">Fec. Vencimiento</th>
+                        <th nowrap scope="col" class="d-none">UnidadMedidadId</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -80,13 +81,14 @@
                                 <td nowrap class="d-none">@item.v_IdProducto</td>
                                 <td nowrap>@item.v_CodInterno</td>
                                 <td nowrap>@item.v_Descripcion</td>
-                                <td nowrap class="text-center">@Math.Round(double.Parse(item.StockActualUM.ToString()),0)</td>
-                                <td nowrap class="text-center">@Math.Round(double.Parse(item.SeparacionActualUM.ToString()),0)</td>
+                                <td nowrap class="text-center">@Math.Round(double.Parse(item.StockActualUM.ToString()), 0)</td>
+                                <td nowrap class="text-center">@Math.Round(double.Parse(item.SeparacionActualUM.ToString()), 0)</td>
                                 <td nowrap class="text-center">@item.SaldoUM.ToString("N2")</td>
                                 <td nowrap class="text-center">@item.d_Precio.ToString("N2")</td>
                                 <td nowrap>@item.UM</td>
                                 <td nowrap>@item.AfectoDetraccion</td>
                                 <td nowrap class="text-center">@item.t_FechaCaducidad.ToShortDateString()</td>
+                                <td nowrap class="text-center">@item.i_IdUnidadMedida</td>
                             </tr>
                             }
                         }

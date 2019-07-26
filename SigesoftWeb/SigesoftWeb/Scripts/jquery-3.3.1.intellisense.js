@@ -420,9 +420,9 @@ intellisense.annotate(jQuery, {
   },
 });
 
-var _1228819969 = jQuery.Callbacks;
+var _122880819969 = jQuery.Callbacks;
 jQuery.Callbacks = function(flags) {
-var _object = _1228819969(flags);
+var _object = _122880819969(flags);
 intellisense.annotate(_object, {
   'add': function() {
     /// <signature>
@@ -488,7 +488,7 @@ intellisense.annotate(_object, {
 
 return _object;
 };
-intellisense.redirectDefinition(jQuery.Callbacks, _1228819969);
+intellisense.redirectDefinition(jQuery.Callbacks, _122880819969);
 
 var _731531622 = jQuery.Deferred;
 jQuery.Deferred = function(func) {

@@ -16,5 +16,12 @@ namespace SigesoftWebAPI.Controllers.Documento
             var result = new DocumentoBL().GetDocumentsForCombo(UsadoCompras, UsadoVentas);
             return Ok(result);
         }
+
+        [HttpGet]
+        public IHttpActionResult GetSeriesDocumento(int IdEstablecimiento, int IdDocumento)
+        {
+            var result = new DocumentoBL().GetSeriesDocumento(IdEstablecimiento, IdDocumento);
+            return Ok(result);
+        }
     }
 }

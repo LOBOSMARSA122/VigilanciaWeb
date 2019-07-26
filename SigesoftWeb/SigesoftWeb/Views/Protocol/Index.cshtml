@@ -1,0 +1,3527 @@
+﻿
+@{
+    ViewBag.Title = "Administrador de Protocolos";
+}
+<style>
+    .modal {
+        overflow-y: auto !important;
+    }
+
+    ul.auto-complete-list {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        z-index: 1500;
+        max-height: 250px;
+        overflow: auto;
+    }
+</style>
+<div class="container-fluid pt-4">
+    <div class="row w-100 mx-0">
+        <div class="col-12">
+            <div class="group-box">
+                <label class="label-group-box">Busqueda / Filtro</label>
+                <div class="row w-100 mx-0">
+                    <div class="col-12 col-lg-4">
+                        <label class="small">Nombre</label>
+
+                        <input type="text" class="form-control form-control-sm" id="protocol-name" value="" />
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <label class="small">Tipo Servicio</label>
+                        <select class="custom-select custom-select-sm" id="change-tiposervicio">
+                            <option value="-1">--Todos--</option>
+                            @if (ViewBag.TypeService != null)
+                            {
+
+                                foreach (var item in ViewBag.TypeService)
+                                {
+                                    <option value="@item.Id">@item.Value</option>
+                                }
+
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <label class="small">Emp. de Trabajo / Sede</label>
+                        <select class="custom-select custom-select-sm" id="change-empresa-trabajo">
+                            <option value="-1">--Todos--</option>
+                            @{if (ViewBag.Empresa != null)
+                                {
+                                    foreach (var item in ViewBag.Empresa)
+                                    {
+                                        <option value="@item.v_Id">@item.Value</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <label class="small">Emp. Empl/ Sede</label>
+                        <select class="custom-select custom-select-sm" id="change-empresaempleadora">
+                            <option value="-1">--Todos--</option>
+
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <label class="small">Servicio</label>
+                        <select class="custom-select custom-select-sm" id="change-servicio">
+                            <option value="-1">--Todos--</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <label class="small">Emp. Cliente / Sede</label>
+                        <select class="custom-select custom-select-sm" id="change-empresa-cliente">
+                            <option value="-1">--Todos--</option>
+
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <label class="small">GESO</label>
+                        <select class="custom-select custom-select-sm" id="change-geso">
+                            <option value="-1">--Todos--</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <label class="small">Tipo Eso</label>
+                        <select class="custom-select custom-select-sm" id="change-eso-type">
+                            <option value="-1">--Todos--</option>
+                            @if (ViewBag.TypeService != null)
+                            {
+
+                                foreach (var item in ViewBag.TipoESO)
+                                {
+                                    <option value="@item.Id">@item.Value</option>
+                                }
+
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-2">
+                        <label class="small">Componente</label>
+                        <input type="text" class="form-control form-control-sm" id="filter-component-name" value="" />
+                    </div>
+                    <div class="col-12 col-lg-1">
+                        <label style="opacity: 0">Activo</label>
+                        <div class="custom-control custom-checkbox">
+                            <input checked type="checkbox" class="custom-control-input" id="activoSiNo">
+                            <label class="custom-control-label" for="activoSiNo">Activo</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-1">
+                        <label style="opacity: 0">Filtro</label>
+                        <button class="btn btn-sm btn-primary btn-block" onclick="Filter()"><i class="fas fa-search mr-1"></i>Filtrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row w-100 mx-0">
+        <div class="col-12 col-lg-6" id="render-protocols">
+            @Html.Partial("_BoardProtocolsPartial")
+        </div>
+        <div class="col-12 col-lg-4" id="render-protocolcomponents">
+            @Html.Partial("_BoardComponentPartial")
+        </div>
+        <div class="col-12 col-lg-2 pt-4">
+            <div class="p-5 d-none d-lg-block"></div>
+            <button class="btn btn-sm btn-secondary btn-block" id="btn-new-protocol"><i class="fas fa-plus mr-1"></i>Nuevo</button>
+            <button class="btn btn-sm btn-secondary btn-block" id="btn-edit-protocol"><i class="fas fa-edit mr-1"></i>Editar</button>
+            <button class="btn btn-sm btn-secondary btn-block" id="btn-clonar-protocolo"><i class="fas fa-clone mr-1"></i>Clonar</button>
+            <button class="btn btn-sm btn-secondary btn-block" id="btn-generar-orden-servicio"><i class="fas fa-cogs mr-1"></i>Generar Ordenes de Servicio</button>
+            @*<button class="btn btn-sm btn-secondary btn-block"><i class="fas fa-users mr-1"></i>Usuarios</button>*@
+            <button class="btn btn-sm btn-secondary btn-block" id="btn-planes"><i class="fas fa-list mr-1"></i>Planes</button>
+        </div>
+
+    </div>
+</div>
+
+@*Modal Nuevo Protocolo*@
+<div class="modal fade" tabindex="-1" id="modalNuevoProtocolo" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="addloading-modalprotocolo">
+                <h5 class="modal-title" style="font-size: 0.9rem"><span id="type-action"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-12">
+                        <div class="group-box">
+                            <label class="label-group-box">Datos del Protocolo</label>
+                            <div class="row w-100 mx-0">
+                                <div class="col-7">
+                                    <label class="small">Nombre Protocolo</label>
+                                    <input type="text" class="form-control form-control-sm" id="new-change-protocolname" value="" />
+                                    <input type="text" class="form-control form-control-sm d-none" id="input-protocol-id" value="" />
+                                </div>
+                                <div class="col-5">
+                                    <label class="small">GESO</label>
+                                    <select class="custom-select custom-select-sm" id="new-change-geso">
+                                        <option value="-1">--Seleccionar--</option>
+                                    </select>
+                                </div>
+                                <div class="col-7">
+                                    <label class="small">Empresa Cliente</label>
+                                    <select class="custom-select custom-select-sm" id="new-change-empresacliente">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @{if (ViewBag.Empresa != null)
+                                            {
+                                                foreach (var item in ViewBag.Empresa)
+                                                {
+                                                    <option value="@item.v_Id">@item.Value</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-5">
+                                    <label class="small">Tipo Servicio</label>
+                                    <select class="custom-select custom-select-sm" id="new-change-tiposervicio">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @if (ViewBag.TypeService != null)
+                                        {
+
+                                            foreach (var item in ViewBag.TypeService)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-7">
+                                    <label class="small">Empresa Empleadora</label>
+                                    <select class="custom-select custom-select-sm" id="new-change-empresaempleadora">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @{if (ViewBag.Empresa != null)
+                                            {
+                                                foreach (var item in ViewBag.Empresa)
+                                                {
+                                                    <option value="@item.v_Id">@item.Value</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-5">
+                                    <label class="small">Servicio</label>
+                                    <select class="custom-select custom-select-sm" id="new-change-service">
+                                        <option value="-1">--Seleccionar--</option>
+                                    </select>
+                                </div>
+                                <div class="col-7">
+                                    <label class="small">Empresa Trabajo</label>
+                                    <select class="custom-select custom-select-sm" id="new-change-empresatrabajo">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @{if (ViewBag.Empresa != null)
+                                            {
+                                                foreach (var item in ViewBag.Empresa)
+                                                {
+                                                    <option value="@item.v_Id">@item.Value</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-5">
+                                    <label class="small">C / Costo</label>
+                                    <input type="text" class="form-control form-control-sm" value="" id="new-change-centrocosto" />
+                                </div>
+                                <div class="col-7">
+                                    <label class="small">Tipo de Examen</label>
+                                    <select class="custom-select custom-select-sm" id="new-change-tipoexamen">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @if (ViewBag.TypeService != null)
+                                        {
+
+                                            foreach (var item in ViewBag.TipoESO)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-2">
+                                    <label style="opacity: 0">Activo</label>
+                                    <div class="custom-control custom-checkbox">
+                                        <input checked type="checkbox" class="custom-control-input" id="activoSiNoNew">
+                                        <label class="custom-control-label" for="activoSiNoNew">Activo</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-none" id="cont-solo-seguros">
+                                    <div class="row w-100 mx-0 justify-content-end">
+                                        <label class="small mx-2">Factor </label>
+                                        <input type="number" class="form-control form-control-sm" style="width:100px" value="" id="new-factor" />
+                                        <label class="small mx-2">E.P.S </label>
+                                        <input type="number" class="form-control form-control-sm" style="width:100px" value="" id="new-medicine-discount" />
+                                        <label class="small mx-2">Cama Hosp. </label>
+                                        <input type="number" class="form-control form-control-sm" style="width:100px" value="" id="new-bed-price" />
+                                        <label class="small mx-2">Dscto. </label>
+                                        <input type="number" class="form-control form-control-sm" style="width:100px" value="" id="new-discount-exam" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row w-100 mx-0 mt-3">
+                    <div class="col-12">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="examen-tab" data-toggle="tab" href="#examen" role="tab" aria-controls="examen" aria-selected="true">Exámenes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="usuarios-tab" data-toggle="tab" href="#usuarios" role="tab" aria-controls="usuarios" aria-selected="false">Usuarios</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="examen" role="tabpanel" aria-labelledby="examen-tab">
+                                <div class="row w-100 mx-0">
+                                    <div class="col-12 col-lg-10 p-0">
+                                        <div class="box box-info">
+                                            <div class="scroll-css" style="overflow:scroll; height: 300px;" id="cont-table-protocol">
+                                                <table class="table table-sm table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th nowrap scope="col" class="d-none">ComponentId</th>
+                                                            <th nowrap scope="col">Componente</th>
+                                                            <th nowrap scope="col">Precio</th>
+                                                            <th nowrap scope="col">Operador</th>
+                                                            <th nowrap scope="col">Edad</th>
+                                                            <th nowrap scope="col">Género</th>
+                                                            <th nowrap scope="col">Es Condicional</th>
+                                                            <th nowrap scope="col">Tipo</th>
+                                                            <th nowrap scope="col" class="d-none">OperadorId</th>
+                                                            <th nowrap scope="col" class="d-none">GeneroId</th>
+                                                            <th nowrap scope="col" class="d-none">EsCondicional</th>
+                                                            <th nowrap scope="col" class="d-none">TipoId</th>
+                                                            <th nowrap scope="col" class="d-none">GrupoEtario</th>
+                                                            <th nowrap scope="col" class="d-none">IsIMC</th>
+                                                            <th nowrap scope="col" class="d-none">MayorIMC</th>
+                                                            <th nowrap scope="col" class="d-none">EsAdicional</th>
+                                                            <th nowrap scope="col" class="d-none">RecordStatus</th>
+                                                            <th nowrap scope="col" class="d-none">RecordType</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="body-new-components"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-2 pt-3">
+                                        <button class="btn btn-sm btn-primary btn-block" id="new-component"><i class="fas fa-plus mr-1"></i>Nuevo</button>
+                                        <button class="btn btn-sm btn-primary btn-block" id="edit-component"><i class="fas fa-edit mr-1"></i>Editar</button>
+                                        <button class="btn btn-sm btn-primary btn-block" id="deleted-component"><i class="fas fa-times mr-1"></i>Eliminar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
+                                <div class="row w-100 mx-0">
+                                    <div class="col-12 col-lg-10 p-0">
+                                        <div class="box box-info">
+                                            <div class="scroll-css" style="overflow:scroll; height: 300px;" id="cont-table-protocol">
+                                                <table class="table table-sm table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th nowrap scope="col" class="d-none">userId</th>
+                                                            <th nowrap scope="col">Nombres</th>
+                                                            <th nowrap scope="col">Usuario</th>
+                                                            <th nowrap scope="col">DNI</th>
+                                                            <th nowrap scope="col">Fecha Caducidad</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="body-new-users"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-2 pt-3">
+                                        <button class="btn btn-sm btn-primary btn-block" id="btn-new-externaluser"><i class="fas fa-plus mr-1"></i>Nuevo</button>
+                                        <button class="btn btn-sm btn-primary btn-block" id="btn-edit-externaluser"><i class="fas fa-edit mr-1"></i>Editar</button>
+                                        <button class="btn btn-sm btn-primary btn-block" id="btn-deleted-externaluser"><i class="fas fa-times mr-1"></i>Eliminar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 p-2 justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="guardar-protocolo"><i class="fas fa-save mr-1"></i>Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal Nuevo Component*@
+<div class="modal fade" tabindex="-1" id="modalNuevoComponente" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size: 0.9rem"><span id="type-action-component"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-12 col-lg-7">
+                        <div class="row w-100 mx-0">
+                            <div class="col-12">
+                                <label class="small">Examen</label>
+                                <div class="input-group input-group-sm mb-3">
+                                    <input type="text" class="form-control form-control-sm" id="input-component-name">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-info" type="button" id="buscar-componente">Buscar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="box box-info">
+                                    <div class="scroll-css" style="overflow:scroll; height: 430px;" id="cont-table-protocol">
+                                        <table class="table table-sm table-hover">
+                                            <thead id="cont-table-head-component">
+                                                <tr>
+                                                    <th nowrap scope="col" class="d-none">ComponentId</th>
+                                                    <th nowrap scope="col">Examen</th>
+                                                    <th nowrap scope="col">Categoria</th>
+                                                    <th nowrap scope="col">Precion Base</th>
+                                                    <th nowrap scope="col">Tipo</th>
+                                                    <th nowrap scope="col" class="d-none">TipoId</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="body-add-components"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-5">
+                        <div class="row w-100 mx-0">
+                            <div class="col-12 p-0">
+                                <div class="group-box">
+                                    <label class="label-group-box">Dato de Examen</label>
+                                    <div class="row w-100 mx-0">
+                                        <div class="col-12">
+                                            <label class="small">Examen</label>
+                                            <input type="text" disabled class="form-control form-control-sm" value="" id="datos-examen-name" />
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="small">Precio</label>
+                                            <input type="text" class="form-control form-control-sm" value="" id="datos-examen-price" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 p-0 py-2">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="adicionalSiNoNew">
+                                    <label class="custom-control-label" for="adicionalSiNoNew">Es un Examen adicional</label>
+                                </div>
+                            </div>
+                            <div class="col-12 p-0 py-2">
+                                <div class="custom-control custom-checkbox">
+                                    <input disabled checked type="checkbox" class="custom-control-input" id="condicionalSiNoNew">
+                                    <label disabled class="custom-control-label" for="condicionalSiNoNew">Es un Examen condicional</label>
+                                </div>
+                            </div>
+                            <div class="col-12 p-0">
+                                <div class="group-box">
+                                    <label class="label-group-box">Configurar condicionales</label>
+                                    <div class="row w-100 m-0">
+                                        <div class="col-8">
+                                            <label class="small">Edad</label>
+                                            <select class="custom-select custom-select-sm" id="select-edad-condicional">
+                                                @if (ViewBag.Operador != null)
+                                                {
+
+                                                    foreach (var item in ViewBag.Operador)
+                                                    {
+                                                        <option value="@item.Id" @(item.Id == "6" ? "selected" : "" )>@item.Value</option>
+                                                    }
+
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="small" style="opacity:0">Edad</label>
+                                            <input type="text" class="form-control form-control-sm" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" value="0" id="imput-edad-condicional" />
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="small">Género</label>
+                                            <select class="custom-select custom-select-sm" id="select-genero-condicional">
+                                                @if (ViewBag.Genero != null)
+                                                {
+
+                                                    foreach (var item in ViewBag.Genero)
+                                                    {
+                                                        <option value="@item.Id" @(item.Id == "3" ? "selected" : "" )>@item.Value</option>
+                                                    }
+
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="small" style="opacity:0">Edad</label>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="imcSiNoNew">
+                                                <label class="custom-control-label" for="imcSiNoNew" id="label-imc-condicional">I.M.C</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-8">
+                                            <label class="small">Mayor que:</label>
+                                            <input type="number" class="form-control form-control-sm" disabled value="" id="imput-mayorque-condicional" />
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="small">Grupo Etario</label>
+                                            <select class="custom-select custom-select-sm" id="imput-grupoetario-condicional">
+                                                <option value="-1">--Todos--</option>
+                                                @if (ViewBag.GrupoEtario != null)
+                                                {
+
+                                                    foreach (var item in ViewBag.GrupoEtario)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 p-2 justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="save-new-exam"><i class="fas fa-save mr-1"></i>Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal nuevo usuario externo*@
+<div class="modal fade" tabindex="-1" id="modalNuevoUsuarioExterno" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="header-user-external">
+                <h5 class="modal-title" style="font-size: 0.9rem">Usuarios Externos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-12 col-lg-8 py-3">
+                        <div class="group-box">
+                            <label class="label-group-box">Datos de persona</label>
+                            <div class="row w-100 mx-0">
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Nombres</label>
+                                    <input type="text" class="form-control form-control-sm" value="" id="new-externaluser-name" oninput="this.value = this.value.toUpperCase()" />
+                                    <input type="text" class="form-control form-control-sm d-none" value="" id="new-externaluser-personId" />
+                                    <input type="text" class="form-control form-control-sm d-none" value="" id="new-externaluser-userId" />
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Tipo Documento</label>
+                                    <select class="custom-select custom-select-sm" id="new-externaluser-doctype">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @if (ViewBag.TipoDocumento != null)
+                                        {
+                                            foreach (var item in ViewBag.TipoDocumento)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Apellido Paterno</label>
+                                    <input type="text" class="form-control form-control-sm" value="" id="new-externaluser-apepat" oninput="this.value = this.value.toUpperCase()" />
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Número de Documento</label>
+                                    <input type="text" class="form-control form-control-sm" value="" id="new-externaluser-docnumber" />
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Apellido Materno</label>
+                                    <input type="text" class="form-control form-control-sm" value="" id="new-externaluser-apemat" oninput="this.value = this.value.toUpperCase()" />
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Género</label>
+                                    <select class="custom-select custom-select-sm" id="new-externaluser-gender">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @if (ViewBag.Genero2 != null)
+                                        {
+
+                                            foreach (var item in ViewBag.Genero2)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Estado Civil</label>
+                                    <select class="custom-select custom-select-sm" id="new-externaluser-maritalstatus">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @if (ViewBag.EstadoCivil != null)
+                                        {
+                                            foreach (var item in ViewBag.EstadoCivil)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Nivel de Estudios</label>
+                                    <select class="custom-select custom-select-sm" id="new-externaluser-nivelestudios">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @if (ViewBag.NivelEstudios != null)
+                                        {
+                                            foreach (var item in ViewBag.NivelEstudios)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Email</label>
+                                    <input type="email" class="form-control form-control-sm" value="" id="new-externaluser-email" oninput="this.value = this.value.toUpperCase()" />
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Lugar de Nacimiento</label>
+                                    <input type="text" class="form-control form-control-sm" value="" id="new-externaluser-lugarnacimiento" oninput="this.value = this.value.toUpperCase()" />
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Teléfono</label>
+                                    <input type="text" class="form-control form-control-sm" value="" id="new-externaluser-telefono" />
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Fecha Nacimiento</label>
+                                    <input type="date" class="form-control form-control-sm" value="" id="new-externaluser-fechanacimiento" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Dirección</label>
+                                    <input type="text" class="form-control form-control-sm" value="" id="new-externaluser-direccion" oninput="this.value = this.value.toUpperCase()" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4 py-3">
+                        <div class="group-box h-100">
+                            <label class="label-group-box">Permisos/Opciones</label>
+                            <div class="row w-100 mx-0">
+                                <div class="col-12">
+                                    @if (ViewBag.ExternalPermisos != null)
+                                    {
+                                        foreach (var item in ViewBag.ExternalPermisos)
+                                        {
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" data-value="@item.Id" class="custom-control-input permisos-opciones" id="permiso-@item.Id">
+                                                <label class="custom-control-label" for="permiso-@item.Id">@item.Value</label>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row w-100 mx-0 mt-3">
+                    <div class="col-12 col-lg-4 py-3">
+                        <div class="group-box">
+                            <label class="label-group-box">Datos de Profesional</label>
+                            <div class="row w-100 mx-0">
+                                <div class="col-12">
+                                    <label class="small">Profesión</label>
+                                    <select class="custom-select custom-select-sm" id="new-externaluser-profesion">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @if (ViewBag.Profesional != null)
+                                        {
+                                            foreach (var item in ViewBag.Profesional)
+                                            {
+                                                if (int.Parse(item.Id) >= 30 && int.Parse(item.Id) <= 33)
+                                                {
+                                                    <option value="@item.Id">@item.Value</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Nro Colegiatura</label>
+                                    <input type="text" class="form-control form-control-sm" value="" id="new-externaluser-colegiatura" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Infor. Adicional</label>
+                                    <input type="text" class="form-control form-control-sm" value="" id="new-externaluser-infoadicional" oninput="this.value = this.value.toUpperCase()" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4 py-3">
+                        <div class="group-box">
+                            <label class="label-group-box">Datos de Usuario</label>
+                            <div class="row w-100 mx-0">
+                                <div class="col-12">
+                                    <label class="small">Usuario</label>
+                                    <input autocomplete="off" type="text" class="form-control form-control-sm" id="new-externaluser-usuario" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Password</label>
+                                    <input autocomplete="new-password" type="password" class="form-control form-control-sm" id="new-externaluser-contraseña" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Repetir Password</label>
+                                    <input autocomplete="new-password" type="password" class="form-control form-control-sm" id="new-externaluser-repetircontraseña" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4 py-3">
+                        <div class="group-box h-100">
+                            <label class="label-group-box">Notificaciones</label>
+                            <div class="row w-100 mx-0">
+                                <div class="col-12">
+
+                                    @if (ViewBag.Notificaciones != null)
+                                    {
+                                        foreach (var item in ViewBag.Notificaciones)
+                                        {
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" data-value="@item.Id" class="custom-control-input permisos-notificaciones" id="noti-@item.Id">
+                                                <label class="custom-control-label" for="noti-@item.Id">@item.Value</label>
+                                            </div>
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-8 py-3">
+                        <div class="group-box h-100">
+                            <label class="label-group-box">Expiración de cuenta</label>
+                            <div class="row w-100 mx-0">
+                                <div class="col-12">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input onchange="$('#fecha-expira').attr('disabled', !$('#fecha-expira').attr('disabled'))" checked type="radio" id="rdo-nuncaexpira" name="expiracion-usuario" class="custom-control-input">
+                                        <label class="custom-control-label" for="rdo-nuncaexpira">Nunca Expira</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input onchange="$('#fecha-expira').attr('disabled', !$('#fecha-expira').attr('disabled'))" type="radio" id="rdo-fechaexpira" name="expiracion-usuario" class="custom-control-input">
+                                        <label class="custom-control-label" for="rdo-fechaexpira">Fecha de Expiración</label>
+                                    </div>
+                                    <div class="custom-control custom-control-inline">
+                                        <input type="date" style="max-width:180px" id="fecha-expira" disabled class="form-control form-control-sm" value="" />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 p-2 justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="save-new-externaluser"><i class="fas fa-save mr-1"></i>Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*Modal Generar Orden de Servicio*@
+<div class="modal fade" tabindex="-1" id="modalOrdenServicio" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="header-orden-servicio">
+                <h5 class="modal-title" style="font-size: 0.9rem">Orden de Servicio</h5>
+                <button type="button" id="xCerraModalOrdenServicio" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0 pt-2">
+                    <div class="col-12 d-block d-lg-flex justify-content-end align-items-center  py-3">
+                        <label class="small m-0 mx-1">Fecha de Emisión</label>
+                        <input type="text" class="d-none" id="serviceorderId" value="" />
+                        <input type="date" class="form-control form-control-sm mx-1" id="fechaemision-serviceorder" value="" style="max-width:150px" />
+                        <label class="small m-0 mx-1">ORDEN DE SERVICIO</label>
+                        <label class="badge badge-secondary m-0 mx-1" style="font-size:1.2rem" id="orden-servicio-secuencial"></label>
+                    </div>
+                    <div class="col-12">
+                        <div class="group-box w-100">
+                            <label class="label-group-box">Datos de la Orden de Servicio</label>
+                            <div class="row w-100 mx-0 ">
+                                <div class="col-12 col-lg-2 p-0">
+                                    <label class="small">Fecha de entrega</label>
+                                    <div class="custom-control custom-checkbox d-flex align-items-start">
+                                        <input type="checkbox" onchange="$('#fecha-delivery-orden-servicio').attr('disabled', !$('#fecha-delivery-orden-servicio').attr('disabled'))" class="custom-control-input" id="isDelivery">
+                                        <label class="custom-control-label" for="isDelivery"></label>
+                                        <input disabled type="date" class="form-control form-control-sm" value="" id="fecha-delivery-orden-servicio" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">Estado</label>
+                                    <select class="custom-select custom-select-sm" id="cbo-estado-ordenservicio">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @if (ViewBag.StatusOrderService != null)
+                                        {
+                                            foreach (var item in ViewBag.StatusOrderService)
+                                            {
+                                                <option value="@item.Id" @(item.Id == "1" ? "selected" : "")>@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">Linea de Crédito</label>
+                                    <select class="custom-select custom-select-sm" id="cbo-linea-ordenservicio">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @if (ViewBag.LineaCredito != null)
+                                        {
+                                            foreach (var item in ViewBag.LineaCredito)
+                                            {
+                                                <option value="@item.Id">@item.Value</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-3 pt-3">
+
+                                    <label class="small mt-3">Mostrar precio</label>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" checked id="mostrarPrecioSi" name="mostrarPrecioSiNo" class="custom-control-input">
+                                        <label class="custom-control-label" for="mostrarPrecioSi">SI</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="mostrarPrecioNo" name="mostrarPrecioSiNo" class="custom-control-input">
+                                        <label class="custom-control-label" for="mostrarPrecioNo">NO</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small" style="opacity:0">Mostrar precio</label>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="protocoloEspecial">
+                                        <label class="custom-control-label" for="protocoloEspecial">Protocolo Especial</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 pt-3">
+                        <div class="group-box w-100">
+                            <label class="label-group-box">Detalle de la Orden de Servicio</label>
+                            <div class="row w-100 mx-0 ">
+                                <div class="col-lg-10 pt-2">
+                                    <div class="row w-100 mx-0">
+                                        <div class="col-lg-2 mt-2">
+                                            <label class="small">Empresa Cliente</label>
+                                        </div>
+                                        <div class="col-lg-10 mt-2">
+                                            <input type="text" class="form-control form-control-sm" id="ordenservicio-empresaCliente" value="" required />
+                                            <input type="text" class="form-control form-control-sm d-none" id="ordenservicio-empresaClienteId" value="" />
+                                            <input type="text" class="form-control form-control-sm d-none" id="ordenservicio-locationId" value="" />
+                                        </div>
+                                        <div class="col-lg-2 mt-2">
+                                            <label class="small">RUC</label>
+                                        </div>
+                                        <div class="col-lg-3 mt-2">
+                                            <div class="input-group">
+                                                <div class="custom-control p-0">
+                                                    <input style="max-width: 95px" type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" class="form-control form-control-sm" id="ordenservicio-ruc" value="" required maxlength="11" />
+                                                </div>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-secondary btn-sm" type="button" id="btn-find-organization"><i class="fas fa-globe-americas"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2 mt-2">
+                                            <label class="small">DIRECCIÓN</label>
+                                        </div>
+                                        <div class="col-lg-2 mt-2">
+                                            <input type="text" id="ordenservicio-sede" class="form-control form-control-sm" value="" />
+                                        </div>
+                                        <div class="col-lg-3 mt-2"></div>
+                                        <div class="col-lg-2 mt-2">
+                                            <label class="small">REPRESENTANTE</label>
+                                        </div>
+                                        <div class="col-lg-4 mt-2">
+                                            <input type="text" id="ordenservicio-representante" class="form-control form-control-sm" value="" />
+                                        </div>
+                                        <hr class="w-100" />
+                                        <div class="col-lg-2 mt-2">
+                                            <label class="small">N° Trabajadores</label>
+                                        </div>
+                                        <div class="col-lg-2 mt-2">
+                                            <input type="number" step="1" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" required class="form-control form-control-sm" id="ordenservicio-cantidadTrabajadores" value="" />
+                                        </div>
+                                        <div class="col-lg-2 mt-2">
+                                            <label class="small">Tipo de Protocolo</label>
+                                        </div>
+                                        <div class="col-lg-2 mt-2">
+                                            <select class="custom-select custom-select-sm" id="protocoltype-orderservice">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @if (ViewBag.TipoProtocolo != null)
+                                                {
+                                                    foreach (var item in ViewBag.TipoProtocolo)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-1 mt-2">
+                                            <label class="small">GESO</label>
+                                        </div>
+                                        <div class="col-lg-3 mt-2">
+                                            <div class="input-group">
+                                                <div class="custom-control p-0">
+                                                    <select class="custom-select custom-select-sm" id="orderservice-geso" style="max-width: 95px">
+                                                        <option value="-1">--Selecc--</option>
+                                                    </select>
+                                                </div>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-secondary btn-sm" type="button" id="btn-find-organization"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="input-group d-none">
+                                                <div class="custom-control p-0">
+                                                    <input type="text" name="name" value="" style="max-width: 95px" />
+                                                </div>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-secondary btn-sm" type="button" id="btn-save-geso"><i class="fas fa-check" title="Guardar geso"></i></button>
+                                                </div>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-danger border-danger btn-sm" type="button" id="btn-cancel-geso"><i class="fas fa-times" title="Cancelar/Regresar"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 pt-2">
+                                    <button class="btn btn-sm btn-primary btn-block" id="add-protocol-orderservice"><i class="fas fa-plus mr-1"></i> Asignar</button>
+                                </div>
+                                <div class="col-12 pt-3">
+                                    <div class="box box-info">
+                                        <div class="scroll-css" style="overflow:scroll; height: 330px;" id="cont-table-protocol">
+                                            <table class="table table-sm table-hover">
+                                                <thead id="cont-table-head-ordenservicio">
+                                                    <tr>
+                                                        <th nowrap scope="col" class="d-none">v_ProtocolId</th>
+                                                        <th nowrap scope="col">Protocolo</th>
+                                                        <th nowrap scope="col">Cantidad de Trabajadores</th>
+                                                        <th nowrap scope="col">Precio Unitario</th>
+                                                        <th nowrap scope="col">Total</th>
+                                                        <th nowrap scope="col">Tipo de Protocolo</th>
+                                                        <th nowrap scope="col" class="d-none">i_ProtocolType</th>
+                                                        <th nowrap scope="col" class="d-none">ServiceOrderDetailId</th>
+                                                        <th nowrap scope="col">Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="body-add-orden-servicio"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="row w-100 mx-0 justify-content-around">
+                                        <div class="col-lg-3 pt-2"><button class="btn btn-sm btn-primary btn-block" id="generar-reporte-ordenservicio"><i class="fas fa-file-pdf mr-1"></i>Generar Reporte Pdf</button></div>
+                                        <div class="col-lg-2 pt-2"><button class="btn btn-sm btn-primary btn-block" id="nuevo-email"><i class="fas fa-envelope mr-1"></i>Enviar Email</button></div>
+                                        <div class="col-lg-4 pt-2">
+                                            <div class="form-inline">
+                                                <label class="small mr-1">Total de Trabajadores:</label>
+                                                <input disabled type="number" class="form-control form-control-sm" id="total-trabajadores-ordenservicio" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 pt-2">
+                                            <div class="form-inline">
+                                                <label class="small mr-1">Total.</label>
+                                                <input disabled type="number" class="form-control form-control-sm" id="total-precio-ordenservicio" value="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 p-2 justify-content-between">
+                <button type="button" class="btn btn-secondary" id="cerraModalOrdenServicio">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="save-orden-servicio"><i class="fas fa-save mr-1"></i>Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@**Modal Enviar Email*@
+<div class="modal fade" tabindex="-1" id="modalPrintEmail" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="add-loading-email">
+            <div class="modal-header" id="header-orden-servicio">
+                <h5 class="modal-title" style="font-size: 0.9rem">Enviar Email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0 my-3">
+                    <div class="col-12 py-2">
+                        <div class="group-box">
+                            <label class="label-group-box">Seleccionar adjuntos:</label>
+
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" checked id="tipo-ordenservicio" name="tipo-adjunto" class="custom-control-input">
+                                <label class="custom-control-label" for="tipo-ordenservicio">Orden de servicio</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="tipo-cotizacion" name="tipo-adjunto" class="custom-control-input">
+                                <label class="custom-control-label" for="tipo-cotizacion">Cotización</label>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-2 py-2">
+                        <label class="small">Para:</label>
+                    </div>
+                    <div class="col-lg-10 py-2">
+                        <input type="email" class="form-control form-control-sm" id="email-para" value="" />
+                    </div>
+                    <div class="col-lg-2 py-2">
+                        <label class="small">Asunto:</label>
+                    </div>
+                    <div class="col-lg-10 py-2">
+                        <input type="text" class="form-control form-control-sm" id="email-asunto" value="Envío de Cotización / Orden de Servicio, Saludo Ocupacional:Salud" />
+                    </div>
+                    <div class="col-lg-2 py-2">
+                        <label class="small">Cuerpo:</label>
+                    </div>
+                    <div class="col-lg-10 py-2">
+                        <textarea style="min-height:200px;" class="form-control form-control-sm" id="email-cuerpo" rows="6">Se adjunta Cotización / Orden de Servicio, para las atenciones Médico Ocupacionales en nuestra Clínica especializada en Salud Ocupacional</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 p-2 justify-content-between">
+                <button type="button" class="btn btn-secondary" id="close-email" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="save-email"><i class="fas fa-envelope mr-1"></i>Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@**Modal Enviar Planes*@
+<div class="modal fade" tabindex="-1" id="modalPlanes" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="header-planes">
+                <h5 class="modal-title" style="font-size: 0.9rem">Plan de aseguradora</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <div class="row w-100 mx-0 justify-content-between">
+                    <div class="col-12">
+                        <div class="group-box">
+                            <label class="label-group-box">Empresa Aseguradora:</label>
+                            <div class="form-inline">
+                                <label class="small mr-1">Empresa: </label>
+                                <select class="custom-select custom-select-sm" id="organization-aseguradora">
+                                    @if (ViewBag.OrgaAseguradora != null)
+                                    {
+                                        foreach (var item in ViewBag.OrgaAseguradora)
+                                        {
+                                            <option value="@item.v_Id">@item.Value</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-10">
+                        <div class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+                            <div class="box box-info mt-2 mb-0">
+                                <div class="scroll-css" style="overflow:scroll; height: 300px;">
+                                    <table class="table table-sm table-hover" id="table-examenes">
+                                        <thead id="add-loading-planes">
+                                            <tr class="text-center">
+                                                <th nowrap scope="col" class="d-none">PlanId</th>
+                                                <th nowrap scope="col">Unidad Productiva</th>
+                                                <th nowrap scope="col">Deducible</th>
+                                                <th nowrap scope="col">Valor</th>
+                                                <th nowrap scope="col">Coaseguro</th>
+                                                <th nowrap scope="col">ImporteCo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="body-planes">
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 py-2">
+                        <button class="btn btn-sm btn-primary btn-block" id="add-new-organization-plan"><i class="fas fa-plus mr-1"></i>Nuevo</button>
+                        <button class="btn btn-sm btn-danger btn-block" id="deleted-organization-plan"><i class="fas fa-times mr-2"></i>Eliminar</button>
+                    </div>
+
+                    <button type="button" class="btn btn-secondary m-3" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary m-3" id="send-plan"><i class="fas fa-save mr-1"></i>Guardar</button>
+                </div>
+                <div class="row w-100 d-none p-4 mx-0 justify-content-between">
+                    <div class="col-12">
+
+                    </div>
+                    <button type="button" class="btn btn-secondary">Regresar</button>
+                    <button type="button" class="btn btn-primary" id="save-plan"><i class="fas fa-save mr-1"></i>Guardar</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@**Modal Nuevo Plan Organización*@
+<div class="modal fade" tabindex="-1" id="modalNuevosPlanes" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="header-nuevos-planes">
+                <h5 class="modal-title" style="font-size: 0.9rem">Agregar listado de beneficios</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-lg-3 py-2">
+                        <label class="small">Unidad Productiva</label>
+                    </div>
+                    <div class="col-lg-9 py-2">
+                        <select class="custom-select custom-select-sm" id="unidad-productiva-id">
+                            @if (ViewBag.Lineas != null) {
+                                foreach (var objLinea in ViewBag.Lineas)
+                                {
+                                    <option value="@objLinea.v_IdLinea">@objLinea.v_Nombre</option> 
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-lg-5 py-2">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="deducible-copago-plan">
+                            <label class="custom-control-label" for="deducible-copago-plan">Deducible(Copago fijo)</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 py-2">
+                        <label class="small">Monto en efectivo paga paciente</label>
+                    </div>
+                    <div class="col-lg-3 py-2">
+                        <input type="text" class="form-control form-control-sm" value="" id="input-deducible" />
+                    </div>
+
+                    <div class="col-lg-5 py-2">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="coaseguro-copago-plan">
+                            <label class="custom-control-label" for="coaseguro-copago-plan">Coaseguro(Copago variable)</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 py-2">
+                        <label class="small">Monto en porcentaje paga paciente</label>
+                    </div>
+                    <div class="col-lg-3 py-2">
+                        <input type="text" class="form-control form-control-sm" value="" id="input-coaseguro" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 justify-content-between">
+                <button type="button" class="btn btn-secondary m-3" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary m-3" id="save-add-plan"><i class="fas fa-save mr-1"></i>Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/Alert.js"></script>
+<link href="~/Content/css/Alert.css" />
+
+<script>
+
+    const SetDateTimeNow = (input = "") => {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+
+        if (input == "") {
+            $("input[type='date']").val(today);
+        } else {
+            input.val(today);
+        }
+
+    }
+
+    const TipoServicio = {
+        Seguros: 11
+    }
+    const RecordStatus = {
+        Grabado: 1,
+        Agregado: 2,
+        Editado: 3,
+        Eliminado: 4
+    }
+    const RecordType = {
+        Temporal: 1,
+        NoTemporal: 2
+    }
+
+    const WarningAlert = function (message) {
+        alertafixed({
+            class: 'warning-class',
+            type: 'warning',
+            title: 'VALIDACIÓN',
+            message,
+        })
+    }
+
+    const InfoAlert = function (message) {
+        alertafixed({
+            class: 'info-class',
+            type: 'info',
+            title: 'INFORMACIÓN',
+            message,
+        })
+    }
+
+    const AlertInfoServidor = function (status, message) {
+        alertafixed({
+            type: 'info',
+            class: 'info-class',
+            title: 'INFORMACIÓN DEL SERVIDOR: ' + status,
+            message,
+        })
+    }
+
+    const AlertErrorServidor = function (status, message) {
+        alertafixed({
+            type: 'danger',
+            class: 'danger-class',
+            title: 'ERROR: ' + status,
+            message,
+        })
+    }
+
+    const SuccessMessageServidor = function (status, message) {
+        alertafixed({
+            type: 'success',
+            class: 'success-class',
+            title: 'HECHO: ' + status,
+            message,
+        })
+    }
+
+    const LimpiarNuevoProtocolo = function () {
+        $("#input-protocol-id").val("");
+
+        $("#new-factor").val("");
+        $("#new-medicine-discount").val("");
+        $("#new-bed-price").val("");
+        $("#new-discount-exam").val("");
+
+        $("#new-change-protocolname").val("");
+        $("#new-change-geso").html("<option value='-1'>--Seleccionar--</option>");
+        $("#new-change-empresacliente").val("-1");
+        $("#new-change-tiposervicio").val("-1");
+        $("#new-change-service").html("<option value='-1'>--Seleccionar--</option>");
+        $("#new-change-empresaempleadora").val("-1");
+        $("#new-change-empresatrabajo").val("-1");
+        $("#new-change-centrocosto").val("");
+        $("#new-change-tipoexamen").val("-1");
+        $("#body-new-components").html("");
+        $("#body-new-users").html("");
+        if ($("#activoSiNoNew:checked").length == 0) {
+            $("#activoSiNoNew").click();
+        }
+    }
+
+    const ValidarCamposProtocolo = function (arrId) {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
+
+        let valido = true;
+
+        for (var i = 0; i < arrId.length; i++) {
+            if ($(arrId[i]).get(0).type == "select-one") {
+                if ($(arrId[i]).val() == "-1") {
+                    $(arrId[i]).addClass("border-danger");
+                    valido = false;
+                } else {
+                    $(arrId[i]).removeClass("border-danger").addClass("border-success");
+                }
+            } else if ($(arrId[i]).get(0).type == "text" || $(arrId[i]).get(0).type == "date" || $(arrId[i]).get(0).type == "password" || $(arrId[i]).get(0).type == "number") {
+                if ($(arrId[i]).val() == "" || !$(arrId[i]).get(0).validity.valid) {
+                    $(arrId[i]).addClass("border-danger");
+                    valido = false;
+                } else {
+                    $(arrId[i]).removeClass("border-danger").addClass("border-success");
+                }
+            } else if ($(arrId[i]).get(0).type == "email") {
+                if ($(arrId[i]).val() == "") {
+                    $(arrId[i]).addClass("border-danger");
+                    valido = false;
+                } else if (!validarEmail($(arrId[i]).val())) {
+                    alertafixed({
+                        type: 'warning',
+                        title: 'VALIDACIÓN',
+                        class: 'error-validate',
+                        message: 'Asegurese de ingresar un Email Valido.'
+                    })
+                    valido = false;
+                    $(arrId[i]).addClass("border-danger");
+                } else {
+                    $(arrId[i]).removeClass("border-danger").addClass("border-success");
+                }
+            }
+
+        }
+
+        if (!valido) {
+            alertafixed({
+                type: 'warning',
+                title: 'VALIDACIÓN',
+                class: 'error-validate',
+                message: 'Por favor, verifique las casillas en rojo y vuelva a intentar.'
+            })
+        }
+
+        return valido;
+    }
+
+    const validarEmail = function (email) {
+        const regExp = new RegExp(/^[\w-]+\@@*[\w-]+\.[a-z]{2,3}(\.[a-z]{2})?$/i);
+        let result = regExp.test(email);
+        return result;
+    }
+
+    const SetSessionStorageOderService = function (status = 1) {
+        sessionStorage.setItem("IsNewOrderService", status);
+    }
+
+    const AgregarOrdenServicio = function (row) {
+
+        if (sessionStorage.getItem("IsNewOrderService") == 1) {
+            return;
+        }
+        SetSessionStorageOderService(1);
+        let protocolId = $(row).find("td").eq(0).text();
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { protocolId },
+            url: '/Protocol/GetDataProtocol',
+            success: function (json) {
+
+                $("#ordenservicio-protocolName").val(json.ProtocolName);
+                $("#ordenservicio-empresaCliente").val(json.EmpresaEmpleadoraName);
+
+
+            },
+            error: function (err) {
+                AlertErrorServidor(err.status, err.statusText);
+            }
+        })
+
+        $("#modalOrdenServicio").modal("show");
+    }
+
+    const GetSecuentialOrderService = async () => {
+
+        try {
+            const result = await $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                url: '/Protocol/GetSecuentialForServiceOrder',
+            })
+            return result;
+        } catch (e) {
+            return { Error: true, Status: e.status, Message: "Sucedió un error conectandose al servidor:" + e.statusText };
+        }
+
+    }
+
+    const ConvertSecuentialInNewOrderService = function (secuential) {
+        let year = new Date().getFullYear();
+        let month = new Date().getMonth() + 1;
+
+        let newSecuential = ('000000' + secuential).substring(secuential.length - 2);
+
+        return `N° ${year}${month}${newSecuential}`;
+    }
+
+    const LimpiarCamposOrdenServicio = function () {
+        $("#serviceorderId").val("");
+        $("#cbo-linea-ordenservicio").val("-1");
+        $("#cbo-estado-ordenservicio").val("1");
+        $("#mostrarPrecioSi").get(0).checked = true;
+        $("#protocoloEspecial").get(0).checked = false;
+        $("#ordenservicio-protocolName").val("");
+        $("#ordenservicio-ruc").val("");
+        $("#ordenservicio-empresaCliente").val("");
+        $("#ordenservicio-cantidadTrabajadores").val("");
+        $("#total-trabajadores-ordenservicio").val("");
+        $("#total-precio-ordenservicio").val("");
+        $("#body-add-orden-servicio").html("");
+        $("#orderservice-geso").html("<optiona value='-1'>--selec--</option>");
+        $("#protocoltype-orderservice").val("-1");
+        $("#ordenservicio-sede").val("");
+        $("#ordenservicio-representante").val("");
+    }
+
+    const GetDataForSaveServiceOrder = function () {
+        let rows = $("#body-add-orden-servicio .row-protocol");
+
+        let serviceorderId = $("#serviceorderId").val();
+        let EntityServiceOrder = {
+            v_ServiceOrderId: serviceorderId,
+            v_CustomServiceOrderId: $("#orden-servicio-secuencial").text(),
+            v_Description: "",
+            v_Comentary: "",
+            i_NumberOfWorker: $("#total-trabajadores-ordenservicio").val(),
+            r_TotalCost: $("#total-precio-ordenservicio").val(),
+            d_DeliveryDate: $("#isDelivery").get(0).checked ? $("#fecha-delivery-orden-servicio").val() : null,
+            i_ServiceOrderStatusId: $("#cbo-estado-ordenservicio").val(),
+            i_LineaCreditoId: $("#cbo-linea-ordenservicio").val(),
+            i_MostrarPrecio: $("#mostrarPrecioSi").get(0).checked ? 1 : 0,
+            i_EsProtocoloEspecial: $("#protocoloEspecial").get(0).checked ? 1 : 0,
+            v_LocationId: $("#ordenservicio-locationId").val(),
+
+            v_OrganizationId: $("#ordenservicio-empresaClienteId").val(),
+            v_OrganizationName: $("#ordenservicio-empresaCliente").val(),
+            v_IdentificationNumber: $("#ordenservicio-ruc").val(),
+        }
+        let ListEntityServiceOrder = [];
+        for (var i = 0; i < rows.length; i++) {
+            if (rows.eq(i).hasClass('row-protocol')) {
+                let td = rows.eq(i).find("td");
+                let EntityServiceOrderDetail = {
+                    v_ServiceOrderDetailId: td.eq(9).text(),
+                    v_ProtocolId: td.eq(0).text(),
+                    i_NumberOfWorkerProtocol: td.eq(2).text(),
+                    r_ProtocolPrice: td.eq(3).text(),
+                    v_ProtocolTypeName: td.eq(5).text(),
+                    i_ProtocolType: td.eq(6).text(),
+                    r_Total: td.eq(4).text(),
+                    ProtocolComponents: [],
+                    v_GroupOccupationId: td.eq(7).text(),
+                    v_GesoName: td.eq(8).text(),
+
+                }
+
+                let rowsChildren = rows.eq(i).next().find(".body-components tr");
+
+                for (let x = 0; x < rowsChildren.length; x++) {
+                    let td = rowsChildren.eq(x).find("td");
+                    let objProtocolComponents = {
+                        v_ComponentId: td.eq(0).text(),
+                        r_Price: td.eq(2).text(),
+                        i_OperadorId: td.eq(8).text(),
+                        i_Edad: td.eq(4).text(),
+                        i_GenderId: td.eq(9).text(),
+                        i_IsConditional: td.eq(10).text(),
+                        i_IsAditional: td.eq(15).text(),
+                        i_ComponentTypeId: td.eq(11).text(),
+                        i_GrupoEtario: td.eq(12).text(),
+                        i_IsIMC: td.eq(13).text(),
+                        r_ValueIMC: td.eq(14).text(),
+                        RecordStatus: td.eq(16).text(),
+                        RecordType: td.eq(17).text(),
+                        v_ProtocolComponentId: td.eq(18).text(),
+                    }
+                    EntityServiceOrderDetail.ProtocolComponents.push(objProtocolComponents);
+                }
+
+                ListEntityServiceOrder.push(EntityServiceOrderDetail);
+
+            }
+
+        }
+        console.log(ListEntityServiceOrder);
+
+        let fechaEmision = $("#fechaemision-serviceorder").val();
+        let data = {
+            FechaEmision: fechaEmision,
+            EntityServiceOrder,
+            ListEntityServiceOrder,
+        }
+        return data;
+    }
+
+    const getDateFromAspNetFormat = function (date) {
+        const re = /-?\d+/;
+        const m = re.exec(date);
+
+        var fecha = new Date(parseInt(m[0], 10));
+        var dd = String(fecha.getDate()).padStart(2, '0');
+        var mm = String(fecha.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fecha.getFullYear();
+
+        fecha = yyyy + '-' + mm + '-' + dd;
+        return fecha;
+    }
+
+    const autocompleteOrganizations = (value, inputOrganizationName, inputOrganizationId, tipoBusqueda = 0) => {
+        if (value == "") {
+            $(inputOrganizationId).val("");
+            return;
+        }
+
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: {
+                'value': value,
+            },
+            url: '/Protocol/SearchOrganizations',
+            success: function (json) {
+                if (json.length != 0) {
+                    var arrayName = [];
+                    var _arrayName = [];
+                    var arrayId = [];
+                    var arrayRuc = [];
+                    var arrayAdress = [];
+                    var arrayLocation = [];
+                    var arrayContactName = [];
+                    for (var i = 0; i < json.length; i++) {
+                        var Getsplit = json[i].split("|");
+                        arrayName.push(Getsplit[tipoBusqueda]);
+                        arrayId.push(Getsplit[1]);
+                        arrayRuc.push(Getsplit[2]);
+                        _arrayName.push(Getsplit[0]);
+                        arrayAdress.push(Getsplit[3]);
+                        arrayLocation.push(Getsplit[4]);
+                        arrayContactName.push(Getsplit[5])
+                    }
+
+                    $(inputOrganizationName).autocomplete({
+                        source: arrayName,
+                        change: function (event, ui) {
+                            val = $(inputOrganizationName).val();
+                            exists = $.inArray(val, arrayName);
+                            if (tipoBusqueda == 0) {
+                                $("#ordenservicio-ruc").val(arrayRuc[exists]);
+                            } else {
+                                $("#ordenservicio-empresaCliente").val(_arrayName[exists]);
+                            }
+                            $("#ordenservicio-sede").val(arrayAdress[exists]);
+                            $("#ordenservicio-representante").val(arrayContactName[exists]);
+                            $("#ordenservicio-locationId").val(arrayLocation[exists]);
+                            $(inputOrganizationId).val(arrayId[exists]);
+                            GetGesoProt(arrayId[exists] + "|" + arrayLocation[exists], "orderservice-geso");
+                        }
+                    });
+                } else {
+                    $(inputOrganizationId).val("");
+                }
+
+            },
+            error: function (error) {
+                console.log("ERROR", error);
+            }
+        });
+
+    }
+
+    const GetCaptchaRuc = function () {
+        $("#cont-img-captcha-ruc").addClass("loadingGrid");
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            url: '/Protocol/GetCaptchaBusquedaRuc',
+            success: function (json) {
+                if (json.Error) {
+                    AlertErrorServidor(json.Status, json.Message);
+                } else {
+                    $("#img-captcha-ruc").attr("src", "data:image/png;base64," + json.Id);
+                }
+                $("#cont-img-captcha-ruc").removeClass("loadingGrid");
+            },
+            error: function (err) {
+                AlertErrorServidor(err.status, err.statusText);
+                $("#cont-img-captcha-ruc").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const FindComponents = function (rowId) {
+
+        $(rowId).attr("id", "generic-Id");
+
+        sessionStorage.setItem("tipollamada", "ordenservicio");
+        sessionStorage.setItem("ActionExam", "create")
+        $("#modalOrdenServicio").modal("hide");
+        $("#modalNuevoComponente").modal("show");
+
+    }
+
+    const GetDataContribuyente = function (captcha) {
+        if (captcha.length == 4) {
+            let value = $("#ordenservicio-empresaCliente").val();
+            let type = Number(value);
+            let tipoBusqueda = 0;
+            if (isNaN(type)) {
+                tipoBusqueda = 3;
+            } else {
+                if (value.length == 8) {
+                    tipoBusqueda = 2
+                } else {
+                    tipoBusqueda = 1
+                }
+            }
+            $("#text-captcha").addClass("border-success").removeClass("border-danger");
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                data: { captcha, value, tipoBusqueda },
+                method: 'GET',
+                url: '/Protocol/GetDataContribuyente',
+                success: function (json) {
+                    console.log(json);
+                },
+                error: function (err) {
+                    AlertErrorServidor(err.status, err.statusText);
+                }
+            })
+        } else {
+            $("#text-captcha").addClass("border-danger").removeClass("border-success");
+            WarningAlert("Ingrese un codigo captcha valido");
+        }
+
+    }
+
+    const GetPlanByProtocolId = function (protocolId) {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { protocolId },
+            url: '/Plan/GetPlanByProtocolId',
+            success: function (json) {
+
+                var arrRows = [];
+                for (let obj of json) {
+
+                    let deducible = obj.i_EsDeducible == 1 ? "checked" : "";
+                    let coaseguro = obj.i_EsCoaseguro == 1 ? "checked" : "";
+                    let htmlRow = `<tr onclick="pintarFilaPlan(this)">
+                                        <td class="d-none">${ obj.i_PlanId }</td>
+                                        <td>
+                                            <label class="small m-0">${ obj.v_IdUnidadProductivaName }</label>
+                                            <i class="fas bg-info fa-search border-radius mt-1 text-white p-1 float-right"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="custom-control custom-checkbox">
+                                              <input type="checkbox" ${ deducible } class="custom-control-input" id="deducible-check-${obj.i_PlanId}">
+                                              <label class="custom-control-label" for="deducible-check-${obj.i_PlanId}"></label>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <input class="form-control form-control-sm" value="${ obj.d_Importe }" style="max-width:70px" />
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="custom-control custom-checkbox">
+                                              <input type="checkbox" ${ coaseguro } class="custom-control-input" id="coaseguro-check-${obj.i_PlanId}">
+                                              <label class="custom-control-label" for="coaseguro-check-${obj.i_PlanId}"></label>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <input class="form-control form-control-sm" value="${ obj.d_Importe }" style="max-width:70px" />
+                                        </td>
+                                    </tr>`;
+
+                    arrRows.push(htmlRow);
+                }
+                $("#body-planes").html(arrRows.join(""));
+            },
+            error: function (err) {
+                AlertErrorServidor(err.status, err.statusText)
+            }
+        })
+    }
+
+
+
+    $(document).ready(function () {
+        $("#generic-Id").removeAttr("id");
+        SetSessionStorageOderService();
+        sessionStorage.setItem("ProtocolId", "");
+        Filter();
+        SetDateTimeNow();
+        SetDataSelectEmpresaClienteEmpleadora();
+        sessionStorage.setItem("tipollamada", "");
+        sessionStorage.setItem("ActionExam", "")
+
+        $("#deleted-organization-plan").on("click", function () {
+            let row = $("#body-planes").find(".row-active");
+            if (row.length == 0) {
+                WarningAlert("Debe seleccionar un PLAN para continuar.");
+                return;
+            }
+            let planId = row.eq(0).find("td").eq(0).text();
+            notificacion({
+                classTitleAndButtons: "warningTitleAndButtons",
+                classMessage: "warningMessage",
+                title: "¡ Confirmación !",
+                icono: "",
+                contenido: "¿ Seguro de eliminar plan ?",
+                btnAceptar: "Aceptar",
+                btnCancelar: "Cancelar",
+                btnOk: "OK",
+                mostrarBtnAceptarAndCancelar: "",
+                mostrarBtnOk: "no",
+            });
+
+            $(".bigBox-Aceptar").on("click", function () {
+                $(".bigBox-Cancelar").click();
+                $("#add-loading-planes").addClass("loadingGrid");
+                $.ajax({
+                    cache: false,
+                    method: 'GET',
+                    dataType: 'json',
+                    data: { planId },
+                    url: '/Plan/DeletedPlan',
+                    success: function (json) {
+                        if (json.Error) {
+                            AlertErrorServidor(json.Status, json.Message);
+                        } else {
+                            SuccessMessageServidor(json.Status, json.Message);
+                            row.eq(0).remove();
+                        }
+                        $("#add-loading-planes").removeClass("loadingGrid");
+                    },
+                    error: function (err) {
+                        AlertErrorServidor(err.status, err.statusText);
+                        $("#add-loading-planes").removeClass("loadingGrid");
+                    }
+                })
+            })
+        })
+
+        $("#save-add-plan").on("click", function () {
+            let v_ProtocoloId = sessionStorage.getItem("ProtocolId");
+            
+            let data = {
+                v_OrganizationSeguroId: $("#organization-aseguradora").val(),
+                v_ProtocoloId,
+                v_IdUnidadProductiva: $("#unidad-productiva-id").val(),
+                i_EsDeducible: $("#deducible-copago-plan").get(0).checked ? 1 : 0,
+                i_EsCoaseguro: $("#coaseguro-copago-plan").get(0).checked ? 1 : 0,
+                d_Importe: $("#input-deducible").val(),
+                d_ImporteCo: $("#input-coaseguro").val(),
+            }
+
+            $("#header-nuevos-planes").addClass("loadingGrid");
+
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                dataType: 'json',
+                data,
+                url: '/Plan/SavePlan',
+                success: function (json) {
+                    if (json.Error) {
+                        AlertErrorServidor(json.Status, json.Message);
+                    } else {
+                        if (json.Status == 409) {//Conflicto
+                            InfoAlert(json.Message);
+                        } else {
+                            SuccessMessageServidor(json.Status, json.Message);
+                            //$("#modalNuevosPlanes").modal("hide");
+                            LimpiarCampos(["#deducible-copago-plan", "#deducible-copago-plan", "#coaseguro-copago-plan", "#input-deducible", "#input-coaseguro"]);
+                            GetPlanByProtocolId(v_ProtocoloId);
+                        }
+                    }
+                    $("#header-nuevos-planes").removeClass("loadingGrid");
+                },
+                error: function (err) {
+                    AlertErrorServidor(err.status, err.statusText);
+                    $("#header-nuevos-planes").removeClass("loadingGrid");
+                }
+            })
+
+        })
+
+        $("#add-new-organization-plan").on("click", function () {
+            
+            $("#modalPlanes").modal("hide");
+            $("#modalNuevosPlanes").modal("show");
+        })
+
+        $("#modalNuevosPlanes").on("hide.bs.modal", function () {         
+            
+            $("#modalPlanes").modal("show");
+        })
+
+        $("#modalPrintEmail").on("hide.bs.modal", function () {
+            $("#modalOrdenServicio").modal("show");
+            let arrCampos = ["#email-asunto|false|Envío de Cotización / Orden de Servicio, Saludo Ocupacional:Salud",
+                "#email-cuerpo|false|Se adjunta Cotización / Orden de Servicio, para las atenciones Médico Ocupacionales en nuestra Clínica especializada en Salud Ocupacional",
+                "#email-para", "#tipo-ordenservicio|true"];
+            LimpiarCampos(arrCampos);
+
+        })
+
+        $("#save-email").on("click", function () {
+
+
+            if (ValidarCamposProtocolo(["#email-para"])) {
+                $("#add-loading-email").addClass("loadingGrid");
+                let data = {
+                    To: $("#email-para").val(),
+                    Subject: $("#email-asunto").val(),
+                    Body: $("#email-cuerpo").val(),
+                    ServiceOrderId: $("#serviceorderId").val(),
+                    TypeEmail: $("#tipo-ordenservicio").get(0).checked ? 0 : 1,
+                }
+
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    data,
+                    dataType: 'json',
+                    url: '/Protocol/SendEmail',
+                    success: function (json) {
+                        if (json.Error) {
+                            AlertErrorServidor(json.Status, json.Message)
+                        } else {
+                            SuccessMessageServidor(json.Status, json.Message);
+                        }
+                        $("#add-loading-email").removeClass("loadingGrid");
+                    },
+                    error: function (err) {
+                        AlertErrorServidor(err.status, err.statusText)
+                        $("#add-loading-email").removeClass("loadingGrid");
+                    }
+                })
+            }
+
+        })
+
+        $("#send-captcha").on("click", function () {
+            GetDataContribuyente($("#text-captcha").val());
+        })
+
+        $("#btn-actualizar-captcha").on("click", function () {
+            GetCaptchaRuc();
+        })
+
+        $("#btn-find-organization").on("click", function () {
+            let ruc = $("#ordenservicio-ruc").val();
+            if (ruc.length == 8 || ruc.length == 11) {
+                $.ajax({
+                    cache: false,
+                    method: 'GET',
+                    dataType: 'json',
+                    data: { ruc },
+                    url: '/Ruc/GetDataContribuyenteByRuc',
+                    success: function (json) {
+                        if (json.Error) {
+                            InfoAlert("No se encontraron resultados para el documento <strong> " + ruc + " </strong>");
+                        } else {
+                            if (json.result.ruc == null) {
+                                InfoAlert("No se encontraron resultados para el documento <strong> " + ruc + " </strong>")
+                            } else {
+
+                                $("#ordenservicio-empresaCliente").val(json.result.razon_social);
+                                $("#ordenservicio-ruc").val(json.result.ruc);
+                                $("#ordenservicio-sede").val(json.result.domicilio_fiscal);
+                                $("#ordenservicio-empresaClienteId").val("");
+                                $("#ordenservicio-locationId").val("");
+                                $("#ordenservicio-representante").val("");
+                                notificacion({
+                                    classTitleAndButtons: "warningTitleAndButtons",
+                                    classMessage: "warningMessage",
+                                    title: "¡ Confirmación !",
+                                    icono: "",
+                                    contenido: "¿ Desea guardar la Empresa ?",
+                                    btnAceptar: "Aceptar",
+                                    btnCancelar: "Cancelar",
+                                    btnOk: "OK",
+                                    mostrarBtnAceptarAndCancelar: "",
+                                    mostrarBtnOk: "no",
+                                });
+
+                                $(".bigBox-Aceptar").on("click", function () {
+                                    $(".bigBox-Cancelar").click();
+
+                                    let data = {
+                                        v_Name: json.result.razon_social,
+                                        v_IdentificationNumber: json.result.ruc,
+                                        v_Address: json.result.domicilio_fiscal,
+                                        v_SectorCodigo: '---',
+                                        v_SectorName: '---',
+                                        v_ContactName: $("#ordenservicio-representante").val(),
+                                    }
+
+                                    $.ajax({
+                                        cache: false,
+                                        method: 'GET',
+                                        dataType: 'json',
+                                        data,
+                                        url: '/Organization/SaveOrganization',
+                                        success: function (json) {
+                                            if (json.Error) {
+                                                AlertErrorServidor(json.Status, json.Message);
+                                            } else {
+                                                SuccessMessageServidor(json.Status, json.Message);
+                                                console.log(json);
+                                                var organizationId = json.Id.split("|")[0];
+                                                var locationId = json.Id.split("|")[1];
+                                                $("#ordenservicio-empresaClienteId").val(organizationId);
+                                                $("#ordenservicio-locationId").val(locationId);
+                                                GetGesoProt(organizationId + "|" + locationId, "orderservice-geso");
+                                            }
+                                        },
+                                        error: function (err) {
+                                            AlertErrorServidor(err.status, err.statusText);
+                                        }
+                                    })
+                                })
+
+                            }
+                        }
+                    },
+                    error: function (err) {
+                        AlertErrorServidor(err.status, err.statusText);
+                    }
+                })
+            } else {
+                WarningAlert("Ingrese un número de documento valido");
+            }
+
+        })
+
+        $("#modalCaptcha").on("hidden.bs.modal", function () {
+            $("#modalOrdenServicio").modal("show")
+        })
+
+        $("#ordenservicio-empresaCliente").on("keyup", function () {
+            autocompleteOrganizations($(this).val(), "#ordenservicio-empresaCliente", "#ordenservicio-empresaClienteId");
+        })
+
+        $("#ordenservicio-ruc").on("keyup", function () {
+            autocompleteOrganizations($(this).val(), "#ordenservicio-ruc", "#ordenservicio-empresaClienteId", 2);
+        })
+
+        $("#btn-planes").on("click", function () {
+            let row = $("#cont-body-protocols .row-active");
+            if (row.length == 0) {
+                WarningAlert("Elija un protocolo para continuar");
+                return;
+            }
+
+            let v_ProtocoloId = row.eq(0).find('td').eq(0).text();
+            sessionStorage.setItem("ProtocolId", v_ProtocoloId);
+            GetPlanByProtocolId(v_ProtocoloId);
+            $("#modalPlanes").modal("show");
+        })
+
+        $("#btn-deleted-externaluser").on("click", function () {
+            let row = $("#body-new-users").find(".row-active");
+            if (row.length == 0) {
+                WarningAlert("Debe seleccionar un usuario para continuar.");
+                return;
+            }
+            let systemUserId = row.eq(0).find("td").eq(0).text();
+            notificacion({
+                classTitleAndButtons: "warningTitleAndButtons",
+                classMessage: "warningMessage",
+                title: "¡ Confirmación !",
+                icono: "",
+                contenido: "¿ Seguro de eliminar usuario ?",
+                btnAceptar: "Aceptar",
+                btnCancelar: "Cancelar",
+                btnOk: "OK",
+                mostrarBtnAceptarAndCancelar: "",
+                mostrarBtnOk: "no",
+            });
+
+            $(".bigBox-Aceptar").on("click", function () {
+                $(".bigBox-Cancelar").click();
+                $.ajax({
+                    cache: false,
+                    method: 'GET',
+                    dataType: 'json',
+                    data: { systemUserId },
+                    url: '/Protocol/DeletedSystemUser',
+                    success: function (json) {
+                        if (json.Error) {
+                            AlertErrorServidor(json.Status, json.Message);
+                        } else {
+                            SuccessMessageServidor(json.Status, json.Message);
+                            row.eq(0).remove();
+                        }
+                    },
+                    error: function (err) {
+                        AlertErrorServidor(err.status, err.statusText);
+                    }
+                })
+            })
+
+        })
+
+        $("#btn-edit-externaluser").on("click", function () {
+
+            let arrayElement = ["#new-externaluser-name", "#new-externaluser-doctype", "#new-externaluser-apepat",
+                "#new-externaluser-docnumber", "#new-externaluser-apemat", "#new-externaluser-gender",
+                "#new-externaluser-maritalstatus", "#new-externaluser-nivelestudios", "#new-externaluser-email",
+                "#new-externaluser-lugarnacimiento", "#new-externaluser-telefono", "#new-externaluser-fechanacimiento",
+                "#new-externaluser-profesion", "#new-externaluser-colegiatura", "#new-externaluser-infoadicional",
+                "#new-externaluser-usuario", "#new-externaluser-contraseña", "#new-externaluser-repetircontraseña",
+                "#rdo-nuncaexpira", "#fecha-expira|true", ".permisos-notificaciones", ".permisos-opciones"];
+
+            LimpiarCampos(arrayElement);
+            let row = $("#body-new-users").find(".row-active");
+            if (row.length == 0) {
+                WarningAlert("Debe seleccionar un usuario para continuar.");
+                return;
+            }
+            let systemUserId = row.eq(0).find("td").eq(0).text();
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: { systemUserId },
+                url: '/Protocol/GetSystemUserById',
+                success: function (json) {
+                    SetValuesUserExternal(json);
+                },
+                error: function (err) {
+                    AlertErrorServidor(err.status, err.statusText);
+                }
+            })
+
+            $("#modalNuevoProtocolo").modal("hide");
+            $("#modalNuevoUsuarioExterno").modal("show");
+        })
+
+        $("#nuevo-email").on("click", function () {
+            let serviceorderId = $("#serviceorderId").val();
+
+            if (serviceorderId == "") {
+                WarningAlert("Debe guardar una orden de servicio para continuar");
+                return;
+            }
+
+            $("#modalOrdenServicio").modal("hide");
+            $("#modalPrintEmail").modal("show");
+        })
+
+        $("#generar-reporte-ordenservicio").on("click", function () {
+            let rows = $("#body-add-orden-servicio tr");
+            if (!ValidarCamposProtocolo(["#cbo-estado-ordenservicio", "#cbo-linea-ordenservicio"])) {
+                return;
+            }
+            if (rows.length == 0) {
+                WarningAlert("No existen datos por guardar.");
+                return;
+            }
+            let serviceorderId = $("#serviceorderId").val();
+            if (serviceorderId.length == 0) {
+                WarningAlert("Debe guardar una orden de servicio para continuar.");
+                return;
+            }
+            let data = GetDataForSaveServiceOrder();
+
+
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                dataType: 'json',
+                data,
+                url: '/Protocol/GenerateServiceOrderReport',
+                success: function (json) {
+                    if (json.Error) {
+                        AlertErrorServidor(json.Status, json.Message);
+                    } else {
+                        console.log(json);
+                        var ApiURI = SigesoftWebApiUrl();
+                        var url = ApiURI + "RutaCotizacion/" + json.Id;
+                        window.open(url, '_blank');
+                    }
+                },
+                error: function (err) {
+                    AlertErrorServidor(err.status, err.statusText);
+                }
+            })
+        })
+
+        $("#save-orden-servicio").on("click", function () {
+
+
+            let rows = $("#body-add-orden-servicio tr");
+
+            if (!ValidarCamposProtocolo(["#cbo-estado-ordenservicio", "#cbo-linea-ordenservicio", "#ordenservicio-empresaCliente", "#ordenservicio-ruc", "#orderservice-geso"])) {
+                return;
+            }
+            if (rows.length == 0) {
+                WarningAlert("No existen datos por guardar.");
+                return;
+            }
+            let rowsParent = $("#body-add-orden-servicio .row-protocol");
+
+            if ($("#ordenservicio-empresaClienteId").val().length == "") {
+                WarningAlert("Debe guardar la Empresa para continuar");
+                return;
+            }
+
+            for (var i = 0; i < rowsParent.length; i++) {
+                let rowsChildren = rowsParent.eq(i).next().find(".body-components tr");
+                if (rowsChildren.length == 0) {
+                    WarningAlert("Existen protocoles sin examenes, por favor agregue uno o borrelo.");
+                    return;
+                }
+            }
+
+
+            let data = GetDataForSaveServiceOrder();
+            $("#cont-table-head-ordenservicio").addClass("loadingGrid");
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                data,
+                dataType: 'json',
+                url: '/Protocol/AddServiceOrder',
+                success: function (json) {
+                    if (json.Error) {
+                        AlertErrorServidor(json.Status, json.Message);
+                    } else {
+                        SuccessMessageServidor(json.Status, json.Message);
+                        $("#serviceorderId").val(json.Id);
+                        GetServicesOrderDetail(json.Id);
+                    }
+                    $("#cont-table-head-ordenservicio").removeClass("loadingGrid");
+                },
+                error: function (err) {
+                    AlertErrorServidor(err.status, err.statusText);
+                    $("#cont-table-head-ordenservicio").removeClass("loadingGrid");
+                }
+
+            })
+        })
+
+        $("#cerraModalOrdenServicio").on("click", function () {
+            console.log("boton cerrar");
+            LimpiarCamposOrdenServicio()
+            $("#modalOrdenServicio").modal("hide");
+        })
+
+        $("#xCerraModalOrdenServicio").on("click", function () {
+            LimpiarCamposOrdenServicio()
+            $("#modalOrdenServicio").modal("hide");
+        })
+
+        $("#add-protocol-orderservice").on("click", function () {
+
+
+            if (!ValidarCamposProtocolo(["#ordenservicio-cantidadTrabajadores", "#protocoltype-orderservice"])) {
+                return;
+            }
+
+            let protocolTypeName = $("#protocoltype-orderservice option:selected").text();
+            let protocolTypeId = $("#protocoltype-orderservice").val();
+            let gesoId = $("#orderservice-geso").val();
+            console.log(gesoId);
+            let gesoName = $("#orderservice-geso option:selected").text();
+            let inputCantTrab = $("#ordenservicio-cantidadTrabajadores");
+            let html = `<tr class="row-protocol" onclick="$(this).next().toggleClass('d-none')">
+                            <td class="d-none"></td>
+                            <td>SE GENERARÁ AUTOMÁTICAMENTE</td>
+                            <td>${ inputCantTrab.val()}</td>
+                            <td></td>
+                            <td></td>
+                            <td>${ protocolTypeName}</td>
+                            <td class="d-none">${ protocolTypeId}</td>
+                            <td class="d-none">${ gesoId}</td>
+                            <td class="d-none">${ gesoName}</td>
+                            <td class="d-none"></td>
+                            <td>
+                                <i class="fas fa-times p-2 bg-danger text-white" onclick="$(this).parent().parent().next().remove(); $(this).parent().parent().remove(); SetPrices()"></i>
+                            </td>
+                        </tr>
+                        <tr ondblclick="FindComponents(this)"  class="d-none animated fadeIn">
+                            <th class="text-center">EXÁMENES</th>
+                            <td colspan="4">
+                                <table class="table table-sm table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th nowrap scope="col" class="d-none">protocolComponentId</th>
+                                            <th nowrap scope="col">Examen</th>
+                                            <th nowrap scope="col">Precio</th>
+                                            <th nowrap scope="col">Operador</th>
+                                            <th nowrap scope="col">Edad</th>
+                                            <th nowrap scope="col">Género</th>
+                                            <th nowrap scope="col">Es Condicional</th>
+                                            <th nowrap scope="col">Tipo</th>
+                                            <th nowrap scope="col" class="d-none">OperadorId</th>
+                                            <th nowrap scope="col" class="d-none">GeneroId</th>
+                                            <th nowrap scope="col" class="d-none">EsCondicional</th>
+                                            <th nowrap scope="col" class="d-none">TipoId</th>
+                                            <th nowrap scope="col" class="d-none">GrupoEtario</th>
+                                            <th nowrap scope="col" class="d-none">IsIMC</th>
+                                            <th nowrap scope="col" class="d-none">MayorIMC</th>
+                                            <th nowrap scope="col" class="d-none">EsAdicional</th>
+                                            <th nowrap scope="col" class="d-none">RecordStatus</th>
+                                            <th nowrap scope="col" class="d-none">RecordType</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="body-components"></tbody>
+                                </table>
+                            </td>
+                        </tr>`;
+            $(html).appendTo($("#body-add-orden-servicio"));
+
+        })
+
+        $("#btn-generar-orden-servicio").on("click", async () => {
+            LimpiarCamposOrdenServicio();
+            var secuential = await GetSecuentialOrderService();
+            $("#orden-servicio-secuencial").text(ConvertSecuentialInNewOrderService(secuential));
+            $("#modalOrdenServicio").modal("show");
+
+        })
+
+        $("#btn-clonar-protocolo").on("click", function () {
+            LimpiarNuevoProtocolo();
+            $(".border-danger").removeClass("border-danger");
+            $(".border-success").removeClass("border-success");
+            let row = $(".row-active");
+            if (row.length == 0) {
+                WarningAlert("Debe seleccionar un protocolo para continuar");
+                return;
+            }
+            let protocolId = row.eq(0).find('td').eq(0).text();
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: { protocolId },
+                url: '/Protocol/GetProtocolComponentByProtocolIdJSON',
+                success: function (json) {
+                    let arrPrtoComp = [];
+                    let arrUsers = [];
+                    for (let item of json.ListProtocolComponents) {
+                        let html = `<tr onclick="PintarFilaComponent(this)">
+                                <td class="d-none">${item.ComponentId}</td>
+                                <td>${item.ComponentName}</td>
+                                <td>${item.Price}</td>
+                                <td>${item.Operador}</td>
+                                <td>${item.Age}</td>
+                                <td>${item.Genero}</td>
+                                <td>${item.v_IsCondicional}</td>
+                                <td>${item.ComponentTypeName}</td>
+                                <td class="d-none">${item.i_OperatorId}</td>
+                                <td class="d-none">${item.GenderId}</td>
+                                <td class="d-none">${item.IsConditionalId}</td>
+                                <td class="d-none">${item.ComponentTypeId}</td>
+                                <td class="d-none">${item.GrupoEtarioId}</td>
+                                <td class="d-none">${item.IsConditionalIMC}</td>
+                                <td class="d-none">${item.r_Imc}</td>
+                                <td class="d-none">${item.IsAdditional}</td>
+                                <td class="d-none">2</td>
+                                <td class="d-none">1</td>
+                                <td class="d-none"></td>
+                            </tr>`;
+
+                        arrPrtoComp.push(html);
+                    }
+
+                    $("#body-new-components").html(arrPrtoComp.join(""));
+
+                },
+                error: function (err) {
+                    AlertErrorServidor(err.status, err.statusText);
+                }
+            })
+
+            $("#modalNuevoProtocolo").modal("show");
+            $("#type-action").text("Clonar Protocolo");
+        })
+
+        $("#new-externaluser-contraseña").on("keyup", function () {
+            let repitPass = $("#new-externaluser-repetircontraseña").val();
+            if (repitPass.length > 0) {
+                if ($(this).val() != repitPass) {
+                    $(this).addClass("border-danger").removeClass("border-success");
+                    $("#new-externaluser-repetircontraseña").addClass("border-danger").removeClass("border-success");
+                } else {
+                    $(this).addClass("border-success").removeClass("border-danger");
+                    $("#new-externaluser-repetircontraseña").addClass("border-success").removeClass("border-danger");
+                }
+            }
+        })
+
+        $("#new-externaluser-repetircontraseña").on("keyup", function () {
+            let pass = $("#new-externaluser-contraseña").val();
+            if (pass.length > 0) {
+                if ($(this).val() != pass) {
+                    $(this).addClass("border-danger").removeClass("border-success");
+                    $("#new-externaluser-contraseña").addClass("border-danger").removeClass("border-success");
+                } else {
+                    $(this).addClass("border-success").removeClass("border-danger");
+                    $("#new-externaluser-contraseña").addClass("border-success").removeClass("border-danger");
+                }
+            }
+        })
+
+        $("#save-new-externaluser").on("click", function () {
+            let arrId = ["#new-externaluser-name", "#new-externaluser-doctype", "#new-externaluser-apepat", "#new-externaluser-docnumber",
+                "#new-externaluser-apemat", "#new-externaluser-gender", "#new-externaluser-email", "#new-externaluser-profesion",
+                "#new-externaluser-colegiatura", "#new-externaluser-infoadicional", "#new-externaluser-usuario", "#new-externaluser-contraseña", "#new-externaluser-repetircontraseña"];
+
+            if (ValidarCamposProtocolo(arrId)) {
+
+                if ($("#new-externaluser-contraseña").val() !== $("#new-externaluser-repetircontraseña").val()) {
+                    WarningAlert("Las contraseñas deben ser iguales");
+                    return;
+                }
+                let checkPermisos = $(".permisos-opciones:checked");
+                if (checkPermisos.length == 0) {
+                    WarningAlert("Seleccione al menos un permiso para continuar");
+                    return;
+                }
+                $("#header-user-external").addClass("loadingGrid");
+                let v_PersonId = $("#new-externaluser-personId").val();
+                let EntityPerson = {
+                    v_PersonId,
+                    v_FirstName: $("#new-externaluser-name").val(),
+                    v_FirstLastName: $("#new-externaluser-apepat").val(),
+                    v_SecondLastName: $("#new-externaluser-apemat").val(),
+                    i_DocTypeId: $("#new-externaluser-doctype").val(),
+                    v_DocNumber: $("#new-externaluser-docnumber").val(),
+                    d_Birthdate: $("#new-externaluser-fechanacimiento").val(),
+                    v_BirthPlace: $("#new-externaluser-lugarnacimiento").val(),
+                    i_SexTypeId: $("#new-externaluser-gender").val(),
+                    i_MaritalStatusId: $("#new-externaluser-maritalstatus").val(),
+                    i_LevelOfId: $("#new-externaluser-nivelestudios").val(),
+                    v_TelephoneNumber: $("#new-externaluser-telefono").val(),
+                    v_AdressLocation: $("#new-externaluser-direccion").val(),
+                    v_Mail: $("#new-externaluser-email").val(),
+                }
+
+                let EntityProfessional = {
+                    v_PersonId,
+                    i_ProfessionId: $("#new-externaluser-profesion").val(),
+                    v_ProfessionalCode: $("#new-externaluser-colegiatura").val(),
+                    v_ProfessionalInformation: $("#new-externaluser-infoadicional").val(),
+                }
+                let fechaExpira = $("#rdo-nuncaexpira").get(0).checked ? "" : $("#fecha-expira").val();
+                let EntitySystemUser = {
+                    i_SystemUserId: $("#new-externaluser-userId").val(),
+                    v_UserName: $("#new-externaluser-usuario").val(),
+                    v_Password: $("#new-externaluser-contraseña").val(),
+                    d_ExpireDate: fechaExpira,
+                }
+
+                let ListEntityProtocolSystemUser = [];
+                let v_ProtocolId = $("#input-protocol-id").val();
+
+                for (var i = 0; i < checkPermisos.length; i++) {
+                    let EntityProtocolSystemUser = {
+                        i_ApplicationHierarchyId: checkPermisos.eq(i).attr('data-value'),
+                        v_ProtocolId,
+                        i_SystemUserId: -1
+                    }
+                    ListEntityProtocolSystemUser.push(EntityProtocolSystemUser);
+                }
+
+                let checkNotificaciones = $(".permisos-notificaciones:checked");
+                for (var i = 0; i < checkNotificaciones.length; i++) {
+                    let EntityProtocolSystemUser = {
+                        i_ApplicationHierarchyId: checkNotificaciones.eq(i).attr('data-value'),
+                        v_ProtocolId,
+                        i_SystemUserId: -1
+                    }
+                    ListEntityProtocolSystemUser.push(EntityProtocolSystemUser);
+                }
+
+                let data = {
+                    EntityPerson,
+                    EntityProfessional,
+                    EntitySystemUser,
+                    ListEntityProtocolSystemUser
+                }
+
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data,
+                    url: '/Protocol/NewSystemUserExternal',
+                    success: function (json) {
+                        if (json.Error) {
+                            AlertErrorServidor(json.Status, json.Message);
+                        } else {
+                            SuccessMessageServidor(json.Status, json.Message);
+                            $("#modalNuevoUsuarioExterno").modal("hide");
+                        }
+                        $("#header-user-external").removeClass("loadingGrid");
+                    },
+                    error: function (err) {
+                        AlertErrorServidor(err.status, err.statusText);
+                        $("#header-user-external").removeClass("loadingGrid");
+                    }
+                })
+            };
+        })
+
+        $("#btn-new-externaluser").on("click", function () {
+            if ($("#input-protocol-id").val() == "") {
+                WarningAlert("Debe guardar un protocolo para continuar.");
+                return;
+            }
+            let arrayElement = ["#new-externaluser-name", "#new-externaluser-doctype", "#new-externaluser-apepat",
+                "#new-externaluser-docnumber", "#new-externaluser-apemat", "#new-externaluser-gender",
+                "#new-externaluser-maritalstatus", "#new-externaluser-nivelestudios", "#new-externaluser-email",
+                "#new-externaluser-lugarnacimiento", "#new-externaluser-telefono", "#new-externaluser-fechanacimiento",
+                "#new-externaluser-profesion", "#new-externaluser-colegiatura", "#new-externaluser-infoadicional",
+                "#new-externaluser-usuario", "#new-externaluser-contraseña", "#new-externaluser-repetircontraseña",
+                "#rdo-nuncaexpira|true", "#fecha-expira|true", ".permisos-notificaciones", ".permisos-opciones", "#new-externaluser-direccion"];
+            LimpiarCampos(arrayElement);
+            $("#modalNuevoProtocolo").modal("hide");
+            $("#modalNuevoUsuarioExterno").modal("show");
+        })
+
+        $("#modalNuevoUsuarioExterno").on("hidden.bs.modal", function () {
+            $("#modalNuevoProtocolo").modal("show");
+        })
+
+        $("#deleted-component").on("click", function () {
+            let row = $("#body-new-components").find(".row-active");
+            if (row.length == 0) {
+                WarningAlert("Debe seleccionar un examen para continuar.")
+                return;
+            }
+
+            let td = row.find("td");
+            let recordStatus = Number(td.eq(16).text());
+            let recordType = Number(td.eq(17).text());
+            let protocolComponentId = td.eq(18).text();
+
+            if (recordStatus == RecordStatus.Agregado && recordType == RecordType.Temporal) {
+                row.eq(0).remove();
+                SuccessMessageServidor(200, 'Se eliminó correctamente.')
+            } else if (recordType == RecordType.NoTemporal) {
+                $.ajax({
+                    cache: false,
+                    method: 'GET',
+                    dataType: 'json',
+                    url: '/Protocol/DeletedProtocolComponent?protocolComponentId=' + protocolComponentId,
+                    success: function (json) {
+                        if (json.Error) {
+                            AlertErrorServidor(json.Status, json.Message);
+                        } else {
+                            row.eq(0).remove();
+                            $(".row-active").click();
+                            SuccessMessageServidor(json.Status, json.Message);
+                        }
+                    },
+                    error: function (err) {
+                        AlertErrorServidor(err.status, err.statusText);
+                    }
+                })
+            }
+        })
+
+        $("#imcSiNoNew").on("change", function () {
+            if ($(this).get(0).checked) {
+                $("#imput-mayorque-condicional").attr("disabled", false);
+            } else {
+                $("#imput-mayorque-condicional").val("").attr("disabled", true);
+            }
+        })
+
+        $("#save-new-exam").on("click", function () {
+
+            let ComponentPrice = $("#datos-examen-price").val();
+            let EsCondicional = $("#condicionalSiNoNew").get(0).checked == true ? 1 : 0;
+            let EsCondicionalText = 1 ? "SI" : "NO";
+            let OperadorText = $("#select-edad-condicional option:selected").text();
+            let Operdador = $("#select-edad-condicional").val();
+            let Edad = $("#imput-edad-condicional").val();
+            let GeneroId = $("#select-genero-condicional").val();
+            let GeneroText = $("#select-genero-condicional option:selected").text();
+            let Imc = $("#imcSiNoNew").get(0).checked == true ? 1 : 0;
+            let MayorImc = Imc == 1 ? $("#imput-mayorque-condicional").val() : "";
+            let EsAdicional = $("#adicionalSiNoNew").get(0).checked == true ? 1 : 0;
+            let GrupoEtario = $("#imput-grupoetario-condicional").val();
+
+            if (sessionStorage.getItem("ActionExam") == "create") {
+
+                let row = $("#body-add-components .row-active");
+                if (row.length == 0) {
+                    WarningAlert("Debe seleccionar un examen para continuar.");
+                    return;
+                }
+                let componentId = row.eq(0).find("td").eq(0).text();
+                let rowParentComponents = $("#body-new-components tr");
+                for (var i = 0; i < rowParentComponents.length; i++) {
+                    if (rowParentComponents.eq(i).find("td").eq(0).text() === componentId) {
+                        WarningAlert("Elija otro examen, este ya está en uso.");
+                        return;
+                    }
+                }
+                let rowParentComponentsOrdenService = $("#generic-Id").find(".body-components").eq(0).find("tr");
+                for (var i = 0; i < rowParentComponentsOrdenService.length; i++) {
+                    if (rowParentComponentsOrdenService.eq(i).find("td").eq(0).text() === componentId) {
+                        WarningAlert("Elija otro examen, este ya está en uso.");
+                        return;
+                    }
+                }
+                let ComponentName = row.eq(0).find("td").eq(1).text();
+
+                let ComponentTypeName = row.eq(0).find("td").eq(4).text();
+                let ComponentTypeId = row.eq(0).find("td").eq(5).text();
+
+                let actionType = sessionStorage.getItem("tipollamada") == "ordenservicio" ? "<td class='text-center'><i class='text-white p-1 bg-danger fas fa-times' onclick='removeRowsComponent(this)'></i></td>" : "";
+
+                let html = `<tr onclick="PintarFilaComponent(this)">
+                                <td class="d-none">${componentId}</td>
+                                <td>${ComponentName}</td>
+                                <td>${ComponentPrice}</td>
+                                <td>${OperadorText}</td>
+                                <td>${Edad}</td>
+                                <td>${GeneroText}</td>
+                                <td>${EsCondicionalText}</td>
+                                <td>${ComponentTypeName}</td>
+                                <td class="d-none">${Operdador}</td>
+                                <td class="d-none">${GeneroId}</td>
+                                <td class="d-none">${EsCondicional}</td>
+                                <td class="d-none">${ComponentTypeId}</td>
+                                <td class="d-none">${GrupoEtario}</td>
+                                <td class="d-none">${Imc}</td>
+                                <td class="d-none">${MayorImc}</td>
+                                <td class="d-none">${EsAdicional}</td>
+                                <td class="d-none">2</td>
+                                <td class="d-none">1</td>
+                                <td class="d-none"></td>
+                                ${ actionType}
+                            </tr>`;
+                if (sessionStorage.getItem("tipollamada") == "ordenservicio") {
+
+                    $(html).appendTo($("#generic-Id").find(".body-components").eq(0));
+                    SetPrices();
+                } else {
+                    $(html).appendTo($("#body-new-components"));
+                }
+
+                SuccessMessageServidor("", "<strong>" + ComponentName + "</strong> Se agregó correctamente")
+            } else {
+                console.log("actualizar")
+                let TdComponentUpdate = $("#body-new-components").find(".row-active").eq(0).find("td");
+                let RecordStatus = 3;
+                let RecordType = 2;
+                if (TdComponentUpdate.eq(16).text() == "2" && TdComponentUpdate.eq(17).text() == "1") {
+                    RecordStatus = 2;
+                    RecordType = 2;
+                }
+
+                TdComponentUpdate.eq(2).text(ComponentPrice);
+                TdComponentUpdate.eq(3).text(OperadorText);
+                TdComponentUpdate.eq(4).text(Edad);
+                TdComponentUpdate.eq(5).text(GeneroText);
+                TdComponentUpdate.eq(6).text(EsCondicionalText);
+                TdComponentUpdate.eq(8).text(Operdador);
+                TdComponentUpdate.eq(9).text(GeneroId);
+                TdComponentUpdate.eq(10).text(EsCondicional);
+                TdComponentUpdate.eq(12).text(GrupoEtario);
+                TdComponentUpdate.eq(13).text(Imc);
+                TdComponentUpdate.eq(14).text(MayorImc);
+                TdComponentUpdate.eq(15).text(EsAdicional);
+                TdComponentUpdate.eq(16).text(RecordStatus);
+                TdComponentUpdate.eq(17).text(RecordType);
+                SuccessMessageServidor("", "<strong>" + $("#datos-examen-name").val() + "</strong> Se actualizó correctamente")
+            }
+
+
+        })
+
+        $("#input-component-name").on("keyup", function (e) {
+            if (e.which == 13) {
+                FilterComponent();
+            }
+        })
+
+        $("#buscar-componente").on("click", function () {
+            FilterComponent();
+        })
+
+        $("#guardar-protocolo").on("click", async () => {
+
+            let arrId = ["#new-change-protocolname", "#new-change-geso", "#new-change-empresacliente",
+                "#new-change-tiposervicio", "#new-change-empresaempleadora", "#new-change-service",
+                "#new-change-empresatrabajo", "#new-change-tipoexamen"];
+            if (ValidarCamposProtocolo(arrId)) {
+
+                if ($("#body-new-components tr").length == 0) {
+                    WarningAlert("Debe ingresar al menos un examen.");
+                    return;
+                }
+
+                let nombreProtocolo = $("#new-change-protocolname").val();
+                let result = await ValidateProtocolName(nombreProtocolo);
+                if (result.Error) {
+                    AlertErrorServidor(result.Status, result.Message);
+                } else {
+                    $("#addloading-modalprotocolo").addClass("loadingGrid");
+                    if (result.Id === nombreProtocolo && $("#input-protocol-id").val() == "") {
+                        AlertInfoServidor(result.Status, result.Message)
+                        $("#new-change-protocolname").select();
+                        $("#addloading-modalprotocolo").removeClass("loadingGrid");
+                    } else {
+                        let data = {
+                            v_ProtocolId: $("#input-protocol-id").val(),
+                            v_Name: nombreProtocolo,
+                            v_Geso: $("#new-change-geso").val(),
+                            v_CustomerOrganizationId: $("#new-change-empresacliente").val(),
+                            i_ServiceTypeId: $("#new-change-tiposervicio").val(),
+                            v_IntermediaryOrganization: $("#new-change-empresaempleadora").val(),
+                            i_MasterServiceId: $("#new-change-service").val(),
+                            v_WorkingOrganizationId: $("#new-change-empresatrabajo").val(),
+                            v_CostCenter: $("#new-change-centrocosto").val(),
+                            i_EsoTypeId: $("#new-change-tipoexamen").val(),
+                            i_IsActive: $("#activoSiNoNew").get(0).checked == true ? 1 : 0,
+                            r_PriceFactor: $("#new-factor").val(),
+                            r_MedicineDiscount: $("#new-medicine-discount").val(),
+                            r_HospitalBedPrice: $("#new-bed-price").val(),
+                            r_DiscountExam: $("#new-discount-exam").val(),
+                            ListComponents: [],
+                        };
+
+                        let rows = $("#body-new-components tr");
+                        for (var i = 0; i < rows.length; i++) {
+                            let td = rows.eq(i).find("td");
+                            if (td.eq(16).text() == "2" || td.eq(16).text() == "3") {
+                                let objComponent = {
+                                    v_ComponentId: td.eq(0).text(),
+                                    r_Price: td.eq(2).text(),
+                                    i_OperadorId: td.eq(8).text(),
+                                    i_Edad: td.eq(4).text(),
+                                    i_GenderId: td.eq(9).text(),
+                                    i_IsConditional: td.eq(10).text(),
+                                    i_IsAditional: td.eq(15).text(),
+                                    i_ComponentTypeId: td.eq(11).text(),
+                                    i_GrupoEtario: td.eq(12).text(),
+                                    i_IsIMC: td.eq(13).text(),
+                                    r_ValueIMC: td.eq(14).text(),
+                                    RecordStatus: td.eq(16).text(),
+                                    RecordType: td.eq(17).text(),
+                                    v_ProtocolComponentId: td.eq(18).text(),
+                                }
+                                data.ListComponents.push(objComponent);
+                            }
+                        }
+
+                        $.ajax({
+                            cache: false,
+                            method: 'POST',
+                            dataType: 'json',
+                            data,
+                            url: '/Protocol/SaveProtocols',
+                            success: function (json) {
+                                if (json.Error) {
+                                    AlertErrorServidor(json.Status, json.Message);
+                                } else {
+                                    SuccessMessageServidor(json.Status, json.Message);
+                                    Filter();
+                                    $("#modalNuevoProtocolo").modal("hide");
+                                    $(".row-active").click();
+                                }
+                                $("#addloading-modalprotocolo").removeClass("loadingGrid");
+                            },
+                            error: function (err) {
+                                AlertErrorServidor(err.status, err.statusText);
+                                $("#addloading-modalprotocolo").removeClass("loadingGrid");
+                            }
+                        })
+                    }
+                }
+            }
+        })
+
+        $("#condicionalSiNoNew").on("change", function () {
+            if ($("#condicionalSiNoNew:checked").length == 0) {
+                $("#imput-grupoetario-condicional").val("-1").attr("disabled", true);
+
+                if ($("#imcSiNoNew:checked").length == 1) {
+                    $("#imcSiNoNew").click();
+                }
+                $("#label-imc-condicional").attr("disabled", true);
+                $("#imcSiNoNew").attr("disabled", true);
+
+                $("#select-genero-condicional").val("3").attr("disabled", true);
+                $("#imput-edad-condicional").val("0").attr("disabled", true);
+                $("#select-edad-condicional").val("6").attr("disabled", true);
+
+
+
+            } else {
+                $("#imput-mayorque-condicional").attr("disabled", true);
+                $("#imput-grupoetario-condicional").attr("disabled", false);
+                $("#label-imc-condicional").attr("disabled", false);
+                $("#imcSiNoNew").attr("disabled", false);
+                $("#select-genero-condicional").attr("disabled", false);
+                $("#imput-edad-condicional").attr("disabled", false);
+                $("#select-edad-condicional").attr("disabled", false);
+            }
+
+
+        })
+
+        $("#edit-component").on("click", function () {
+            sessionStorage.setItem("ActionExam", "update");
+
+            let row = $("#body-new-components").find(".row-active");
+            if (row.length == 0) {
+                WarningAlert("Debe seleccionar un examen para continuar.")
+                return;
+            }
+
+            $("#input-component-name").val("").attr("disabled", true);
+            $("#buscar-componente").attr("disabled", true);
+            $("#body-add-components").html("");
+            let td = row.find("td");
+            let ComponentName = td.eq(1).text();
+            let ComponentPrice = td.eq(2).text();
+            let EsAdicional = td.eq(15).text();
+            let EsCondicional = td.eq(10).text();
+            let Operador = td.eq(8).text();
+            let Edad = td.eq(4).text();
+            let Genero = td.eq(9).text();
+            let IsIMC = td.eq(13).text();
+            let MayorIMC = td.eq(14).text();
+            let GrupoEtarioId = td.eq(12).text();
+
+            $("#datos-examen-name").val(ComponentName);
+            $("#datos-examen-price").val(ComponentPrice);
+            $("#adicionalSiNoNew").get(0).checked = EsAdicional == 1 ? true : false;
+            $("#condicionalSiNoNew").get(0).checked = EsCondicional == 1 ? true : false;
+            $("#select-edad-condicional").val(Operador);
+            $("#imput-edad-condicional").val(Edad);
+            $("#select-genero-condicional").val(Genero);
+            $("#imcSiNoNew").get(0).checked = IsIMC == 1 ? true : false;
+            if ($("#imcSiNoNew").get(0).checked) {
+                $("#imput-mayorque-condicional").attr("disabled", false);
+            }
+            $("#imput-mayorque-condicional").val(MayorIMC)
+            $("#imput-grupoetario-condicional").val(GrupoEtarioId);
+
+            $("#modalNuevoProtocolo").modal("hide");
+            $("#type-action-component").text("Editar Componente")
+            $("#modalNuevoComponente").modal("show");
+        })
+
+        $("#new-component").on("click", function () {
+            $("#input-component-name").val("").attr("disabled", false);
+            $("#buscar-componente").attr("disabled", false);
+            $("#body-add-components").html("");
+            $("#datos-examen-name").val("");
+            $("#datos-examen-price").val("");
+
+            if ($("#adicionalSiNoNew").get(0).checked) {
+                $("#adicionalSiNoNew").click();
+            }
+            $("#select-edad-condicional").val("6");
+            $("#imput-edad-condicional").val("0");
+            $("#select-genero-condicional").val("3");
+
+            if ($("#imcSiNoNew").get(0).checked) {
+                $("#imcSiNoNew").click();
+            }
+            $("#imput-mayorque-condicional").val("");
+            $("#imput-grupoetario-condicional").val("-1")
+            sessionStorage.setItem("ActionExam", "create");
+            $("#modalNuevoProtocolo").modal("hide");
+            $("#type-action-component").text("Nuevo Componente")
+            $("#modalNuevoComponente").modal("show");
+        })
+
+        $("#modalNuevoComponente").on("hidden.bs.modal", function () {
+
+            if (sessionStorage.getItem("tipollamada") == "ordenservicio") {
+                $("#modalOrdenServicio").modal("show");
+                sessionStorage.setItem("tipollamada", "");
+                $("#generic-Id").removeAttr("id");
+            } else {
+                $("#modalNuevoProtocolo").modal("show");
+
+            }
+
+        });
+
+        $("#btn-new-protocol").on("click", function () {
+            LimpiarNuevoProtocolo();
+            $(".border-danger").removeClass("border-danger");
+            $(".border-success").removeClass("border-success");
+            $("#modalNuevoProtocolo").modal("show");
+            $("#type-action").text("Nuevo Protocolo");
+        })
+
+        $("#btn-edit-protocol").on("click", function () {
+            $(".border-danger").removeClass("border-danger");
+            $(".border-success").removeClass("border-success");
+            let row = $(".row-active");
+            if (row.length == 0) {
+                WarningAlert("Debe seleccionar un protocolo para continuar");
+                return;
+            }
+            $("#modalNuevoProtocolo").modal("show");
+            $("#type-action").text("Editar Protocolo");
+
+            let protocolId = row.eq(0).find("td").eq(0).text();
+            let protocolName = row.eq(0).find("td").eq(1).text();
+            let centroDeCosto = row.eq(0).find("td").eq(8).text();
+            let groupOccupation = row.eq(0).find("td").eq(9).text();
+            let workingOrganization = row.eq(0).find("td").eq(10).text();
+            let clientOrganization = row.eq(0).find("td").eq(11).text();
+            let esoType = row.eq(0).find("td").eq(12).text();
+            let serviceType = row.eq(0).find("td").eq(13).text();
+            let masterService = row.eq(0).find("td").eq(14).text();
+            let employerOrganization = row.eq(0).find("td").eq(15).text();
+            let r_PriceFactor = row.eq(0).find("td").eq(16).text();
+            let r_HospitalBedPrice = row.eq(0).find("td").eq(17).text();
+            let r_DiscountExam = row.eq(0).find("td").eq(18).text();
+            let r_MedicineDiscount = row.eq(0).find("td").eq(19).text();
+            let isActive = row.eq(0).find("td").eq(20).text();
+            let objProtocol = {
+                protocolId,
+                protocolName,
+                employerOrganization,
+                centroDeCosto,
+                groupOccupation,
+                workingOrganization,
+                clientOrganization,
+                esoType,
+                serviceType,
+                masterService,
+                r_PriceFactor,
+                r_HospitalBedPrice,
+                r_DiscountExam,
+                r_MedicineDiscount,
+                isActive
+            }
+            console.log(objProtocol);
+
+            SetValuesProtocol(objProtocol);
+        })
+
+        $("#change-empresaempleadora").on("change", function () {
+            let organizationId = $(this).val();
+            if (organizationId == "-1") {
+                let html = "<option value='-1'>--Todos--</option>";
+                $("#change-geso").html(html);
+                return;
+            }
+            GetGesoProt(organizationId);
+        })
+
+        $("#change-tiposervicio").on("change", function () {
+            if ($(this).val() == "-1") {
+                let html = "<option value='-1'>--Todos--</option>";
+                $("#change-servicio").html(html);
+                return;
+            }
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'GET',
+                data: { 'TypeService': $(this).val() },
+                url: '/Protocol/GetMasterServiceId',
+                success: function (json) {
+
+                    let html = "<option value='-1'>--Todos--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
+                    }
+
+                    $("#change-servicio").html(html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        })
+
+        $("#new-change-tiposervicio").on("change", function () {
+            if ($(this).val() == "-1") {
+                let html = "<option value='-1'>--Seleccionar--</option>";
+                $("#change-servicio").html(html);
+                return;
+            }
+
+            if ($(this).val() == TipoServicio.Seguros) {
+                $("#cont-solo-seguros").removeClass("d-none");
+            } else {
+                $("#cont-solo-seguros").addClass("d-none");
+            }
+
+            $.ajax({
+                cache: false,
+                dataType: 'json',
+                method: 'GET',
+                data: { 'TypeService': $(this).val() },
+                url: '/Protocol/GetMasterServiceId',
+                success: function (json) {
+
+                    let html = "<option value='-1'>--Seleccionar--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
+                    }
+
+                    $("#new-change-service").html(html);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        })
+
+        $("#new-change-empresacliente").on("change", function () {
+            let id = $(this).val();
+            $("#new-change-empresaempleadora").val(id).trigger("change");
+            $("#new-change-empresatrabajo").val(id);
+        })
+
+        $("#new-change-empresaempleadora").on("change", function () {
+            let organizationId = $(this).val();
+            if (organizationId == "-1") {
+                let html = "<option value='-1'>--Seleccionar--</option>";
+                $("#new-change-geso").html(html);
+                return;
+            }
+            GetGesoProt(organizationId, "new-change-geso");
+        })
+
+    })
+
+    const removeRowsComponent = function (icon, protocolComponentId = null) {
+
+        if (protocolComponentId == null) {
+            $(icon).parent().parent().remove();
+            SetPrices();
+        } else {
+            InfoAlert("Este examen ya ha sido guardado, no puede ser eliminado. Tiene que ir directamente al protocolo para poder hacerlo.");
+        }
+    }
+
+    const pintarFilaPlan = function (row) {
+        let rowAc = $("#body-planes").find(".row-active");
+        if (rowAc.length > 0) {
+            rowAc.removeClass("row-active");
+        }
+
+        $(row).addClass("row-active");
+    }
+
+    const SetPrices = function () {
+
+        let rows = $("#body-add-orden-servicio tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            if (!rows.eq(i).hasClass("row-protocol")) {
+                let rowsChildren = rows.eq(i).find(".body-components tr");
+                let priceUnit = 0;
+                for (let x = 0; x < rowsChildren.length; x++) {
+                    let td = rowsChildren.eq(x).find("td");
+                    let price = td.eq(2).text();
+                    priceUnit += Number(price);
+                }
+                let td = rows.eq(i).prev().find("td");
+                let priceTotal = (Number(td.eq(2).text()) * priceUnit);
+                td.eq(3).text(priceUnit);
+                td.eq(4).text(priceTotal);
+            }
+
+        }
+
+
+
+        let totalTrab = 0;
+        let totalPrice = 0;
+        for (var i = 0; i < rows.length; i++) {
+            if (rows.eq(i).hasClass("row-protocol")) {
+                let td = rows.eq(i).find("td");
+                let cantTrab = Number(td.eq(2).text());
+                let tPrice = Number(td.eq(4).text());
+                totalTrab += cantTrab;
+                totalPrice += tPrice;
+            }
+        }
+        $("#total-trabajadores-ordenservicio").val(totalTrab);
+        $("#total-precio-ordenservicio").val(totalPrice);
+
+
+    }
+
+    const GetPriceTotal = (a, b) => a * b;
+
+    const SetValuesUserExternal = function (json) {
+        console.log(json)
+        //datos de la persona
+        $("#new-externaluser-personId").val(json.v_PersonId);
+        $("#new-externaluser-name").val(json.v_FirstName);
+        $("#new-externaluser-apepat").val(json.v_FirstLastName);
+        $("#new-externaluser-apemat").val(json.v_SecondLastName);
+        $("#new-externaluser-doctype").val(json.i_DocTypeId);
+        $("#new-externaluser-docnumber").val(json.v_DocNumber);
+        let fechNac = json.d_Birthdate == null ? "" : getDateFromAspNetFormat(json.d_Birthdate);
+        $("#new-externaluser-fechanacimiento").val(fechNac);
+        $("#new-externaluser-lugarnacimiento").val(json.v_BirthPlace);
+        $("#new-externaluser-gender").val(json.i_SexTypeId);
+        $("#new-externaluser-maritalstatus").val(json.i_MaritalStatusId);
+        $("#new-externaluser-nivelestudios").val(json.i_LevelOfId);
+        $("#new-externaluser-telefono").val(json.v_TelephoneNumber);
+        $("#new-externaluser-direccion").val(json.v_AdressLocation);
+        $("#new-externaluser-email").val(json.v_Mail);
+        ///----
+
+        //datos de la profesion
+        $("#new-externaluser-profesion").val(json.i_ProfesionId);
+        console.log(json.i_ProfesionId);
+        $("#new-externaluser-colegiatura").val(json.v_ProfessionalCode);
+        $("#new-externaluser-infoadicional").val(json.v_ProfessionalInformation);
+        //-----
+
+        //datos del usuario
+        $("#new-externaluser-userId").val(json.i_SystemUserId);
+        $("#new-externaluser-usuario").val(json.v_UserName)
+        $("#new-externaluser-contraseña").val(json.v_Password)
+        $("#new-externaluser-repetircontraseña").val(json.v_Password);
+        $("#rdo-nuncaexpira").get(0).checked = json.d_ExpireDate == null ? true : false;
+        $("#rdo-fechaexpira").get(0).checked = json.d_ExpireDate == null ? false : true;
+        let fechExpira = json.d_ExpireDate == null ? "" : getDateFromAspNetFormat(json.d_ExpireDate);
+        $("#fecha-expira").val(fechExpira);
+        $("#fecha-expira").attr("disabled", fechExpira == "" ? true : false);
+        //-----
+
+
+
+        //permisos
+        let checkPermisos = $(".permisos-opciones");
+        let checkNotificaciones = $(".permisos-notificaciones");
+
+        for (let i = 0; i < checkPermisos.length; i++) {
+            let value = checkPermisos.eq(i).attr('data-value');
+            for (let item of json.ListPremisos) {
+                if (item.i_ApplicationHierarchyId == value) {
+                    checkPermisos.eq(i).get(0).checked = true;
+                }
+            }
+
+
+
+        }
+        for (let i = 0; i < checkNotificaciones.length; i++) {
+            let value = checkNotificaciones.eq(i).attr('data-value');
+            for (let item of json.ListPremisos) {
+                if (item.i_ApplicationHierarchyId == value) {
+                    checkNotificaciones.eq(i).get(0).checked = true;
+                }
+            }
+        }
+    }
+
+    const removeProtocol = function (row, serviceOrderDetail = null) {
+
+        notificacion({
+            classTitleAndButtons: "warningTitleAndButtons",
+            classMessage: "warningMessage",
+            title: "¡ Confirmación !",
+            icono: "",
+            contenido: "¿ Seguro de eliminar el detalle del servicio ?",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "",
+            mostrarBtnOk: "no",
+        });
+
+        $(".bigBox-Aceptar").on("click", function () {
+            $(".bigBox-Cancelar").click();
+
+            if (serviceOrderDetail == null) {
+                $(row).parent().parent().next().remove();
+                $(row).parent().parent().remove();
+                SetPrices();
+            } else {
+                $.ajax({
+                    cache: false,
+                    method: 'GET',
+                    dataType: 'json',
+                    data: { serviceOrderDetail },
+                    url: '/Protocol/DeletedServiceOrderDetail',
+                    success: function (json) {
+                        if (json.Error) {
+                            AlertErrorServidor(json.Status, json.Message);
+                        } else {
+                            SuccessMessageServidor(json.Status, json.Message);
+                            $(row).parent().parent().next().remove();
+                            $(row).parent().parent().remove();
+                            SetPrices();
+                        }
+                    },
+                    error: function (err) {
+                        AlertErrorServidor(err.status, err.statusText);
+                    }
+                })
+            }
+        })
+    }
+
+    const GetServicesOrderDetail = function (serviceOrderId) {
+        $("#serviceorderId").val(serviceOrderId);
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            data: { serviceOrderId },
+            dataType: 'json',
+            url: '/Protocol/GetServicesOrderDetail',
+            success: function (json) {
+                arrRows = [];
+                console.log(json);
+                for (let item of json) {
+                    let rowHtml = `<tr class="row-protocol" onclick="$(this).next().toggleClass('d-none')">
+                                        <td class="d-none">${ item.v_ProtocolId}</td>
+                                        <td>${ item.v_ProtocolName}</td>
+                                        <td>${ item.i_NumberOfWorkerProtocol}</td>
+                                        <td>${ item.r_ProtocolPrice}</td>
+                                        <td>${ item.r_Total}</td>
+                                        <td>${ item.v_ProtocolTypeName}</td>
+                                        <td class="d-none">${ item.i_ProtocolType}</td>
+                                        <td class="d-none">${ item.v_GroupOccupationId}</td>
+                                        <td class="d-none">${ item.v_GesoName}</td>
+                                        <td class="d-none">${ item.v_ServiceOrderDetailId}</td>
+                                        <td>
+                                            <i class="fas fa-times p-2 bg-danger text-white" onclick="removeProtocol(this,'${ item.v_ServiceOrderDetailId}')"></i>
+                                        </td>
+                                    </tr>
+                                    <tr ondblclick="FindComponents(this)"  class="d-none animated fadeIn">
+                                        <th class="text-center">EXÁMENES</th>
+                                        <td colspan="4">
+                                            <table class="table table-sm table-hover">
+                                                <thead>
+                                                   <tr>
+                                                        <th nowrap scope="col" class="d-none">componentId</th>
+                                                        <th nowrap scope="col">Examen</th>
+                                                        <th nowrap scope="col">Precio</th>
+                                                        <th nowrap scope="col">Operador</th>
+                                                        <th nowrap scope="col">Edad</th>
+                                                        <th nowrap scope="col">Género</th>
+                                                        <th nowrap scope="col">Es Condicional</th>
+                                                        <th nowrap scope="col">Tipo</th>
+                                                        <th nowrap scope="col" class="d-none">OperadorId</th>
+                                                        <th nowrap scope="col" class="d-none">GeneroId</th>
+                                                        <th nowrap scope="col" class="d-none">EsCondicional</th>
+                                                        <th nowrap scope="col" class="d-none">TipoId</th>
+                                                        <th nowrap scope="col" class="d-none">GrupoEtario</th>
+                                                        <th nowrap scope="col" class="d-none">IsIMC</th>
+                                                        <th nowrap scope="col" class="d-none">MayorIMC</th>
+                                                        <th nowrap scope="col" class="d-none">EsAdicional</th>
+                                                        <th nowrap scope="col" class="d-none">RecordStatus</th>
+                                                        <th nowrap scope="col" class="d-none">RecordType</th>
+                                                        <th nowrap scope="col" class="d-none">protocolComponentId</th>
+                                                        <th nowrap scope="col" class="d-none">componentId</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="body-components">`;
+
+                    for (let prot of item.ProtocolComponents) {
+                        rowHtml += `<tr onclick="PintarFilaComponent(this)">
+                                        <td class="d-none">${prot.v_ComponentId}</td>
+                                        <td>${prot.v_Name}</td>
+                                        <td>${prot.r_Price}</td>
+                                        <td>${prot.v_OperadorName}</td>
+                                        <td>${prot.i_Edad}</td>
+                                        <td>${prot.v_GenderName}</td>
+                                        <td>${prot.v_IsConditional}</td>
+                                        <td>${prot.v_ComponentTypeName}</td>
+                                        <td class="d-none">${prot.i_OperadorId}</td>
+                                        <td class="d-none">${prot.i_GenderId}</td>
+                                        <td class="d-none">${prot.i_IsConditional}</td>
+                                        <td class="d-none">${prot.i_ComponentTypeId}</td>
+                                        <td class="d-none">${prot.i_GrupoEtario}</td>
+                                        <td class="d-none">${prot.i_IsIMC}</td>
+                                        <td class="d-none">${prot.IMC}</td>
+                                        <td class="d-none">${prot.i_IsAditional}</td>
+                                        <td class="d-none">${prot.RecordStatus}</td>
+                                        <td class="d-none">${prot.RecordType}</td>
+                                        <td class="d-none">${prot.v_ProtocolComponentId}</td>
+                                        <td class='text-center'><i class='text-white p-1 bg-danger fas fa-times' disabled onclick="removeRowsComponent(this, '${prot.v_ProtocolComponentId}')"></i></td>
+                                    </tr>`;
+                    }
+
+
+                    rowHtml += `</tbody>
+                                    </table>
+                                </td>
+                            </tr>`;
+                    arrRows.push(rowHtml);
+
+                }
+                $("#body-add-orden-servicio").html(arrRows.join(""));
+            },
+            error: function (err) {
+                AlertErrorServidor(err.status, err.statusText);
+            }
+        })
+    }
+
+    const SetValuesProtocol = function (obj) {
+
+        if (obj.isActive == 1) {
+            $("#activoSiNoNew").get(0).checked = true;
+        } else {
+            $("#activoSiNoNew").get(0).checked = false;
+        }
+        console.log(obj);
+        $("#new-change-protocolname").val(obj.protocolName);
+        $("#new-change-empresacliente").val(obj.clientOrganization).trigger("change");
+        $("#new-change-empresaempleadora").val(obj.employerOrganization).trigger("change");
+        $("#new-change-empresatrabajo").val(obj.workingOrganization).trigger("change");
+        $("#new-change-tipoexamen").val(obj.esoType).trigger("change");
+        $("#new-change-tiposervicio").val(obj.serviceType).trigger("change");
+        $("#new-change-centrocosto").val(obj.centroDeCosto);
+
+        $("#input-protocol-id").val(obj.protocolId)
+
+        $("#new-factor").val(obj.r_PriceFactor);
+        $("#new-medicine-discount").val(obj.r_HospitalBedPrice);
+        $("#new-bed-price").val(obj.r_DiscountExam);
+        $("#new-discount-exam").val(obj.r_MedicineDiscount);
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'protocolId': obj.protocolId },
+            url: '/Protocol/GetProtocolComponentByProtocolIdJSON',
+            success: function (json) {
+                let arrPrtoComp = [];
+                let arrUsers = [];
+                for (let item of json.ListProtocolComponents) {
+                    let html = `<tr onclick="PintarFilaComponent(this)">
+                                <td class="d-none">${item.ComponentId}</td>
+                                <td>${item.ComponentName}</td>
+                                <td>${item.Price}</td>
+                                <td>${item.Operador}</td>
+                                <td>${item.Age}</td>
+                                <td>${item.Genero}</td>
+                                <td>${item.v_IsCondicional}</td>
+                                <td>${item.ComponentTypeName}</td>
+                                <td class="d-none">${item.i_OperatorId}</td>
+                                <td class="d-none">${item.GenderId}</td>
+                                <td class="d-none">${item.IsConditionalId}</td>
+                                <td class="d-none">${item.ComponentTypeId}</td>
+                                <td class="d-none">${item.GrupoEtarioId}</td>
+                                <td class="d-none">${item.IsConditionalIMC}</td>
+                                <td class="d-none">${item.r_Imc}</td>
+                                <td class="d-none">${item.IsAdditional}</td>
+                                <td class="d-none">1</td>
+                                <td class="d-none">2</td>
+                                <td class="d-none">${item.ProtocolComponentId}</td>
+                            </tr>`;
+
+                    arrPrtoComp.push(html);
+                }
+
+
+                for (let item of json.ListUsers) {
+                    let html = `<tr onclick="PintarFilaUsers(this)">
+                                <td class="d-none">${item.i_SystemUserId}</td>
+                                <td>${item.v_PersonName}</td>
+                                <td>${item.v_UserName}</td>
+                                <td>${item.v_DocNumber}</td>
+                                <td>${item.d_ExpireDate == null ? "" : getDateFromAspNetFormat(item.d_ExpireDate)}</td>
+                            </tr>`;
+
+                    arrUsers.push(html);
+                }
+
+                setTimeout(function () {
+                    $("#new-change-geso").val(obj.groupOccupation);
+                    $("#new-change-service").val(obj.masterService);
+                }, 500)
+                $("#body-new-components").html(arrPrtoComp.join(""));
+                $("#body-new-users").html(arrUsers.join(""));
+            },
+            error: function (err) {
+                AlertErrorServidor(err.status, err.statusText);
+            }
+        })
+    }
+
+    const SetDataSelectEmpresaClienteEmpleadora = function () {
+        let value = $("#change-empresa-trabajo").html();
+        $("#change-empresaempleadora").html(value)
+        $("#change-empresa-cliente").html(value)
+    }
+
+    const FilterComponent = function () {
+        let componentName = $("#input-component-name").val();
+        $("#cont-table-head-component").addClass("loadingGrid");
+
+
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { componentName },
+            url: '/Protocol/GetMedicalExam',
+            success: function (json) {
+                if (json.length == 0) {
+                    InfoAlert("No se encontraron resultados para: " + "<strong>" + componentName + "</strong>")
+
+                } else {
+                    arrRows = [];
+                    for (let exam of json) {
+                        let row = `<tr onclick="PintarFilaAdditionalComponent(this)">
+                                            <td nowrap class="d-none">${exam.v_ComponentId}</td>
+                                            <td nowrap>${exam.v_ComponentName}</td>
+                                            <td nowrap>${exam.v_CategoryName}</td>
+                                            <td nowrap>${exam.r_Price}</td>
+                                            <td nowrap>${exam.v_ComponentTypeName}</td>
+                                            <td nowrap class="d-none">${exam.i_ComponentTypeId}</td>
+                                       </tr>`;
+                        arrRows.push(row);
+
+                    }
+
+                    $("#body-add-components").html(arrRows.join(""));
+                }
+                $("#cont-table-head-component").removeClass("loadingGrid");
+            },
+            error: function (err, asd, asdf) {
+                AlertErrorServidor(err.status, err.statusText);
+                $("#cont-table-head-component").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const PintarFilaAdditionalComponent = function (row) {
+        let rowAc = $("#body-add-components").find(".row-active");
+        if (rowAc.length > 0) {
+            rowAc.removeClass("row-active");
+        }
+        $(row).addClass("row-active");
+
+        let componentName = $(row).find("td").eq(1).text();
+        let basePrice = $(row).find("td").eq(3).text();
+
+        $("#datos-examen-name").val(componentName);
+        $("#datos-examen-price").val(basePrice);
+
+    }
+
+    const PintarFilaComponent = function (row) {
+        let rowAc = $("#body-new-components").find(".row-active");
+        if (rowAc.length > 0) {
+            rowAc.removeClass("row-active");
+        }
+
+        let rowAc_ = $(".body-components").find(".row-active");
+        if (rowAc_.length > 0) {
+            rowAc_.removeClass("row-active");
+        }
+        $(row).addClass("row-active");
+    }
+
+    const PintarFilaUsers = function (row) {
+        let rowAc = $("#body-new-users").find(".row-active");
+        if (rowAc.length > 0) {
+            rowAc.removeClass("row-active");
+        }
+        $(row).addClass("row-active");
+    }
+
+    const FindComponentsByProtocol = function (row) {
+        if ($(".row-active").length > 0) {
+            $(".row-active").removeClass("row-active");
+        }
+        $(row).addClass("row-active");
+        let protocolId = $(row).eq(0).find("td").eq(0).text();
+        $("#cont-table-ProtocolComponent").addClass("loadingGrid");
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'html',
+            data: { 'protocolId': protocolId },
+            url: '/Protocol/GetProtocolComponentByProtocolId',
+            success: function (html) {
+                $("#render-protocolcomponents").html(html);
+                $("#cont-table-ProtocolComponent").removeClass("loadingGrid");
+            },
+            erorr: function (err, type, message) {
+                alertafixed({
+                    class: 'error-protocol',
+                    type: 'danger',
+                    title: 'ERROR' + err.status,
+                    message: 'Sucedió un error con el servidor: ' + message
+                })
+                $("#cont-table-ProtocolComponent").removeClass("loadingGrid");
+            }
+        })
+
+    }
+
+    const Filter = function (index = 1) {
+
+        $("#cont-table-protocol").addClass("loadingGrid");
+        let IsActive = 0;
+        if ($("#activoSiNo:checked").length == 1) {
+            IsActive = 1;
+        }
+        var data = {
+            ProtocolName: $("#protocol-name").val(),
+            MasterServiceType: $("#change-tiposervicio").val(),
+            MasterService: $("#change-servicio").val(),
+            EmpresaTrabajo: $("#change-empresa-trabajo").val(),
+            EmpresaEmpleadora: $("#change-empresaempleadora").val(),
+            EmpresaCliente: $("#change-empresa-cliente").val(),
+            GESO: $("#change-geso").val(),
+            EsoType: $("#change-eso-type").val(),
+            ComponentName: $("#filter-component-name").val(),
+            IsActive,
+            Index: index,
+            Take: $("#take").val()
+        };
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'html',
+            data,
+            url: '/Protocol/GetAllProtocol',
+            success: function (html) {
+                $("#render-protocols").html(html);
+                $("#cont-table-protocol").removeClass("loadingGrid");
+            },
+            error: function (err, type, message) {
+                alertafixed({
+                    class: "error",
+                    type: "danger",
+                    title: "ERROR: " + err.status,
+                    message: "Sucedió un error en el servidor: " + message
+                })
+                $("#cont-table-protocol").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const GetGesoProt = function (organizationId, id = "change-geso") {
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: { 'organizationId': organizationId },
+            url: '/Protocol/GetGESO',
+            success: function (json) {
+                var tipo = "Todos";
+                if (id != "change-geso") {
+                    tipo = "Seleccionar";
+                }
+                let html = "<option value='-1'>--" + tipo + "--</option>";
+                for (var i = 0; i < json.length; i++) {
+                    html += `<option value="${json[i].v_Id}">${json[i].Value}</option>`;
+                }
+                $("#" + id).html(html);
+            },
+            error: function (err) {
+                alertafixed({
+                    class: 'error-protocol',
+                    type: 'danger',
+                    title: 'ERROR' + err.status,
+                    message: 'Sucedió un error con el servidor.'
+                })
+                console.log(err);
+            }
+        })
+    }
+
+    const ValidateProtocolName = async (protocolName) => {
+        try {
+            const result = await $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: { protocolName },
+                url: '/Protocol/VerifyExistsProtocol',
+            });
+            return result;
+        } catch (e) {
+            return { Error: true, Status: e.status, Message: "Sucedió un error conectandose al servidor:" + e.statusText };
+        }
+
+    }
+
+    const LimpiarCampos = function (arrElem) {
+
+        for (let i = 0; i < arrElem.length; i++) {
+            let idCut = arrElem[i].split("|");
+            let element = $(idCut[0]);
+            let type = element.get(0).type;
+            if (type == "text" || type == "number" || type == "time" || type == "email" || type == "password" || type == "textarea") {
+                let disabled = idCut.length == 2 ? true : false;
+                let dataValue = idCut.length == 3 ? idCut[2] : "";
+                element.attr("disabled", disabled);
+                element.val(dataValue);
+            } else if (type == "radio" || type == "checkbox") {
+                let defaultVal = idCut.length > 1 ? idCut[1] == 'true' || idCut[1] == true ? true : false : false;
+                for (let i = 0; i < element.length; i++) {
+                    element.eq(i).get(0).checked = defaultVal;
+                }
+            } else if (type == "select-one") {
+                let defaultVal = idCut.length > 1 ? idCut[1] : "-1";
+                element.val(defaultVal);
+            } else if (type == "datetime" || type == "date") {
+                let disabled = idCut.length > 1 ? true : false;
+                element.attr("disabled", disabled);
+                SetDateTimeNow(element);
+            }
+        }
+    }
+</script>

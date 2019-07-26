@@ -14,9 +14,11 @@ namespace BE.Security
         public string RucEmpresa { get; set; }
         public string UserName { get; set; }
         public string FullName { get; set; }
+        public int EstablecimientoPredeterminado { get; set; }
         public byte[] PersonImage { get; set; }
         public int SystemUserTypeId { get; set; }
         public string SystemUserByOrganizationId { get; set; }
+        public string TelephoneNumber { get; set; }
         public List<Permission> Permissions { get; set; }
         public List<OrganizationSystemUser> Organizations{ get; set; }
         public List<Option> Options { get; set; }

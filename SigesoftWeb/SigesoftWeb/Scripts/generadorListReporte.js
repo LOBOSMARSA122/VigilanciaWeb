@@ -57,14 +57,19 @@ function GenerarReport() {
                 url: '/PatientsAssistance/BuildReport',
                 success: function (json) {
                     $(".js-cont-reports").removeClass("loadingGrid");
-                    if (location.hostname === "localhost") {
-                        var fileName = json + ".pdf";
-                        var url = "http://localhost:1932/ESO/" + fileName;
-                        window.open(url, '_blank');
-                    } else {
-                        var url = "https://www.omegavigilanciaservicios.com/ESO/" + json + ".pdf";
-                        window.open(url, '_blank');
-                    }
+
+                    var ApiURI = SigesoftWebApiUrl();
+                    var fileName = json + ".pdf";
+                    var url = ApiURI + "ESO/" + fileName;
+                    window.open(url, '_blank');
+                    //if (location.hostname === "localhost") {
+                    //    var fileName = json + ".pdf";
+                    //    var url = "http://localhost:1932/ESO/" + fileName;
+                    //    window.open(url, '_blank');
+                    //} else {
+                    //    var url = "https://www.omegavigilanciaservicios.com/ESO/" + json + ".pdf";
+                    //    window.open(url, '_blank');
+                    //}
                     
                 },
                 error: function (error) {

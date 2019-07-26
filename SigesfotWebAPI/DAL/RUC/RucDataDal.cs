@@ -19,6 +19,7 @@ namespace DAL.RUC
         public RootObject GetDataContribuyente(string numDoc)
         {
             RootObject _RootObject = new RootObject();
+            _RootObject.Sunat = true;
             try
             {
                 
@@ -36,12 +37,12 @@ namespace DAL.RUC
                 sr.Close();               
                 if (sContentsa == "[]")
                 {
-                    _RootObject.success = false;
-                    _RootObject.mensaje = "No se obtuvo ningún resultado";
+                    _RootObject.Error = true;
+                    _RootObject.Message = "No se obtuvo ningún resultado";
                 }
                 else
                 {
-                    _RootObject.success = true;
+                    _RootObject.Error = false;
                     result = JsonConvert.DeserializeObject<ControlResultadosRUC>(sContentsa);
                 }
 
@@ -52,8 +53,8 @@ namespace DAL.RUC
             }
             catch (Exception)
             {
-                _RootObject.success = false;
-                _RootObject.mensaje = "No se obtuvo ningún resultado";
+                _RootObject.Error = false;
+                _RootObject.Message = "No se obtuvo ningún resultado";
                 return _RootObject;
             }
             

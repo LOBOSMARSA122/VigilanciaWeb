@@ -47,8 +47,53 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Antecedentes\EsoAntecedentes.cs" />
+    <Compile Include="Antecedentes\EsoCuidadosPreventivos.cs" />
     <Compile Include="Calendar\CalendarCustom.cs" />
+    <Compile Include="Calendar\CalendarList.cs" />
+    <Compile Include="Categoria\Categoria.cs" />
+    <Compile Include="Common\AdditionalExamBE.cs" />
+    <Compile Include="Common\AdolecenteBE.cs" />
+    <Compile Include="Common\AdultoBE.cs" />
+    <Compile Include="Common\AdultoMayorBE.cs" />
+    <Compile Include="Common\AntecedentesAsistencialBE.cs" />
+    <Compile Include="Common\CuidadoPreventivoBE.cs" />
+    <Compile Include="Common\CuidadoPreventivoComentarioBE.cs" />
+    <Compile Include="Common\EmbarazoBE.cs" />
+    <Compile Include="Common\NinioBE.cs" />
+    <Compile Include="Common\PlanIntegralBE.cs" />
+    <Compile Include="Common\ProblemaBE.cs" />
+    <Compile Include="Common\RecetaBE.cs" />
+    <Compile Include="Common\ServiceOrderBE.cs" />
+    <Compile Include="Common\ServiceOrderDetailBE.cs" />
+    <Compile Include="Component\AdditionalExamCustom.cs" />
+    <Compile Include="Component\ExamsCustom.cs" />
+    <Compile Include="Email\EmailModel.cs" />
+    <Compile Include="Embarazo\EmbarazoCustom.cs" />
+    <Compile Include="Especiality\EspecialityBE.cs" />
+    <Compile Include="Especiality\EspecialityCustom.cs" />
+    <Compile Include="HistoriaClinica\AtencionIntegral.cs" />
+    <Compile Include="HistoriaClinica\AtencionIntegralAdolescente.cs" />
+    <Compile Include="HistoriaClinica\AtencionIntegralAdulto.cs" />
+    <Compile Include="HistoriaClinica\AtencionIntegralAdultoMayor.cs" />
+    <Compile Include="HistoriaClinica\Ninio.cs" />
+    <Compile Include="Ninio\NinioCustom.cs" />
+    <Compile Include="Organization\OrganizationCustom.cs" />
+    <Compile Include="Piso\PisoCustom.cs" />
+    <Compile Include="PlanIntegral\PlanIntegralList.cs" />
+    <Compile Include="ProtocolComponent\ProtocolComponentCustom.cs" />
+    <Compile Include="ProtocolSystemUser\ProtocolSystemUserCustom.cs" />
+    <Compile Include="Protocol\ProtocolList.cs" />
+    <Compile Include="Receta\RecetaDespachoCustom.cs" />
+    <Compile Include="RoleNodeComponentProfile\RoleNodeComponentProfileCustom.cs" />
     <Compile Include="RUC\ControlResultadosRUC.cs" />
+    <Compile Include="Security\SystemUserCustom.cs" />
+    <Compile Include="ServiceOrder\BoardServiceOrder.cs" />
+    <Compile Include="ServiceOrder\OrdenServicio.cs" />
+    <Compile Include="ServiceOrder\OrdenServicioPromocion.cs" />
+    <Compile Include="ServiceOrder\Report_ServiceOrderConsolidate.cs" />
+    <Compile Include="SystemUser\BoardSystemUserExternal.cs" />
+    <Compile Include="Usuario\UsuarioGrabo.cs" />
     <Compile Include="Z-CommonSAMBHS\ClienteBE.cs" />
     <Compile Include="Z-CommonSAMBHS\ClienteDireccionesBE.cs" />
     <Compile Include="Z-CommonSAMBHS\DataHierarchyBE.cs" />
@@ -212,8 +257,11 @@
     <Compile Include="Worker\VapidBe.cs" />
     <Compile Include="Worker\WorkerPwa.cs" />
     <Compile Include="Z-SAMBHSCUSTOM\Clientes\ClienteCustom.cs" />
+    <Compile Include="Z-SAMBHSCUSTOM\Productos\MedicamentoCustomSAMBHS.cs" />
     <Compile Include="Z-SAMBHSCUSTOM\Productos\ProductCustomSAMBHS.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Problemas\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

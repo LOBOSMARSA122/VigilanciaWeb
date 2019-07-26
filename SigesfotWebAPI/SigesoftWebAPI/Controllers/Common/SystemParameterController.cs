@@ -20,6 +20,14 @@ namespace SigesoftWebAPI.Controllers.Common
             List<Dropdownlist> result = oSystemParameterBL.GetParametroByGrupoId(grupoId);
             return Ok(result);
         }
+
+        [HttpGet]
+        public IHttpActionResult GetOrganizationForCombo()
+        {
+            List<Dropdownlist> result = oSystemParameterBL.GetOrganizationForCombo();
+            return Ok(result);
+        }
+
         [HttpGet]
         public IHttpActionResult GetParameterTypeServiceByGrupoId(int grupoId)
         {
@@ -41,10 +49,19 @@ namespace SigesoftWebAPI.Controllers.Common
         }
 
         [HttpGet]
-        public IHttpActionResult GetGESO(string organizationId, string locationId)
+        public IHttpActionResult GetGESO(string organizationId, string locationId = null)
         {
-            List<Dropdownlist> result = oSystemParameterBL.GetGeso(organizationId, locationId);
-            return Ok(result);
+            if (locationId != null)
+            {
+                List<Dropdownlist> result = oSystemParameterBL.GetGeso(organizationId, locationId);
+                return Ok(result);
+            }
+            else
+            {
+                List<Dropdownlist> result = oSystemParameterBL.GetGeso(organizationId);
+                return Ok(result);
+            }
+            
         }
 
         [HttpGet]
@@ -59,7 +76,14 @@ namespace SigesoftWebAPI.Controllers.Common
             List<Dropdownlist> result = oSystemParameterBL.GetProtocolsForCombo(Service, ServiceType);
             return Ok(result);
         }
-        
+
+        [HttpGet]
+        public IHttpActionResult GetProtocolsForComboEspeciality(int Service, int ServiceType)
+        {
+            List<Dropdownlist> result = oSystemParameterBL.GetProtocolsForComboEspeciality(Service, ServiceType);
+            return Ok(result);
+        }
+
         [HttpGet]
         public IHttpActionResult GetOrganizationAndLocation()
         {

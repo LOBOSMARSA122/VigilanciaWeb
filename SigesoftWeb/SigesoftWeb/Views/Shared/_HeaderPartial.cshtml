@@ -5,7 +5,6 @@
 }
 <style>
     .js-dropdown-menu {
-
         padding: 0;
         top: 40px !important;
         position: absolute;
@@ -14,15 +13,16 @@
         overflow: hidden;
         list-style: none;
     }
-    a:hover{
+
+    a:hover {
         text-decoration: none;
     }
 
-    .js-drop-down{
-        position:relative;
+    .js-drop-down {
+        position: relative;
     }
-    .lbl-organizacion {
 
+    .lbl-organizacion {
         color: #5e95b9;
         font-family: 'Roboto', sans-serif;
         font-size: 13px;
@@ -30,21 +30,21 @@
 </style>
 <header class="fixed-top">
     <div class="row align-items-center menu">
-        <div class="col-auto align-self-stretch boton-menu ">
+        <div class="col-auto align-self-stretch boton-menu back">
             <a href="#" class="bt-menu" id="first-btn-menu"><span class="text-white"><i class="fas fa-bars"></i></span></a>
         </div>
 
         <div class="col logo">
             <a href="@Url.Content("~/PatientsAssistance")">
-                <span> Módulo de Vigilancia</span>
+                <span class="color-principal"> Módulo de Vigilancia</span>
             </a>
         </div>
         <div class="d-none d-md-block mr-2">
-            <label class="m-0 lbl-organizacion">Organización</label>
+            <label class="m-0 lbl-organizacion color-principal">Organización</label>
         </div>
         <div class="d-none d-md-block">
 
-            <select id="cbo-organization" style="height: 35px" class="custom-select">
+            <select id="cbo-organization" style="height: 35px" class="custom-select ">
                 @{
                     foreach (var item in Organizations)
                     {
@@ -55,12 +55,12 @@
             </select>
         </div>
         <div class="d-none d-md-block mx-2">
-            <label class="m-0 lbl-organizacion">Almacén</label>
+            <label class="m-0 lbl-organizacion color-principal">Almacén</label>
         </div>
         <div class="d-none d-md-block">
 
             <select id="cbo-organizationWarehouse" style="height: 35px" class="custom-select">
-                <option value="-1">--Seleccionar--</option>
+                <option selected value="-1">--Seleccionar--</option>
             </select>
         </div>
         <div class="d-none d-md-block js-drop-down" onclick="dropdown()">
@@ -68,7 +68,7 @@
             <nav class="col ">
 
                 <a href="#" class="imagen">  <img src="@imgSrc" width="35" height="35" /></a>
-                <a href="#" class="nombre-usuario ">Bienvenido: @ViewBag.USER.FullName <i class="fas fa-caret-down"></i></a>
+                <a href="#" class="nombre-usuario color-principal">Bienvenido: @ViewBag.USER.FullName <i class="fas fa-caret-down"></i></a>
                 <input type="text" class="d-none" id="user-logg" value="@ViewBag.USER.UserName" />
                 <ul class="js-dropdown-menu">
                     <li class="user-header ">

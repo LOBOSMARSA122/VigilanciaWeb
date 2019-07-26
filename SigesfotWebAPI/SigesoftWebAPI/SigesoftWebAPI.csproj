@@ -36,6 +36,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +54,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\..\FACT_ELECT\ExternalLibraries\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp, Version=5.5.0.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\SalusLaboris\Proyecto Salus Laboris\ExternalLibraries\itextsharp.dll</HintPath>
@@ -61,6 +65,9 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Selenium.WebDriverBackedSelenium">
+      <HintPath>..\..\..\..\Desktop\boot\ConsultaSIS\App_Data\Component\Libs\Selenium.WebDriverBackedSelenium.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -125,6 +132,12 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebDriver">
+      <HintPath>..\..\..\..\Desktop\boot\ConsultaSIS\App_Data\Component\Libs\WebDriver.dll</HintPath>
+    </Reference>
+    <Reference Include="WebDriver.Support">
+      <HintPath>..\..\..\..\Desktop\boot\ConsultaSIS\App_Data\Component\Libs\WebDriver.Support.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -190,19 +203,29 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AntecedentesController.cs" />
     <Compile Include="Controllers\Calendar\CalendarController.cs" />
     <Compile Include="Controllers\Clientes\ClientesController.cs" />
     <Compile Include="Controllers\Common\DataHierarchyController.cs" />
     <Compile Include="Controllers\Common\SystemParameterController.cs" />
     <Compile Include="Controllers\Component\ComponentController.cs" />
     <Compile Include="Controllers\ConfDx\ConfigDiagnosticController.cs" />
+    <Compile Include="Controllers\ConsultaRUC\ConsultaRUCController.cs" />
+    <Compile Include="Controllers\ConsultaSIS\ConsultaSISController.cs" />
+    <Compile Include="Controllers\Consultorio\ConsultorioController.cs" />
     <Compile Include="Controllers\Diagnostic\DiagnosticController.cs" />
     <Compile Include="Controllers\Documento\DocumentoController.cs" />
+    <Compile Include="Controllers\Embarazo\EmbarazoController.cs" />
+    <Compile Include="Controllers\Especiality\EspecialityController.cs" />
+    <Compile Include="Controllers\HistoriaClinica\HistoriaClinicaController.cs" />
     <Compile Include="Controllers\MedicalAssistance\PatientsAssistanceController.cs" />
     <Compile Include="Controllers\Node\NodeController.cs" />
     <Compile Include="Controllers\Notification\NotificationController.cs" />
+    <Compile Include="Controllers\Organization\OrganizationController.cs" />
     <Compile Include="Controllers\Pacient\PacientController.cs" />
+    <Compile Include="Controllers\PlanIntegralController.cs" />
     <Compile Include="Controllers\PlanVigilancia\PlanVigilanciaController.cs" />
+    <Compile Include="Controllers\Plan\PlanController.cs" />
     <Compile Include="Controllers\ProductWarehouse\ProductWarehouseController.cs" />
     <Compile Include="Controllers\Product\ProductController.cs" />
     <Compile Include="Controllers\Protocol\ProtocolController.cs" />
@@ -210,18 +233,26 @@
     <Compile Include="Controllers\RUC\DataRucController.cs" />
     <Compile Include="Controllers\Schedule\ScheduleController.cs" />
     <Compile Include="Controllers\Security\AuthorizationController.cs" />
+    <Compile Include="Controllers\SendSMS\SendSMSController.cs" />
+    <Compile Include="Controllers\ServiceOrder\ServiceOrderController.cs" />
     <Compile Include="Controllers\Service\ServiceController.cs" />
     <Compile Include="Controllers\Subscribe\SubscribeController.cs" />
+    <Compile Include="Controllers\SystemUser\SystemUserController.cs" />
     <Compile Include="Controllers\Test\TestController.cs" />
     <Compile Include="Controllers\Eso\EsoController.cs" />
     <Compile Include="Controllers\Vigilancia\VigilanciaController.cs" />
     <Compile Include="Controllers\WorkerPwa\WorkerPwaController.cs" />
+    <Compile Include="Controllers\z-LineaSAMBHS\LineaSAMBHSController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Component\Libs\Selenium.WebDriverBackedSelenium.dll" />
+    <Content Include="App_Data\Component\Libs\WebDriver.dll" />
+    <Content Include="App_Data\Component\Libs\WebDriver.Support.dll" />
+    <Content Include="App_Data\Component\phantomjs.exe" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -250,6 +281,7 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="ReportesBasura\N009-SR000010539-COPIA-HISTORIA-CLINICA.pdf" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -274,9 +306,12 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="ESO\" />
+    <Folder Include="ExamenesAdicionales\" />
+    <Folder Include="HistoriaClinicaReports\" />
     <Folder Include="Models\" />
+    <Folder Include="RutaCotizacion\" />
+    <Folder Include="ServiceOrderFile\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

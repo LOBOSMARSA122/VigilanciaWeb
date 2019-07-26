@@ -16,6 +16,8 @@ namespace BE.Sigesoft
         public const int HEIGHT_MAX_SIZE_IMAGE = 7000;
         public const int COLUMNAS_POR_CONTROL = 3;
 
+        public const string ATENCION_INTEGRAL_ANTECEDENTES = "N009-MF000004935";
+
         #region EXOGRAFIAS - JUAN PABLO
         /// <summary>
         /// IE OBSTETRICO

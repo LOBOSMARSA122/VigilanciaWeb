@@ -10450,7 +10450,7 @@ $.ui.plugin.add( "draggable", "connectToSortable", {
 					sortable._mouseStop( event, true );
 
 					// Restore sortable behaviors that were modfied
-					// when the draggable entered the sortable area (#9481)
+					// when the draggable entered the sortable area (#948081)
 					sortable.options.revert = sortable.options._revert;
 					sortable.options.helper = sortable.options._helper;
 

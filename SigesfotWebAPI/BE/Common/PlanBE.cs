@@ -12,7 +12,8 @@ namespace BE.Common
     public class PlanBE
     {
         [Key]
-        public int? i_PlanId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int i_PlanId { get; set; }
         public string v_OrganizationSeguroId { get; set; }
         public string v_ProtocoloId { get; set; }
         public string v_IdUnidadProductiva { get; set; }

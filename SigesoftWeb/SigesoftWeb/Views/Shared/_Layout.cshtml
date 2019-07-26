@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ObackOffice</title>
+    <title>@ViewBag.Title</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
     <link href="~/fontawesome/css/all.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
@@ -13,6 +13,107 @@
         var Organizations = ViewBag.USER.Organizations;
     }
     <style>
+        .fixed-top {
+            background-color: #6bce9c !important;
+        }
+
+        .back {
+            box-shadow: 0px, 0px, 6px, 0px;
+            background-color: #00ad7b !important;
+        }
+
+        .color-principal {
+            color: #087321 !important;
+        }
+
+        .box.box-info {
+            border-top-color: #00ad7b !important;
+        }
+
+        .box.box-warning {
+            border-top-color: #ff8c18 !important;
+        }
+
+        .box.box-danger {
+            border-top-color: #f52727 !important;
+        }
+
+        .box.box-success {
+            border-top-color: #84c646 !important;
+        }
+
+        .box.box-primary {
+            border-top-color: #0057a5 !important;
+        }
+
+        .btn-warning {
+            background-color: #00ad7b !important;
+            border-color: #00ad7b !important;
+        }
+
+        body, .contenido2, .label-group-box, .has-float-label, .modal-content {
+            background-color: #d7ede1 !important;
+        }
+
+        .container-fluid {
+            background-color: #d7ede1 !important;
+        }
+
+        .btn-warning:hover {
+            background-color: #63ceb5 !important;
+            border-color: #63ceb5 !important;
+        }
+
+        .btn-secondary {
+            background-color: #00ad7b !important;
+            border-color: #00ad7b !important;
+        }
+
+            .btn-secondary:hover {
+                background-color: #63ceb5 !important;
+                border-color: #63ceb5 !important;
+            }
+
+        .btn-danger {
+            background-color: #00ad7b !important;
+            border-color: #00ad7b !important;
+        }
+
+            .btn-danger:hover {
+                background-color: #63ceb5 !important;
+                border-color: #63ceb5 !important;
+            }
+
+        .btn-success {
+            background-color: #00ad7b !important;
+            border-color: #00ad7b !important;
+        }
+
+            .btn-success:hover {
+                background-color: #63ceb5 !important;
+                border-color: #63ceb5 !important;
+            }
+
+        .btn-info {
+            background-color: #00ad7b !important;
+            border-color: #00ad7b !important;
+        }
+
+            .btn-info:hover {
+                background-color: #63ceb5 !important;
+                border-color: #63ceb5 !important;
+            }
+
+        .btn-primary {
+            background-color: #00ad7b !important;
+            border-color: #00ad7b !important;
+        }
+
+            .btn-primary:hover {
+                background-color: #63ceb5 !important;
+                border-color: #63ceb5 !important;
+            }
+
         .first-modal {
             z-index: 999999999999999;
             position: fixed;
@@ -21,18 +122,16 @@
             height: 100% !important;
             left: 0;
             background-color: rgba(0,0,0,0.5);
-            opacity:0;
+            opacity: 0;
         }
 
         .first-footer-info {
             background-color: #00a7d0;
             height: 60px;
-           
         }
 
         .first-modal-info {
             padding: 20px;
- 
             background-color: #00c0ef;
             height: calc(100% - 60px);
         }
@@ -48,17 +147,18 @@
             border-radius: 2px !important;
             width: 70px !important;
         }
-        .first-btn-modal:hover {
-            border: 1px solid white;
-            background-color: rgba(0, 0, 0,0.1);
-            color: white;
-            height: 35px;
-            font-size: 1.2rem;
-            margin: 10px 10px 10px 10px;
-            font-family: 'Open Sans', sans-serif;
-            border-radius: 2px !important;
-            width: 70px !important;
-        }
+
+            .first-btn-modal:hover {
+                border: 1px solid white;
+                background-color: rgba(0, 0, 0,0.1);
+                color: white;
+                height: 35px;
+                font-size: 1.2rem;
+                margin: 10px 10px 10px 10px;
+                font-family: 'Open Sans', sans-serif;
+                border-radius: 2px !important;
+                width: 70px !important;
+            }
 
         .container-first-modal {
             overflow: hidden;
@@ -68,10 +168,12 @@
             min-height: 410px !important;
             border-radius: 8px 8px 8px 8px
         }
+
         .scale {
-            transition: transform 1s ;
+            transition: transform 1s;
             transform: scale(1)
         }
+
         .name-user {
             color: white;
             font-weight: bolder;
@@ -82,7 +184,8 @@
             color: white;
             font-size: 1.1rem;
         }
-        .justify{
+
+        .justify {
             text-align: justify !important
         }
     </style>
@@ -121,6 +224,17 @@
             if(window.session_timeout <= 0)
                 window.location.href = '@Url.Content("~/adios")';
         }, 1000);
+        document.onclick = detectarEvento;
+        document.onmousedown = detectarEvento;
+        document.onmouseup = detectarEvento;
+        document.ondblclick = detectarEvento;
+        document.onkeydown = detectarEvento;
+        document.onmouseover = detectarEvento;
+
+        function detectarEvento() {
+            window.session_timeout = @(Session.Timeout * 60 * 1000);
+        }
+
     </script>
     <script src="~/Scripts/jquery-3.3.1.js"></script>
     @Scripts.Render("~/bundles/jquery")
@@ -141,23 +255,67 @@
     <script src="~/Scripts/locale/es.js"></script>
     <link href="~/Content/fullcalendar.css" rel="stylesheet" />
     <link href="~/Content/css/FullCalendar-custom.css" rel="stylesheet" />
-
+    <link href="~/Content/css/Alert.css" rel="stylesheet" />
+    <script src="~/Scripts/Alert.js"></script>
     <script>
-       FirstModal();
+       //FirstModal();
+
+        function SigesoftWebApiUrl() {
+            const DIRECTION = '@System.Configuration.ConfigurationManager.AppSettings["SigesoftWebApiUrl"]';
+            return DIRECTION;
+        }
+        function CopiarPdf(anchor) {
+
+            $(anchor).addClass("loadingGrid");
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                url: '/PatientsAssistance/CopyPdf',
+                success: function (json) {
+                    if (json.Error) {
+                        alertafixed({
+                            type: 'danger',
+                            class: 'danger-class',
+                            title: 'ERROR: ' + json.Status,
+                            message: json.Message
+                        })
+                    } else {
+                        alertafixed({
+                            type: 'success',
+                            class: 'success-class',
+                            title: 'HECHO: ' + json.Status,
+                            message: json.Message
+                        })
+                    }
+                    $(anchor).removeClass("loadingGrid");
+                },
+                error: function (err) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'danger-class',
+                        title: 'ERROR: ' + err.status,
+                        message: 'Sucedió conectandose al servidor: ' + err.statusText
+                    })
+                    $(anchor).removeClass("loadingGrid");
+                }
+            })
+        }
+
 
         $(document).ready(function () {
-            $(".first-modal").animate({
-                opacity: 1,
-            }, 200, scale());
+            //$(".first-modal").animate({
+            //    opacity: 1,
+            //}, 200, scale());
             var organizationId = $("#first-select").val() == undefined ? $("#cbo-organization").val() : $("#first-select").val();
-            
-            SetComboAlmacen(organizationId); 
+
+            SetComboAlmacen(organizationId);
 
             $("#first-select").on("change", function () {
                 let organizationId = $(this).val();
                 SetComboAlmacen(organizationId);
             });
-            
+
         })
 
         function SetComboAlmacen(organizationId) {
@@ -258,7 +416,7 @@
 
                                                         <h5>¡ @ViewBag.USER.FullName !</h5>
                                                         <p class="text-justify">Bienvenido a OMEGAVIGILANCIA.COM, por favor seleccione una empresa y un almacén.</p>
-                                                          
+
                                                     </div>
                                                     <div class="row">
                                                         <label>Empresa:</label>

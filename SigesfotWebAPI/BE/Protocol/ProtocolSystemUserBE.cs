@@ -14,7 +14,7 @@ namespace BE.Protocol
         [Key]
         public string v_ProtocolSystemUserId { get; set; }
 
-        public int? i_SystemUserId { get; set; }
+        public int i_SystemUserId { get; set; }
         public string v_ProtocolId { get; set; }
         public int? i_ApplicationHierarchyId { get; set; }
         public int? i_IsDeleted { get; set; }
@@ -22,5 +22,6 @@ namespace BE.Protocol
         public DateTime? d_InsertDate { get; set; }
         public int? i_UpdateUserId { get; set; }
         public DateTime? d_UpdateDate { get; set; }
+        public string v_ComentaryUpdate { get; set; }
     }
 }

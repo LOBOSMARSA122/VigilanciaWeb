@@ -8,37 +8,37 @@
         <div class="col-12 col-lg-6">
             <div class="form-inline mt-2 justify-content-between">
                 <label class="small">Nombres/Apellidos/Nro Documento:</label>
-                <input type="text" class="form-control form-control-sm w-50" value="" />
-                <button class="btn btn-sm btn-info"><i class="fas fa-search mr-1"></i>Filtrar</button>
+                <input type="text" class="form-control form-control-sm w-50" id="value-filter-pacient" value="" />
+                <button class="btn btn-sm btn-info" id="filtrar-paciente"><i class="fas fa-search mr-1"></i>Filtrar</button>
             </div>
         </div>
-        <div class="col-12 col-lg-9">
+        <div class="col-12 col-lg-9" id="render-board-pacient">
             @Html.Partial("_BoardPacientPartial")
         </div>
         <div class="col-12 col-lg-3">
             <div class="row w-100 mx-0 justify-content-center pt-lg-0 pt-2">
-                <figure class="img-thumbnail" style="max-width:250px; max-height: 350px">
-                    <img src="https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png" class="img img-fluid" alt="Imagen" />
+                <figure class="img-thumbnail" style="max-width:250px; max-height: 350px" id="cont-person-image">
+                    <img src="https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png" class="img img-fluid" id="img-pacient" alt="Imagen" />
                 </figure>
                 <div class="row w-100 mx-0">
                     <div class="col-12 p-0">
-                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" id="person-docnumber" />
                         <label class="has-float-label static">Nro Documento</label>
-                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" id="person-address" />
                         <label class="has-float-label static">Dirección</label>
-                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" id="person-grfrsanguineo" />
                         <label class="has-float-label static">Gr. Fr. Sanguineo</label>
-                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" id="person-email" />
                         <label class="has-float-label static">Email</label>
-                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" id="person-currentocupation" />
                         <label class="has-float-label static">Puesto Actual</label>
-                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" />
+                        <input type="text" disabled class="form-control form-control-sm inputLabelFloat" value="" id="person-birthdate" />
                         <label class="has-float-label static">Fecha Nacimiento</label>
                     </div>
                 </div>
                 <div class="row w-100 mx-0 py-2 justify-content-between">
-                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalNuevoPaciente"><i class="fas fa-plus mr-1"></i>Nuevo</button>
-                    <button class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalNuevoPaciente"><i class="fas fa-user-edit mr-1"></i>Editar</button>
+                    <button class="btn btn-sm btn-primary btn-block mb-2" data-toggle="modal" data-target="#modalNuevoPaciente" id="btn-nuevopaciente"><i class="fas fa-plus mr-1"></i>Nuevo</button>
+                    <button class="btn btn-sm btn-secondary btn-block" id="actualiza-paciente"><i class="fas fa-user-edit mr-1"></i>Editar</button>
                 </div>
             </div>
         </div>
@@ -54,3 +54,746 @@
 
 <link href="~/Content/css/Alert.css" rel="stylesheet" />
 <script src="~/Scripts/Alert.js"></script>
+
+
+<script>
+
+    const AlertErrorServidor = function (status, message) {
+        alertafixed({
+            type: 'danger',
+            class: 'danger-class',
+            title: 'ERROR: ' + status,
+            message,
+        })
+    }
+
+    const SuccessMessageServidor = function (status, message) {
+        alertafixed({
+            type: 'success',
+            class: 'success-class',
+            title: 'HECHO: ' + status,
+            message,
+        })
+    }
+
+    const getDateFromAspNetFormat = function (date) {
+        const re = /-?\d+/;
+        const m = re.exec(date);
+
+        var fecha = new Date(parseInt(m[0], 10));
+        var dd = String(fecha.getDate()).padStart(2, '0');
+        var mm = String(fecha.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fecha.getFullYear();
+
+        fecha = yyyy + '-' + mm + '-' + dd;
+        return fecha;
+    }
+
+    $(document).ready(function () {
+
+        Filter();
+
+        $("#actualiza-paciente").on("click", function () {
+            if ($(".row-active").length == 0) {
+                alertafixed({
+                    class: 'warning-class',
+                    type: 'warning',
+                    title: 'VALIDACIÓN',
+                    message: 'Seleccione a un paciente para continuar.'
+                })
+                return;
+            }
+            LimpiarDataSchedule();
+            $(".border-danger").removeClass("border-danger");
+            $(".border-success").removeClass("border-success");
+            $("#doc-number-find").val("");
+            $("#cont-captcha").addClass("d-none");
+            $("#value-captcha").val("");
+            $("#modalNuevoPaciente").modal("show");
+            var document = $(".row-active").eq(0).find("td").eq(1).text();
+            $("#doc-number-find").val(document);
+
+            $("#btn-trabajador").click();
+        })
+
+        $("#filtrar-paciente").on("click", function () {
+
+            Filter();
+        })
+
+        $("#btn-recargarcaptcha").on("click", function () {
+
+            $("#figure-captcha").addClass("loadingGrid");
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                url: '/ConsultaSIS/GetCaptcha',
+                success: function (json) {
+
+                    if (json.Error) {
+                        alertafixed({
+                            type: 'danger',
+                            class: 'danger-class',
+                            title: 'ERROR: ' + json.Status,
+                            message: 'Sucedió un error en el servidor: ' + json.Message,
+                        })
+
+                    } else {
+                        $("#img-captcha").attr("src", "data:image/jpeg;base64," + json.Id);
+
+                    }
+                    $("#figure-captcha").removeClass("loadingGrid");
+
+                },
+                error: function (err, status, message) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'danger-class',
+                        title: 'ERROR: ' + status,
+                        message: 'Sucedió un error en el servidor: ' + message,
+                    })
+                    $("#figure-captcha").removeClass("loadingGrid");
+                }
+            })
+        })
+
+        $("#btn-nuevopaciente").on("click", function () {
+            $(".border-danger").removeClass("border-danger");
+            $(".border-success").removeClass("border-success");
+            $("#doc-number-find").val("");
+            $("#cont-captcha").addClass("d-none");
+            $("#value-captcha").val("");
+            LimpiarDataSchedule();
+        })
+
+        $("#value-captcha").on("keyup", function (e) {
+            var tecla = (document.all) ? e.keyCode : e.which;
+            if (tecla == 13) {
+                EnviarCaptchaSiS()
+            }
+        })
+
+        $("#btn-enviarcaptcha").on("click", function () {
+            EnviarCaptchaSiS()
+        })
+
+        $("#btn-trabajador").on("click", function () {
+            var input = $("#doc-number-find");
+            FindPersonByDocNumber(input.val(), input);
+        })
+
+        $("#doc-number-find").on("keyup", function (e) {
+
+            var tecla = (document.all) ? e.keyCode : e.which;
+            if (tecla == 13) {
+                FindPersonByDocNumber($(this).val(), $(this));
+            }
+        })
+
+        $("#doc-number-find-titular").on("keyup", function (e) {
+            console.log("key");
+            var tecla = (document.all) ? e.keyCode : e.which;
+            if (tecla == 13) {
+                GetAnSetDataTitular($(this).val());
+            }
+
+        })
+
+        $("#btn-buscar-titular").on("click", function () {
+            GetAnSetDataTitular($("#doc-number-find-titular").val());
+            console.log("click");
+        });
+
+        $("#guardar-titular").on("click", function () {
+            if (!ErrorValidateTitular()) {
+                $("#doc-number-find-titular").removeClass("border-danger");
+                let data = {
+                    v_PersonId: $("#titular-id").val(),
+                    v_FirstName: $("#nombres-titular").val(),
+                    v_FirstLastName: $("#apepat-titular").val(),
+                    v_SecondLastName: $("#apemat-titular").val(),
+                    i_DocTypeId: $("#tipo-doc-titular").val(),
+                    v_DocNumber: $("#numero-doc-titular").val(),
+                    d_Birthdate: $("#fecha-titular").val(),
+                    i_SexTypeId: $("#genero-titular").val(),
+                }
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: data,
+                    url: '/Pacientes/UpdateCreatePacient',
+                    success: function (json) {
+                        if (json.Error) {
+                            alertafixed({
+                                title: "ERROR",
+                                message: json.Message,
+                                type: "danger",
+                                class: "error-interno"
+                            })
+                        } else {
+                            alertafixed({
+                                title: "HECHO",
+                                message: json.Message,
+                                type: "success",
+                                class: "error-interno"
+                            })
+                        }
+
+                        $("#modal-content-paciente").removeClass("loadingGrid");
+                    },
+                    error: function (err) {
+                        ViewErrorResponse(err);
+                        $("#modal-content-paciente").removeClass("loadingGrid");
+                    }
+                })
+            }
+        })
+
+        $("#modalTitular").on("hidden.bs.modal", function () {
+            $("#modalNuevoPaciente").modal("show");
+            localStorage.setItem("Clean", 'true');
+            LimpiarDataTitular();
+        })
+
+        $("#modalTitular").on("show.bs.modal", function () {
+            localStorage.setItem("Clean", 'false');
+            $("#modalNuevoPaciente").modal("hide");
+
+        })
+
+        $("#distrito-paciente").on("change", function () {
+            if ($(this).val() == "-1") {
+                return;
+            }
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: { 'name': $("#distrito-paciente option[value = '" + $(this).val() + "']").text() },
+                url: '/Agenda/GetProvincia',
+                success: function (json) {
+                    console.log(json);
+                    if (json.length == 0) {
+                        $("#provincia-paciente").val("-1");
+                        $("#departamento-paciente").val("-1");
+                        return;
+                    }
+                    let html = "<option value='-1'>--Seleccionar--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
+                    }
+                    $("#provincia-paciente").html(html);
+                    $("#provincia-paciente option[value = '" + json[0].Id + "']").attr("selected", true).trigger("change");
+                },
+                error: function (err) {
+                    alertafixed({
+                        class: 'error-protocol',
+                        type: 'danger',
+                        title: 'ERROR' + err.status,
+                        message: 'Sucedió un error con el servidor.'
+                    })
+                    console.log(err);
+                }
+            })
+        })
+
+        $("#provincia-paciente").on("change", function () {
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: { 'id': $(this).val() },
+                url: '/Agenda/GetDepartamento',
+                success: function (json) {
+                    if (json.length == 0) {
+                        $("#departamento-paciente").val("-1");
+                        return;
+                    }
+                    let html = "<option value='-1'>--Seleccionar--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
+                    }
+                    $("#departamento-paciente").html(html);
+                    $("#departamento-paciente option[value = '" + json[0].Id + "']").attr("selected", true).trigger("change");
+                },
+                error: function (err) {
+                    alertafixed({
+                        class: 'error-protocol',
+                        type: 'danger',
+                        title: 'ERROR' + err.status,
+                        message: 'Sucedió un error con el servidor.'
+                    })
+                    console.log(err);
+                }
+            })
+        })
+
+        $("#btn-guardar-paciente").on("click", function () {
+
+
+            let arrId = ["#tipo-documento", "#nombres-paciente", "#apepat-paciente", "#apemat-paciente", "#numero-documento", "#tipo-documento", "#genero-paciente", "#fecha-nacimiento|date"];
+
+            if (ErrorValidatePacient(arrId)) {
+                return;
+            }
+            $("#modal-content-paciente").addClass("loadingGrid");
+            let data = {
+                v_PersonId: $("#paciente-id").val(),
+                v_FirstName: $("#nombres-paciente").val(),
+                v_FirstLastName: $("#apepat-paciente").val(),
+                v_SecondLastName: $("#apemat-paciente").val(),
+                i_DocTypeId: $("#tipo-documento").val(),
+                v_DocNumber: $("#numero-documento").val(),
+                d_Birthdate: $("#fecha-nacimiento").val(),
+                i_SexTypeId: $("#genero-paciente").val(),
+
+                i_MaritalStatusId: $("#estado-civil").val(),
+                i_LevelOfId: $("#nivel-estudios").val(),
+                v_BirthPlace: $("#lugar-nacimiento").val(),
+                i_BloodGroupId: $("#grupo-sanguineo").val(),
+                i_DistrictId: $("#distrito-paciente").val(),
+                i_BloodFactorId: $("#factor-sanguineo").val(),
+                i_ProvinceId: $("#provincia-paciente").val(),
+                v_ResidenceTimeInWorkplace: $("#tiempo-residencia").val(),
+                i_DepartmentId: $("#departamento-paciente").val(),
+                i_TypeOfInsuranceId: $("#tipo-seguro").val(),
+                i_ResidenceInWorkplaceId: $("#reside-trabajo").val(),
+                i_NumberLiveChildren: $("#hijos-vivos").val(),
+                i_NumberDeadChildren: $("#hijos-muertos").val(),
+                i_NroHermanos: $("#numero-hermanos").val(),
+                v_Mail: $("#email-paciente").val(),
+                v_TelephoneNumber: $("#telefono-paciente").val(),
+                v_AdressLocation: $("#direccion-paciente").val(),
+                v_CurrentOccupation: $("#puesto-postula").val(),
+                i_AltitudeWorkId: $("#altitud-labor").val(),
+                i_PlaceWorkId: $("#lugar-labor").val(),
+                v_ExploitedMineral: $("#mineral-explotado").val(),
+                v_ResidenciaAnterior: $("#residencia-anterior").val(),
+                v_Nacionalidad: $("#nacionalidad-paciente").val(),
+                v_Religion: $("#religion-paciente").val(),
+                i_Relationship: $("#parentesco-paciente").val(),
+                v_OwnerName: $("#titular-paciente option:selected").text() + "|" + $("#titular-paciente").val(),
+            }
+
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data,
+                url: '/Pacientes/UpdateCreatePacient',
+                success: function (json) {
+                    if (json.Error) {
+
+                        AlertErrorServidor(json.Status, json.Message);
+
+                    } else {
+
+                        SuccessMessageServidor(json.Status, json.Message);
+                        $("#paciente-id").val(json.Id);
+                        Filter();
+                    }
+                    $("#modal-content-paciente").removeClass("loadingGrid");
+                },
+                error: function (err, status, message) {
+                    AlertErrorServidor(status, message);
+                    $("#modal-content-paciente").removeClass("loadingGrid");
+                }
+
+            })
+        })
+    })
+
+    const PintarDataPerson = function (fila) {
+        $("#cont-person-image").addClass("loadingGrid");
+
+
+        if ($(".row-active").length > 0) {
+            $(".row-active").removeClass("row-active");
+        }
+        $(fila).addClass("row-active");
+
+        let NroDocumento = $(fila).find("td").eq(1).text();
+        let Direccion = $(fila).find("td").eq(5).text();
+        let GrupoSanguineo = $(fila).find("td").eq(9).text();
+        let FactorSanguineo = $(fila).find("td").eq(10).text();
+        let Email = $(fila).find("td").eq(7).text();
+        let PuestoActual = $(fila).find("td").eq(11).text();
+        let FechaNacimiento = $(fila).find("td").eq(8).text();
+        let image = $(fila).find("td").eq(12).text();
+
+        if (image != "") {
+            $("#img-pacient").attr('src', 'data:image/jpeg;base64,' + image);
+            $("#cont-person-image").removeClass("loadingGrid");
+        } else {
+            $("#img-pacient").attr('src', 'https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png');
+            $("#cont-person-image").removeClass("loadingGrid");
+        }
+
+        $("#person-docnumber").val(NroDocumento);
+        $("#person-grfrsanguineo").val(GrupoSanguineo + " - " + FactorSanguineo);
+        $("#person-address").val(Direccion);
+        $("#person-email").val(Email);
+        $("#person-currentocupation").val(PuestoActual);
+        $("#person-birthdate").val(FechaNacimiento);
+    }
+
+    const SetValuePacient = function (json) {
+        console.log(json);
+        if (json.PersonImage != "" && json.PersonImage != null) {
+            $("#add-person-image").attr('src', 'data:image/jpeg;base64,' + json.PersonImage);
+        } else {
+            $("#add-person-image").attr('src', 'https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png');
+        }
+
+        if (json.PersonHuella != "" && json.PersonHuella != null) {
+            $("#add-person-finger").attr('src', 'data:image/jpeg;base64,' + json.PersonHuella);
+        } else {
+            $("#add-person-finger").attr('src', 'https://informesinbandera.com/img/placeholder-img.png');
+        }
+
+        if (json.PersonFirma != "" && json.PersonFirma != null) {
+            $("#add-person-rubric").attr('src', 'data:image/jpeg;base64,' + json.PersonFirma);
+        } else {
+            $("#add-person-rubric").attr('src', 'https://informesinbandera.com/img/placeholder-img.png');
+        }
+
+        $("#paciente-id").val(json.v_PersonId).next();
+        $("#nombres-paciente").val(json.v_FirstName).next().addClass("static");
+        $("#apepat-paciente").val(json.v_FirstLastName).next().addClass("static");
+        $("#apemat-paciente").val(json.v_SecondLastName).next().addClass("static");
+        $("#tipo-documento").val(json.i_DocTypeId);
+        $("#numero-documento").val(json.v_DocNumber).next().addClass("static");
+        $("#fecha-nacimiento").val(getDateFromAspNetFormat(json.d_Birthdate));
+        $("#genero-paciente").val(json.i_SexTypeId);
+        $("#estado-civil").val(json.i_MaritalStatusId);
+        $("#nivel-estudios").val(json.i_LevelOfId);
+        $("#lugar-nacimiento").val(json.v_BirthPlace);
+        $("#grupo-sanguineo").val(json.i_BloodGroupId);
+        $("#distrito-paciente").val(json.i_DistrictId).trigger("change");
+        $("#factor-sanguineo").val(json.i_BloodFactorId);
+        $("#provincia-paciente").val(json.i_ProvinceId);
+        $("#tiempo-residencia").val(json.v_ResidenceTimeInWorkplace);
+        $("#departamento-paciente").val(json.i_DepartmentId);
+        $("#tipo-seguro").val(json.i_TypeOfInsuranceId);
+        $("#reside-trabajo").val(json.i_ResidenceInWorkplaceId);
+        $("#hijos-vivos").val(json.i_NumberLiveChildren);
+        $("#hijos-muertos").val(json.i_NumberDeadChildren);
+        $("#numero-hermanos").val(json.i_NroHermanos);
+        $("#email-paciente").val(json.v_Mail);
+        $("#telefono-paciente").val(json.v_TelephoneNumber);
+        $("#direccion-paciente").val(json.v_AdressLocation);
+        $("#puesto-postula").val(json.v_CurrentOccupation);
+        $("#altitud-labor").val(json.i_AltitudeWorkId);
+        $("#lugar-labor").val(json.i_PlaceWorkId);
+        $("#mineral-explotado").val(json.v_ExploitedMineral);
+        $("#residencia-anterior").val(json.v_ResidenciaAnterior);
+        $("#nacionalidad-paciente").val(json.v_Nacionalidad);
+        $("#religion-paciente").val(json.v_Religion);
+        $("#parentesco-paciente").val(json.i_Relationship);
+        var titularId = "-1";
+        if (json.v_OwnerName != null) {
+            titularId = json.v_OwnerName.split("|")[1];
+        }
+        $("#titular-paciente").val(titularId);
+
+
+        if (json.PersonImage != null) {
+            $("#img-pacient-modal").attr('src', 'data:image/jpeg;base64,' + json.PersonImage);
+        } else {
+            $("#img-pacient-modal").attr('src', 'https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png');
+        }
+
+    }
+
+    const FindPersonByDocNumber = function (value, input) {
+        $("#modal-content-paciente").addClass("loadingGrid");
+        if (input.val() == "") {
+
+            alertafixed({
+                title: "VALIDACIÓN",
+                message: "Ingrese un número de documento por favor.",
+                type: "warning",
+                class: "validacin-interno"
+            })
+            input.addClass('border-danger');
+
+            $("#modal-content-paciente").removeClass("loadingGrid");
+            return;
+        } else {
+            input.removeClass('border-danger');
+        }
+        LimpiarDataSchedule();
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'docNumber': value },
+            url: '/Pacientes/GetPacientByDocNumber',
+            success: function (json) {
+                if (json.BaseDatos) {
+                    SetValuePacient(json);
+                    input.removeClass('border-danger');
+                    $("#cont-captcha").addClass("d-none")
+                } else {
+                    if (json.Error) {
+                        ValidacionInputFindPacient(json, input);
+                        $("#cont-captcha").addClass("d-none")
+                    } else {
+                        alertafixed({
+                            type: 'info',
+                            class: 'info-class',
+                            title: 'INFORMACIÓN: ' + json.Status,
+                            message: json.Message,
+                        })
+                        $("#cont-captcha").removeClass("d-none");
+                        $("#img-captcha").attr("src", "data:image/jpeg;base64," + json.Id)
+                    }
+
+                }
+
+                $("#modal-content-paciente").removeClass("loadingGrid");
+            },
+            error: function (error) {
+                LimpiarDataSchedule();
+                ViewErrorResponse(error);
+                $("#modal-content-paciente").removeClass("loadingGrid");
+                $("#cont-captcha").addClass("d-none")
+            }
+        });
+
+    }
+
+    const LimpiarDataSchedule = function () {
+        $("#add-person-image").attr('src', 'https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png');
+        $("#add-person-finger").attr('src', 'https://informesinbandera.com/img/placeholder-img.png');
+        $("#add-person-rubric").attr('src', 'https://informesinbandera.com/img/placeholder-img.png');
+
+        $("#nro-afiliacion").text("");
+        $("#tipo-asegurado").text("");
+        $("#estado-seguro").text("");
+
+        $("#paciente-id").val("");
+        $("#nombres-paciente").val("");
+        $("#apepat-paciente").val("");
+        $("#apemat-paciente").val("");
+        $("#tipo-documento").val("-1");
+        $("#numero-documento").val("");
+        $("#fecha-nacimiento").val("");
+        $("#genero-paciente").val("-1");
+        $("#estado-civil").val("-1");
+        $("#nivel-estudios").val("-1");
+        $("#lugar-nacimiento").val("");
+        $("#grupo-sanguineo").val("-1");
+        $("#distrito-paciente").val("-1");
+        $("#factor-sanguineo").val("-1");
+        $("#provincia-paciente").val("-1");
+        $("#tiempo-residencia").val("");
+        $("#departamento-paciente").val("-1");
+        $("#tipo-seguro").val("-1");
+        $("#reside-trabajo").val("-1");
+        $("#hijos-vivos").val("");
+        $("#hijos-muertos").val("");
+        $("#numero-hermanos").val("");
+        $("#email-paciente").val("");
+        $("#telefono-paciente").val("");
+        $("#direccion-paciente").val("");
+        $("#puesto-postula").val("-1");
+        $("#altitud-labor").val("-1");
+        $("#lugar-labor").val("-1");
+        $("#mineral-explotado").val("");
+        $("#residencia-anterior").val("");
+        $("#nacionalidad-paciente").val("");
+        $("#religion-paciente").val("");
+        $("#parentesco-paciente").val("-1");
+
+        //$("#doc-number-find").val("");
+    }
+
+    const Filter = function (index = 1) {
+
+        $("#render-board-pacient").addClass("loadingGrid");
+
+        var data = {
+            Pacient: $("#value-filter-pacient").val(),
+            Index: index,
+            Take: $("#take").val()
+        };
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'html',
+            data,
+            url: '/Pacientes/GetDataPacient',
+            success: function (html) {
+                $("#render-board-pacient").html(html);
+                $("#render-board-pacient").removeClass("loadingGrid");
+            },
+            error: function (err, as, asd) {
+                AlertErrorServidor(err.status, asd)
+                $("#render-board-pacient").removeClass("loadingGrid");
+            }
+        })
+
+    }
+
+    function EnviarCaptchaSiS() {
+        LimpiarDataSchedule();
+        var dni = $("#doc-number-find").val();
+        $("#figure-captcha").addClass("loadingGrid");
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            url: '/ConsultaSIS/GetData?captcha=' + $("#value-captcha").val() + '&dni=' + dni,
+            success: function (json) {
+                if (json.Error) {
+                    if (json.Status == 204) {
+                        $("#cont-captcha").addClass("d-none")
+                        alertafixed({
+                            type: 'info',
+                            class: 'info-class',
+                            title: 'INFORMACIÓN: ' + json.Status,
+                            message: json.Message,
+                        })
+                        $("#value-captcha").val("");
+                        $("#figure-captcha").removeClass("loadingGrid");
+                        LimpiarDataSchedule();
+                    } else {
+                        alertafixed({
+                            type: 'info',
+                            class: 'info-class',
+                            title: 'INFORMACIÓN: ' + json.Status,
+                            message: json.Message,
+                        })
+                        $("#value-captcha").val("");
+                        $("#figure-captcha").removeClass("loadingGrid");
+                        $("#btn-recargarcaptcha").click();
+                        LimpiarDataSchedule();
+                    }
+
+                } else {
+                    $("#nombres-paciente").val(json.Result.Nombres).next().addClass("static");
+                    $("#apepat-paciente").val(json.Result.ApellidoPaterno).next().addClass("static");
+                    $("#apemat-paciente").val(json.Result.ApellidoMaterno).next().addClass("static");
+
+                    $("#nro-afiliacion").text(json.Result.NroAfiliacion);
+                    $("#tipo-asegurado").text(json.Result.TipoAsegurado);
+                    $("#estado-seguro").text(json.Result.Estado);
+                    $("#numero-documento").val(dni);
+                    $("#cont-captcha").addClass("d-none")
+                    $("#value-captcha").val("");
+                    $("#figure-captcha").removeClass("loadingGrid");
+                }
+
+            },
+            error: function (err, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'danger-class',
+                    title: 'ERROR: ' + status,
+                    message: 'Sucedió un error en el servidor: ' + message,
+                })
+                $("#figure-captcha").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const GetAnSetDataTitular = function (value) {
+        $("#modalTitular").addClass("loadingGrid");
+        if ($("#doc-number-find-titular").val() == "") {
+
+            alertafixed({
+                title: "VALIDACIÓN",
+                message: "Ingrese un número de documento por favor.",
+                type: "warning",
+                class: "validacin-interno"
+            })
+            $("#doc-number-find-titular").addClass('border-danger');
+            $("#modalTitular").removeClass("loadingGrid");
+            return;
+        } else {
+            $("#doc-number-find-titular").removeClass('border-danger');
+        }
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'docNumber': value },
+            url: '/Pacientes/GetPacientByDocNumber',
+            success: function (json) {
+                console.log(json);
+                if (json.Error) {
+                    ValidacionInputFindPacient(json, $("#doc-number-find-titular"));
+                    $("#modalTitular").removeClass("loadingGrid");
+                } else {
+                    console.log(json);
+                    $("#nombres-titular").val(json.v_FirstName);
+                    $("#apepat-titular").val(json.v_FirstLastName);
+                    $("#apemat-titular").val(json.v_SecondLastName);
+                    $("#fecha-titular").val(getDateFromAspNetFormat(json.d_Birthdate));
+                    $("#tipo-doc-titular").val(json.i_DocTypeId);
+                    $("#numero-doc-titular").val(json.v_DocNumber);
+                    $("#genero-titular").val(json.i_SexTypeId);
+                    $("#titular-id").val(json.v_PersonId);
+                    $("#doc-number-find-titular").removeClass('border-danger');
+
+                }
+                $("#modalTitular").removeClass("loadingGrid");
+            },
+            error: function (error) {
+                ViewErrorResponse(error);
+                $("#modalTitular").removeClass("loadingGrid");
+                LimpiarDataTitular();
+            }
+        });
+    }
+
+    const ErrorValidatePacient = function (arrId) {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
+
+        let error = false;
+
+        for (var i = 0; i < arrId.length; i++) {
+
+            let id = arrId[i].split('|');
+            if (id.length > 1) {
+                if (id[1] == "date") {
+                    if ($(id[0]).val() == "" || Date.parse($(id[0]).val()) >= Date.parse(today)) {
+                        $(id[0]).addClass("border-danger");
+                        error = true;
+                    } else {
+                        $(id[0]).removeClass("border-danger").addClass("border-success");
+                    }
+                }
+            } else {
+                if ($(arrId[i]).val() == "" || $(arrId[i]).val() == "-1") {
+                    $(arrId[i]).addClass("border-danger");
+                    error = true;
+                } else {
+                    $(arrId[i]).removeClass("border-danger").addClass("border-success");
+                }
+            }
+
+        }
+
+        if (error) {
+            alertafixed({
+                type: 'warning',
+                title: 'VALIDACIÓN',
+                class: 'error-validate',
+                message: 'Por favor, verifique las casillas en rojo y vuelva a intentar.'
+            })
+        }
+
+        return error;
+    }
+
+</script>

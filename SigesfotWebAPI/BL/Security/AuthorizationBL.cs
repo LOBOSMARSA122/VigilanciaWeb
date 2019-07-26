@@ -38,6 +38,7 @@ namespace BL.Security
                     FullName = per.v_FirstName + " " + per.v_FirstLastName + " " +  per.v_SecondLastName,
                     PersonImage = per.b_PersonImage,
                     UserName = per.v_FirstName + " " + per.v_FirstLastName,
+                    TelephoneNumber = per.v_TelephoneNumber,
                     //SystemUserId = sys.i_SystemUserId.Value,
                     //SystemUserTypeId = sys.i_SystemUserTypeId.Value,
                     //SystemUserByOrganizationId = sys.v_SystemUserByOrganizationId
@@ -48,6 +49,7 @@ namespace BL.Security
 
         private AuthorizationModel ProcessSystemUser(int nodeId, string userName, string password)
         {
+            var EstablecimientoId = int.Parse(System.Configuration.ConfigurationManager.AppSettings["appEstablecimientoPredeterminado"]);
             var isDeleted = (int)SiNo.No;
             var user = (from sys in ctx.SystemUser
                 join per in ctx.Person on sys.v_PersonId equals per.v_PersonId
@@ -55,6 +57,7 @@ namespace BL.Security
                 from pro in proJoin.DefaultIfEmpty()
                 join org in ctx.Organization on sys.v_SystemUserByOrganizationId equals org.v_OrganizationId into orgJoin
                 from org in orgJoin.DefaultIfEmpty()
+
                 where sys.v_UserName == userName &&
                       sys.v_Password == password &&
                       sys.i_IsDeleted == isDeleted
@@ -64,9 +67,11 @@ namespace BL.Security
                     FullName = per.v_FirstName + " " + per.v_FirstLastName,
                     PersonImage = per.b_PersonImage,
                     UserName = sys.v_UserName,
+                    EstablecimientoPredeterminado = EstablecimientoId,
                     RucEmpresa = org.v_IdentificationNumber,
-                    SystemUserId = sys.i_SystemUserId.Value,
+                    SystemUserId = sys.i_SystemUserId,
                     SystemUserTypeId = sys.i_SystemUserTypeId.Value,
+                    TelephoneNumber = per.v_TelephoneNumber,
                     SystemUserByOrganizationId = sys.v_SystemUserByOrganizationId
                 }).FirstOrDefault();
 
@@ -136,9 +141,10 @@ namespace BL.Security
                           )
                   .Concat(from a in ctx.SystemUserGobalProfile
                           join b in ctx.ApplicationHierarchy on a.i_ApplicationHierarchyId equals b.i_ApplicationHierarchyId
+                          join c in ctx.SystemUserRoleNode on a.i_SystemUserId equals c.i_SystemUserId
                           where (a.i_SystemUserId == systemUserId)
                                && (b.i_ApplicationHierarchyTypeId == 1 || b.i_ApplicationHierarchyTypeId == 2)
-                                && (b.i_IsDeleted == 0) && (a.i_IsDeleted == 0)
+                                && (b.i_IsDeleted == 0) && (a.i_IsDeleted == 0) && c.i_IsDeleted == 0
                                && (b.i_TypeFormId == (int)TypeForm.Web)
                           select new Permission
                           {
@@ -148,8 +154,8 @@ namespace BL.Security
                               ParentId = b.i_ParentId.Value,
                               Form = b.v_Form == null ? string.Empty : b.v_Form,
                               RoleName = "",
-                              RoleId = 0
-                          }).ToList();
+                              RoleId = c.i_RoleId.Value
+                          }).ToList().GroupBy(x => x.Form).Select(z => z.First()).ToList();
 
                 List<Permission> objAutorizationList = query.AsEnumerable()
                                                               .OrderBy(p => p.ApplicationHierarchyId)
@@ -186,7 +192,7 @@ namespace BL.Security
             {
                 var query = (from A in ctx.SystemUserGobalProfile
                     join B in ctx.AplicationHierarchy on A.i_ApplicationHierarchyId equals B.i_ApplicationHierarchyId
-                    where A.i_SystemUserId == 87 && B.i_ApplicationHierarchyTypeId == 4 && A.i_IsDeleted == 0
+                    where A.i_SystemUserId == systemUserId && B.i_ApplicationHierarchyTypeId == 4 && A.i_IsDeleted == 0
                     select new Option
                     {
                         Name = B.v_Description,

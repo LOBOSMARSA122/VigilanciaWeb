@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using static SigesoftWeb.Models.Eso.RecipesCustom;
+using static BE.Eso.RecipesCustom;
 
 namespace SigesoftWeb.Controllers.ProductWarehouse
 {

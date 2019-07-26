@@ -1,28 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BE.Common
 {
+    [Table("rolenodecomponentprofile")]
     public class RoleNodeComponentProfileBE
     {
         [Key]
-        public string RoleNodeComponentId { get; set; }
+        public string v_RoleNodeComponentId { get; set; }
 
-        public int? NodeId { get; set; }
-        public int? RoleId { get; set; }
-        public string ComponentId { get; set; }
-        public int? Read { get; set; }
-        public int? Write { get; set; }
-        public int? Dx { get; set; }
-        public int? Approved { get; set; }
-        public int? IsDeleted { get; set; }
-        public int? InsertUserId { get; set; }
-        public DateTime? InsertDate { get; set; }
-        public int? UpdateUserId { get; set; }
-        public DateTime? UpdateDate { get; set; }
+        public int? i_NodeId { get; set; }
+        public int? i_RoleId { get; set; }
+        public string v_ComponentId { get; set; }
+        public int? i_Read { get; set; }
+        public int? i_Write { get; set; }
+        public int? i_Dx { get; set; }
+        public int? i_Approved { get; set; }
+        public int? i_IsDeleted { get; set; }
+        public int? i_InsertUserId { get; set; }
+        public DateTime? d_InsertDate { get; set; }
+        public int? i_UpdateUserId { get; set; }
+        public DateTime? d_UpdateDate { get; set; }
+        public string v_ComentaryUpdate { get; set; }
     }
 }

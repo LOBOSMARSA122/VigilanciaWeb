@@ -7,6 +7,15 @@ using BE.Common;
 
 namespace BE.Component
 {
+    public class DatosDoctorMedicina
+    {
+        public byte[] FirmaMedicoMedicina { get; set; }
+        public string ApellidosDoctor { get; set; }
+        public string DireccionDoctor { get; set; }
+        public string NombreDoctor { get; set; }
+        public string CMP { get; set; }
+    }
+
     public class AdditionalExams
     {
         public int? CategoryId { get; set; }

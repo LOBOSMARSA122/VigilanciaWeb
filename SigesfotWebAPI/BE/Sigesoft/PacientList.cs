@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace BE.Sigesoft
 {
-   public class PacientList
+
+    public class ListaComun
+    {
+        public string Valor1 { get; set; }
+        //public string Valor2 { get; set; }
+        public string i_Item { get; set; }
+
+    }
+    public class PacientList
     {
         public string EmpresaClienteId { get; set; }
 
@@ -16,19 +24,19 @@ namespace BE.Sigesoft
         
         public string v_PersonId { get; set; }
         
-        public String v_FirstName { get; set; }
+        public string v_FirstName { get; set; }
         
-        public String v_FirstLastName { get; set; }
+        public string v_FirstLastName { get; set; }
         
-        public String v_SecondLastName { get; set; }
+        public string v_SecondLastName { get; set; }
         
         public int? i_DocTypeId { get; set; }
         
-        public String v_DocNumber { get; set; }
+        public string v_DocNumber { get; set; }
         
-        public Nullable<DateTime> d_Birthdate { get; set; }
+        public DateTime? d_Birthdate { get; set; }
         
-        public String v_BirthPlace { get; set; }
+        public string v_BirthPlace { get; set; }
         
         public int? i_SexTypeId { get; set; }
         
@@ -36,17 +44,17 @@ namespace BE.Sigesoft
         
         public int? i_LevelOfId { get; set; }
         
-        public String v_TelephoneNumber { get; set; }
+        public string v_TelephoneNumber { get; set; }
         
-        public String v_AdressLocation { get; set; }
+        public string v_AdressLocation { get; set; }
         
-        public String v_GeografyLocationId { get; set; }
+        public string v_GeografyLocationId { get; set; }
         
-        public String v_ContactName { get; set; }
+        public string v_ContactName { get; set; }
         
-        public String v_EmergencyPhone { get; set; }
+        public string v_EmergencyPhone { get; set; }
         
-        public String v_Mail { get; set; }
+        public string v_Mail { get; set; }
         
         public string v_DocTypeName { get; set; }
         
@@ -64,14 +72,14 @@ namespace BE.Sigesoft
         
         public int? i_UpdateNodeId { get; set; }
 
-        public Byte[] b_Photo { get; set; }
+        public byte[] b_Photo { get; set; }
 
         public int? i_Correlative { get; set; }
 
         public int? i_BloodGroupId { get; set; }
 
         
-        public Byte[] b_FingerPrintTemplate { get; set; }
+        public byte[] b_FingerPrintTemplate { get; set; }
 
         
         public int? i_FingerPrintQuality { get; set; }
@@ -80,19 +88,19 @@ namespace BE.Sigesoft
         public int? i_FingerPrintId { get; set; }
 
         
-        public String v_FingerPrintId { get; set; }
+        public string v_FingerPrintId { get; set; }
 
         
-        public Byte[] b_RubricImage { get; set; }
+        public byte[] b_RubricImage { get; set; }
         public int? i_BloodFactorId { get; set; }
         
-        public Byte[] b_FingerPrintImage { get; set; }
+        public byte[] b_FingerPrintImage { get; set; }
 
         
-        public String t_RubricImageText { get; set; }
+        public string t_RubricImageText { get; set; }
 
         
-        public String b_RubricImageBitVaring { get; set; }
+        public string b_RubricImageBitVaring { get; set; }
 
         public string v_CurrentOccupation { get; set; }
 
@@ -109,7 +117,7 @@ namespace BE.Sigesoft
         public int? i_ResidenceInWorkplaceId { get; set; }
 
         
-        public String v_ResidenceTimeInWorkplace { get; set; }
+        public string v_ResidenceTimeInWorkplace { get; set; }
 
         
         public int? i_TypeOfInsuranceId { get; set; }
@@ -120,7 +128,7 @@ namespace BE.Sigesoft
         
         public int? i_NumberDependentChildren { get; set; }
 
-        public String v_OrganitationName { get; set; }
+        public string v_OrganitationName { get; set; }
 
         public string v_MaritalStatus { get; set; }
 
@@ -205,11 +213,11 @@ namespace BE.Sigesoft
 
         public int? i_InsertNodeId { get; set; }
 
-        public String v_Password { get; set; }
-        public String GESO { get; set; }
+        public string v_Password { get; set; }
+        public string GESO { get; set; }
         public int? i_AptitudeStatusId { get; set; }
 
-        public String v_ObsStatusService { get; set; }
+        public string v_ObsStatusService { get; set; }
 
         // Antecedentes ginecologicos
         public DateTime? d_PAP { get; set; }
@@ -238,9 +246,9 @@ namespace BE.Sigesoft
         public DateTime? FechaCaducidad { get; set; }
         public DateTime? FechaActualizacion { get; set; }
         public string N_Informe { get; set; }
-        public String v_Religion { get; set; }
-        public String v_Nacionalidad { get; set; }
-        public String v_ResidenciaAnterior { get; set; }
+        public string v_Religion { get; set; }
+        public string v_Nacionalidad { get; set; }
+        public string v_ResidenciaAnterior { get; set; }
 
         public byte[] logoCliente { get; set; }
 

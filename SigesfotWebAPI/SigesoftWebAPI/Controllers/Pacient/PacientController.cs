@@ -32,6 +32,13 @@ namespace SigesoftWebAPI.Controllers.Pacient
             return Ok(result);
         }
 
+        [HttpPost]
+        public IHttpActionResult GetAllPacient(MultiDataModel data)
+        {
+            var dataPacient = JsonConvert.DeserializeObject<BoardPacients>(data.String1);
+            var result = pacientBL.GetAllPacient(dataPacient);
+            return Ok(result);
+        }
 
     }
 }

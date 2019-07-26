@@ -1495,6 +1495,8 @@
     };
 
     function LoadModalTopxOccupational() {
+
+
         var session = sessionStorage.getItem("organizationId");
         var organizationId = $("#cbo-organization").val();
         if (session != null && session != undefined && session != "") {
@@ -1508,6 +1510,8 @@
             data: { 'organizationId': organizationId },
             url: '/PatientsAssistance/TopDiagnosticOcupational',
             success: function (html) {
+                console.log(html);
+                //LoadDxOccupationalModal(json);
                 if (html.indexOf("IniciarSesion") == -1) {
                     LoadDxOccupationalModal(html);
                 } else {
@@ -1781,7 +1785,7 @@
             cache: false,
             method: 'POST',
             data: data,
-            //url: 'http://vigilanciasanlorenzo.dyndns-web.com:8081/PatientsAssistance/DownloadFile',
+            //url: 'http://vigilanciasanlorenzo.dyndns-web.com:808081/PatientsAssistance/DownloadFile',
             url: '/PatientsAssistance/DownloadFile',
             success: function (response) {
                 var base64 = JSON.parse(response);
@@ -2081,7 +2085,7 @@
     function ViewPdf(patientId) {
 
         var viewer = $('#viewpdf');
-        PDFObject.embed('http://vigilanciasanlorenzo.dyndns-web.com:8081/ESO/' + patientId + '.pdf', viewer);
+        PDFObject.embed('http://vigilanciasanlorenzo.dyndns-web.com:808081/ESO/' + patientId + '.pdf', viewer);
         
 
     };

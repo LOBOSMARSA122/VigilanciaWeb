@@ -49,7 +49,7 @@
         <table class="table table-sm table-bordered table-wrapper-scroll scroll-css">
             <thead>
                 <tr>
-                    <th nowrap scope="col">
+                    <th nowrap scope="col" class="d-none">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="selectAll" onchange="checkedAllCheckBoxes()">
                             <label class="custom-control-label" for="selectAll">Selec.</label>
@@ -76,11 +76,12 @@
                     <th nowrap scope="col" class="d-none">FullName</th>
                     <th nowrap scope="col" class="d-none">Empresa Trabajo</th>
                     <th nowrap scope="col" class="d-none">Tipo Eso</th>
-                    <th nowrap scope="col" class="d-none">MasterService</th>
+                    <th nowrap scope="col" class="">MasterService</th>
                     <th nowrap scope="col" class="d-none">MedicoTratante</th>
                     <th nowrap scope="col" class="d-none">Ruc</th>
                     <th nowrap scope="col" class="d-none">ProtocolId</th>
-                    <th nowrap scope="col" class="d-none">ServiceId</th>
+                    <th nowrap scope="col" class="d-none">OrganizationId</th>
+                    <th nowrap scope="col" class="d-none">PrecioTotalProtocolo</th>
                 </tr>
             </thead>
             <tbody>
@@ -98,8 +99,8 @@
                     {
                         foreach (var item in ViewBag.Calendar.List)
                         {
-                        <tr onclick="PintarDataPerson(this)">
-                            <td>
+                        <tr onclick="PintarDataPerson(this)" class="cmCalendar">
+                            <td class="d-none">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input checkbox-agenda">
                                     <label class="custom-control-label" onclick="checkedCheckBox(this)"></label>
@@ -126,11 +127,12 @@
                             <td nowrap class="d-none">@item.v_Pacient</td>
                             <td nowrap class="d-none">@item.v_WorkingOrganizationName</td>
                             <td nowrap class="d-none">@item.v_EsoTypeName</td>
-                            <td nowrap class="d-none">@item.i_MasterServiceId</td>
+                            <td nowrap class="">@item.i_MasterServiceId</td>
                             <td nowrap class="d-none">@item.i_MedicoTratanteId</td>
                             <td nowrap class="d-none">@item.RucEmpFact</td>
                             <td nowrap class="d-none">@item.v_ProtocolId</td>
-                            <td nowrap class="d-none">@item.v_ServiceId</td>
+                            <td nowrap class="d-none">@item.v_OrganizationId</td>
+                            <td nowrap class="d-none">@item.PrecioTotalProtocolo</td>
                         </tr>
                         }
                     }

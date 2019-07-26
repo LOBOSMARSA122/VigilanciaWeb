@@ -49,7 +49,7 @@ namespace SigesoftWeb.Controllers
                     if(ViewBag.USER.SystemUserId == 0)
                         return RedirectToAction("Index", "WorkerData");
                     else
-                        return RedirectToAction("Index", "PatientsAssistance");
+                        return RedirectToAction("Index", "Agenda");
                 else
                     return RedirectToRoute("General_Login");
             }
@@ -100,9 +100,11 @@ namespace SigesoftWeb.Controllers
                 RucEmpresa = ViewBag.USER.RucEmpresa,
                 SystemUserByOrganizationId = ViewBag.USER.SystemUserByOrganizationId,
                 Permissions = ViewBag.USER.Permissions,
+                EstablecimientoPredeterminado = ViewBag.USER.EstablecimientoPredeterminado,
                 Organizations = ViewBag.USER.Organizations,
                 Options = ViewBag.USER.Options,
                 UserName = ViewBag.USER.UserName,
+                TelephoneNumber = ViewBag.USER.TelephoneNumber,
                 NodeId = int.Parse(ConfigurationManager.AppSettings["NodeId"])
         };
             return oclientSession;

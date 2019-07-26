@@ -15,6 +15,8 @@ using BE.Test;
 using BE.Vigilancia;
 using BE.Warehouse;
 using BE.ConfDx;
+using BE;
+
 
 namespace DAL
 {
@@ -123,6 +125,22 @@ namespace DAL
 
         public DbSet<ConfigDxDto> ConfigDx { get; set; }
         public DbSet<HolidaysBE> Holiday { get; set; }
+        public DbSet<AdditionalExamBE> AdditionalExam { get; set; }
+        public DbSet<AntecedentesAsistencialBE> AntecedentesAsistencial { get; set; }
+        public DbSet<CuidadoPreventivoBE> CuidadoPreventivo { get; set; }
+        public DbSet<CuidadoPreventivoComentarioBE> CuidadoPreventivoComentario { get; set; }
+        public DbSet<PlanIntegralBE> PlanIntegral { get; set; }
+        public DbSet<ProblemaBE> Problema { get; set; }
+        public DbSet<EmbarazoBE> Embarazo { get; set; }
+        public DbSet<AdultoMayorBE> AdultoMayor { get; set; }
+        public DbSet<AdultoBE> Adulto { get; set; }
+        public DbSet<AdolescenteBE> Adolescente { get; set; }
+        public DbSet<NinioBE> Ninio { get; set; }
+        public DbSet<RecetaBE> Receta { get; set; }
+        public DbSet<ServiceOrderBE> ServiceOrder { get; set; }
+        public DbSet<ServiceOrderDetailBE> ServiceOrderDetail { get; set; }
+        public DbSet<EspecialityBE> Especiality { get; set; }
+
         //----------------Dtos TEST---------------------
         public DbSet<TestConcurrenceDto> TestConcurrenc { get; set; }
     }

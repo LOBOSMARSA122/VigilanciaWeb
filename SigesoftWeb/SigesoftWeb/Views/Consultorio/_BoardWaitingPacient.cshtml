@@ -1,0 +1,89 @@
+﻿
+<div class="container-fluid" style="padding:0px;">
+    <div class="box box-info mt-2 mb-0" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>Lista de Pacientes en espera</h3>
+        </div>
+    </div>
+</div>
+<div id="contBoardCallingPacient" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+    <div class="box box-info mt-2 mb-0">
+        <div class="scroll-css" style="overflow:scroll; height: 250px;">
+            <table class="table table-sm table-hover" id="table-waiting">
+                <thead>
+                    <tr>
+                        <th nowrap scope="col" class="d-none">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="selectAll" onchange="checkedAllCheckBoxes()">
+                                <label class="custom-control-label" for="selectAll">Selec.</label>
+                            </div>
+                        </th>
+                        <th nowrap scope="col" class="d-none">CalendarId</th>
+                        <th nowrap scope="col" class="d-none">PersonId</th>
+                        <th nowrap scope="col">    </th>
+                        <th nowrap scope="col">Inicio circuito</th>
+                        <th nowrap scope="col">Paciente</th>
+                        <th nowrap scope="col">Protocolo</th>
+                        <th nowrap scope="col">Tipo Atención</th>
+                        <th nowrap scope="col">Piso</th>
+                        <th nowrap scope="col" class="d-none">Edad</th>
+                        <th nowrap scope="col" class="d-none">Dni</th>
+                        <th nowrap scope="col">ServiceStatus</th>
+                        <th nowrap scope="col" class="d-none">ServiceStatusId</th>
+                        <th nowrap scope="col" class="d-none">ServiceId</th>
+                        <td nowrap class="d-none">Llamando</td>
+                    </tr>
+                </thead>
+                <tbody id="body-waiting-pacient">
+                    @{
+
+                        if (ViewBag.WaitingPacients == null)
+                        {
+                            <tr><td colspan="16" class="text-center">No hay resultados</td></tr>
+                        }
+                        else if (ViewBag.WaitingPacients.Count == 0)
+                        {
+                            <tr><td colspan="16" class="text-center">No hay resultados</td></tr>
+                        }
+                        else
+                        {
+                            foreach (var item in ViewBag.WaitingPacients)
+                            {
+                                <tr onclick="PintarDataPerson(this)">
+                                    <td class="d-none">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input checkbox-agenda">
+                                            <label class="custom-control-label" onclick="checkedCheckBox(this)"></label>
+                                        </div>
+                                    </td>
+                                    <td nowrap class="d-none">@item.v_CalendarId</td>
+                                    <td nowrap class="d-none">@item.v_PersonId</td>
+                                    <td nowrap></td>
+                                    <td nowrap>@item.d_DateTimeCalendar</td>
+                                    <td nowrap>@item.v_Pacient</td>
+                                    <td nowrap>@item.v_ProtocolName</td>
+                                    <td nowrap>@item.v_EsoTypeName</td>
+                                    <td nowrap>@item.Piso</td>
+                                    <td nowrap class="d-none">@item.i_Edad</td>
+                                    <td nowrap class="d-none">@item.v_DocNumber</td>
+                                    <td nowrap>@item.v_ServiceStatusName</td>
+                                    <td nowrap class="d-none">@item.i_ServiceStatusId</td>
+                                    <td nowrap class="d-none">@item.v_ServiceId</td>
+                                </tr>
+                            }
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+
+</script>
+
+
+
+

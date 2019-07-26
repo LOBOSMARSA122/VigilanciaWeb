@@ -14,6 +14,8 @@ namespace BE.Common
             set { _objData[0] = value.ToString(); }
         }
 
+        
+
         public int CurrentOrganizationId
         {
             get { return int.Parse(_objData[1]); }

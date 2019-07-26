@@ -8,10 +8,27 @@ namespace BE.Common
 {
    public class Enumeratores
     {
+        public enum TypeEmail
+        {
+            Ordenservicio = 0,
+            Cotización = 2
+        }
+
         public enum ActionType
         {
             Create = 1,
             Edit = 2
+        }
+
+        public enum RoleNode
+        {
+            AdministradorSistemas = 1,
+        }
+
+        public enum TipoProblema
+        {
+            Cronico = 1,
+            Agudo = 2
         }
 
         public enum Currency
@@ -19,6 +36,12 @@ namespace BE.Common
             Soles = 1,
             Dolares = 2,
             Todas = -1
+        }
+
+        public enum SystemUserTypeId
+        {
+            Internal = 1,
+            External = 2
         }
 
         public enum Result
@@ -47,6 +70,15 @@ namespace BE.Common
         {
             Windows = 1,
             Web = 2
+        }
+
+        public enum TipoBusqueda
+        {
+            CodigoSegus = 1,
+            NombreCategoria = 2,
+            NombreSubCategoria = 3,
+            NombreComponent = 4,
+            ComponentId = 5,
         }
 
         public enum SiNo
@@ -108,6 +140,28 @@ namespace BE.Common
             AtxMedica = 9,
             AtxMedicaParticular = 10
 
+        }
+
+        public enum MasterService
+        {
+            Eso = 2,
+            ConsultaInformatica = 4,
+            ConsultaMedica = 3,
+            ConsultaNutricional = 6,
+            ConsultaPsicológica = 7,
+            ProcEnfermería = 8,
+            AtxMedica = 9,
+            AtxMedicaParticular = 10,
+            AtxMedicaSeguros = 12,
+            Hospitalizacion = 19,
+            Emergencia = 31
+        }
+
+        public enum ServiceType
+        {
+            Empresarial = 1,
+            Particular = 9,
+            Preventivo = 11
         }
 
         public enum ServiceStatus
@@ -218,6 +272,35 @@ namespace BE.Common
             X_esMayorIgualque_A_yMenorque_B = 9,
             X_esMayorIgualque_A_yMenorIgualque_B = 12,
         }
+
+
+        public enum CategoryTypeExam
+        {
+            Laboratorio = 1,
+            odontologia = 2,
+            Neonatal = 3,
+            Ginecologia = 4,
+            Cardiologia = 5,
+            Rx = 6,
+            Psicologia = 7,
+            Triaje = 10,
+            ExamenFisico = 11,
+            Inmunizaciones = 113,
+            Oftalmología = 14,
+
+            Audiometria = 15,
+            Espiromertia = 16,
+            RXLumbar = 18,
+
+            RiesgoActividadCritica = 19,
+            Labclinica = 20,
+            Clinica = 21,
+            Psicosensometrico = 22,
+
+            Ecografia = 24
+
+        }
+
 
         public enum GrupoEtario
         {

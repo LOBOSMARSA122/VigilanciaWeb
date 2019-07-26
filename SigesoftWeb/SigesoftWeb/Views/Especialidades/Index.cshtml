@@ -1,0 +1,515 @@
+﻿
+@{
+    ViewBag.Title = "Especialidades";
+}
+
+<div class="container-fluid">
+    <div class="row w-100 mx-0">
+        <div class="col-lg-6 py-3">
+            <div class="form-inline mt-2 justify-content-between">
+                <label class="small">Especialidad:</label>
+                <input type="text" class="form-control form-control-sm w-50" id="value-filter-especialidad" value="" />
+                <button class="btn btn-sm btn-info" id="filtrar-especialidad"><i class="fas fa-search mr-1"></i>Filtrar</button>
+            </div>
+        </div>
+        <div class="col-12 col-lg-10" id="render-board-especialidad">
+            @Html.Partial("_BoardEspecialityPartial")
+        </div>
+        <div class="col-12 col-lg-2">
+            <button class="btn btn-sm btn-block btn-primary" id="add-especiality"><i class="fas fa-plus mr-1"></i> Nuevo</button>
+            <button class="btn btn-sm btn-block btn-primary" id="edit-especiality"><i class="fas fa-pen mr-1"></i> Editar</button>
+            <button class="btn btn-sm btn-block btn-primary" id="delete-especiality"><i class="fas fa-times mr-1"></i> Eliminar</button>
+        </div>
+    </div>
+</div>
+
+
+
+@*Modal especialidad*@
+<div class="modal fade" id="modalEspecialidad" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="modalEspeciality">
+                <h5 class="modal-title" id="tipoModal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-lg-4 py-1">
+                        <label class="small">Nombre</label>
+                        <input type="text" class="form-control form-control-sm" id="name-especiality" value="" />
+                        <input type="text" class="form-control d-none form-control-sm" id="id-especiality" value="" />
+                    </div>
+                    <div class="col-lg-2 py-1">
+                        <label class="small">Tiempo de Atención</label>
+                        <input type="time" class="form-control form-control-sm" id="tiempo-atencion" value="" />
+                    </div>
+                    <div class="col-lg-2 py-1">
+                        <label class="small">Costo</label>
+                        <input type="number" disabled class="form-control form-control-sm" id="costo-atencion" value="" />
+                    </div>
+                    <div class="col-lg-4 py-1">
+                        <label class="small">Protocolo</label>
+                        <select class="custom-select custom-select-sm" id="protocolo-especialidad">
+                            <option value="-1">--seleccionar--</option>
+                            @if (ViewBag.Protocols != null)
+                            {
+                                foreach (var item in ViewBag.Protocols)
+                                {
+                                    <option value="@item.v_Id" data-price="@item.Field">@item.Value</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-lg-12 py-1">
+                        <label class="small">Descripción</label>
+                        <input type="text" class="form-control form-control-sm" id="descripcion-especiality" value="" />
+                    </div>
+                    <div class="col-lg-2 py-1">
+                        <label class="small">Hora Inicio <small class="text-muted">(Formato 24hr)</small> </label>
+                        <input type="time" class="form-control form-control-sm" id="inicio-especiality" value="" />
+                    </div>
+                    <div class="col-lg-2 py-1">
+                        <label class="small">Hora Fin <small class="text-muted">(Formato 24hr)</small></label>
+                        <input type="time" class="form-control form-control-sm" id="fin-especiality" value="" />
+                    </div>
+                    <div class="col-2 pt-3 pb-1">
+                        <div class="custom-control custom-checkbox mt-3">
+                            <input type="checkbox" class="custom-control-input" id="horarioAdicional" onchange="HorariosAdicionales()">
+                            <label class="custom-control-label" for="horarioAdicional">Horario adicional</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 py-1">
+                        <label class="small">Hora Inicio Adicional</label>
+                        <input type="time" disabled class="form-control form-control-sm" id="horaInicioAdiocional" value="" />
+                    </div>
+                    <div class="col-lg-2 py-1">
+                        <label class="small">Hora Fin Adicional</label>
+                        <input type="time" disabled class="form-control form-control-sm" id="horaFinAdiocional" value="" />
+                    </div>
+                    <div class="col-12 py-1 pt-3">
+                        <div class="row w-100 mx-0">
+                            <div class="col-lg-2 py-1">
+                                <label class="badge badge-info p-2 mt-4" style="font-size: 1.3rem; cursor:pointer" for="imagen-especialidad">Subir Imagen</label>
+                                <input type="file" class=" d-none form-control form-control-sm" id="imagen-especialidad" value="" />
+                            </div>
+                            <div class="col-9">
+                                <figure style="max-height: 230px !important; max-width:250px; overflow:hidden; border: 1px dashed #0094ff">
+                                    <img class="img-fluid" id="img-especialidad" src="https://www.axxana.com/wp-content/themes/linstar/assets/images/default.jpg" alt="Alternate Text" />
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 justify-content-between">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="save-especiality">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<link href="~/Content/css/Alert.css" rel="stylesheet" />
+<script src="~/Scripts/Alert.js"></script>
+
+<script>
+
+    const WarningAlert = function (message) {
+        alertafixed({
+            class: 'warning-class',
+            type: 'warning',
+            title: 'VALIDACIÓN',
+            message,
+        })
+    }
+
+    const InfoAlert = function (message) {
+        alertafixed({
+            class: 'info-class',
+            type: 'info',
+            title: 'INFORMACIÓN',
+            message,
+        })
+    }
+
+    const AlertInfoServidor = function (status, message) {
+        alertafixed({
+            type: 'info',
+            class: 'info-class',
+            title: 'INFORMACIÓN DEL SERVIDOR: ' + status,
+            message,
+        })
+    }
+
+    const AlertErrorServidor = function (status, message) {
+        alertafixed({
+            type: 'danger',
+            class: 'danger-class',
+            title: 'ERROR: ' + status,
+            message,
+        })
+    }
+
+    const ValidarCamposEspecialidad = function (arrId) {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
+
+        let valido = true;
+
+        for (var i = 0; i < arrId.length; i++) {
+            if ($(arrId[i]).get(0).type == "select-one") {
+                if ($(arrId[i]).val() == "-1") {
+                    $(arrId[i]).addClass("border-danger");
+                    valido = false;
+                } else {
+                    $(arrId[i]).removeClass("border-danger").addClass("border-success");
+                }
+            } else if ($(arrId[i]).get(0).type == "text" || $(arrId[i]).get(0).type == "date" || $(arrId[i]).get(0).type == "password" || $(arrId[i]).get(0).type == "number" || $(arrId[i]).get(0).type == "time") {
+                if ($(arrId[i]).val() == "") {
+                    $(arrId[i]).addClass("border-danger");
+                    valido = false;
+                } else {
+                    $(arrId[i]).removeClass("border-danger").addClass("border-success");
+                }
+            } else if ($(arrId[i]).get(0).type == "email") {
+                if ($(arrId[i]).val() == "") {
+                    $(arrId[i]).addClass("border-danger");
+                    valido = false;
+                } else if (!validarEmail($(arrId[i]).val())) {
+                    alertafixed({
+                        type: 'warning',
+                        title: 'VALIDACIÓN',
+                        class: 'error-validate',
+                        message: 'Asegurese de ingresar un Email Valido.'
+                    })
+                    $(arrId[i]).addClass("border-danger");
+                } else {
+                    $(arrId[i]).removeClass("border-danger").addClass("border-success");
+                }
+            } else if ($(arrId[i]).get(0).type == "file") {
+                if ($(arrId[i]).prop("files").length == 0) {
+                    alertafixed({
+                        type: 'warning',
+                        title: 'VALIDACIÓN',
+                        class: 'error-validate',
+                        message: 'Ingrese una imagen para continuar.'
+                    })
+                    valido = false;
+                }
+            }
+
+        }
+
+        if (!valido) {
+            alertafixed({
+                type: 'warning',
+                title: 'VALIDACIÓN',
+                class: 'error-validate',
+                message: 'Por favor, verifique las casillas en rojo y vuelva a intentar.'
+            })
+        }
+
+        return valido;
+    }
+
+    const SuccessMessageServidor = function (status, message) {
+        alertafixed({
+            type: 'success',
+            class: 'success-class',
+            title: 'HECHO: ' + status,
+            message,
+        })
+    }
+
+    function DecodeArrayByte(buffer) {
+        var binary = '';
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
+
+    $(document).ready(function () {
+        Filter();
+
+        $("#imagen-especialidad").on("change", function () {
+            let files = $(this).prop("files");
+            if (files.length == 0) {
+                WarningAlert("Debe seleccionar una imagen");
+                return;
+            }
+
+            let nombreCortado = files[0].name.split(".");
+            let extension = nombreCortado[nombreCortado.length - 1];
+
+            let extensionesValidas = ["jpg", "svg", "png", "gif", "jpeg", "psd"];
+
+            if (extensionesValidas.indexOf(extension) == -1) {
+                WarningAlert(`Ingresó un archivo del tipo ${extension}, las extensiones validas son: ${extensionesValidas.join(', ')}.`);
+                files = [];
+                console.log(files);
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function () {
+                var arrayBuffer = reader.result;
+                var result = DecodeArrayByte(arrayBuffer);
+
+                $("#img-especialidad").attr("src", "data:image/png;base64," + result);
+            }
+            reader.readAsArrayBuffer($(this).prop("files")[0]);
+        })
+
+        $("#protocolo-especialidad").on("change", function () {
+            let precio = $("#protocolo-especialidad option:selected").data("price");
+            $("#costo-atencion").val(precio);
+        })
+
+        $("#filtrar-especialidad").on("click", function () {
+            Filter();
+        })
+
+        $("#add-especiality").on("click", function () {
+            $("#tipoModal").text("Nueva Especialidad");
+            LimpiarCampos();
+            $("#modalEspecialidad").modal("show");
+
+        })
+
+        $("#edit-especiality").on("click", function () {
+            let row = $(".row-active");
+            if (row.length == 0) {
+                WarningAlert("Seleccionar una especialidad para actualizar.")
+                return;
+            }
+
+            let especialityId = row.eq(0).find("td").eq(0).text();
+            LimpiarCampos();
+            $("#modalEspecialidad").modal("show");
+
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: { especialityId },
+                url: '/Especialidades/GetEspeciality',
+                success: function (json) {
+                    console.log(json.b_EspecilityPicture);
+                    if (json.v_EspecialityPicture != null) {
+                        $("#img-especialidad").attr("src", "data:image/png;base64," + json.v_EspecialityPicture);
+                    } else {
+                        $("#img-especialidad").attr("src", "https://www.axxana.com/wp-content/themes/linstar/assets/images/default.jpg");
+                    }
+                    $("#id-especiality").val(json.v_EspecialityId);
+                    $("#protocolo-especialidad").val(json.v_ProtocolId);
+                    $("#name-especiality").val(json.v_EspecialityName);
+                    $("#tiempo-atencion").val(SetFormatHour(json.t_TimeForAttention));
+                    $("#costo-atencion").val(json.r_Cost);
+                    $("#descripcion-especiality").val(json.v_Description);
+                    $("#inicio-especiality").val(SetFormatHour(json.t_StartTime));
+                    $("#fin-especiality").val(SetFormatHour(json.t_EndTime));
+                    
+                    if (json.t_StartTime2 != null) {
+                        $("#horaInicioAdiocional").val(SetFormatHour(json.t_StartTime2));
+                        $("#horaFinAdiocional").val(SetFormatHour(json.t_EndTime2));
+                        $("#horarioAdicional").get(0).checked = true;
+                    }
+                },
+                error: function (err) {
+                    AlertErrorServidor(err.status, err.statusText);
+                }
+            })
+
+
+        })
+
+        $("#delete-especiality").on("click", function () {
+
+            let row = $(".row-active");
+            if (row.length == 0) {
+                WarningAlert("Seleccionar una especialidad para actualizar.")
+                return;
+            }
+
+            let especialityId = row.eq(0).find("td").eq(0).text();
+
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                data: { especialityId },
+                dataType: 'json',
+                url: '/Especialidades/DeleteEspeciality',
+                success: function (json) {
+                    if (json.Error) {
+                        AlertErrorServidor(json.Status, json.Message);
+                    } else {
+                        SuccessMessageServidor(json.Status, json.Message);
+                        Filter();
+                    }
+                },
+                error: function (err) {
+                    AlertErrorServidor(err.status, err.statusText);
+                }
+            })
+
+        })
+
+        $("#save-especiality").on("click", function () {
+            
+            let arrValid = ["#imagen-especialidad", "#name-especiality", "#tiempo-atencion", "#costo-atencion", "#inicio-especiality", "#fin-especiality", "#protocolo-especialidad",]
+            if (ValidarCamposEspecialidad(arrValid)) {
+                $("#modalEspeciality").addClass("loadingGrid");
+                let data = {
+                    v_EspecialityId: $("#id-especiality").val(),
+                    v_ProtocolId: $("#protocolo-especialidad").val(),
+                    v_EspecialityName: $("#name-especiality").val(),
+                    t_TimeForAttention: $("#tiempo-atencion").val(),
+                    r_Cost: $("#costo-atencion").val(),
+                    v_Description: $("#descripcion-especiality").val(),
+                    t_StartTime: $("#inicio-especiality").val(),
+                    t_EndTime: $("#fin-especiality").val(),
+                    t_StartTime2: "",
+                    t_EndTime2: "",
+                    b_EspecialityPicture: null,
+                    v_EspecialityPicture: "",
+                }
+                if ($("#horarioAdicional").get(0).checked) {
+                    data.t_StartTime2 = $("#horaInicioAdiocional").val();
+                    data.t_EndTime2 = $("#horaFinAdiocional").val();
+                }
+
+                let inputfile = $("#imagen-especialidad").prop("files");
+
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var arrayBuffer = reader.result;
+                    data.v_EspecialityPicture = DecodeArrayByte(arrayBuffer);
+                    $.ajax({
+                        cache: false,
+                        method: 'POST',
+                        data,
+                        dataType: 'json',
+                        url: '/Especialidades/AddEspeciality',
+                        success: function (json) {
+                            if (json.Error) {
+                                AlertErrorServidor(json.Status, json.Message);
+                            } else {
+                                SuccessMessageServidor(json.Status, json.Message);
+                                Filter();
+                                $("#modalEspecialidad").modal("hide");
+                                
+                            }
+                            $("#modalEspeciality").removeClass("loadingGrid");
+                        },
+                        error: function (err) {
+                            AlertErrorServidor(err.status, err.statusText);
+                            $("#modalEspeciality").removeClass("loadingGrid");
+                        }
+                    })
+                }
+                reader.readAsArrayBuffer(inputfile[0]);
+                
+                
+                
+            }
+            
+        })
+
+       
+    })
+
+    const HorariosAdicionales = function () {
+
+        $("#horaInicioAdiocional").attr("disabled", !$("#horarioAdicional").get(0).checked);
+        $("#horaFinAdiocional").attr("disabled", !$("#horarioAdicional").get(0).checked);
+    }
+
+    const SetFormatHour = function (time) {
+        let format = "";
+        let hours = "";
+        let minutes = "";
+
+        if (time.Hours.toString().length == 1) {
+            
+            hours = `0${time.Hours}`;
+        } else {
+            hours = `${time.Hours}`;
+        }
+
+        if (time.Minutes.toString().length == 1) {
+            minutes = `0${time.Minutes}`;
+        } else {
+            minutes = `${time.Minutes}`;
+        }
+        format = `${hours}:${minutes}`
+        console.log(format);
+        return format;
+    }
+
+    const PintarFila = function (fila) {
+        if ($(".row-active").length > 0) {
+            $(".row-active").removeClass("row-active");
+        }
+        $(fila).addClass("row-active");
+    }
+
+    const Filter = function (index = 1) {
+        $("#loadingTable").addClass("loadingGrid");
+        var data = {
+            Especiality: $("#value-filter-especialidad").val(),
+            Index: index,
+            Take: $("#take").val()
+        };
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'html',
+            data,
+            url: '/Especialidades/GetData',
+            success: function (html) {
+                $("#render-board-especialidad").html(html);
+                $("#loadingTable").removeClass("loadingGrid");
+            },
+            error: function (err) {
+                AlertErrorServidor(err.status, err.statusText);
+                $("#loadingTable").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const LimpiarCampos = function () {
+        $("#img-especialidad").attr("src", "https://www.axxana.com/wp-content/themes/linstar/assets/images/default.jpg");
+        $(".border-danger").removeClass("border-danger");
+        $(".border-success").removeClass("border-success");
+        $("#id-especiality").val("");
+        $("#name-especiality").val("");
+        $("#tiempo-atencion").val("00:00");
+        $("#costo-atencion").val("");
+        $("#descripcion-especiality").val("");
+        $("#inicio-especiality").val("");
+        $("#fin-especiality").val("");
+        $("#horarioAdicional").get(0).checked = false;
+        $("#horarioAdicional").trigger("change");
+        $("#horaInicioAdiocional").val("");
+        $("#horaFinAdiocional").val("");
+        $("#protocolo-especialidad").val("-1");
+    }
+
+    
+</script>

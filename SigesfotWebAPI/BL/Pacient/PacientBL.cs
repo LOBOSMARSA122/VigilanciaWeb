@@ -1,6 +1,8 @@
 ﻿using BE.Common;
 using BE.Message;
 using BE.Pacient;
+using BE.Protocol;
+using BE.Security;
 using DAL.Pacient;
 using System;
 using System.Collections.Generic;
@@ -44,8 +46,8 @@ namespace BL.Pacient
                     }
                     else
                     {
-                        personId = pacientDal.CreatePacient(data, userId, nodeId);
-
+                        personId = pacientDal.CreatePerson(data, userId, nodeId);
+                        pacientDal.CreatePacient(personId, userId, nodeId);
                         if (personId == null)
                         {
                             return _MessageCustom;
@@ -97,6 +99,13 @@ namespace BL.Pacient
         {
             return pacientDal.FindPacientByDocNumberOrPersonId(value);
         }
+
+        public BoardPacients GetAllPacient(BoardPacients data)
+        {
+            return new PacientDal().GetAllPacient(data);
+        }
+
+        
 
     }
 }

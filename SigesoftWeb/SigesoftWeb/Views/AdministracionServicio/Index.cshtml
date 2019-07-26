@@ -1,0 +1,265 @@
+﻿
+@{
+    ViewBag.Title = "Servicios";
+}
+<div class="container-fluid mt-3">
+    <div class="row w-100 mx-0">
+        <div class="col-12 col-lg-2">
+            <label class="small">Fech. Desde</label>
+            <input type="date" class="form-control form-control-sm" id="fecha-desde" value="" />
+        </div>
+        <div class="col-12 col-lg-2">
+            <label class="small">Fech. Hasta</label>
+            <input type="date" class="form-control form-control-sm" id="fecha-hasta" value="" />
+        </div>
+        <div class="col-12 col-lg-3">
+            <label class="small">Tipo Servicio</label>
+            <select disabled class="form-control form-control-sm" id="tipo-servicio">
+                <option value="9">PARTICULAR</option>
+            </select>
+        </div>
+        <div class="col-12 col-lg-5">
+            <label class="small">Empresa Cliente</label>
+            <select disabled class="form-control form-control-sm" id="empresa-cliente">
+                <option value="N009-OO000000052">OTRAS ACTIVIDADES DE ATENCIÓN DE LA SALUD HUMANA</option>
+
+            </select>
+        </div>
+        <div class="col-12 col-lg-4">
+            <label class="small">Paciente/Nro Documento</label>
+            <input type="text" class="form-control form-control-sm" value="" id="value-pacient" />
+        </div>
+        <div class="col-12 col-lg-3">
+            <label class="small">Servicio</label>
+            <select class="form-control form-control-sm" id="value-servicio">
+                <option value="-1">--Seleccionar--</option>
+                @foreach (var item in ViewBag.MasterService)
+                {
+                    <option value="@item.Id">@item.Value</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-lg-5">
+            <label class="small">Protocolo</label>
+            <select class="form-control form-control-sm" id="protocolo-id">
+                <option value="-1">--Seleccionar--</option>
+
+            </select>
+        </div>
+        <div class="col-12 col-lg-4">
+            <label class="small">Id Servicio</label>
+            <input type="text" class="form-control form-control-sm" value="" id="service-id" />
+        </div>
+        <div class="col-12 col-lg-3">
+            <label class="small">Estado Servicio</label>
+            <select class="form-control form-control-sm" id="estado-servicio">
+                <option value="-1">--Seleccionar--</option>
+                @foreach (var item in ViewBag.EstadoServicio)
+                {
+                    <option value="@item.Id">@item.Value</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-lg-3">
+            <label class="small">Usuario</label>
+            <select class="form-control form-control-sm" id="usuario-medico">
+                <option value="-1">--Seleccionar--</option>
+                @foreach (var item in ViewBag.Users)
+                {
+                    <option value="@item.Id">@item.Value</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-lg-1">
+            <label style="opacity:0">Filtro</label>
+            <button class="btn btn-sm btn-info" id="filtrar-servicios"><i class="fas fa-search mr-1"></i>Filtrar</button>
+        </div>
+    </div>
+    <div class="row w-100 mx-0">
+        <div class="col-12 col-lg-10">
+            <div id="render-services">
+                @Html.Partial("_BoardServicesPartial")
+            </div>
+        </div>
+        <div class="col-12 col-lg-2 pt-2">
+            <button class="btn btn-sm btn-primary" id="btn-generar-historia-clinica"><i class="fas fa-print mr-1"></i>Generar Historia Clinica</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<link href="~/Content/css/Alert.css" rel="stylesheet" />
+<script src="~/Scripts/Alert.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        SetDateTimeNow();
+        Filter();
+
+        $("#btn-generar-historia-clinica").on("click", function () {
+            if ($(".row-active").length == 0) {
+                alertafixed({
+                    class: 'warning-class',
+                    type: 'warning',
+                    title: 'VALIDACIÓN',
+                    message: 'Debe seleccionar una fila para continuar.'
+                })
+                return;
+            }
+            let row = $(".row-active").eq(0);
+            let serviceId = row.find("td").eq(0).text();
+            let personId = row.find("td").eq(1).text();
+            $(".cmCalendar").addClass("loadingGrid");
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                url: '/AdministracionServicio/GenerateHistoriaClinica?personId=' + personId + '&serviceId=' + serviceId,
+                success: function (json) {
+                    console.log(json)
+                    if (json.Error) {
+                        alertafixed({
+                            class: 'error-class',
+                            type: 'danger',
+                            title: 'ERROR' + json.Status,
+                            message: json.Message
+                        })
+
+                    } else {
+                        var ApiURI = SigesoftWebApiUrl();
+                        var url = ApiURI + "ReportesBasura/" + json.Id;
+                        window.open(url, '_blank');
+                        //if (location.hostname === "localhost") {
+
+                        //    //var fileName = json + ".pdf";
+                        //    var url = "http://192.168.1.1:8081/ReportesBasura/" + json.Id + ".pdf";
+                        //    window.open(url, '_blank');
+                        //} else {
+                        //    var url = "http://192.168.1.1:8081/ReportesBasura/" + json.Id + ".pdf";
+                        //    window.open(url, '_blank');
+                        //}
+                    }
+                    $(".cmCalendar").removeClass("loadingGrid");
+                },
+                error: function (err, status, message) {
+                    alertafixed({
+                        class: 'error-class',
+                        type: 'danger',
+                        title: 'ERROR' + err.status,
+                        message: 'Sucedió un error con el servidor: ' + message
+                    })
+                    $(".cmCalendar").removeClass("loadingGrid");
+                }
+            })
+
+        })
+
+        $("#value-servicio").on("change", function () {
+            let Service = $(this).val();
+            let ServiceType = $("#tipo-servicio").val();
+
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: { Service, ServiceType },
+                url: '/Agenda/GetProtocolsForCombo',
+                success: function (json) {
+                    let html = "<option value='-1'>--Seleccionar--</option>";
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<option value='${json[i].v_Id}'>${json[i].Value}</option>`;
+                    }
+                    $("#protocolo-id").html(html);
+
+                },
+                error: function (err, status, message) {
+                    alertafixed({
+                        class: 'error-protocol',
+                        type: 'danger',
+                        title: 'ERROR' + err.status,
+                        message: 'Sucedió un error con el servidor: ' + message
+                    })
+                }
+            })
+        })
+
+        $("#filtrar-servicios").on("click", function () {
+            Filter();
+        })
+
+    })
+
+    const ViewService = function (serviceId, pacientId) {
+        var url = '/PatientsAssistance/MedicalConsultation?id=' + pacientId + '&serviceId=' + serviceId + '&organizationId=';
+        window.open(url, '_blank');
+    }
+    const PintarFila = function (fila) {
+
+        if ($(".row-active").length > 0) {
+            $(".row-active").removeClass("row-active");
+        }
+        $(fila).addClass("row-active");
+    }
+
+
+    const SetDateTimeNow = _ => {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        $("input[type='date']").val(today);
+    }
+
+    const Filter = function (index = 1) {
+        var data = {
+            FechaDesde: $("#fecha-desde").val(),
+            FechaHasta: $("#fecha-hasta").val(),
+            Pacient: $("#value-pacient").val(),
+            TipoServicio: $("#tipo-servicio").val(),
+            Servicio: $("#value-servicio").val(),
+
+            ProtocolId: $("#protocolo-id").val(),
+            ServiceId: $("#service-id").val(),
+            EstadoServicio: $("#estado-servicio").val(),
+            UsuarioMedico: $("#usuario-medico").val(),
+            Index: index,
+            Take: $("#take").val()
+        };
+        $("#cont-table").addClass("loadingGrid");
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'html',
+            data,
+            url: '/AdministracionServicio/FilterService',
+            success: function (html) {
+                $("#render-services").html(html);
+                $("#cont-table").removeClass("loadingGrid");
+            },
+            error: function (err, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'danger-class',
+                    title: 'ERROR: ' + status,
+                    message: 'Sucedió un error en el servidor: ' + message
+                })
+                $("#cont-table").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const checkedAllCheckBoxes = function (className = "checkbox-agenda") {
+        for (var i = 0; i < $("." + className).length; i++) {
+            $("." + className).eq(i).click();
+        }
+    }
+
+    const checkedCheckBox = function (chk) {
+        $(chk).parent().find("input").click();
+    }
+
+</script>

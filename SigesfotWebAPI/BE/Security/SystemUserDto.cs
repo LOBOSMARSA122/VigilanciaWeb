@@ -9,7 +9,8 @@ namespace BE.Security
     public class SystemUserDto
     {
         [Key]
-        public int? i_SystemUserId { get; set; }
+        public int i_SystemUserId { get; set; }
+
         public string v_PersonId { get; set; }
         public string v_UserName { get; set; }
         public string v_Password { get; set; }

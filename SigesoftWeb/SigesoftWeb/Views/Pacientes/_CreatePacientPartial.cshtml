@@ -1,37 +1,129 @@
 ﻿
 <div class="modal fade" id="modalNuevoPaciente" tabindex="-1" role="dialog" aria-labelledby="agendarPersona" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content" id="modal-content-agenda">
+        <div class="modal-content" id="modal-content-paciente">
             <div class="modal-header">
                 <h5 class="modal-title" style="font-size:1.2rem" id="agendarPersona">Paciente</h5>
+                <label class="mx-3"><strong>Nro Afiliación: </strong><span id="nro-afiliacion"></span></label>
+                <label class="mx-3"><strong>Tipo Asegurado: </strong><span id="tipo-asegurado"></span></label>
+                <label class="mx-3"><strong>Estado Asegurado: </strong><span id="estado-seguro"></span></label>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body row w-100 mx-0">
+                <div class="col-12 col-lg-6 mb-2">
+                    <div class="group-box">
+                        <label class="label-group-box">Búsqueda</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" placeholder="DNI" aria-label="Paciente" aria-describedby="btn-trabajador" id="doc-number-find">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-info" type="button" id="btn-trabajador"><i class="fas fa-search mr-1"></i>Buscar</button>
+                            </div>
+                        </div>
+                        <div class="form-inline d-none" id="cont-captcha">
+                            <figure id="figure-captcha">
+                                <img src="" alt="CargandoCaptcha" id="img-captcha" />
+                            </figure>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" placeholder="Captcha" aria-label="Trabajador" aria-describedby="btn-trabajador" id="value-captcha">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info" type="button" id="btn-enviarcaptcha"><i class="fas fa-check"></i></button>
+                                </div>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary" type="button" id="btn-recargarcaptcha"><i class="fas fa-sync-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
                 <div class="col-12 py-2">
                     <div class="group-box">
                         <label class="label-group-box">Datos Generales del Paciente</label>
                         <div class="row w-100 mx-0">
-                            <div class="col-12 p-0 col-lg-9">
+                            <div class="col-12 p-0">
                                 <div class="row w-100 mx-0">
+                                    <div class="col-12 col-lg-3 mt-2">
+                                        <label class="small">Nombres</label>
+                                        <input type="text" class="form-control form-control-sm" value="" id="nombres-paciente" />
+
+                                    </div>
+                                    <div class="col-12 col-lg-3 mt-2">
+                                        <label class="small">Ap. Paterno</label>
+                                        <input type="text" class="form-control form-control-sm " value="" id="apepat-paciente" />
+
+                                    </div>
+                                    <div class="col-12 col-lg-3 mt-2">
+                                        <label class="small">Ap. Materno</label>
+                                        <input type="text" class="form-control form-control-sm " value="" id="apemat-paciente" />
+
+                                    </div>
+                                    <div class="col-12 col-lg-3 mt-2">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Fech.Nac:</label>
+                                            <input type="date" class="form-control form-control-sm" id="fecha-nacimiento" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small"> Tipo Doc:</label>
+                                            <select class="custom-select custom-select-sm" id="tipo-documento">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.TipoDocumento)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Nro. Doc</label>
+                                            <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" class="form-control form-control-sm " value="" id="numero-documento" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Género:</label>
+                                            <select class="custom-select custom-select-sm" id="genero-paciente">
+                                                <option value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.Genero)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Estado Civil:</label>
-                                            <select class="custom-select custom-select-sm">
+                                            <select class="custom-select custom-select-sm" id="estado-civil">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option selected value="1">CASADO</option>
-                                                <option value="2">SOLTERO</option>
+                                                @{
+                                                    foreach (var item in ViewBag.EstadoCivil)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Nivel Estudios:</label>
-                                            <select class="custom-select custom-select-sm">
+                                            <select class="custom-select custom-select-sm" id="nivel-estudios">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option selected value="1">PRIMARIA</option>
-                                                <option value="2">SECUNDARIA</option>
+                                                @{
+                                                    foreach (var item in ViewBag.NivelEstudios)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
@@ -39,36 +131,48 @@
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Lugar Nac.:</label>
-                                            <input type="text" class="form-control form-control-sm" name="name" value="" />
+                                            <input type="text" class="form-control form-control-sm" id="lugar-nacimiento" value="" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Gr. Sanguineo:</label>
-                                            <select class="custom-select custom-select-sm">
+                                            <select class="custom-select custom-select-sm" id="grupo-sanguineo">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option selected value="1">O</option>
-                                                <option value="2">A</option>
+                                                @{
+                                                    foreach (var item in ViewBag.GrupoSanguineo)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Distrito:</label>
-                                            <select class="custom-select custom-select-sm">
+                                            <select class="custom-select custom-select-sm" id="distrito-paciente">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option selected value="1">Lima</option>
-                                                <option value="2">Lima</option>
+                                                @{
+                                                    foreach (var item in ViewBag.Distrito)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Fr. Sanguineo:</label>
-                                            <select class="custom-select custom-select-sm">
+                                            <select class="custom-select custom-select-sm" id="factor-sanguineo">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option selected value="1">POSITIVO</option>
-                                                <option value="2">NEGATIVO</option>
+                                                @{
+                                                    foreach (var item in ViewBag.FactorSanguineo)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
@@ -76,165 +180,223 @@
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Provincia:</label>
-                                            <select disabled class="custom-select custom-select-sm">
+                                            <select disabled class="custom-select custom-select-sm" id="provincia-paciente">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option value="1">O</option>
-                                                <option value="2">A</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Tiempo Residencia:</label>
-                                            <input type="text" class="form-control form-control-sm" name="name" value="" />
+                                            <input type="text" class="form-control form-control-sm" value="" id="tiempo-residencia" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Departamento:</label>
-                                            <select disabled class="custom-select custom-select-sm">
+                                            <select disabled class="custom-select custom-select-sm" id="departamento-paciente">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option value="1">O</option>
-                                                <option value="2">A</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Tipo de Seguro:</label>
-                                            <select class="custom-select custom-select-sm">
+                                            <select class="custom-select custom-select-sm" id="tipo-seguro">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option value="1">O</option>
-                                                <option value="2">A</option>
+                                                @{
+                                                    foreach (var item in ViewBag.TipoSeguro)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Reside Lugar Trabajo?:</label>
-                                            <select class="custom-select custom-select-sm">
+                                            <select class="custom-select custom-select-sm" id="reside-trabajo">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option value="1">SI</option>
-                                                <option value="2">NO</option>
+                                                @{
+                                                    foreach (var item in ViewBag.ResideLugar)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
-                                            <label class="small">Hijso Vivos:</label>
-                                            <input type="text" class="form-control form-control-sm" name="name" value="" />
+                                            <label class="small">Hijos Vivos:</label>
+                                            <input type="text" class="form-control form-control-sm" id="hijos-vivos" value="" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Hijso Muertos:</label>
-                                            <input type="text" class="form-control form-control-sm" name="name" value="" />
+                                            <input type="text" class="form-control form-control-sm" id="hijos-muertos" value="" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Nro Hermanos:</label>
-                                            <input type="text" class="form-control form-control-sm" name="name" value="" />
+                                            <input type="text" class="form-control form-control-sm" id="numero-hermanos" value="" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Email:</label>
-                                            <input type="text" class="form-control form-control-sm" name="name" value="" />
+                                            <input type="text" class="form-control form-control-sm" id="email-paciente" value="" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Teléfono:</label>
-                                            <input type="text" class="form-control form-control-sm" name="name" value="" />
+                                            <input type="text" class="form-control form-control-sm" id="telefono-paciente" value="" />
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Dirección</label>
-                                            <input type="text" class="form-control form-control-sm w-75" name="name" value="" />
+                                            <input type="text" class="form-control form-control-sm w-75" id="direccion-paciente" value="" />
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Puesto(Actual/Postula):</label>
-                                            <select class="custom-select custom-select-sm w-75">
+                                            <select class="custom-select custom-select-sm w-75" id="puesto-postula">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option value="1">SI</option>
-                                                <option value="2">NO</option>
+                                                @{
+                                                    foreach (var item in ViewBag.PuestoActuPostu)
+                                                    {
+                                                        <option value="@item.Value">@item.Value</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Altitud Labor:</label>
-                                            <select class="custom-select custom-select-sm">
+                                            <select class="custom-select custom-select-sm" id="altitud-labor">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option value="1">SI</option>
-                                                <option value="2">NO</option>
+                                                @{
+                                                    foreach (var item in ViewBag.AltitudLabor)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Lugar Labor:</label>
-                                            <select class="custom-select custom-select-sm">
+                                            <select class="custom-select custom-select-sm" id="lugar-labor">
                                                 <option value="-1">--Seleccionar--</option>
-                                                <option value="1">SI</option>
-                                                <option value="2">NO</option>
+                                                @{
+                                                    foreach (var item in ViewBag.LugarLabor)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Minerales Explotados:</label>
-                                            <input type="text" class="form-control form-control-sm" name="name" value="" />
+                                            <input type="text" class="form-control form-control-sm" id="mineral-explotado" value="" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Residencia Anterior:</label>
-                                            <input type="text" class="form-control form-control-sm" name="name" value="" />
+                                            <input type="text" class="form-control form-control-sm" id="residencia-anterior" value="" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Nacionalidad:</label>
-                                            <input type="text" class="form-control form-control-sm" value="" />
+                                            <input type="text" class="form-control form-control-sm" id="nacionalidad-paciente" value="" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Religión:</label>
-                                            <input type="text" class="form-control form-control-sm" value="" />
+                                            <input type="text" class="form-control form-control-sm" id="religion-paciente" value="" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <div class="form-inline mt-2 justify-content-between">
                                             <label class="small">Parentesco:</label>
-                                            <select class="custom-select custom-select-sm w-50">
+                                            <select class="custom-select custom-select-sm w-50" id="parentesco-paciente">
                                                 <option selected value="-1">--Seleccionar--</option>
-                                                <option value="1">Opción1</option>
-                                                <option value="2">Opción1</option>
+                                                @{
+                                                    foreach (var item in ViewBag.Parentesco)
+                                                    {
+                                                        <option value="@item.Id">@item.Value</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-12 col-lg-6" id="cont-nombretitular">
+                                        <div class="form-inline mt-2 justify-content-between">
+                                            <label class="small">Titular:</label>
+                                            <select class="custom-select custom-select-sm w-50" id="titular-paciente">
+                                                <option selected value="-1">--Seleccionar--</option>
+                                                @{
+                                                    foreach (var item in ViewBag.Titulares)
+                                                    {
+                                                        <option value="@item.v_Id">@item.Value</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <button class="btn btn-sm btn-info" title="Buscar Titular" id="btn-titular" data-toggle="modal" data-target="#modalTitular"><i class="fas fa-user-tie"></i></button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-3">
+                            <div class="col-lg-3 pt-3 d-flex align-items-center justify-content-center">
                                 <div class="row w-100 mx-0 justify-content-center pt-lg-0 pt-2">
-                                    <figure class="img-thumbnail" style="max-width:250px; max-height: 350px">
-                                        <img src="https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png" class="img img-fluid" alt="Imagen" />
+                                    <label>FOTO</label>
+                                    <figure class="img-thumbnail w-100" style="max-height: 300px !important; overflow: hidden">
+                                        <img src="https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png" id="add-person-image" class="img img-fluid" alt="Imagen" />
                                     </figure>
-                                </div>                               
-                                <div class="row w-100 mx-0 justify-content-between">
+                                </div>
+                            </div>
+                            <div class="col-lg-7 pt-3 d-flex align-items-center justify-content-center">
+                                
+                                <div class="row w-100 mx-0 justify-content-center pt-lg-0 pt-2">
+                                    <label>FIRMA</label>
+                                    <figure class="img-thumbnail w-100" style="max-height: 300px !important; overflow: hidden">
+                                        <img src="https://informesinbandera.com/img/placeholder-img.png" id="add-person-rubric" class="img-fluid" alt="Imagen" />
+                                    </figure>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-2 pt-3 d-flex align-items-center justify-content-center">
+                                <div class="row w-100 mx-0 justify-content-center pt-lg-0 pt-2">
+                                    <label class="w-100 text-center">HUELLA</label>
+                                    <figure class="img-thumbnail w-100" style="max-height: 300px; width: 80px !important; overflow: hidden">
+                                        <img src="https://informesinbandera.com/img/placeholder-img.png" id="add-person-finger" class="img img-fluid" alt="Imagen" />
+                                    </figure>
+                                </div>
+                            </div>
+                            <div class="col-12">
+
+                                <div class="row w-100 mx-0 justify-content-between d-none">
                                     <input type="text" class="form-control m-1 form-control-sm w-100" value="" />
                                     <button class="btn btn-sm btn-info m-1">Buscar foto</button>
                                     <button class="btn btn-sm btn-danger m-1">Eliminar foto</button>
                                 </div>
-                                <div class="row w-100 mx-0 justify-content-between">
+                                <div class="row w-100 mx-0 justify-content-between d-none">
+                                    <input type="text" class="" value="" id="paciente-id" />
                                     <button class="btn btn-sm btn-secondary m-1"><i class="fas fa-camera mr-1"></i>Foto</button>
                                     <button class="btn btn-sm btn-secondary m-1">Huella Digital y firma</button>
+
                                     <button class="btn btn-sm btn-primary m-1 w-100"><i class="fas fa-save mr-1"></i>Guardar Paciente</button>
                                 </div>
                             </div>
@@ -244,7 +406,115 @@
             </div>
             <div class="modal-footer row w-100 mx-0 py-2 px-4 justify-content-between" id="footer-new-person">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btn-guardar-agenda">Guardar</button>
+                <button type="button" class="btn btn-primary" id="btn-guardar-paciente">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalTitular" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size: 1.2rem">Nuevo Titular</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-12 col-lg-8">
+                        <div class="group-box mb-3">
+                            <label class="label-group-box">Búsqueda</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" placeholder="Titular" aria-label="Titular" aria-describedby="btn-titular" id="doc-number-find-titular">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info" type="button" id="btn-buscar-titular"><i class="fas fa-search mr-1"></i>Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group-box">
+                            <label class="label-group-box">Datos Generales</label>
+                            <div class="row w-100 mx-0">
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Nombres:</label>
+                                        <input type="text" class="form-control form-control-sm" value="" id="nombres-titular" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Tipo Doc:</label>
+                                        <select class="custom-select custom-select-sm" id="tipo-doc-titular">
+                                            <option value="-1">--Seleccionar--</option>
+                                            @{
+                                                foreach (var item in ViewBag.TipoDocumento)
+                                                {
+                                                    <option value="@item.Id">@item.Value</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Ape. Paterno:</label>
+                                        <input type="text" class="form-control form-control-sm" value="" id="apepat-titular" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Nro Doc.:</label>
+                                        <input type="text" class="form-control form-control-sm" value="" id="numero-doc-titular" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Ape. Materno:</label>
+                                        <input type="text" class="form-control form-control-sm" value="" id="apemat-titular" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Género:</label>
+                                        <select class="custom-select custom-select-sm" id="genero-titular">
+                                            <option value="-1">--Seleccionar--</option>
+                                            @{
+                                                foreach (var item in ViewBag.Genero)
+                                                {
+                                                    <option value="@item.Id">@item.Value</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">Fec. Nacimiento:</label>
+                                        <input type="date" class="form-control form-control-sm" value="" id="fecha-titular" />
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 d-none">
+                                    <div class="form-inline mt-2 justify-content-between">
+                                        <label class="small">titular id:</label>
+                                        <input type="text" class="form-control form-control-sm" value="" id="titular-id" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <div class="row w-100 mx-0 justify-content-center pt-lg-0 pt-2">
+                            <figure class="img-thumbnail" style="max-width:250px; max-height: 350px">
+                                <img src="https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png" class="img img-fluid" id="img-pacient-modal" alt="Imagen" />
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" id="guardar-titular">Guardar</button>
             </div>
         </div>
     </div>

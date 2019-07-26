@@ -1,10 +1,20 @@
 ﻿using BE.Common;
+using BE.Message;
 using BE.Pacient;
+using BE.Protocol;
+using BE.Security;
+using DAL.Organizarion;
+using DAL.ProtocolSystemUser;
+using DAL.Security;
+using DAL.SystemUser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
+using static BE.Common.Enumeratores;
 
 namespace DAL.Pacient
 {
@@ -17,83 +27,90 @@ namespace DAL.Pacient
             {
                 DatabaseContext ctx = new DatabaseContext();
                 var isDeleted = (int)Enumeratores.SiNo.No;
-                int groupDocTypeId = (int)Enumeratores.DataHierarchy.TypeDoc;
+                //int groupDocTypeId = (int)Enumeratores.DataHierarchy.TypeDoc;
                 int skip = (data.Index - 1) * data.Take;
 
                 //filters
                 string filterPacient = string.IsNullOrWhiteSpace(data.Pacient) ? "" : data.Pacient;
-                string filterDocNumber = string.IsNullOrWhiteSpace(data.DocNumber) ? "" : data.DocNumber;
-                var list = (from pac in ctx.Pacient
-                            join per in ctx.Person on pac.v_PersonId equals per.v_PersonId
-                            join dhy in ctx.DataHierarchy on new { a = per.i_DocTypeId.Value, b = groupDocTypeId } equals new { a = dhy.i_ItemId, b = dhy.i_GroupId }
-                            where pac.i_IsDeleted == isDeleted
-                                    && (per.v_FirstName.Contains(filterPacient) || per.v_FirstLastName.Contains(filterPacient) || per.v_SecondLastName.Contains(filterPacient))
-                                    && (per.v_DocNumber.Contains(filterDocNumber))
+                //string filterDocNumber = string.IsNullOrWhiteSpace(data.DocNumber) ? "" : data.DocNumber;
+                var list = (from per in ctx.Person
+                            //join dhy in ctx.DataHierarchy on new { a = per.i_DocTypeId.Value, b = groupDocTypeId } equals new { a = dhy.i_ItemId, b = dhy.i_GroupId }
+                            join sys in ctx.SystemParameter on new { a = per.i_BloodGroupId.Value, b = 154 } equals new { a = sys.i_ParameterId, b = sys.i_GroupId } into sys_join from sys in sys_join.DefaultIfEmpty()
+                            join sys2 in ctx.SystemParameter on new { a = per.i_BloodFactorId.Value, b = 155 } equals new { a = sys2.i_ParameterId, b = sys2.i_GroupId } into sys2_join from sys2 in sys2_join.DefaultIfEmpty()
+                            where per.i_IsDeleted == isDeleted
+                                    && (per.v_FirstName.Contains(filterPacient) || per.v_FirstLastName.Contains(filterPacient) || per.v_SecondLastName.Contains(filterPacient) || filterPacient == "" || per.v_DocNumber.Contains(filterPacient))
                             select new PacientCustom
                             {
                                 v_PersonId = per.v_PersonId,
                                 v_FirstName = per.v_FirstName,
                                 v_FirstLastName = per.v_FirstLastName,
                                 v_SecondLastName = per.v_SecondLastName,
-                                i_DocTypeId = per.i_DocTypeId,
+                                //i_DocTypeId = per.i_DocTypeId,
                                 v_DocNumber = per.v_DocNumber,
                                 d_Birthdate = per.d_Birthdate,
-                                v_BirthPlace = per.v_BirthPlace,
-                                i_SexTypeId = per.i_SexTypeId,
-                                i_MaritalStatusId = per.i_MaritalStatusId,
-                                i_LevelOfId = per.i_LevelOfId,
+                                //v_BirthPlace = per.v_BirthPlace,
+                                //i_SexTypeId = per.i_SexTypeId,
+                                //i_MaritalStatusId = per.i_MaritalStatusId,
+                                //i_LevelOfId = per.i_LevelOfId,
                                 v_TelephoneNumber = per.v_TelephoneNumber,
                                 v_AdressLocation = per.v_AdressLocation,
-                                v_GeografyLocationId = per.v_GeografyLocationId,
-                                v_ContactName = per.v_ContactName,
-                                v_EmergencyPhone = per.v_EmergencyPhone,
+                               // v_GeografyLocationId = per.v_GeografyLocationId,
+                                //v_ContactName = per.v_ContactName,
+                                //v_EmergencyPhone = per.v_EmergencyPhone,
                                 b_PersonImage = per.b_PersonImage,
                                 v_Mail = per.v_Mail,
-                                i_BloodGroupId = per.i_BloodGroupId,
-                                i_BloodFactorId = per.i_BloodFactorId,
-                                b_FingerPrintTemplate = per.b_FingerPrintTemplate,
-                                b_RubricImage = per.b_RubricImage,
-                                b_FingerPrintImage = per.b_FingerPrintImage,
-                                t_RubricImageText = per.t_RubricImageText,
+                                //i_BloodGroupId = per.i_BloodGroupId,
+                                //i_BloodFactorId = per.i_BloodFactorId,
+                               // b_FingerPrintTemplate = per.b_FingerPrintTemplate,
+                                //b_RubricImage = per.b_RubricImage,
+                                //b_FingerPrintImage = per.b_FingerPrintImage,
+                                //t_RubricImageText = per.t_RubricImageText,
                                 v_CurrentOccupation = per.v_CurrentOccupation,
-                                i_DepartmentId = per.i_DepartmentId,
-                                i_ProvinceId = per.i_ProvinceId,
-                                i_DistrictId = per.i_DistrictId,
-                                i_ResidenceInWorkplaceId = per.i_ResidenceInWorkplaceId,
-                                v_ResidenceTimeInWorkplace = per.v_ResidenceTimeInWorkplace,
-                                i_TypeOfInsuranceId = per.i_TypeOfInsuranceId,
-                                i_NumberLivingChildren = per.i_NumberLivingChildren,
-                                i_NumberDependentChildren = per.i_NumberDependentChildren,
-                                i_OccupationTypeId = per.i_OccupationTypeId,
-                                v_OwnerName = per.v_OwnerName,
-                                i_NumberLiveChildren = per.i_NumberLiveChildren,
-                                i_NumberDeadChildren = per.i_NumberDeadChildren,
-                                i_IsDeleted = per.i_IsDeleted,
-                                i_InsertNodeId = per.i_InsertNodeId,
-                                i_UpdateNodeId = per.i_UpdateNodeId,
-                                i_Relationship = per.i_Relationship,
-                                v_ExploitedMineral = per.v_ExploitedMineral,
-                                i_AltitudeWorkId = per.i_AltitudeWorkId,
-                                i_PlaceWorkId = per.i_PlaceWorkId,
-                                v_NroPoliza = per.v_NroPoliza,
-                                v_Deducible = per.v_Deducible,
-                                i_NroHermanos = per.i_NroHermanos,
-                                v_Password = per.v_Password,
-                                v_Procedencia = per.v_Procedencia,
-                                v_CentroEducativo = per.v_CentroEducativo,
-                                v_Religion = per.v_Religion,
-                                v_Nacionalidad = per.v_Nacionalidad,
-                                v_ResidenciaAnterior = per.v_ResidenciaAnterior,
-                                v_Subs = per.v_Subs,
-                                v_ComentaryUpdate = per.v_ComentaryUpdate,
-                            }).OrderBy(x => x.v_FirstLastName).ToList();
+                                //i_DepartmentId = per.i_DepartmentId,
+                               // i_ProvinceId = per.i_ProvinceId,
+                                //i_DistrictId = per.i_DistrictId,
+                               // i_ResidenceInWorkplaceId = per.i_ResidenceInWorkplaceId,
+                               // v_ResidenceTimeInWorkplace = per.v_ResidenceTimeInWorkplace,
+                               // i_TypeOfInsuranceId = per.i_TypeOfInsuranceId,
+                               // i_NumberLivingChildren = per.i_NumberLivingChildren,
+                               // i_NumberDependentChildren = per.i_NumberDependentChildren,
+                              //  i_OccupationTypeId = per.i_OccupationTypeId,
+                                //v_OwnerName = per.v_OwnerName,
+                                //i_NumberLiveChildren = per.i_NumberLiveChildren,
+                                //i_NumberDeadChildren = per.i_NumberDeadChildren,
+                                //i_IsDeleted = per.i_IsDeleted,
+                               // i_InsertNodeId = per.i_InsertNodeId,
+                                //i_UpdateNodeId = per.i_UpdateNodeId,
+                                //i_Relationship = per.i_Relationship,
+                                //v_ExploitedMineral = per.v_ExploitedMineral,
+                                //i_AltitudeWorkId = per.i_AltitudeWorkId,
+                                //i_PlaceWorkId = per.i_PlaceWorkId,
+                                //v_NroPoliza = per.v_NroPoliza,
+                                //v_Deducible = per.v_Deducible,
+                                //i_NroHermanos = per.i_NroHermanos,
+                                //v_Password = per.v_Password,
+                                //v_Procedencia = per.v_Procedencia,
+                                //v_CentroEducativo = per.v_CentroEducativo,
+                                //v_Religion = per.v_Religion,
+                                //v_Nacionalidad = per.v_Nacionalidad,
+                                //v_ResidenciaAnterior = per.v_ResidenciaAnterior,
+                                //v_Subs = per.v_Subs,
+                                //v_ComentaryUpdate = per.v_ComentaryUpdate,
+                                v_BloodGroupId = sys.v_Value1,
+                                v_BloodFactorId = sys2.v_Value1,
 
+                            }).OrderBy(x => x.v_FirstLastName).ToList();
+                
                 int totalRecords = list.Count;
 
                 if (data.Take > 0)
                     list = list.Skip(skip).Take(data.Take).ToList();
 
                 data.TotalRecords = totalRecords;
+                foreach (var item in list)
+                {
+                    item.PersonImage = item.b_PersonImage == null ? null : Convert.ToBase64String(item.b_PersonImage);
+                }
                 data.List = list;
 
                 return data;
@@ -104,7 +121,32 @@ namespace DAL.Pacient
             }
         }
 
-        public string CreatePacient(PacientCustom data, int userId, int nodeId)
+        public void CreatePacient(string personId, int userId, int nodeId)
+        {
+            try
+            {
+                DatabaseContext cnx = new DatabaseContext();
+                var oPacient = new PacientBE
+                {
+                    v_PersonId = personId,
+                    i_IsDeleted = (int)Enumeratores.SiNo.No,
+                    d_InsertDate = DateTime.UtcNow,
+                    i_InsertUserId = userId
+                };
+
+
+                cnx.Pacient.Add(oPacient);
+                cnx.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
+        }
+
+        public string CreatePerson(PacientCustom data, int userId, int nodeId)
         {
             try
             {
@@ -166,7 +208,6 @@ namespace DAL.Pacient
                 oPersonDto.v_ResidenciaAnterior = data.v_ResidenciaAnterior;
                 oPersonDto.v_Subs = data.v_Subs;
                 oPersonDto.v_ComentaryUpdate = data.v_ComentaryUpdate;
-
                 //Auditoria
                 oPersonDto.i_InsertUserId = userId;
                 oPersonDto.d_InsertDate = DateTime.Now;
@@ -266,6 +307,12 @@ namespace DAL.Pacient
             }
         }
 
+        public int GetEdad(DateTime BirthDate)
+        {
+            int edad = DateTime.Today.AddTicks(-BirthDate.Ticks).Year - 1;
+            return edad;
+        }
+
         public PacientCustom FindPacientByDocNumberOrPersonId(string value)
         {
             try
@@ -275,6 +322,7 @@ namespace DAL.Pacient
                 var objPacient = cnx.Person.Where(x => (x.v_DocNumber == value || x.v_PersonId == value) && x.i_IsDeleted == 0).FirstOrDefault();
                 if (objPacient != null)
                 {
+                    _PacientCustom.BaseDatos = true;
                     _PacientCustom.v_PersonId = objPacient.v_PersonId;
                     _PacientCustom.v_FirstName = objPacient.v_FirstName;
                     _PacientCustom.v_FirstLastName = objPacient.v_FirstLastName;
@@ -329,8 +377,11 @@ namespace DAL.Pacient
                     _PacientCustom.v_Nacionalidad = objPacient.v_Nacionalidad;
                     _PacientCustom.v_ResidenciaAnterior = objPacient.v_ResidenciaAnterior;
                     _PacientCustom.v_Subs = objPacient.v_Subs;
+                    _PacientCustom.i_Edad = GetEdad(objPacient.d_Birthdate.Value);
                     _PacientCustom.v_ComentaryUpdate = objPacient.v_ComentaryUpdate;
                     _PacientCustom.PersonImage = objPacient.b_PersonImage == null? null : Convert.ToBase64String(objPacient.b_PersonImage);
+                    _PacientCustom.PersonHuella = objPacient.b_FingerPrintImage == null ? null : Convert.ToBase64String(objPacient.b_FingerPrintImage);
+                    _PacientCustom.PersonFirma = objPacient.b_RubricImage == null ? null : Convert.ToBase64String(objPacient.b_RubricImage);
                     _PacientCustom.TieneRegistroHuella = objPacient.b_FingerPrintImage == null ? "NO REGISTRADO" : "REGISTRADO";
                     _PacientCustom.TieneRegistroFirma = objPacient.b_RubricImage == null ? "NO REGISTRADO" : "REGISTRADO";
                     return _PacientCustom;
@@ -342,6 +393,199 @@ namespace DAL.Pacient
                 return null;
             }
 
+        }
+
+        public MessageCustom AddSystemUserExternal(PersonDto pobjPerson, ProfessionalBE pobjProfessional, SystemUserDto pobjSystemUser, List<ProtocolSystemUserBE> ListProtocolSystemUser, int userId, int nodeId)
+        {
+            //mon.IsActive = true;
+            string newId = string.Empty;
+            int systemUserId = -1;
+            MessageCustom msg = new MessageCustom();
+            OperationResult objOperationResult = new OperationResult();
+
+            try
+            {
+                using (var ts = new TransactionScope())
+                {
+                    #region Validations
+                    // Validar el DNI de la persona
+                    DatabaseContext dbContext = new DatabaseContext();
+                    if (pobjPerson != null)
+                    {
+                        if (pobjSystemUser.i_SystemUserId == -1) //-1 es nuevo
+                        {                           
+                            // Grabar Persona
+                            var _recordCount1 = GetPersonCount(pobjPerson.v_DocNumber);
+                            if (_recordCount1 != 0) throw new Exception("El número de documento <strong>" + pobjPerson.v_DocNumber + "</strong> ya se encuentra registrado. Por favor ingrese otro número de documento.");
+                            
+                            pobjPerson.d_InsertDate = DateTime.Now;
+                            pobjPerson.i_InsertUserId = userId;
+                            pobjPerson.i_IsDeleted = 0;
+                            // Autogeneramos el Pk de la tabla
+                            newId = new Common.Utils().GetPrimaryKey(nodeId, 8, "PP");
+                            pobjPerson.v_PersonId = newId;
+
+                            dbContext.Person.Add(pobjPerson);
+                            dbContext.SaveChanges();
+
+
+                            // Grabar Profesional
+                            pobjProfessional.v_PersonId = pobjPerson.v_PersonId;
+                            bool resultProf = AddProfessional(pobjProfessional, userId, nodeId);
+                            if (!resultProf) throw new Exception("Sucedió un error al guardar el profesional, por favor actualice la pagina y vuelva a intentar");
+                        }
+                        else
+                        {//actualiza
+                            var objPerson = dbContext.Person.Where(x => x.v_PersonId == pobjPerson.v_PersonId).FirstOrDefault();
+                            objPerson.v_FirstName = pobjPerson.v_FirstName;
+                            objPerson.v_FirstLastName = pobjPerson.v_FirstLastName;
+                            objPerson.v_SecondLastName = pobjPerson.v_SecondLastName;
+                            objPerson.i_DocTypeId = pobjPerson.i_DocTypeId;
+                            objPerson.v_DocNumber = pobjPerson.v_DocNumber;
+                            objPerson.i_SexTypeId = pobjPerson.i_SexTypeId;
+                            objPerson.i_MaritalStatusId = pobjPerson.i_MaritalStatusId;
+                            objPerson.i_LevelOfId = pobjPerson.i_LevelOfId;
+                            objPerson.v_Mail = pobjPerson.v_Mail;
+                            objPerson.v_BirthPlace = pobjPerson.v_BirthPlace;
+                            objPerson.v_TelephoneNumber = pobjPerson.v_TelephoneNumber;
+                            objPerson.d_Birthdate = pobjPerson.d_Birthdate;
+                            objPerson.v_AdressLocation = pobjPerson.v_AdressLocation;
+                            objPerson.i_UpdateUserId = userId;
+                            objPerson.d_UpdateDate = DateTime.Now;
+                            dbContext.SaveChanges();
+
+                            var objProfessional = dbContext.Professional.Where(x => x.v_PersonId == pobjPerson.v_PersonId).FirstOrDefault();
+                            objProfessional.i_ProfessionId = pobjProfessional.i_ProfessionId;
+                            objProfessional.v_ProfessionalCode = pobjProfessional.v_ProfessionalCode;
+                            objProfessional.v_ProfessionalInformation = pobjProfessional.v_ProfessionalInformation;
+                            objProfessional.i_UpdateUserId = userId;
+                            objProfessional.d_UpdateDate = DateTime.Now;
+                            dbContext.SaveChanges();
+                        }                     
+                    }
+
+                    // Validar existencia de UserName en la BD
+                    if (pobjSystemUser != null)
+                    {
+                        if (pobjSystemUser.i_SystemUserId == -1)
+                        {
+                            OperationResult objOperationResult7 = new OperationResult();
+                            var _recordCount2 = new SecurityDal().GetSystemUserCount(pobjSystemUser.v_UserName);
+
+                            if (_recordCount2 != 0) throw new Exception("El nombre de usuario  <strong>" + pobjSystemUser.v_UserName + "</strong> ya se encuentra registrado.<br> Por favor ingrese otro nombre de usuario.");
+
+                        }
+
+                    }
+                    #endregion
+
+                    // Grabar Usuario
+                    if (pobjSystemUser != null)
+                    {
+                        if (pobjSystemUser.i_SystemUserId == -1)//-1 es nuevo
+                        {
+                            pobjSystemUser.v_PersonId = pobjPerson.v_PersonId;
+                            pobjSystemUser.i_SystemUserTypeId = (int)SystemUserTypeId.External;
+                            pobjSystemUser.i_RolVentaId = -1;
+                            pobjSystemUser.v_SystemUserByOrganizationId = ListProtocolSystemUser != null ? OrganizationDal.GetOrganizationIdByProtocolId(ListProtocolSystemUser[0].v_ProtocolId) : "";
+                            systemUserId = new SecurityDal().AddSystemUSer(pobjSystemUser, userId, nodeId);
+                            if (systemUserId == -1) throw new Exception("Sucedió un error al guardar el usuario, por favor actualice la pagina y vuelva a intentar");
+                        }
+                        else
+                        {//actualiza
+                            var objUser = dbContext.SystemUser.Where(x => x.i_SystemUserId == pobjSystemUser.i_SystemUserId).FirstOrDefault();
+                            objUser.v_UserName = pobjSystemUser.v_UserName;
+                            objUser.v_Password = pobjSystemUser.v_Password;
+                            objUser.d_ExpireDate = pobjSystemUser.d_ExpireDate;
+                            objUser.i_UpdateUserId = userId;
+                            objUser.d_UpdateDate = DateTime.Now;
+                            systemUserId = objUser.i_SystemUserId;
+                            dbContext.SaveChanges();
+                        }
+
+                    }
+
+                    #region GRABA ProtocolSystemUser
+
+                    if (ListProtocolSystemUser != null)
+                    {
+                        if (pobjSystemUser.i_SystemUserId == -1)//-1 es nuevo
+                        {
+                            bool resultProt = new ProtocolSystemUserDal().AddProtocolSystemUser(ListProtocolSystemUser, systemUserId, userId, nodeId);
+                            if (!resultProt) throw new Exception("Sucedió un error al guardar los protocolos del usuario, por favor actualice la pagina y vuelva a intentar");
+                        }
+                        else{//actualiza
+                            bool deletedProt = ProtocolSystemUserDal.DeletedProtocolSystemUser(systemUserId, userId);
+                            if (!deletedProt) throw new Exception("Sucedió un error al actualizar los protocolos del usuario, por favor actualice la pagina y vuelva a intentar");
+                            bool resultProt = new ProtocolSystemUserDal().AddProtocolSystemUser(ListProtocolSystemUser, systemUserId, userId, nodeId);
+                            if (!resultProt) throw new Exception("Sucedió un error al actualizar los protocolos del usuario, por favor actualice la pagina y vuelva a intentar");
+                        }
+                        
+                    }
+
+                    #endregion
+
+                    msg.Error = false;
+                    msg.Status = (int)HttpStatusCode.Created;
+                    msg.Message = "Se guardó correctamente";
+
+                    ts.Complete();
+                }
+                
+                return msg;
+
+            }
+            catch (Exception ex)
+            {
+                msg.Error = true;
+                msg.Status = (int)HttpStatusCode.BadRequest;
+                msg.Message = ex.Message;
+                return msg;
+
+            }
+        }
+
+        public int GetPersonCount(string docNumber)
+        {
+            //mon.IsActive = true;
+            try
+            {
+                DatabaseContext dbContext = new DatabaseContext();
+                var query = (from a in dbContext.Person where a.v_DocNumber == docNumber && a.i_IsDeleted == 0 select a).ToList();
+
+
+                int intResult = query.Count();
+
+                return intResult;
+            }
+            catch (Exception ex)
+            {
+
+                return 0;
+            }
+        }
+
+        public bool AddProfessional(ProfessionalBE pobjDtoEntity, int userId, int nodeId)
+        {
+            try
+            {
+                DatabaseContext dbContext = new DatabaseContext();
+
+
+                pobjDtoEntity.d_InsertDate = DateTime.Now;
+                pobjDtoEntity.i_InsertUserId = userId;
+                pobjDtoEntity.i_IsDeleted = 0;
+
+                dbContext.Professional.Add(pobjDtoEntity);
+                dbContext.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
         }
 
     }

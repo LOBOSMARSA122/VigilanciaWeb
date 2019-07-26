@@ -115,5 +115,11 @@ namespace SigesoftWebAPI.Controllers.MedicalAssistance
             return Ok(result);
         }
 
+        [HttpGet]
+        public IHttpActionResult CopyPdf()
+        {
+            var result = PatientsAssistanceBL.CopyPdf();
+            return Ok(result);
+        }
     }
 }

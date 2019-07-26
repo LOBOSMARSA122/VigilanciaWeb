@@ -2,6 +2,7 @@
 using SigesoftWeb.Controllers.Security;
 using SigesoftWeb.Models;
 using SigesoftWeb.Models.Common;
+using SigesoftWeb.Models.Message;
 using SigesoftWeb.Models.Organization;
 using SigesoftWeb.Utils;
 using System;
@@ -44,7 +45,7 @@ namespace SigesoftWeb.Controllers.Organization
 
             return await Task.Run(() =>
             {
-                ViewBag.Company = API.Post<BoardCompany>("Organization/GetBoardCompany", arg);
+                //PorHacer//ViewBag.Company = API.Post<BoardCompany>("Organization/GetBoardCompany", arg);
                 return PartialView("_BoardCompanyPartial");
             });
             
@@ -72,20 +73,18 @@ namespace SigesoftWeb.Controllers.Organization
         }
 
         [GeneralSecurity(Rol = "Organization-CreateCompany")]
-        public async Task<JsonResult> AddCompany(Company company)
+        public JsonResult SaveOrganization(OrganizationCustom data)
         {
             Api API = new Api();
             Dictionary<string, string> arg = new Dictionary<string, string>()
             {
-                { "String1", JsonConvert.SerializeObject(company) },
-                { "Int1", ViewBag.USER.SystemUserId.ToString() }
+                { "String1", JsonConvert.SerializeObject(data) },
+                { "Int1", ViewBag.USER.SystemUserId.ToString() },
+                { "Int2", ViewBag.USER.NodeId.ToString() },
             };
 
-            return await Task.Run(() =>
-            {
-                bool response = API.Post<bool>("Organization/AddCompany", arg);
-                return Json(response);
-            });
+            var response = API.Post<MessageCustom>("Organization/SaveOrganization", arg);
+            return new JsonResult { Data = response, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
         [GeneralSecurity(Rol = "Organization-CreateCompany")]

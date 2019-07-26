@@ -57,6 +57,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdditionalExam\AdditionalExamDal.cs" />
+    <Compile Include="Antecedentes\EsoAntecedentesDal.cs" />
     <Compile Include="Calendar\CalendarDal.cs" />
     <Compile Include="Calendar\OperatorX.cs" />
     <Compile Include="Calendar\SchedulePersonDal.cs" />
@@ -67,7 +69,15 @@
     <Compile Include="Calendar\X_esMenorque_A.cs" />
     <Compile Include="Calendar\X_MenosUno.cs" />
     <Compile Include="Calendar\X_noesIgualque_A.cs" />
+    <Compile Include="Consultorio\ConsultorioDal.cs" />
+    <Compile Include="Embarazo\EmbarazoDal.cs" />
+    <Compile Include="Especiality\EspecialityDal.cs" />
+    <Compile Include="PlanIntegral\PlanIntegralDal.cs" />
+    <Compile Include="ProtocolSystemUser\ProtocolSystemUserDal.cs" />
     <Compile Include="RUC\RucDataDal.cs" />
+    <Compile Include="Security\SecurityDal.cs" />
+    <Compile Include="ServiceOrder\ServiceOrderDal.cs" />
+    <Compile Include="SystemUser\SystemUserDal.cs" />
     <Compile Include="z-ClientesSAMBHS\ClientesDal.cs" />
     <Compile Include="Common\LogDal.cs" />
     <Compile Include="Common\PersonDal.cs" />
@@ -104,6 +114,7 @@
     <Compile Include="Warehouse\WarehouseDal.cs" />
     <Compile Include="Worker\WorkersDal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="z-LineasSAMBHS\LineaSAMBHSDal.cs" />
     <Compile Include="z-ProductsSAMBHS\ProductSAMBHSDal.cs" />
   </ItemGroup>
   <ItemGroup>

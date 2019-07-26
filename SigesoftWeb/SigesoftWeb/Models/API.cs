@@ -57,6 +57,11 @@ namespace SigesoftWeb.Models
             return JsonConvert.DeserializeObject<T>(json);
         }
 
+        internal dynamic Post<T>(string v)
+        {
+            throw new NotImplementedException();
+        }
+
         public byte[] GetDownloadStream(string relativePath, Dictionary<string, string> args)
         {
             return CallStream(relativePath, HttpVerb.GET, args);

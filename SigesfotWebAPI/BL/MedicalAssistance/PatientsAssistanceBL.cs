@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 using BE.Vigilancia;
 using DAL.Vigilancia;
 using static BE.Common.Enumeratores;
+using DAL.Service;
+using BE.Message;
+using System.Net;
 
 namespace BL.MedicalAssistance
 {
@@ -808,6 +811,75 @@ namespace BL.MedicalAssistance
         public List<VigilanciaServiceCustom> VigilanciaServiceDtos(int doctoRespondibleId, string organizationId)
         {
             return new VigilanciaDal().VigilanciaServiceDtos(doctoRespondibleId, organizationId);
+        }
+
+        public static MessageCustom CopyPdf()
+        {
+            MessageCustom msg = new MessageCustom();
+            try
+            {
+
+
+                List<string> ListServicesId = ServiceDal.GetServicesId();
+
+                //string sourceFolder = @"E:\Archivos Ocupacional\Reportes Medicos";
+                string sourceFolder = System.Configuration.ConfigurationManager.AppSettings["rutaReportesIca"];
+                string destinationFolder = string.Format("{0}{1}\\", System.Web.Hosting.HostingEnvironment.MapPath("~/"), System.Configuration.ConfigurationManager.AppSettings["directorioESO"]);
+                DirectoryInfo source = new DirectoryInfo(sourceFolder);
+                DirectoryInfo desti = new DirectoryInfo(destinationFolder);
+                // el método GetFiles obtiene todos los archivos de un folder especifico, 
+                // incluso puedes poner un filtro a que archivos te traiga, como por ejemplo
+                // todos los archivos *.png o *.txt
+
+                List<string> FinalListServicesId = new List<string>();
+
+                foreach (var sercviceId in ListServicesId)
+                {
+                    string busqueda = string.Format("{0}?.pdf", sercviceId);
+                    FileInfo[] filesToExclude = desti.GetFiles(busqueda);
+
+                    if (filesToExclude.Length == 0)
+                    {
+                        FinalListServicesId.Add(sercviceId);
+                    }
+                }
+
+                var iterador = 0;
+
+                foreach (var sercviceId in FinalListServicesId)
+                {
+                    string busqueda = string.Format("{0}?.pdf", sercviceId);
+                    FileInfo[] filesToCopy = source.GetFiles(busqueda);
+                    foreach (FileInfo file in filesToCopy)
+                    {
+                        if (file.Name == sercviceId || file.Name == sercviceId + ".pdf")
+                        {
+                            iterador++;
+                            file.CopyTo(destinationFolder + "\\" + file.Name);
+                        }
+                        
+                    }
+                }
+
+                msg.Error = false;
+                msg.Status = (int)HttpStatusCode.OK;
+                msg.Message = String.Format("Los archivos se movieron de {0} a {1}, con un total de {2} registros.", sourceFolder, destinationFolder, iterador);
+
+                return msg;
+            }
+            catch (Exception ex)
+            {
+                msg.Error = true;
+                msg.Status = (int)HttpStatusCode.Conflict;
+                msg.Message = "Sucedió un error al mover los archivos";
+
+                return msg;
+            }
+
+            
+
+
+
         }
     }
 }

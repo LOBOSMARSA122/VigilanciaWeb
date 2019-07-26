@@ -16,23 +16,30 @@
                     <ul>
                         @foreach (var submenu in menu.SubMenus)
                         {
-                        <li>
-                            <a href="#">@submenu.Description<span class="caret icon-down-dir"></span></a>
-                            @if (submenu.SubMenus != null)
-                            {
-                                foreach (var submenu_ in submenu.SubMenus)
+                            <li>
+                                <a href="#">@submenu.Description<span class="caret icon-down-dir"></span></a>
+                                @if (submenu.SubMenus != null)
                                 {
-                                    <ul class="submenu-ebene2 submenu_">
-                                        <li><a href="@Url.Content("~/")@submenu_.Form">@submenu_.Description</a></li>
-                                    </ul>
+                                    foreach (var submenu_ in submenu.SubMenus)
+                                    {
+                                        <ul class="submenu-ebene2 submenu_">
+                                            <li><a href="@Url.Content("~/")@submenu_.Form">@submenu_.Description</a></li>
+                                        </ul>
+                                    }
                                 }
-                            }
 
-                        </li>
+                            </li>
                         }
                     </ul>
                 </li>
             }
+            @if (ViewBag.USER.Permissions[0].RoleId == 1)
+            {
+                <li>
+                    <a onclick="CopiarPdf()" style="cursor:pointer"><span>Copiar PDF's</span></a>
+                </li>
+            }
+            
             <li>
                 <a href="@Url.Content("~/salir")"><i class="icon-logout"></i><span>Salir del Sistema</span></a>
             </li>

@@ -1,0 +1,70 @@
+﻿
+
+<div class="container-fluid" style="padding:0px;">
+    <div class="box box-info mt-2" id="acordion">
+        <div class="box-header with-border" id="heading1">
+            <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>Componentes del protocolo</h3>
+        </div>
+    </div>
+</div>
+<input id="heightBoardProd" type="hidden" value="">
+<div id="contBoardCalendar" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+    <div class="box box-info mt-2">
+        <div class="scroll-css" style="overflow:scroll; height: 380px;" id="cont-table-ProtocolComponent">
+            <table>
+                <thead>
+                    <tr>
+                        <th nowrap scope="col" class="d-none">ProtocolComponentId</th>
+                        <th nowrap scope="col">ProtocolComponente</th>
+                        <th nowrap scope="col">Categoria</th>
+                        <th nowrap scope="col">Precio</th>
+                        <th nowrap scope="col">Operador</th>
+                        <th nowrap scope="col">Edad</th>
+                        <th nowrap scope="col">Género</th>
+                        <th nowrap scope="col">Es Condicional</th>
+                        <th nowrap scope="col">Tipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+
+                        if (ViewBag.ProtocolComponent == null)
+                        {
+
+                        }
+                        else if (ViewBag.ProtocolComponent.ListProtocolComponents.Count == 0)
+                        {
+                            <tr><td colspan="16" class="text-center">No hay resultados</td></tr>
+                        }
+                        else
+                        {
+                            foreach (var item in ViewBag.ProtocolComponent.ListProtocolComponents)
+                            {
+                                <tr>
+                                    <td nowrap class="d-none">@item.ProtocolComponentId</td>
+                                    <td nowrap>@item.ComponentName</td>
+                                    <td nowrap>@item.CategoryName</td>
+                                    <td nowrap>@item.Price.ToString("N2")</td>
+                                    <td nowrap>@item.Operador</td>
+                                    <td nowrap>@item.Age</td>
+                                    <td nowrap>@item.Genero</td>
+                                    <td nowrap>@item.v_IsCondicional</td>
+                                    <td nowrap>@item.ComponentTypeName</td>
+                                </tr>
+                            }
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+
+</script>
+
+
+
+

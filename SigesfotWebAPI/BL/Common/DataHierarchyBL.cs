@@ -69,6 +69,35 @@ namespace BL.Common
                                          }).ToList();
             return result;
         }
+
+        public List<Dropdownlist> GetExternalPermisionForChekedListByTypeId(int ExternalUserFunctionalityTypeId)
+        {
+            try
+            {
+                var query = (from ah in ctx.ApplicationHierarchy
+                             where ah.i_IsDeleted == 0 &&
+                             ah.i_ExternalUserFunctionalityTypeId == ExternalUserFunctionalityTypeId || ah.i_ExternalUserFunctionalityTypeId == 3
+                             select new
+                             {
+                                 Id = ah.i_ApplicationHierarchyId,
+                                 Value = ah.v_Description
+                             });
+
+                var query1 = (from a in query.AsEnumerable()
+                              select new Dropdownlist
+                              {
+                                  Id = a.Id.Value,
+                                  Value = a.Value
+                              });
+                List<Dropdownlist> list = query1.OrderBy(P => P.Value).ToList();
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         #endregion
     }
 }

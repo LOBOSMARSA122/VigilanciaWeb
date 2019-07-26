@@ -126,6 +126,16 @@ namespace DAL.Common
             }
         }
 
+        public static int GetNextSecuentialNoSave(int pintNodeId, int pintTableId)
+        {
+            DatabaseContext dbContext = new DatabaseContext();
+
+            var objSecuential = (from a in dbContext.Secuential
+                                        where a.i_TableId == pintTableId && a.i_NodeId == pintNodeId
+                                        select a).SingleOrDefault();
+            return objSecuential.i_SecuentialId.Value;
+        }
+
         public int GetNextSecuentialId(int pintNodeId, int pintTableId)
         {
             var value = 0;

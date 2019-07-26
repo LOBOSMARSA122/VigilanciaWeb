@@ -1,0 +1,1177 @@
+﻿
+@{
+    ViewBag.Title = "Consultorio";
+
+}
+<style>
+    input {
+        max-height: 25px;
+        color: #63ceb5
+    }
+</style>
+
+<div class="container-fluid mt-2">
+    <div class="row w-100 mx-0">
+        <div class="col-12 col-lg-7">
+            <div class="row w-100 mx-0">
+                <div class="col-12">
+                    <label class="small">Tipo de Servicio</label>
+                    <select class="custom-select custom-select-sm" id="filter-ServiceType">
+                        <option value="-1">--Seleccionar--</option>
+                        @foreach (var item in ViewBag.TypeService)
+                        {
+
+                            if (item.Id != "1")
+                            {
+                                <option value="@item.Id" @(item.Id == "9" ? "selected" : "")>@item.Value</option>
+                            }
+
+                        }
+
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="small">Servicio</label>
+                    <select class="custom-select custom-select-sm" id="select-serviceID">
+                        <option value="-1">--Seleccionar--</option>
+
+                    </select>
+                    <div id="render-lista-esperando">
+                        @Html.Partial("_BoardWaitingPacient")
+                    </div>
+                </div>
+                <div class="col-12 d-flex justify-content-end pt-2 align-items-end">
+                    <div class="custom-control-inline align-items-end">
+                        <label class="small m-0">Oficina/Nro de Piso</label>
+                        <select class="custom-select custom-select-sm" id="oficinas">
+                            <option value="-1">--Seleccionar--</option>
+                            <option value="101">Oficina 101, Primer Piso</option>
+                            <option value="102">Oficina 102, Primer Piso</option>
+                            <option value="201">Oficina 201, Segundo Piso</option>
+                            <option value="202">Oficina 202, Segundo Piso</option>
+                            <option value="301">Oficina 301, Tercer Piso</option>
+                            <option value="302">Oficina 302 Tercer Piso</option>
+                        </select>
+                    </div>
+                    <button class="btn mr-1 btn-sm btn-warning" id="llamar-paciente"><i class="fas fa-bell mr-1"></i>Llamar</button>
+                    <button class="btn btn-sm btn-success" id="btn-refrescar"><i class="fas fa-sync-alt mr-1"></i>Refrescar</button>
+                </div>
+                <div class="col-12">
+                    <label>Llamando paciente</label>
+                    <div class="render-lista-llamando">
+                        @Html.Partial("_BoardCallingPacient")
+                    </div>
+                </div>
+                <div class="col-12 pt-2">
+                    <div class="row w-100 mx-0 align-items-end justify-content-end">
+                        <button class="btn mx-1 btn-sm btn-warning"><i class="fas fa-bell mr-1"></i>Re-Llamar</button>
+                        <button class="btn mx-1 btn-sm btn-primary" id="atender-servicios"><i class="fas fa-folder-open mr-1"></i>Antender / Ver Servicio</button>
+                        <button class="btn mx-1 btn-sm btn-success" id="liberar-paciente"><i class="fas fa-hourglass-end mr-1"></i>Liberar / Finalizar Circuito</button>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-12 col-lg-5 mt-2">
+            <div class="group-box">
+                <label class="label-group-box">SERVICIO</label>
+
+                <div class="row w-100 mx-0">
+                    <div class="col-12 col-lg-8">
+                        <label class="small">Paciente</label>
+                        <input type="text" class="form-control form-control-sm" value="" id="pacient-Paciente" />
+                        <div class="row w-100 mx-0 justify-content-between">
+                            <div class="col-3 p-0">
+                                <label class="small">Edad</label>
+                                <input type="text" class="form-control form-control-sm" value="" id="pacient-Edad" />
+                            </div>
+                            <div class="col-8 p-0">
+                                <label class="small">DNI</label>
+                                <input type="text" class="form-control form-control-sm" value="" id="pacient-Dni" />
+                            </div>
+                        </div>
+                        <label class="small">Protocolo</label>
+                        <input type="text" class="form-control form-control-sm" value="" id="pacient-Protocolo" />
+                        <label class="small">Tipo de Atención</label>
+                        <input type="text" class="form-control form-control-sm" value="" id="pacient-TipoAtencion" />
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <div class="row w-100 mx-0 justify-content-center pt-lg-0 pt-2" id="cont-person-image">
+                            <figure class="img-thumbnail" style="max-width:250px; max-height: 350px">
+                                <img src="https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png" class="img img-fluid" id="img-pacient" alt="Imagen" />
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div id="render-lista-examenes">
+                            @Html.Partial("_BoardExamenPartial")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalExamenes" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:0.9rem">Lista de Exámenes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <select class="custom-select custom-select-sm" id="select-exam">
+                    <option value="-1">--Seleccionar--</option>
+                    @foreach (var item in ViewBag.Componentes)
+                    {
+                        <option data-value2="@item.Value2" value="@item.Value4">@item.Value</option>
+                    }
+                </select>
+            </div>
+            <div class="modal-footer row w-100 mx-0 px-2 justify-content-between">
+                <button class="btn btn-sm btn-secondary" id="btn-regresar"><i class="fas fa-step-backward mr-1"></i>Regresar</button>
+                <button class="btn btn-sm btn-primary" id="btn-aceptar"><i class="fas fa-check mr-1"></i>Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalExamenesAdicionales" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:0.9rem">Agregar Examen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="group-box w-100">
+                        <label class="label-group-box">Filtro</label>
+                        <div class="row w-100 mx-0">
+                            <div class="col-12 col-lg-2">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="CategoryName" data-tipobusqueda="2" name="tipoBusqueda" class="custom-control-input radio-filtro">
+                                    <label class="custom-control-label" for="CategoryName">Nombre Categoria</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="SubCategoryName" data-tipobusqueda="3" name="tipoBusqueda" class="custom-control-input radio-filtro">
+                                    <label class="custom-control-label" for="SubCategoryName">Nombre Sub Categoria</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="ComponentName" data-tipobusqueda="4" name="tipoBusqueda" class="custom-control-input radio-filtro">
+                                    <label class="custom-control-label" for="ComponentName">Nombre Componente</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="CodigoSegus" data-tipobusqueda="1" name="tipoBusqueda" class="custom-control-input radio-filtro">
+                                    <label class="custom-control-label" for="CodigoSegus">Codigo Segus</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                <input type="text" class="form-control form-control-sm" style="max-width:150px;" value="" id="input-busqueda" />
+                            </div>
+                            <div class="col-12 col-lg-2">
+                                <button class="btn btn-sm btn-info" id="buscar-examenes">Buscar</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row w-100 mx-0">
+                    <div class="col-12 col-lg-7 scroll-css" style="max-height: 500px; overflow:scroll">
+                        <ul class="list-group list-group-flush" id="cont-examenes-additional"></ul>
+                    </div>
+                    <div class="col-12 col-lg-5">
+                        <div class="row w-100 mx-0">
+
+                            <div class="col-12">
+                                <label>Exámenes:</label>
+                                <ul class="list-group list-group-flush" id="cont-examenes-agreados"></ul>
+                            </div>
+                            <div class="col-12">
+                                <label class="small">Comentario</label>
+                                <textarea id="commentary-additional" rows="3" class="form-control w-100"></textarea>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-danger m-2" id="btn-cancelar-adicionales">Cancelar</button>
+                        <button class="btn btn-sm btn-primary m-2" id="btn-guardar-adicionales">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalModificarAdicionales" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <label class="small">Comentario</label>
+                    <input type="text" class="form-control form-control-sm" id="input-comentario" value="" />
+                    <div class="col-10">
+                        <div id="render-adicionales">
+                            @Html.Partial("_BoardAdditionalExams")
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn w-auto m-2 btn-sm btn-success" id="btn-editar-adicional">Editar</button>
+                        <button class="btn w-auto m-2 btn-sm btn-danger" id="btn-eliminar-adicional">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer row w-100 mx-0 p-2 justify-content-between">
+                <button class="btn btn-sm btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-sm btn-primary" id="btn-actualizar-adicional">Guardar Actualización</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<link href="~/Content/css/Alert.css" rel="stylesheet" />
+<script src="~/Scripts/Alert.js"></script>
+<script>
+    const setMasterServices = function () {
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: { 'TypeService': $("#filter-ServiceType").val() },
+            url: '/Agenda/GetMasterServiceId',
+            success: function (json) {
+
+                let html = "<option value='-1'>--Todos--</option>";
+                for (var i = 0; i < json.length; i++) {
+                    html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
+                }
+                $("#select-serviceID").html(html);
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+    $(document).ready(function () {
+
+        setMasterServices();
+        $("#filter-ServiceType").on("change", function () {
+            setMasterServices();
+        })
+        $("#modalExamenes").modal("show");
+
+        $("#atender-servicios").on("click", function () {
+            if ($("#body-calling-paciente tr").length == 0) {
+                alertafixed({
+                    type: 'info',
+                    class: 'info-class',
+                    title: 'INFORMACIÓN',
+                    message: 'No hay paciente por entender.'
+                })
+                return;
+            }
+            let personId = $("#body-calling-paciente tr").eq(0).find("td").eq(1).text();
+            let serviceId = $("#body-calling-paciente tr").eq(0).find("td").eq(0).text();
+            var url = '/PatientsAssistance/MedicalConsultation?id=' + personId + '&serviceId=' + serviceId + '&organizationId=';
+            console.log(url);
+            window.open(url, '_blank');
+            //var anchorElement = document.createElement("a");
+            //anchorElement.style = "display: none";
+            //anchorElement.href = url;
+            //document.body.appendChild(anchorElement);
+            //anchorElement.click();
+            //document.body.removeChild(anchorElement);
+        })
+
+        $("#btn-eliminar-adicional").on("click", function () {
+
+            if ($("#body-update-additional").find("tr.row-active").length == 0) {
+                alertafixed({
+                    type: 'warning',
+                    class: 'warning-servicio',
+                    title: 'VALIDACIÓN',
+                    message: 'Seleccione una fila para continuar.',
+                })
+                return;
+            }
+            let additionalExamId = $("#body-update-additional").find("tr.row-active").eq(0).find("td").eq(0).text();
+            let comentario = $("#input-comentario").val();
+            let serviceId = $("#body-update-additional").find("tr.row-active").eq(0).find("td").eq(3).text();
+            $("#body-update-additional").find("tr.row-active").eq(0).find("td").eq(0).addClass("loadingGrid");
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    'additionalExamId': additionalExamId,
+                    'serviceId': serviceId,
+                    'comentario': comentario,
+                },
+                url: '/Consultorio/SaveDeletedAdditionalExam',
+                success: function (json) {
+                    if (json.Error) {
+                        alertafixed({
+                            type: 'danger',
+                            class: 'error-servidor',
+                            title: 'ERROR: ' + json.Status,
+                            message: json.Message
+                        })
+                        $(this).attr("disabled", false);
+                    } else {
+                        //var url = "http://netmedical.dyndns-web.com:81/ExamenesAdicionales/" + json.Id;
+                        var url = "http://netmedical.dyndns-web.com:81/ExamenesAdicionales/" + json.Id;
+                        window.open(url, '_blank');
+                        alertafixed({
+                            type: 'success',
+                            class: 'hecho-servidor',
+                            title: 'HECHO: ' + json.Status,
+                            message: json.Message
+                        })
+                        $("#body-update-additional").find("tr.row-active").eq(0).remove();
+                    }
+
+                },
+                error: function (error, status, message) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'error-servicio',
+                        title: 'ERROR: ' + status,
+                        message: 'Sucedió un error conectandose al servidor: ' + message
+                    })
+
+                }
+            })
+        })
+
+        $("#btn-actualizar-adicional").on("click", function () {
+
+            let comentario = $("#input-comentario").val();
+            let rows = $("#body-update-additional tr");
+            let serviceId = rows.eq(0).find("td").eq(3).text();
+            let ListaComponentes = [];
+            let ListaAdditionalExamId = [];
+
+            for (var i = 0; i < rows.length; i++) {
+                let td = rows.eq(i).find("td");
+                if (td.eq(5).text() == "3") {
+                    let componentId = td.eq(2).find("select").eq(0).val();
+                    let additionalExamId = td.eq(0).text();
+                    ListaAdditionalExamId.push(additionalExamId);
+                    ListaComponentes.push(componentId);
+                }
+
+
+            }
+            SaveUpdateAdditionalExam(ListaAdditionalExamId, ListaComponentes, serviceId, comentario);
+        })
+
+        $("#liberar-paciente").on("click", function () {
+
+            let Category = $("#select-exam").val();
+            let ServiceId = $("#body-calling-paciente tr").eq(0).find("td").eq(0).text();
+            let CalendarId = $("#body-calling-paciente tr").eq(0).find("td").eq(3).text();
+            let CategoryName = $("#select-exam option[value='" + $("#select-exam").val() + "']").text();
+
+
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    Category,
+                    ServiceId,
+                    CategoryName,
+                    CalendarId
+                },
+                url: '/Consultorio/LiberarPaciente',
+                success: function (json) {
+                    console.log(json);
+                    if (json.Error) {
+                        alertafixed({
+                            type: 'danger',
+                            class: 'danger-class',
+                            title: 'ERROR: ' + json.Status,
+                            message: json.Message,
+                        })
+                    } else {
+                        alertafixed({
+                            type: 'success',
+                            class: 'success-class',
+                            title: 'HECHO: ' + json.Status,
+                            message: json.Message,
+                        })
+
+                        $("#modalExamenesAdicionales").modal("hide");
+                        $("#body-waiting-pacient tr").eq(0).trigger("click");
+                    }
+                },
+                error: function (err, status, messa) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'danger-class',
+                        title: 'ERROR: ' + status,
+                        message: 'Sucedió un error en el servidor: ' + messa
+                    })
+                }
+            })
+
+            $("#body-calling-paciente tr").eq(0).remove();
+        })
+
+        $("#btn-cancelar-adicionales").on("click", function () {
+            $("#cont-examenes-additional").empty();
+            $("#cont-examenes-agreados").empty();
+            $("#modalExamenesAdicionales").modal("hide");
+        })
+
+        $("#btn-guardar-adicionales").on("click", function () {
+
+            var arrLi = $("#cont-examenes-agreados li");
+            if (arrLi.length == 0) {
+                alertafixed({
+                    type: 'info',
+                    class: 'info-class',
+                    title: 'INFO',
+                    message: 'No hay cambios por guardar.',
+                })
+                return;
+            }
+            let data = [];
+
+            for (let i = 0; i < arrLi.length; i++) {
+                let ComponentId = arrLi.eq(i).data("componentid");
+                let ServiceId = arrLi.eq(i).data("serviceid");
+                let PersonId = arrLi.eq(i).data("personid");
+                let EsNuevoServicio = arrLi.eq(i).data("nuevo-servicio");
+                let IsProcessed = 0;
+                let Commentary = $("#commentary-additional").val();
+                let IsNewService = 0;
+                if (EsNuevoServicio == true || EsNuevoServicio == 'true') {
+                    IsNewService = 1;
+                }
+                let AdditionalExamCustom = { ComponentId, PersonId, ServiceId, EsNuevoServicio, IsProcessed, IsNewService, Commentary };
+
+                data.push(AdditionalExamCustom);
+
+            }
+            $("#modalExamenesAdicionales").find(".modal-header").addClass("loadingGrid");
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                dataType: 'json',
+                data: { 'data': JSON.stringify(data) },
+                url: '/Consultorio/SaveExamsAdditional',
+                success: function (json) {
+                    if (json.Error) {
+                        alertafixed({
+                            type: 'danger',
+                            class: 'danger-class',
+                            title: 'ERROR: ' + json.Status,
+                            message: json.Message,
+                        })
+                    } else {
+                        alertafixed({
+                            type: 'success',
+                            class: 'success-class',
+                            title: 'HECHO: ' + json.Status,
+                            message: json.Message,
+                        })
+                        //var url = "http://netmedical.dyndns-web.com:81/ReportesBasura/" + json.Id;
+                        var url = "http://netmedical.dyndns-web.com:81/ReportesBasura/" + json.Id;
+                        window.open(url, '_blank');
+                        $("#modalExamenesAdicionales").modal("hide");
+                    }
+                    $("#modalExamenesAdicionales").find(".modal-header").removeClass("loadingGrid");
+                },
+                error: function (err, status, messa) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'danger-class',
+                        title: 'ERROR: ' + status,
+                        message: 'Sucedió un error en el servidor: ' + messa
+                    })
+                    $("#modalExamenesAdicionales").find(".modal-header").removeClass("loadingGrid");
+                }
+            })
+        })
+
+        $("#btn-editar-adicional").on("click", function () {
+            if ($("#render-adicionales").find(".row-active").length == 0) {
+                alertafixed({
+                    title: 'VALIDACIÓN',
+                    class: 'validacion-asd',
+                    type: 'warning',
+                    message: "Seleccione una fila para continuar."
+                })
+                return;
+            }
+            $("#render-adicionales").find(".row-active").eq(0).find("td").eq(2).find("select").attr("disabled", false);
+            $("#render-adicionales").find(".row-active").eq(0).find("td").eq(5).text("3");
+        })
+
+        $.contextMenu({
+            selector: '.cmExamenes',
+            trigger: 'left',
+            callback: function (key, options) {
+                if (key === "AgregarExamen") {
+                    $("#table-examenes").addClass("loadingGrid");
+                    let ServiceId = "";
+                    let personId = "";
+                    $('tr.context-menu-active').each(function () {
+                        ServiceId = $(this).find('td').eq(1).text();
+                        personId = $(this).find('td').eq(7).text();
+                    });
+                    BuscarExamenesParaAdicionar(ServiceId, personId);
+
+                    $("#buscar-examenes").on("click", function () {
+                        BuscarExamenesParaAdicionar(ServiceId, personId);
+                    })
+
+                } else if (key === "EliminarExamen") {
+                    let examen = "";
+                    let CategoryId = "";
+                    let ServicecomponentId = "";
+                    let ServiceId = "";
+                    $('tr.context-menu-active').each(function () {
+                        examen = $(this).find('td').eq(2).text();
+                        CategoryId = $(this).find('td').eq(0).text();
+                        ServicecomponentId = $(this).find('td').eq(7).text();
+                        ServiceId = $(this).find('td').eq(1).text();
+                    });
+                    notificacion({
+                        classTitleAndButtons: "warningTitleAndButtons",
+                        classMessage: "warningMessage",
+                        title: "¡ Confirmación !",
+                        icono: "",
+                        contenido: "¿ Desea eliminar el examen de " + examen + " ?",
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "",
+                        mostrarBtnOk: "no",
+                    });
+
+                    $(".bigBox-Aceptar").on("click", function () {
+
+                        $(".bigBox-Cancelar").click();
+                        EliminarExamen({ CategoryId, ServicecomponentId, ServiceId });
+                    })
+
+
+                } else if (key === "ModificarAdicionales") {
+                    let ServiceId = "";
+                    $('tr.context-menu-active').each(function () {
+                        ServiceId = $(this).find('td').eq(1).text();
+                    });
+                    LoadModalAddtional(ServiceId);
+
+                } else if (key === "ReImprimir") {
+
+                    let ServiceId = "";
+                    $('tr.context-menu-active').each(function () {
+                        ServiceId = $(this).find('td').eq(1).text();
+                    });
+                    ReImprimirAdicional(ServiceId);
+                }
+            },
+            items: {
+                "AgregarExamen": { name: "Agregar examen" },
+                "EliminarExamen": { name: "Eliminar examen" },
+                "ModificarAdicionales": { name: "Modificar Exámenes adicionales" },
+                "ReImprimir": { name: "Re Imprimir" },
+                "sep1": "---------",
+                "Salir": { name: "Salir" }
+            }
+        });
+
+        $("#modalExamenes").on("hidden.bs.modal", function (e) {
+            if ($("#select-exam").val() == "-1") {
+                $("#modalExamenes").modal("show");
+                alertafixed({
+                    title: 'VALIDACIÓN',
+                    message: 'Debe seleccionar un examen.',
+                    type: 'warning',
+                    class: 'werning-validation',
+                })
+            } else {
+                loadWaitingPacient();
+            }
+        })
+
+        $("#llamar-paciente").on("click", function () {
+            if ($("#oficinas").val() == "-1") {
+                alertafixed({
+                    title: 'VALIDACIÓN',
+                    message: 'Seleccione un oficina.',
+                    type: 'warning',
+                    class: 'werning-validation',
+                })
+                return;
+            }
+
+            if ($("#body-calling-paciente tr").length > 0) {
+                alertafixed({
+                    title: 'VALIDACIÓN',
+                    message: 'Solo puede llamar a un paciente a la vez.',
+                    type: 'warning',
+                    class: 'werning-validation',
+                })
+                return;
+            }
+
+            if ($(".row-active").length > 1) {
+                alertafixed({
+                    title: 'VALIDACIÓN',
+                    message: 'Solo puede llamar a un paciente a la vez.',
+                    type: 'warning',
+                    class: 'werning-validation',
+                })
+                return;
+            }
+
+            if ($(".row-active").length == 0) {
+                alertafixed({
+                    title: 'VALIDACIÓN',
+                    message: 'Seleccion a un paciente.',
+                    type: 'warning',
+                    class: 'werning-validation',
+                })
+                return;
+            }
+            LlamarPaciente();
+        })
+
+        $("#btn-regresar").on("click", function () {
+            window.history.back();
+        })
+
+        $("#btn-refrescar").on("click", function () {
+            loadWaitingPacient();
+        })
+
+        $("#btn-aceptar").on("click", function () {
+            $("#modalExamenes").modal("hide");
+        })
+
+
+    })
+
+    const ReImprimirAdicional = function (serviceId) {
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data: { 'serviceId': serviceId },
+            url: '/Consultorio/ReImprimirAdicionales',
+            success: function (json) {
+                if (json.Error) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'error-servidor',
+                        title: 'ERROR: ' + json.Status,
+                        message: json.Message
+                    })
+                } else {
+                    //var url = "http://netmedical.dyndns-web.com:81/ReportesBasura/" + json.Id;
+                    var url = "http://netmedical.dyndns-web.com:81/ReportesBasura/" + json.Id;
+                    window.open(url, '_blank');
+                }
+            },
+            error: function (error, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'error-servicio',
+                    title: 'ERROR: ' + status,
+                    message: 'Sucedió un error conectandose al servidor: ' + message
+                })
+                $("#modalModificarAdicionales").find(".modal-header").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const SaveUpdateAdditionalExam = function (additionalExamId, componentId, serviceId, comentario) {
+        $("#modalModificarAdicionales").find(".modal-header").addClass("loadingGrid");
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                'additionalExamId': JSON.stringify(additionalExamId),
+                'componentId': JSON.stringify(componentId),
+                'serviceId': serviceId,
+                'comentario': comentario,
+            },
+            url: '/Consultorio/SaveUpdateAdditionalExam',
+            success: function (json) {
+                if (json.Error) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'error-servidor',
+                        title: 'ERROR: ' + json.Status,
+                        message: json.Message
+                    })
+                } else {
+                    //var url = "http://netmedical.dyndns-web.com:81/ExamenesAdicionales/" + json.Id;
+                    var url = "http://netmedical.dyndns-web.com:81/ExamenesAdicionales/" + json.Id;
+                    window.open(url, '_blank');
+                    alertafixed({
+                        type: 'success',
+                        class: 'hecho-servidor',
+                        title: 'HECHO: ' + json.Status,
+                        message: json.Message
+                    })
+                    $("#modalModificarAdicionales").modal("hide")
+                }
+                $("#modalModificarAdicionales").find(".modal-header").removeClass("loadingGrid");
+            },
+            error: function (error, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'error-servicio',
+                    title: 'ERROR: ' + status,
+                    message: 'Sucedió un error conectandose al servidor: ' + message
+                })
+                $("#modalModificarAdicionales").find(".modal-header").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const LoadModalAddtional = function (serviceId) {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'html',
+            data: { 'serviceId': serviceId },
+            url: '/Consultorio/ViewAdditionalExams',
+            success: function (html) {
+                $("#render-adicionales").html(html);
+                $("#modalModificarAdicionales").modal("show");
+            },
+            error: function (error, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'error-servicio',
+                    title: 'ERROR: ' + status,
+                    message: 'Sucedió un error conectandose al servidor: ' + message
+                })
+            }
+        })
+    }
+
+    const AddExamenesInLIst = function (json, serviceId, personId) {
+        $("#cont-examenes-additional").empty();
+        $("#cont-examenes-agreados").empty();
+        for (var i = 0; i < json.length; i++) {
+
+            var html = `
+                            <li class="list-group-item" data-categoryId="${json[i].i_CategoryId}">
+                                <i id="icon-categoryId-${json[i].i_CategoryId}" onclick="return colapse(this)" class="fas fa-plus"></i> ${json[i].v_CategoryName}
+                                <ul id="category-${json[i].i_CategoryId}" style="overflow:hidden; height:0px !important">
+
+                                </ul>
+                            </li>
+                        `;
+
+
+            $(html).appendTo($("#cont-examenes-additional"));
+
+            var componentes = json[i].Componentes;
+            var subListas = "";
+            for (var x = 0; x < componentes.length; x++) {
+                subListas += `<li onclick="ClickComponent(this)" style="cursor:pointer" ondblclick="PasarExamen(this, '${serviceId}', '${personId}')" class="list-group-item" id="${componentes[x].v_ComponentId}">${componentes[x].v_ComponentName}</li>`;
+            }
+
+            $(`#category-${json[i].i_CategoryId}`).html(subListas);
+        }
+        $("#modalExamenesAdicionales").modal("show");
+        $("#table-examenes").removeClass("loadingGrid");
+    }
+
+    const PasarExamen = function (li, serviceId, personId) {
+
+        let nombre = $(li).text();
+        let componentId = li.id;
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: {
+                'componentId': componentId,
+                'serviceId': serviceId,
+            },
+            url: '/Consultorio/BuscarCoincidencia',
+            success: function (json) {
+                if (json) {
+                    notificacion({
+                        classTitleAndButtons: "warningTitleAndButtons",
+                        classMessage: "warningMessage",
+                        title: "¡ Confirmación !",
+                        icono: "",
+                        contenido: "¿ El paciente ya cuenta con este examen, desea crear un nuevo servicio ?",
+                        btnAceptar: "Aceptar",
+                        btnCancelar: "Cancelar",
+                        btnOk: "OK",
+                        mostrarBtnAceptarAndCancelar: "",
+                        mostrarBtnOk: "no",
+                    });
+
+                    $(".bigBox-Aceptar").on("click", function () {
+                        $(".bigBox-Cancelar").click();
+                        var html = `
+                                    <li class="list-group-item" data-serviceid="${serviceId}" data-personid="${personId}" data-nuevo-servicio="${json}" style="cursor:pointer" ondblclick="$(this).remove()" data-componentId="${componentId}">${nombre}</li>
+                                    `;
+                        $(html).appendTo($("#cont-examenes-agreados"));
+                    })
+                } else {
+                    var html = `
+                                <li class="list-group-item" data-serviceid="${serviceId}" data-personid="${personId}"" data-nuevo-servicio="${json}" style="cursor:pointer" ondblclick="$(this).remove()" data-componentId="${componentId}">${nombre}</li>
+                                `;
+                    $(html).appendTo($("#cont-examenes-agreados"));
+                }
+
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+
+
+
+    }
+
+    const BuscarExamenesParaAdicionar = function (ServiceId, personId) {
+        let TipoBusqueda = $("input[name='tipoBusqueda']:checked").data("tipobusqueda");
+        if (TipoBusqueda == undefined) {
+            TipoBusqueda = 0;
+        }
+        let Value = $("#input-busqueda").val();
+        let data = {
+            TipoBusqueda,
+            Value,
+            ServiceId
+        }
+
+        console.log($("input[name='tipoBusqueda']:checked").data("tipobusqueda"));
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data,
+            url: '/Consultorio/GetAdditionalExams',
+            success: function (json) {
+                AddExamenesInLIst(json, ServiceId, personId);
+            },
+            error: function (error, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'error-servicio',
+                    title: 'ERROR: ' + status,
+                    message: 'Sucedió un error conectandose al servidor: ' + message
+                })
+            }
+        })
+    }
+
+    const ClickComponent = function (li) {
+
+        if ($(".row-active").length > 0) {
+            $(".row-active").removeClass("row-active");
+        }
+        $(li).addClass("row-active");
+    }
+
+    function colapse(icon) {
+        if ($("#" + icon.id).hasClass("fa-plus")) {
+            $("#" + icon.id).siblings().stop().animate({
+                height: '100%',
+            }, 300)
+        } else {
+            $("#" + icon.id).siblings().stop().animate({
+                height: '0px'
+            }, 300)
+        }
+
+        $("#" + icon.id).toggleClass("fa-plus").toggleClass("fa-minus");
+    }
+
+    const EliminarExamen = function (data) {
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data,
+            url: '/Consultorio/EliminarExamen',
+            success: function (json) {
+                if (json.Error) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'error-servidor',
+                        title: 'ERROR: ' + json.Status,
+                        message: json.Message
+                    })
+                } else {
+                    alertafixed({
+                        type: 'success',
+                        class: 'hecho-servidor',
+                        title: 'HECHO: ' + json.Status,
+                        message: json.Message
+                    })
+                }
+            },
+            error: function (err, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'error-servidor',
+                    title: 'ERROR: ' + status,
+                    message: "Sucedió un error en el servidor: " + message
+                })
+            }
+        })
+    }
+
+    const LlamarPaciente = function () {
+        $("#body-calling-paciente").addClass("loadingGrid");
+        let chk = $(".row-active").eq(0);
+        let row = chk;
+        let td = row.find("td");
+
+        let CategoryId = $("#select-exam").val();
+        let ServiceId = td.eq(13).text();
+        let Piso = td.eq(8).text();
+        let ServiceStatusId = td.eq(12).text();
+        let Paciente = td.eq(5).text();
+        let PacientId = td.eq(2).text();
+        let CalendarId = td.eq(1).text();
+        let Oficina = $("#oficinas option[value='" + $("#oficinas").val() + "']").text();
+        let data = {
+            CategoryId,
+            ServiceId,
+            Piso,
+            ServiceStatusId,
+            Oficina,
+            CalendarId,
+        }
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            data,
+            dataType: 'json',
+            url: '/Consultorio/CallingPacient',
+            success: function (json) {
+                if (json.Message.Error && json.Message.Status == 200) {
+                    alertafixed({
+                        type: 'warning',
+                        class: 'warning-service',
+                        title: 'VALIDACIÓN: ' + json.Message.Status,
+                        message: json.Message.Message
+                    })
+
+                } else if (json.Message.Error && json.Message.Status == 400) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'danger-service',
+                        title: 'ERROR: ' + json.Message.Status,
+                        message: json.Message.Message
+                    })
+                } else if (json.Message.Error && json.Message.Status == 500) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'danger-service',
+                        title: 'ERROR: ' + json.Message.Status,
+                        message: json.Message.Message
+                    })
+                } else {
+                    let TypeServiceId = "9";
+                    var html = `
+                                <tr class="text-center" onclick="FindExams('${ServiceId}',${TypeServiceId},'${CalendarId}',${CategoryId},${ServiceStatusId}, ${true})">
+                                    <td nowrap>${ServiceId}</td>
+                                    <td nowrap class="d-none">${PacientId}</td>
+                                    <td nowrap>${Paciente}</td>
+                                    <td nowrap class="d-none">${CalendarId}</td>
+                                </tr>
+                                `;
+
+                    $("#body-calling-paciente").html(html);
+                    $("#body-calling-paciente tr").eq(0).trigger("click");
+                }
+                $("#body-calling-paciente").removeClass("loadingGrid");
+            },
+            error: function (err) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'error-service',
+                    title: 'ERROR: ' + err.status,
+                    message: 'Sucedió un error conectandose al servidor.'
+                })
+                $("#body-calling-paciente").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const checkedCheckBox = function (chk) {
+        $(chk).parent().find("input").click();
+    }
+
+    const loadWaitingPacient = function () {
+        $("#table-waiting").addClass("loadingGrid");
+        $("#modalExamenes").modal("hide");
+        let componentId = $("#select-exam").data("value2");
+        let id = $("#select-exam").val();
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'html',
+            data: {
+                'componentId': componentId,
+                'categoryId': id,
+                'i_ServiceId': $("#select-serviceID").val(),
+            },
+            url: '/Consultorio/GetWaitingPacient',
+            success: function (html) {
+                $("#table-waiting").removeClass("loadingGrid");
+                $("#render-lista-esperando").html(html);
+            },
+            error: function (err) {
+                $("#table-waiting").removeClass("loadingGrid");
+                console.log(err)
+            }
+        })
+    }
+
+
+
+    const PintarFila = function (fila) {
+        if ($(".row-active").length > 0) {
+            $(".row-active").removeClass("row-active");
+        }
+        $(fila).addClass("row-active");
+    }
+
+    const PintarDataPerson = function (fila) {
+
+        $("#cont-person-image").addClass("loadingGrid");
+
+        if ($(".row-active").length > 0) {
+            $(".row-active").removeClass("row-active");
+        }
+        $(fila).addClass("row-active");
+
+
+        let Protocolo = $(fila).find("td").eq(6).text();
+        let Paciente = $(fila).find("td").eq(5).text();
+        let Edad = $(fila).find("td").eq(9).text();
+        let Dni = $(fila).find("td").eq(10).text();
+        let TipoAtencion = $(fila).find("td").eq(7).text();
+        let PersonId = $(fila).find("td").eq(2).text();
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'personId': PersonId },
+            url: '/Pacientes/GetPacientByPersonId',
+            success: function (json) {
+
+                if (json.PersonImage != null) {
+                    $("#img-pacient").attr('src', 'data:image/jpeg;base64,' + json.PersonImage);
+                } else {
+                    $("#img-pacient").attr('src', 'https://cdn4.iconfinder.com/data/icons/rcons-user/32/boss_man-512.png');
+                }
+                $("#cont-person-image").removeClass("loadingGrid");
+            },
+            error: function (err, asd, as) {
+                console.log(err);
+                console.log(asd);
+                console.log(as);
+                $("#cont-person-image").removeClass("loadingGrid");
+            }
+        })
+
+        $("#pacient-Protocolo").val(Protocolo);
+        $("#pacient-Paciente").val(Paciente);
+        $("#pacient-Edad").val(Edad);
+        $("#pacient-Dni").val(Dni);
+        $("#pacient-TipoAtencion").val(TipoAtencion);
+
+        let ServiceId = $(fila).find("td").eq(13).text();
+        let TypeServiceId = "9";
+        let CalendarId = $(fila).find("td").eq(1).text();
+        let CategoryId = $("#select-exam").val();
+        let ServiceStatusId = $(fila).find("td").eq(12).text();
+
+        FindExams(ServiceId, TypeServiceId, CalendarId, CategoryId, ServiceStatusId);
+    }
+
+    const FindExams = function (ServiceId, TypeServiceId, CalendarId, CategoryId, ServiceStatusId, pintarFila = false) {
+
+        var data = {
+            ServiceId,
+            TypeServiceId,
+            CalendarId,
+            CategoryId,
+            ServiceStatusId
+        }
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            data,
+            dataType: 'html',
+            url: '/Consultorio/GetExamenes',
+            success: function (html) {
+
+                $("#render-lista-examenes").html(html);
+
+                if (pintarFila) {
+                    var rows = $("#render-lista-examenes tr");
+                    for (var i = 0; i < rows.length; i++) {
+                        console.log(rows.eq(i).find("td").eq(0).text());
+                        console.log(CategoryId);
+                        if (rows.eq(i).find("td").eq(0).text() == CategoryId) {
+                            rows.eq(i).addClass("table-primary");
+                            break;
+                        }
+                    }
+                }
+            },
+            error: function (err) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'error-service',
+                    title: 'ERROR: ' + err.status,
+                    message: 'Sucedio un error conectandose al servidor.'
+                })
+            }
+        })
+
+
+
+    }
+
+
+
+</script>

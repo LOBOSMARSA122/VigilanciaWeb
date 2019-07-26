@@ -24,7 +24,15 @@ using SigesoftWeb.Models.ServiceComponent;
 using SigesoftWeb.Models.Service;
 using System.IO;
 using SigesoftWeb.Models.Security;
-using static SigesoftWeb.Models.Eso.RecipesCustom;
+
+using SigesoftWeb.Models.Antecedentes;
+using SigesoftWeb.Models.Pacient;
+using SigesoftWeb.Models.PlanIntegral;
+using SigesoftWeb.Models.Message;
+using SigesoftWeb.Models.Embarazo;
+using SigesoftWeb.Models.AntecedentesGenerales;
+using System.Net;
+using static BE.Eso.RecipesCustom;
 
 namespace SigesoftWeb.Controllers.MedicalAssistance
 {
@@ -103,7 +111,7 @@ namespace SigesoftWeb.Controllers.MedicalAssistance
                 { "grupoId" , ((int)Enums.SystemParameter.AuditType).ToString() },
             };
 
-            
+
             Dictionary<string, string> arg3 = new Dictionary<string, string>()
             {
                 { "patientId", id},
@@ -117,8 +125,23 @@ namespace SigesoftWeb.Controllers.MedicalAssistance
 
             ViewBag.ServiceId = serviceId;
             ViewBag.PersonId = id;
-
+            ViewBag.AntecedentesEmbarazo = API.Get<List<EmbarazoCustom>>("Embarazo/GetEmbarazo?personId=" + id);
+            ViewBag.AtencedentesEso = API.Get<BoardEsoAntecedentes>("Antecedentes/ObtenerEsoAntecedentesPorGrupoId?PersonId=" + id);
             ViewBag.EstateEso = API.Get<List<Dropdownlist>>("SystemParameter/GetParametroByGrupoId", arg4);
+            ViewBag.EstadoCivil = API.Get<List<Dropdownlist>>("SystemParameter/GetParametroByGrupoId?grupoId=101");
+            ViewBag.GradoInstruccion = API.Get<List<Dropdownlist>>("DataHierarchy/GetDataHierarchyByGrupoId?grupoId=108");
+            ViewBag.Pacient = API.Get<PacientCustom>("Pacient/FindPacientByDocNumberOrPersonId?value=" + id);
+            ViewBag.DataCuidadosPreventivos = API.Get<List<EsoCuidadosPreventivosFechas>>("Antecedentes/ObtenerFechasCuidadosPreventivos?PersonId=" + id);
+            ViewBag.Genero = API.Get<List<Dropdownlist>>("SystemParameter/GetParametroByGrupoId?grupoId=100");
+            ViewBag.DataGeneral = API.Get<BoardGenerales>("Antecedentes/GetDataGeneral?personId=" + id);
+            ViewBag.Afiliacion = API.Get<List<Dropdownlist>>("SystemParameter/GetParametroByGrupoId?grupoId=188");
+
+
+
+            ViewBag.EsControlado = API.Get<List<Dropdownlist>>("SystemParameter/GetParametroByGrupoId?grupoId=111");
+            ViewBag.TipoPlan = API.Get<List<Dropdownlist>>("SystemParameter/GetParametroByGrupoId?grupoId=281");
+            ViewBag.GrupoSanguineo = API.Get<List<Dropdownlist>>("SystemParameter/GetParametroByGrupoId?grupoId=154");
+            ViewBag.FactorSanguineo = API.Get<List<Dropdownlist>>("SystemParameter/GetParametroByGrupoId?grupoId=155");
             ViewBag.EstadoAuditoria = API.Get<List<Dropdownlist>>("SystemParameter/GetParametroByGrupoId", arg2);
             ViewBag.Indicators = API.Get<Indicators>("PatientsAssistance/IndicatorByPacient", arg);
             ViewBag.Antecedent = API.Get<List<PersonMedicalHistoryList>>("PatientsAssistance/GetAntecedentConsolidateForService", arg);
@@ -126,6 +149,14 @@ namespace SigesoftWeb.Controllers.MedicalAssistance
 
             return View();
         }
+        [GeneralSecurity(Rol = "MedicalConsultation-BoardRecipes")]
+        public ActionResult GetRecipesByServiceId(string serviceId)
+        {
+            Api API = new Api();
+            ViewBag.RecipesForService = API.Get<List<Recipes>>("Eso/GetRecipesByServiceId?serviceId=" + serviceId);
+            return PartialView("_BoardRecipesPartial");
+        }
+
         [GeneralSecurity(Rol = "PatientsAssistance-MedicalConsultation")]
         public JsonResult Indicators(string patientId)
         {
@@ -565,7 +596,7 @@ namespace SigesoftWeb.Controllers.MedicalAssistance
             };
 
             var response = API.Post<string>(url, arg);
-            //DirectoryInfo source = new DirectoryInfo("http://localhost:1932/ESO/");
+            //DirectoryInfo source = new DirectoryInfo(http://localhost:1932/ESO/");
             //FileInfo[] fileToCopy = source.GetFiles(response);
             //var destinationFolder = "http://localhost:1045/ESO/";
             //foreach (FileInfo file in fileToCopy)
@@ -680,6 +711,303 @@ namespace SigesoftWeb.Controllers.MedicalAssistance
 
             var result = API.Post<string>("Eso/GeneratePrintRecipes", arg);
 
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-AddEmbarazo")]
+        public JsonResult AddEmbarazo(EmbarazoCustom data)
+        {
+
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1" , JsonConvert.SerializeObject(data) },
+                { "Int1" , ViewBag.USER.NodeId.ToString() },
+                { "Int2" , ViewBag.USER.SystemUserId.ToString() },
+            };
+
+            var result = API.Post<MessageCustom>("Embarazo/AddEmbarazo", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-AddPlanIntegral")]
+        public JsonResult AddPlanIntegral(PlanIntegralList data)
+        {
+
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1" , JsonConvert.SerializeObject(data) },
+                { "Int1" , ViewBag.USER.NodeId.ToString() },
+                { "Int2" , ViewBag.USER.SystemUserId.ToString() },
+            };
+
+            var result = API.Post<MessageCustom>("PlanIntegral/AddPlanIntegral", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-AddProblema")]
+        public JsonResult AddProblema(ProblemaList data)
+        {
+
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1" , JsonConvert.SerializeObject(data) },
+                { "Int1" , ViewBag.USER.NodeId.ToString() },
+                { "Int2" , ViewBag.USER.SystemUserId.ToString() },
+            };
+
+            var result = API.Post<MessageCustom>("PlanIntegral/AddProblema", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-AddProblema")]
+        public JsonResult GetPlanIntegral(string PersonId)
+        {
+            Api API = new Api();
+
+            var result = API.Get<List<PlanIntegralList>>("PlanIntegral/GetPlanIntegralAndFiltered?personId=" + PersonId);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+        [GeneralSecurity(Rol = "MedicalConsultation-AddProblema")]
+        public JsonResult GetProblemas(string PersonId)
+        {
+            Api API = new Api();
+
+            var result = API.Get<List<ProblemaList>>("PlanIntegral/GetProblemaPagedAndFiltered?personId=" + PersonId);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-AddProblema")]
+        public JsonResult EditPlanIntegral(string PersonId)
+        {
+            Api API = new Api();
+
+            var result = API.Get<List<PlanIntegralList>>("PlanIntegral/GetPlanIntegralAndFiltered?personId=" + PersonId);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+        [GeneralSecurity(Rol = "MedicalConsultation-EditProblemas")]
+        public JsonResult EditProblemas(string PersonId)
+        {
+            Api API = new Api();
+
+            var result = API.Get<List<ProblemaList>>("PlanIntegral/GetProblemaPagedAndFiltered?personId=" + PersonId);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-SaveDataNinio")]
+        public JsonResult SaveDataNinio(BoardGenerales data)
+        {
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1", JsonConvert.SerializeObject(data) },
+                { "Int1", ViewBag.USER.SystemUserId.ToString() },
+                { "Int2", ViewBag.USER.NodeId.ToString() },
+            };
+            var result = API.Post<MessageCustom>("Antecedentes/SaveDataNinio", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-UpdateDataNinio")]
+        public JsonResult UpdateDataNinio(BoardGenerales data)
+        {
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1", JsonConvert.SerializeObject(data) },
+                { "Int1", ViewBag.USER.SystemUserId.ToString() },
+                { "Int2", ViewBag.USER.NodeId.ToString() },
+            };
+            var result = API.Post<MessageCustom>("Antecedentes/UpdateDataNinio", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-SaveDataAdolescente")]
+        public JsonResult SaveDataAdolescente(BoardGenerales data)
+        {
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1", JsonConvert.SerializeObject(data) },
+                { "Int1", ViewBag.USER.SystemUserId.ToString() },
+                { "Int2", ViewBag.USER.NodeId.ToString() },
+            };
+            var result = API.Post<MessageCustom>("Antecedentes/SaveDataAdolescente", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-UpdateDataAdolescente")]
+        public JsonResult UpdateDataAdolescente(BoardGenerales data)
+        {
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1", JsonConvert.SerializeObject(data) },
+                { "Int1", ViewBag.USER.SystemUserId.ToString() },
+                { "Int2", ViewBag.USER.NodeId.ToString() },
+            };
+            var result = API.Post<MessageCustom>("Antecedentes/UpdateDataAdolescente", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-SaveDataAdulto")]
+        public JsonResult SaveDataAdulto(BoardGenerales data)
+        {
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1", JsonConvert.SerializeObject(data) },
+                { "Int1", ViewBag.USER.SystemUserId.ToString() },
+                { "Int2", ViewBag.USER.NodeId.ToString() },
+            };
+            var result = API.Post<MessageCustom>("Antecedentes/SaveDataAdulto", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-UpdateDataAdulto")]
+        public JsonResult UpdateDataAdulto(BoardGenerales data)
+        {
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1", JsonConvert.SerializeObject(data) },
+                { "Int1", ViewBag.USER.SystemUserId.ToString() },
+                { "Int2", ViewBag.USER.NodeId.ToString() },
+            };
+            var result = API.Post<MessageCustom>("Antecedentes/UpdateDataAdulto", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-SaveDataAdultoMayor")]
+        public JsonResult SaveDataAdultoMayor(BoardGenerales data)
+        {
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1", JsonConvert.SerializeObject(data) },
+                { "Int1", ViewBag.USER.SystemUserId.ToString() },
+                { "Int2", ViewBag.USER.NodeId.ToString() },
+            };
+            var result = API.Post<MessageCustom>("Antecedentes/SaveDataAdultoMayor", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-UpdateDataAdultoMayor")]
+        public JsonResult UpdateDataAdultoMayor(BoardGenerales data)
+        {
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1", JsonConvert.SerializeObject(data) },
+                { "Int1", ViewBag.USER.SystemUserId.ToString() },
+                { "Int2", ViewBag.USER.NodeId.ToString() },
+            };
+            var result = API.Post<MessageCustom>("Antecedentes/UpdateDataAdultoMayor", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-UpdateDataAdultoMayor")]
+        public JsonResult SaveCuidadosPreventivos(EsoCuidadosPreventivosFechas data, string personId)
+        {
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1", JsonConvert.SerializeObject(data) },
+                { "String2", personId },
+                { "Int1", ViewBag.USER.SystemUserId.ToString() },
+                { "Int2", ViewBag.USER.NodeId.ToString() },
+            };
+            var result = API.Post<MessageCustom>("Antecedentes/SaveCuidadosPreventivos", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+
+        [GeneralSecurity(Rol = "MedicalConsultation-VerificarKey")]
+        public JsonResult SendSMS()
+        {
+            MessageCustom msg = new MessageCustom();
+            Api API = new Api();
+            if (ViewBag.USER.TelephoneNumber != null)
+            {
+                if (ViewBag.USER.TelephoneNumber.Length == 9)
+                {
+                    var result = API.Get<string>("SendSMS/SendSMS?number=" + ViewBag.USER.TelephoneNumber);
+                    ViewBag.USER.KeySMS = result;
+                    msg.Error = false;
+                    msg.Status = (int)HttpStatusCode.OK;
+
+                }
+                else
+                {
+                    msg.Error = true;
+                    msg.Status = (int)HttpStatusCode.NoContent;
+                    msg.Message = "Su número registrado debe ser un celular, por favor comuniquese con el administrador de sistemas";
+                }
+            }
+            else
+            {
+                msg.Error = true;
+                msg.Status = (int)HttpStatusCode.NoContent;
+                msg.Message = "Debe tener registrado un número de celular, por favor comuniquese con el administrador de sistemas";
+
+            }
+
+            return new JsonResult { Data = msg, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+
+        [GeneralSecurity(Rol = "MedicalConsultation-VerificarKey")]
+        public JsonResult VerificarKey(string keySMS)
+        {
+
+            bool result = false;
+            if (ViewBag.USER.KeySMS == keySMS)
+            {
+                result = true;
+            }
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-SaveAndPrintRecipes")]
+        public JsonResult SaveAndPrintRecipes(BoardPrintRecipes data)
+        {
+            data.MovementTypeId = (int)Enumeratores.MovementType.Egreso;
+            Api API = new Api();
+            Dictionary<string, string> arg = new Dictionary<string, string>()
+            {
+                { "String1" , JsonConvert.SerializeObject(data) },
+                { "Int1" , ViewBag.USER.NodeId.ToString() },
+                { "Int2" , ViewBag.USER.SystemUserId.ToString() },
+            };
+
+            var result = API.Post<MessageCustom>("Eso/SaveAndPrintRecipes", arg);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        [GeneralSecurity(Rol = "MedicalConsultation-CopyPdf")]
+        public JsonResult CopyPdf()
+        {
+            Api API = new Api();
+            var result = API.Get<MessageCustom>("PatientsAssistance/CopyPdf");
             return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
     }

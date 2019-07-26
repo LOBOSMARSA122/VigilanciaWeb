@@ -392,6 +392,31 @@ namespace DAL.z_ProductsSAMBHS
             }
         }
 
+        public static List<MedicamentoCustomSAMBHS> ObtenerContasolMedicamentos()
+        {
+            try
+            {
+                DatabaseSAMBHSContext dbContex = new DatabaseSAMBHSContext();
+                var List = (from pro in dbContex.Producto
+                            join prod in dbContex.ProductoDetalle on pro.v_IdProducto equals prod.v_IdProducto
+                            where prod.i_Eliminado == 0
+                            select new MedicamentoCustomSAMBHS
+                            {
+                                IdProductoDetalle = prod.v_IdProductoDetalle,
+                                CodInterno = pro.v_CodInterno,
+                                Nombre = pro.v_Descripcion,
+                                Presentacion = pro.v_Presentacion,
+                                Concentracion = pro.v_Concentracion,
+                                Ubicacion = pro.v_Ubicacion,
+                            }).ToList();
+
+                return List;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
     }
 

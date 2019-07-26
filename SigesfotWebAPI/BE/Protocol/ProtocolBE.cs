@@ -39,6 +39,7 @@ namespace BE.Protocol
         public double? r_PriceFactor { get; set; }
         public double? r_MedicineDiscount { get; set; }
         public double? r_HospitalBedPrice { get; set; }
+        public double? r_ClinicDiscount { get; set; }
         public double? r_DiscountExam { get; set; }
     }
 }

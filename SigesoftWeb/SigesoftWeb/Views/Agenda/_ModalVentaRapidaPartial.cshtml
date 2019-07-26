@@ -13,7 +13,7 @@
                     <div class="col-12 col-lg-5">
                         <label class="small">Documento:</label>
                         <div class="row w-100 mx-0 justify-content-between">
-                            <select disabled class="custom-select custom-select-sm w-25">
+                            <select disabled class="custom-select custom-select-sm w-25" id="select-documento">
                                 <option value="-1">--Seleccionar--</option>
                                 @{
                                     foreach (var item in ViewBag.Document)
@@ -22,14 +22,14 @@
                                     }
                                 }
                             </select>
-                            <input type="text" class="form-control form-control-sm mx-0 w-25">
-                            <input type="text" disabled class="form-control form-control-sm w-50">
+                            <input type="text" class="form-control form-control-sm mx-0 w-25" id="serie-caja">
+                            <input type="text" disabled class="form-control form-control-sm w-50" id="serie-correlativo">
                         </div>
                     </div>
-                    <div class="col-12 col-lg-5">
+                    <div class="col-12 col-lg-5 d-none">
                         <label class="small">Documento Ref:</label>
                         <div class="row w-100 mx-0 justify-content-between">
-                            <select disabled class="custom-select custom-select-sm w-25" id="select-documento">
+                            <select disabled class="custom-select custom-select-sm w-25">
                                 <option value="-1">--Seleccionar--</option>
                                 @{
                                     foreach (var item in ViewBag.Document)
@@ -69,7 +69,7 @@
                     </div>
                     <div class="col-12 col-lg-2">
                         <label class="small">Tipo Cambio:</label>
-                        <input type="text" disabled class="form-control form-control-sm w-100">
+                        <input type="text" disabled class="form-control form-control-sm w-100" readonly="readonly" id="factura-tipocambio">
                     </div>
 
                     <div class="col-12 col-lg-3">
@@ -115,7 +115,7 @@
                     </div>
                     <div class="col-7 col-lg-3" id="cont-solo-contado">
                         <label class="small" style="opacity:0;">Solo contado:</label>
-                        <select class="custom-select custom-select-sm">
+                        <select class="custom-select custom-select-sm" id="select-tipopago">
                             <option value="-1">--Seleccionar--</option>
                             @{
                                 foreach (var item in ViewBag.TipoPago)
@@ -125,12 +125,13 @@
                             }
                         </select>
                     </div>
-                    <div class="col-5 col-lg-1 pt-2">
-                        <label class="badge mt-4 badge-secondary">Nro. Operación:</label>
+                    <div class="col-5 col-lg-3 pt-2">
+                        <label style="opacity:0">Numero de cuenta</label>
+                        <input oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" type="text" class="form-control form-control-sm" id="numero-operacion" placeholder="Numero de operación" disabled value="" />
                     </div>
                     <div class="col-12 px-2 col-lg-3">
                         <label class="small">Tipo Servicio:</label>
-                        <select class="custom-select custom-select-sm">
+                        <select class="custom-select custom-select-sm" id="factura-tiposervicio">
                             <option selected value="-1">--Seleccionar--</option>
                             @{
                                 foreach (var item in ViewBag.TypeService)
@@ -171,8 +172,10 @@
                                         <th nowrap scope="col">IGV</th>
                                         <th nowrap scope="col">Precio V.</th>
                                         <th nowrap scope="col">Prec. Contraparte</th>
+                                        <th nowrap scope="col" class="d-none">UnidadMedidaId</th>
                                         <th nowrap scope="col" class="d-none">RecordStatus</th>
                                         <th nowrap scope="col" class="d-none">RecordType</th>
+
                                     </tr>
                                 </thead>
                                 <tbody id="body-venta-rapida">
@@ -214,15 +217,15 @@
                 <div class="col-12 pt-2">
                     <div class="custom-control-inline row w-100 mx-0 align-content-center justify-content-between">
                         <label class="small" style="width:10%">V. Venta</label>
-                        <input type="text" class="form-control form-control-sm" style="width:20%" id="total-valorventa" />
+                        <input disabled type="text" class="form-control form-control-sm" style="width:20%" id="total-valorventa" />
                         <label class="small" style="width:10%">I.G.V</label>
-                        <input type="text" class="form-control form-control-sm" style="width:20%" id="total-igv" />
+                        <input disabled type="text" class="form-control form-control-sm" style="width:20%" id="total-igv" />
                         <label class="small bold" style="width:10%">Total</label>
-                        <input type="text" class="form-control form-control-sm" style="width:20%" id="total-total" />
+                        <input disabled type="text" class="form-control form-control-sm" style="width:20%" id="total-total" />
                     </div>
                 </div>
                 <div class="col-4 col-md-2 mx-0 pt-2">
-                    <button class="btn btn-sm btn-primary"><i class="fas fa-save mr-1"></i>Guardar</button>
+                    <button class="btn btn-sm btn-primary" id="btn-guardarfactura"><i class="fas fa-save mr-1"></i>Guardar</button>
                 </div>
                 <div class="col-4 col-md-2 mx-0 pt-2">
                     <button class="btn btn-sm btn-secondary"><i class="fas fa-print mr-1"></i>Imprimir</button>

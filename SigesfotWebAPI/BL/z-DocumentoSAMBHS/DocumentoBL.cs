@@ -15,5 +15,10 @@ namespace SAMBHSBL.Documento
         {
             return new DocumentoDal().GetDocumentsForCombo(UsadoCompras, UsadoVentas);
         }
+
+        public string GetSeriesDocumento(int IdEstablecimient, int IdDocumento)
+        {
+            return new DocumentoDal().GetSeriesDocumento(IdEstablecimient, IdDocumento);
+        }
     }
 }

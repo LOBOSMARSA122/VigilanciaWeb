@@ -5,6 +5,10 @@
         position: relative;
     }
 
+    .modal {
+        overflow-y: auto;
+    }
+
     .ui-menu .ui-menu-item a {
         font-size: 12px;
     }
@@ -63,17 +67,21 @@
     #modalIns {
         width: 500px;
     }
+
     .fa-medkit {
         color: green;
         font-size: 20px;
     }
+
     .disabled {
         background-color: #eaeaea !important
     }
+
     body {
         overflow-x: hidden;
         width: 100%;
     }
+
     .fa-info-circle {
         color: #FF8800 !important;
         font-size: 1.1rem !important;
@@ -393,9 +401,11 @@
         width: 230px;
         background-color: #fff;
     }
+
     #select-category {
         height: 31px !important;
     }
+
     .cont-dinamic-select {
         position: relative;
         width: 230px;
@@ -406,7 +416,7 @@
 
         .cont-dinamic-select.active {
             width: 230px;
-            height: auto; 
+            height: auto;
         }
 
     .options-select {
@@ -469,9 +479,11 @@
         left: 230px;
         background-color: #fff;
     }
+
     .border-danger-comp {
         border: 1px solid #dc3545 !important;
     }
+
     .container {
         height: 600px;
     }
@@ -720,8 +732,8 @@
             <li class="breadcrumb-item active" aria-current="page">Consulta Médica</li>
         </ol>
     </nav>
-    <section class="contenedor-main  row w-100 m-0 justify-content-end">
-        <main class="col-md-8 pl-0">
+    <section class="contenedor-main  row w-100 m-0">
+        <main class="col-12 pl-0">
             <div class="Chart mb-3 mx-0 ml-0">
                 <div class="box box-info mb-1" id="acordion">
                     <div class="box-header with-border" id="heading1">
@@ -977,7 +989,7 @@
 
                         </div>
                         <div class="row  w-100 m-0 p-0 justify-content-end">
-                            <input style="cursor: pointer" type="button" style="min-width: 150px;" id="js-save-exam" value="Examen" class="btn btn-info text-center" onclick="return SaveExam(event, this)">
+                            <input style="cursor: pointer" type="button" style="min-width: 150px;" id="js-save-exam" value="Examen" class="btn btn-info text-center" onclick="EnviarKeySMS()">
                         </div>
                     </div>
                     <div id="auditoria" class="col-12 p-0 mt-4">
@@ -1008,9 +1020,9 @@
             </div>
 
         </main>
-        <aside class="col-md-4 w-100">
+        <aside class="col-12 w-100">
             <div class="row notice ">
-                <div class="col-12 Chart mr-0">
+                <div class="col-12 d-none Chart mr-0">
                     <div class="row title" onclick="ColapseTable('DivTopDx','heightDivTopDx')">
                         Indicadores
                     </div>
@@ -1050,7 +1062,7 @@
                     </div>
 
                 </div>
-                <div class="col-12 js-cont-list-examen d-none Chart mr-0">
+                <div class="col-12 d-none js-cont-list-examen d-none Chart mr-0" style="display: none !important">
                     <div class="row title" onclick="ColapseTable('DivCategory','heightDivCategory')">
                         Exámenes adicionales
                     </div>
@@ -1062,8 +1074,8 @@
                     </div>
 
                 </div>
-                <div id="cont-recipes" class=" row p-0 m-0 w-100">
-                    <div class="col-12 Chart mr-0" id="">
+                <div id="cont-recipes" class="row p-0 m-0 w-100">
+                    <div class="col-12 Chart m-0 mt2" id="">
                         <div class="row title" onclick="ColapseTable('DivReceta','heightDivReceta')">
                             Receta: <strong> N° 0001</strong>
                         </div>
@@ -1078,18 +1090,28 @@
                                             <th>Posología</th>
                                             <th>Duración</th>
                                             <th>Cant.</th>
+                                            <th class="d-none">Precio Unit</th>
                                             <th>Stock</th>
+                                            <th>Fecha Fin</th>
                                             <th>X</th>
+                                            <th class="d-none">RecipeId</th>
+                                            <th class="d-none">RecipeId</th>
+                                            <th class="d-none">RecipeId</th>
+                                            <th class="d-none">RecipeId</th>
+                                            <th class="d-none">RecipeId</th>
+                                            <th class="d-none">RecipeId</th>
+                                            <th class="d-none">RecipeId</th>
+
                                         </tr>
                                     </thead>
                                     <tbody id="body-recetas">
-                                        <tr><td colspan="7" class="text-center sin-resultados">No hay resultados</td></tr>
+                                        @Html.Partial("_BoardRecipesPartial")
                                     </tbody>
                                 </table>
                             </div>
                             <div class="row w-100 mx-0 mt-2 p-2 justify-content-between">
-                                <button class="btn btn-sm btn-success" id="add-medicines" data-toggle="modal" data-target="#modal-add-medicine">Agregar Medicamendo</button>
-                                <button class="btn btn-sm btn-primary" id="print-recipe">Imprimir Receta</button>
+                                <button class="btn btn-sm btn-success" id="add-medicines" onclick="setComponentInSelect()" data-toggle="modal" data-target="#modal-add-medicine">Agregar Medicamendo</button>
+                                <button class="btn btn-sm btn-primary" id="print-recipe">Guardar e Imprimir Receta</button>
                             </div>
 
                             @*-------MODAL--------*@
@@ -1104,6 +1126,7 @@
                                         </div>
                                         <div class="modal-body">
                                             <form>
+
                                                 <div class="input-group mb-3">
                                                     <input type="text" class="form-control" id="js-NameMedicine" style="border-top-left-radius: 0.3rem; border-bottom-left-radius: 0.3rem;" placeholder="Buscar medicamento..." aria-label="Buscar medicamento..." aria-describedby="btn-GetMedicines">
                                                     <div class="input-group-append">
@@ -1116,6 +1139,12 @@
                                                     <div class="input-group-append">
                                                         <button class="btn btn-outline-info" type="button" id="btn-Diseases"><i class="fas fa-magic"></i></button>
                                                     </div>
+                                                </div>
+                                                <div class="input-group mb-3">
+                                                    <label>Seleccione un componente</label>
+                                                    <select id="select-component-for-recipe" class="custom-select custom-select-sm">
+                                                        <option value="-1">--Seleccionar--</option>
+                                                    </select>
                                                 </div>
                                                 <div id="render-list-medicine">
                                                     <table class="table table-sm table-hover table-bordered" style="text-align:left">
@@ -1131,6 +1160,9 @@
                                                                 <th>Medicamento</th>
                                                                 <th>P.A</th>
                                                                 <th>Descripción</th>
+                                                                <th>Unidad Productiva Id</th>
+                                                                <th class="d-none">ProductoDetalleId</th>
+                                                                <th>Previo Venta</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody id="body-medicamentos">
@@ -1153,7 +1185,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 js-cont-reports Chart mr-0">
+                <div class="col-12 js-cont-reports d-none Chart mr-0">
                     <div class="row title" onclick="ColapseTable('DivReport','heightDivReport')">
                         Reportes
                     </div>
@@ -1173,7 +1205,7 @@
             </div>
 
         </aside>
-        <div class="col-md-4 w-100 cont-time-line Chart  pb-4">
+        <div class="col-md-4 w-100 cont-time-line Chart d-none pb-4">
             <div class="row titulo">
                 Línea de tiempo: Atención médica
             </div>
@@ -1231,6 +1263,28 @@
 
 </div>
 
+@*Modal confimacion*@
+<div class="modal fade" tabindex="-1" id="modal-verificar-key" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:0.7rem">Digite el codigo enviado a su celular</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label class="small">Codigo de 5 digitos</label>
+                <input type="text" class="form-control form-control-sm" id="input-key-sms" value="" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="verificar-key">Verificar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="~/Scripts/jquery-3.3.1.js"></script>
 <script src="~/Scripts/jquery-ui.js"></script>
 <link href="~/Content/jquery-ui.css" rel="stylesheet" />
@@ -1257,6 +1311,28 @@
     //MedicalResult();
 
     $("#indicators").click();
+
+    function GetRecipesForService() {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'html',
+            data: { 'serviceId': $("#js-serviceId").val() },
+            url: '/PatientsAssistance/GetRecipesByServiceId',
+            success: function (html) {
+                $("#body-recetas").html(html)
+            },
+            error: function (error, Status, Message) {
+                alertafixed({
+                    class: 'danger-class',
+                    type: 'danger',
+                    title: 'ERROR: ' + Status,
+                    message: 'Sucedió un error en el servidor: ' + Message,
+                })
+            }
+        })
+    }
+
     function ChangeCheckboxMedicines(check) {
 
         var value = "";
@@ -1268,7 +1344,964 @@
 
         $(check).val(value);
     }
+    function activarTab(e, anchorTag) {
+        if ($("#" + anchorTag.id).hasClass("no-activo") == false) {
+            $(".list-group-item-action").removeClass("active")
+            $(".j-tabPane-examen").addClass("d-none").fadeOut(100);
+
+            $(".tabsCategory").find(".active").removeClass("active");
+
+            $("#list-" + anchorTag.id.split("-")[1]).addClass("show active").fadeIn(100).removeClass("d-none");
+            anchorTag.classList.add("active");
+
+            $("#nameCategory").empty().text($(anchorTag).text());
+
+        } else {
+            $(".list-group-item-action").removeClass("active")
+            $(".j-tabPane-examen").addClass("d-none").fadeOut(100);
+
+
+            $("#list-" + anchorTag.id.split("-")[1]).addClass("show active").fadeIn(100);
+            anchorTag.classList.add("active");
+
+            $("#js-save-exam").val($(anchorTag).text());
+
+            $("#js-save-exam").attr("class", anchorTag.id);
+        }
+    }
+
+    const getDateFromAspNetFormat = function (date) {
+        const re = /-?\d+/;
+        const m = re.exec(date);
+
+        var fecha = new Date(parseInt(m[0], 10));
+        var dd = String(fecha.getDate()).padStart(2, '0');
+        var mm = String(fecha.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fecha.getFullYear();
+
+        fecha = yyyy + '-' + mm + '-' + dd;
+        return fecha;
+    }
+
+    const GetPlanIntegral = function()
+    {
+        let html = "";
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            url: '/PatientsAssistance/GetPlanIntegral?PersonId=' + obtenerValorParametro("id"),
+            success: function (json) {
+
+                if (json.length > 0) {
+
+                    for (var i = 0; i < json.length; i++) {
+                        html += `<tr>
+                                    <td nowrap class="d-none">${json[i].v_PlanIntegral}</td>
+                                    <td nowrap>${json[i].v_Tipo}</td>
+                                    <td nowrap>${getDateFromAspNetFormat(json[i].d_Fecha)}</td>
+                                    <td nowrap>${json[i].v_Descripcion}</td>
+                                    <td nowrap>${json[i].v_Lugar}</td>
+                                </tr>`;
+                    }
+                } else {
+                    html = "<tr><td nowrap colspan='5' class='text-center'>No se encontraron resultados</td></tr>";
+                }
+
+                $("#body-planintegral").html(html);
+            },
+            error: function (err, status, message) {
+                html = "<tr><td nowrap colspan='5' class='text-center'>Sucedió un error en el servidor</td></tr>";
+                $("#body-planintegral").html(html);
+            }
+        })
+    }
+
+    const GetProblemas = function () {
+        let htmlCronico = "";
+        let htmlAgudo = "";
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            url: '/PatientsAssistance/GetProblemas?PersonId=' + obtenerValorParametro("id"),
+            success: function (json) {
+
+                if (json.length > 0) {
+
+                    for (var i = 0; i < json.length; i++) {
+                        if (json[i].i_Tipo == 1) {
+                            htmlCronico += `<tr>
+                                                <td nowrap class="d-none">${json[i].v_ProblemaId}</td>
+                                                <td nowrap>${getDateFromAspNetFormat(json[i].d_Fecha)}</td>
+                                                <td nowrap>${json[i].v_Descripcion}</td>
+                                                <td nowrap>${json[i].v_EsControlado}</td>
+                                                <td nowrap>${json[i].v_Observacion}</td>
+                                            </tr>`;
+                        } else if (json[i].i_Tipo == 2) {
+                            htmlAgudo += `<tr>
+                                            <td nowrap class="d-none">${json[i].v_ProblemaId}</td>
+                                            <td nowrap>${getDateFromAspNetFormat(json[i].d_Fecha)}</td>
+                                            <td nowrap>${json[i].v_Descripcion}</td>
+                                            <td nowrap>${json[i].v_Observacion}</td>
+                                        </tr>`;
+                        }
+                    }
+                } else {
+                    htmlCronico = "<tr><td nowrap colspan='5' class='text-center'>No se encontraron resultados</td></tr>";
+                    htmlAgudo = htmlCronico;
+                }
+
+                $("#body-cronico").html(htmlCronico);
+                $("#body-agudo").html(htmlAgudo);
+            },
+            error: function (err, status, message) {
+                htmlCronico = "<tr><td nowrap colspan='5' class='text-center'>Sucedió un error en el servidor</td></tr>";
+                htmlAgudo = htmlCronico;
+                $("#body-cronico").html(htmlCronico);
+                $("#body-agudo").html(htmlAgudo);
+            }
+        })
+    }
+
+    const ValidacionPorIds = function (arrId) {
+        let error = false;
+        for (var i = 0; i < arrId.length; i++) {
+            let input = $(arrId[i]);
+            if (input.val() == "") {
+                input.removeClass("border-success").addClass("border-danger");
+                error = true;
+            } else {
+                input.addClass("border-success").removeClass("border-danger");
+            }
+        }
+        if (error) {
+            alertafixed({
+                type: 'warning',
+                class: 'warning-class',
+                title: 'VALIDACIÓN',
+                message: 'Complete los campos para continuar porfavor.'
+            })
+
+        }
+
+        return error;
+    }
+
+    function obtenerValorParametro(sParametroNombre) {
+        var sPaginaURL = window.location.search.substring(1);
+        var sURLVariables = sPaginaURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++) {
+            var sParametro = sURLVariables[i].split('=');
+            if (sParametro[0] == sParametroNombre) {
+                return sParametro[1];
+            }
+        }
+        return null;
+    }
+
+    const GuardarNiño = function (arrEsoAntecedentesPadre) {
+        objNinio = {
+            v_NinioId: $("#id-campo-ninio").val(),
+            v_NombreCuidador: $("#nombre-cuidador-ninio").val(),
+            v_EdadCuidador: $("#edad-cuidador-ninio").val(),
+            v_DniCuidador: $("#dni-cuidador-ninio").val(),
+            v_NombreMadre: $("#nombremadre-cuidador-ninio").val(),
+            v_EdadMadre: $("#edadmadre-cuidador-ninio").val(),
+            v_DniMadre: $("#dnimadre-cuidador-ninio").val(),
+            i_TipoAfiliacionMadre: $("#afilicionmadre-cuidador-ninio").val(),
+            v_CodigoAfiliacionMadre: $("#codafiliacionmadre-cuidador-ninio").val(),
+            i_GradoInstruccionMadre: $("#instruccionmadre-cuidador-ninio").val(),
+            v_OcupacionMadre: $("#ocupacionmadre-cuidador-ninio").val(),
+            i_EstadoCivilIdMadre1: $("#estadocivilmadre-cuidador-ninio").val(),
+            v_ReligionMadre: $("#religionmadre-cuidador-ninio").val(),
+            v_NombrePadre: $("#nombrepadre-cuidador-ninio").val(),
+            v_EdadPadre: $("#edadpadre-cuidador-ninio").val(),
+            v_DniPadre: $("#dnipadre-cuidador-ninio").val(),
+            i_TipoAfiliacionPadre: $("#afiliacionpadre-cuidador-ninio").val(),
+            v_CodigoAfiliacionPadre: $("#codafiliacionpadre-cuidador-ninio").val(),
+            i_GradoInstruccionPadre: $("#instruccionpadre-cuidador-ninio").val(),
+            v_OcupacionPadre: $("#ocupacionpadre-cuidador-ninio").val(),
+            i_EstadoCivilIdPadre: $("#estadocivilpadre-cuidador-ninio").val(),
+            v_ReligionPadre: $("#religionpadre-cuidador-ninio").val(),
+
+            v_PatologiasGestacion: $("#patologia-cuidador-ninio").val(),
+            v_nEmbarazos: $("#cantembarazo-cuidador-ninio").val(),
+            v_nAPN: $("#apn-cuidador-ninio").val(),
+            v_LugarAPN: $("#lugarapn-cuidador-ninio").val(),
+            v_ComplicacionesParto: $("#complicacion-cuidador-ninio").val(),
+            v_Atencion: $("#atencion-cuidador-ninio").val(),
+
+            v_EdadGestacion: $("#edadgestacion-cuidador-ninio").val(),
+            v_Peso: $("#pesonace-cuidador-ninio").val(),
+            v_Talla: $("#tallanace-cuidador-ninio").val(),
+            v_PerimetroCefalico: $("#perimetrocefalico-cuidador-ninio").val(),
+            v_TiempoHospitalizacion: $("#tiempohospitalizacion-cuidador-ninio").val(),
+            v_PerimetroToracico: $("#perimetrotoracico-cuidador-ninio").val(),
+            v_EspecificacionesNac: $("#respiracionnace-cuidador-ninio").val(),
+            v_InicioAlimentacionComp: $("#inicioalimentacion-cuidador-ninio").val(),
+            v_AlergiasMedicamentos: $("#alergiaespecifica-cuidador-ninio").val(),
+            v_OtrosAntecedentes: $("#otrosantecedentes-cuidador-ninio").val(),
+
+            v_QuienTuberculosis: $("#tuberculosis-cuidador-ninio").val(),
+            i_QuienTuberculosis: 0,
+            v_QuienAsma: $("#asma-cuidador-ninio").val(),
+            i_QuienAsma: 0,
+            v_QuienVIH: $("#vih-cuidador-ninio").val(),
+            i_QuienVIH: 0,
+            v_QuienDiabetes: $("#diabetes-cuidador-ninio").val(),
+            i_QuienDiabetes: 0,
+            v_QuienEpilepsia: $("#epilepsia-cuidador-ninio").val(),
+            i_QuienEpilepsia: 0,
+            v_QuienAlergias: $("#alergiassino-cuidador-ninio").val(),
+            i_QuienAlergias: 0,
+            v_QuienViolenciaFamiliar: $("#violenciasino-cuidador-ninio").val(),
+            i_QuienViolenciaFamiliar: 0,
+            v_QuienAlcoholismo: $("#alocoholismosino-cuidador-ninio").val(),
+            i_QuienAlcoholismo: 0,
+            v_QuienDrogadiccion: $("#drogadiccionsino-cuidador-ninio").val(),
+            i_QuienDrogadiccion: 0,
+            v_QuienHeptitisB: $("#hebatitissino-cuidador-ninio").val(),
+            i_QuienHeptitisB: 0,
+            v_EspecificacionesAgua: $("#especiagua-cuidador-ninio").val(),
+            v_EspecificacionesDesague: $("#especidesague-cuidador-ninio").val(),
+            v_PersonId: obtenerValorParametro("id"),
+        }
+
+        if ($("input:radio[name=radio-tbc]:checked").data("value") == "1") {
+            objNinio.i_QuienTuberculosis = 1;
+        }
+        if ($("input:radio[name=radio-asma]:checked").data("value") == "1") {
+            objNinio.i_QuienAsma = 1;
+        }
+        if ($("input:radio[name=radio-sida]:checked").data("value") == "1") {
+            objNinio.i_QuienVIH = 1;
+        }
+        if ($("input:radio[name=radio-diabetes]:checked").data("value") == "1") {
+            objNinio.i_QuienDiabetes = 1;
+        }
+        if ($("input:radio[name=radio-epilepsia]:checked").data("value") == "1") {
+            objNinio.i_QuienEpilepsia = 1;
+        }
+        if ($("input:radio[name=radio-alergia]:checked").data("value") == "1") {
+            objNinio.i_QuienAlergias = 1;
+        }
+        if ($("input:radio[name=radio-violencia]:checked").data("value") == "1") {
+            objNinio.i_QuienViolenciaFamiliar = 1;
+        }
+        if ($("input:radio[name=radio-alcoholismo]:checked").data("value") == "1") {
+            objNinio.i_QuienAlcoholismo = 1;
+        }
+        if ($("input:radio[name=radio-drogadiccion]:checked").data("value") == "1") {
+            objNinio.i_QuienDrogadiccion = 1;
+        }
+        if ($("input:radio[name=radio-hepatitis]:checked").data("value") == "1") {
+            objNinio.i_QuienHeptitisB = 1;
+        }
+        let data = {
+            EsoAntecedentesPadre: arrEsoAntecedentesPadre,
+            DataNinioCustom: objNinio,
+        }
+        let url = '/PatientsAssistance/SaveDataNinio';
+        if ($("#id-campo-ninio").val() != "") {
+            url = '/PatientsAssistance/UpdateDataNinio';
+        }
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data,
+            url,
+            success: function (json) {
+                if (json.Error) {
+                    alertafixed({
+                        class: 'danger-class',
+                        type: 'danger',
+                        title: 'ERROR: ' + json.Status,
+                        message: json.Message,
+                    })
+                } else {
+                    alertafixed({
+                        class: 'success-class',
+                        type: 'success',
+                        title: 'HECHO: ' + json.Status,
+                        message: json.Message,
+                    })
+
+                    $("#id-campo-ninio").val(json.Id)
+                }
+            },
+            error: function (err, Status, Message) {
+                alertafixed({
+                    class: 'danger-class',
+                    type: 'danger',
+                    title: 'ERROR: ' + Status,
+                    message: 'Sucedió un error en el servidor: ' + Message,
+                })
+            }
+        })
+    }
+
+    const GuardarAdolescente = function (arrEsoAntecedentesPadre) {
+        objAdolescente = {
+            v_NombreCuidador: $("#nombre-cuidador-adloscente").val(),
+            v_EdadCuidador: $("#edad-cuidador-adloscente").val(),
+            v_DniCuidador: $("#dni-cuidador-adloscente").val(),
+            v_EdadInicioTrabajo: $("#edadtrabajo-cuidador-adloscente").val(),
+            v_TipoTrabajo: $("#tipotrabajo-cuidador-adloscente").val(),
+            v_NroHorasTv: $("#horastv-cuidador-adloscente").val(),
+            v_NroHorasJuegos: $("#horasjuegos-cuidador-adloscente").val(),
+            v_MenarquiaEspermarquia: $("#menarquia-cuidador-adloscente").val(),
+            v_ViveCon: $("#vive-cuidador-adloscente").val(),
+            v_EdadInicioRS: $("#iniciosexual-cuidador-adloscente").val(),
+
+            v_Parto: $("#cant-embarazos").val(),
+            v_Prematuro: $("#cant-prematuros").val(),
+            v_Aborto: $("#cant-abortos").val(),
+            v_PersonId: obtenerValorParametro("id"),
+            v_AdolescenteId: $("#id-campo-adolescente").val()
+        }
+        let data = {
+            EsoAntecedentesPadre: arrEsoAntecedentesPadre,
+            DataAdolescenteCustom: objAdolescente,
+        }
+
+        let url = '/PatientsAssistance/SaveDataAdolescente';
+        if ($("#id-campo-adolescente").val() != "") {
+            url = '/PatientsAssistance/UpdateDataAdolescente';
+        }
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data,
+            url,
+            success: function (json) {
+                if (json.Error) {
+                    alertafixed({
+                        class: 'danger-class',
+                        type: 'danger',
+                        title: 'ERROR: ' + json.Status,
+                        message: json.Message,
+                    })
+                } else {
+                    alertafixed({
+                        class: 'success-class',
+                        type: 'success',
+                        title: 'HECHO: ' + json.Status,
+                        message: json.Message,
+                    })
+
+                    $("#id-campo-adolescente").val(json.Id)
+                }
+            },
+            error: function (err, Status, Message) {
+                alertafixed({
+                    class: 'danger-class',
+                    type: 'danger',
+                    title: 'ERROR: ' + Status,
+                    message: 'Sucedió un error en el servidor: ' + Message,
+                })
+            }
+        })
+    }
+
+    const GuardarAdultoYAdultoMayor = function (arrEsoAntecedentesPadre) {
+
+        objDataAdulto = {
+            v_NombreCuidador: $("#nombre-cuidador").val(),
+            v_EdadCuidador: $("#edad-cuidador").val(),
+            v_DniCuidador: $("#dni-cuidador").val(),
+            v_DescripcionAntecedentes: $("#antecedentes-familiares").val(),
+            v_MedicamentoFrecuente: $("#medicamentos-frecuentes").val(),
+            v_ReaccionAlergica: $("#reaccion-alergica").val(),
+            v_InicioRS: $("#inicio-rs").val(),
+            v_NroPs: $("#nro-ps").val(),
+            v_FechaUR: $("#fecha-ur").val(),
+            v_RC: $("#value-rc").val(),
+            v_FlujoVaginal: $("#fluido-vaginal").val(),
+
+            v_Parto: $("#cant-embarazos").val(),
+            v_Prematuro: $("#cant-prematuros").val(),
+            v_Aborto: $("#cant-abortos").val(),
+            v_PersonId: obtenerValorParametro("id"),
+        }
+
+        let data = {};
+        var tipoAdulto = "";
+        let edad = $("#edad-paciente").val();
+        if (Number(edad) > 17 && Number(edad) < 65) {
+            tipoAdulto = "Adulto";
+            data = {
+                EsoAntecedentesPadre: arrEsoAntecedentesPadre,
+                DataAdultoCustom: objDataAdulto,
+            }
+            data.DataAdultoCustom.v_AdultoId = $("#id-campo-adultoyadultomayor").val();
+        } else if (Number(edad) > 64) {
+            tipoAdulto = "AdultoMayor"
+            data = {
+                EsoAntecedentesPadre: arrEsoAntecedentesPadre,
+                DataAdultoMayorCustom: objDataAdulto,
+            }
+            data.DataAdultoMayorCustom.v_AdultoMayorId = $("#id-campo-adultoyadultomayor").val();
+        }
+
+        let url = '/PatientsAssistance/SaveData' + tipoAdulto;
+        if ($("#id-campo-adultoyadultomayor").val() != "") {
+            url = '/PatientsAssistance/UpdateData' + tipoAdulto;
+        }
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data,
+            url,
+            success: function (json) {
+                if (json.Error) {
+                    alertafixed({
+                        class: 'danger-class',
+                        type: 'danger',
+                        title: 'ERROR: ' + json.Status,
+                        message: json.Message,
+                    })
+                } else {
+                    alertafixed({
+                        class: 'success-class',
+                        type: 'success',
+                        title: 'HECHO: ' + json.Status,
+                        message: json.Message,
+                    })
+
+                    $("#id-campo-adultoyadultomayor").val(json.Id)
+                }
+            },
+            error: function (err, Status, Message) {
+                alertafixed({
+                    class: 'danger-class',
+                    type: 'danger',
+                    title: 'ERROR: ' + Status,
+                    message: 'Sucedió un error en el servidor: ' + Message,
+                })
+            }
+        })
+    }
+
+    function setComponentInSelect() {
+        var htmlSelecet = "<option value='-1'>--Seleccionar--</option>";
+        for (var i = 0; i < $("#ulDinamic li").length; i++) {
+
+            var categoryId = $("#ulDinamic li a:eq(" + i + ")").attr("id").split("_")[1];
+
+
+            for (var x = 0; x < $("#tab_" + categoryId + " .js-group-component").length; x++) {
+
+                var id = $("#tab_" + categoryId + " .js-group-component:eq(" + x + ")").attr("id");
+
+                var text = $("#tab_" + categoryId + " .js-group-component:eq(" + x + ") div .lblName:eq(0)").text();
+                htmlSelecet += `<option value="${id}">${text}</option>`;
+
+            }
+
+
+        }
+        $("#select-component-for-recipe").html(htmlSelecet);
+    }
+
+    function EnviarKeySMS() {
+
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            url: '/PatientsAssistance/SendSMS',
+            success: function (json) {
+                if (json.Error) {
+                    alertafixed({
+                        class: 'warning-class',
+                        type: 'warning',
+                        title: 'VALIDACIÓN',
+                        message: json.Message
+                    })
+                } else {
+                    $("#modal-verificar-key").modal("show");
+                }
+
+            },
+            error: function (err, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'danger-class',
+                    title: 'ERROR: ' + status,
+                    message: 'Sucedió un error en el servidor: ' + message
+                })
+            }
+        })
+    }
+
     $(document).ready(function () {
+        sessionStorage.setItem("TipoProb", "");
+        sessionStorage.setItem("TipoAccion", "");
+        GetRecipesForService();
+        //$("#editar-plan-integral").on("click", function () {
+        //    sessionStorage.setItem("TipoAccion", "EDIT");
+        //})
+        //setComponentInSelect();
+
+        $("#verificar-key").on("click", function (e) {
+            let key = $("#input-key-sms").val();
+
+            if (key.length > 5 || key.length < 5) {
+                alertafixed({
+                    type: 'warning',
+                    class: 'warning-class',
+                    title: 'VALIDACIÓN',
+                    message: 'El codigo deber ser de 5 digitos.'
+                })
+                return;
+            }
+
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data: { 'keySMS': key },
+                url: '/PatientsAssistance/VerificarKey',
+                success: function (json) {
+                    if (json) {
+                        $("#modal-verificar-key").modal("hide");
+                        $("#input-key-sms").val("");
+                        alertafixed({
+                            type: 'info',
+                            class: 'info-class',
+                            title: 'INFORMACIÓN',
+                            message: 'Correcto, se procederá a guardar el examen.'
+                        })
+                        $("#input-key-sms").removeClass("border-danger");
+                        SaveExam(e, $("#js-save-exam"));
+                    } else {
+                        alertafixed({
+                            type: 'warning',
+                            class: 'warning-class',
+                            title: 'VALIDACIÓN',
+                            message: 'El codigo ingresado es incorrecto.'
+                        })
+                        $("#input-key-sms").addClass("border-danger");
+
+                    }
+                },
+                error: function (err, status, message) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'danger-class',
+                        title: 'ERROR: ' + status,
+                        message: 'Sucedió un error conectandose al servidor: ' + message
+                    })
+                }
+            })
+        })
+
+        $("#guardar-cuidados-preventivos").on("click", function () {
+            let rows = $("#body-cuidados-preventivos tr");
+
+            let Listado = [];
+            var fecha = "";
+            for (var i = 0; i < rows.length; i++) {
+
+                var ulti = rows.eq(i).find("td").length - 2;
+                var com = rows.eq(i).find("td").length - 1;
+                var comentario = rows.eq(i).find("td").eq(com).find("input").val();
+
+                var ultimoServicio = rows.eq(i).find("td").eq(ulti).find("input:checkbox");
+
+                if (ultimoServicio.length == 1) {
+                    fecha = ultimoServicio.data("fecha");
+                    let Valor = false;
+                    if (rows.eq(i).find("td").eq(ulti).find("input:checkbox:checked").length == 1) {
+                        Valor = true;
+                    }
+
+                    let EsoCuidadosPreventivos = {
+                        Valor,
+                        Comentario: comentario,
+                        GrupoId: ultimoServicio.data("grupo"),
+                        ParameterId: ultimoServicio.data("parametro"),
+                    }
+                    Listado.push(EsoCuidadosPreventivos);
+                }
+
+            }
+            let data = {
+                FechaServicio: fecha,
+                Listado,
+            }
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    'data': data,
+                    'personId': obtenerValorParametro("id")
+                },
+                url: '/PatientsAssistance/SaveCuidadosPreventivos',
+                success: function (json) {
+                    if (json.Error) {
+                        alertafixed({
+                            type: 'danger',
+                            class: 'danger-class',
+                            title: 'ERROR: ' + json.Status,
+                            message: json.Message
+                        })
+
+                    } else {
+                        alertafixed({
+                            type: 'success',
+                            class: 'success-class',
+                            title: 'HECHO: ' + json.Status,
+                            message: json.Message
+                        })
+
+                    }
+
+                },
+                error: function (err, status, message) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'danger-class',
+                        title: 'ERROR: ' + status,
+                        message: 'Sucedió un error en el servidor: ' + message
+                    })
+
+                }
+
+            })
+
+        })
+
+        $("#modalIntegral").on("show.bs.modal", function () {
+            GetPlanIntegral();
+            GetProblemas();
+        })
+
+        $("#guardar-problema").on("click", function () {
+            let arrIds = []
+            let tipoOperacion = sessionStorage.getItem("TipoProb");
+            let url = "";
+            let i_Tipo = null;
+            let i_TipoId = null;
+            let v_PersonId = obtenerValorParametro("id");
+            let d_Fecha = $("#prob-fecha").val();
+            let v_Descripcion = $("#prob-problema").val();
+            let i_EsControlado = null;
+            let v_Observacion = $("#prob-observacion").val();
+            let v_Lugar = null;
+            if (tipoOperacion == "INTEGRAL") {
+                url = "/PatientsAssistance/AddPlanIntegral";
+                i_TipoId = $("#prob-tipo").val();
+                v_Lugar = $("#prob-lugar").val();
+                arrIds = ["#prob-fecha", "#prob-problema", "#prob-lugar"]
+
+            } else if (tipoOperacion == "CRONICO") {
+                url = "/PatientsAssistance/AddProblema";
+                i_Tipo = 1;
+                i_EsControlado = $("#prob-controlado").val();
+                arrIds = ["#prob-fecha", "#prob-problema", "#prob-observacion"]
+            } else if (tipoOperacion == "AGUDO") {
+                url = "/PatientsAssistance/AddProblema";
+                i_Tipo = 2;
+                arrIds = ["#prob-fecha", "#prob-problema", "#prob-observacion"]
+            }
+
+            if (sessionStorage.getItem("Accion" == "EDIT")) {
+                if (tipoOperacion == "INTEGRAL") {
+                    url = "/PatientsAssistance/EditPlanIntegral";
+                }
+                if (tipoOperacion == "CRONICO" || tipoOperacion == "AGUDO") {
+                    url = "/PatientsAssistance/EditProblemas";
+                }
+
+            }
+
+
+            if (!ValidacionPorIds(arrIds)) {
+                let error = false;
+                if (tipoOperacion == "INTEGRAL") {
+                    if ($("#prob-tipo").val() == "-1") {
+                        $("#prob-tipo").removeClass("border-success").addClass("border-danger");
+                        error = true;
+                    } else{
+                        $("#prob-tipo").addClass("border-success").removeClass("border-danger");
+                    }
+                } else if (tipoOperacion == "CRONICO") {
+                    if ($("#prob-controlado").val() == "-1") {
+                        $("#prob-controlado").removeClass("border-success").addClass("border-danger");
+                        error = true;
+                    } else {
+                        $("#prob-controlado").addClass("border-success").removeClass("border-danger");
+                    }
+
+                }
+                if (error) {
+                    alertafixed({
+                        type: 'warning',
+                        class: 'warning-class',
+                        title: 'VALIDACIÓN',
+                        message: 'Complete los campos para continuar porfavor.'
+                    })
+                    return;
+                }
+                let data = { i_Tipo, v_PersonId, d_Fecha, v_Descripcion, i_EsControlado, v_Observacion, v_Lugar, i_TipoId };
+
+                $("#modalProblemaPlan").find(".modal-header").addClass("loadingGrid");
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data,
+                    url,
+                    success: function (json) {
+                        if (json.Error) {
+                            alertafixed({
+                                type: 'danger',
+                                class: 'danger-class',
+                                title: 'ERROR: ' + json.Status,
+                                message: json.Message
+                            })
+
+                        } else {
+                            alertafixed({
+                                type: 'success',
+                                class: 'success-class',
+                                title: 'HECHO: ' + json.Status,
+                                message: json.Message
+                            })
+
+
+                            $("#modalProblemaPlan").modal("hide");
+                            GetPlanIntegral();
+                            GetProblemas();
+
+
+                        }
+                        $("#modalProblemaPlan").find(".modal-header").removeClass("loadingGrid");
+                    },
+                    error: function (err, status, message) {
+                        alertafixed({
+                            type: 'danger',
+                            class: 'danger-class',
+                            title: 'ERROR: ' + status,
+                            message: 'Sucedió un error en el servidor: ' + message
+                        })
+                        $("#modalProblemaPlan").find(".modal-header").removeClass("loadingGrid");
+                    }
+                })
+
+            }
+
+
+
+        })
+
+        $("#modalProblemaPlan").on("hidden.bs.modal", function () {
+            $("#prob-tipo").val("-1");
+            $("#prob-fecha").val("");
+            $("#prob-problema").val("");
+            $("#prob-controlado").val("-1");
+            $("#prob-observacion").val("");
+            $("#prob-lugar").val("");
+        })
+
+        $("#nuevo-plan-integral").on("click", function () {
+            $("#modalIntegral").modal("hide");
+            sessionStorage.setItem("TipoProb", "INTEGRAL");
+            $("#modalProblemaPlan").modal("show");
+            $("#cont-tipo").removeClass("d-none");
+            $("#cont-observacion").addClass("d-none");
+            $("#cont-lugar").removeClass("d-none");
+            $("#cont-controlado").addClass("d-none");
+            $("#tipo-popup").text("NUEVO PLAN INTEGRAL")
+        })
+
+        $("#nuevo-problema-cronico").on("click", function () {
+            $("#modalIntegral").modal("hide");
+            sessionStorage.setItem("TipoProb", "CRONICO");
+            $("#cont-observacion").removeClass("d-none");
+            $("#modalProblemaPlan").modal("show");
+            $("#modalProblemaPlan").modal("show");
+            $("#cont-tipo").addClass("d-none");
+            $("#cont-lugar").addClass("d-none");
+            $("#cont-controlado").removeClass("d-none");
+            $("#tipo-popup").text("NUEVO PROBLEMA CRÓNICO")
+        })
+
+        $("#nuevo-problema-agudo").on("click", function () {
+            $("#cont-observacion").removeClass("d-none");
+            $("#modalIntegral").modal("hide");
+            sessionStorage.setItem("TipoProb", "AGUDO");
+            $("#modalProblemaPlan").modal("show");
+            $("#cont-tipo").addClass("d-none");
+            $("#cont-lugar").addClass("d-none");
+            $("#cont-controlado").addClass("d-none");
+            $("#tipo-popup").text("NUEVO PROBLEMA AGUDO")
+        })
+
+        $("#modalProblemaPlan").on("hidden.bs.modal", function () {
+            $("#modalIntegral").modal("show");
+            $(".border-success").removeClass("border-success");
+            $(".border-danger").removeClass("border-danger");
+        });
+
+        $("#guardar-embarazo").on("click", function () {
+
+            let arrIds = ["#embarazo-anio", "#embarazo-cpn", "#embarazo-complicacion", "#embarazo-parto", "#embarazo-peso", "#embarazo-puerperio"]
+
+            if (!ValidacionPorIds(arrIds)) {
+
+                let data = {
+                    PersonId : obtenerValorParametro("id"),
+                    Anio : $("#embarazo-anio").val(),
+                    Cpn : $("#embarazo-cpn").val(),
+                    Complicacion : $("#embarazo-complicacion").val(),
+                    Parto : $("#embarazo-parto").val(),
+                    PesoRn : $("#embarazo-peso").val(),
+                    Puerpio : $("#embarazo-puerperio").val(),
+                }
+
+                $("#modalNuevoEmabarazo").find(".modal-header").addClass("loadingGrid");
+                $.ajax({
+                    cache: false,
+                    method: 'POST',
+                    dataType: 'json',
+                    data,
+                    url: '/PatientsAssistance/AddEmbarazo',
+                    success: function (json) {
+                        if (json.Error) {
+                            alertafixed({
+                                type: 'danger',
+                                class: 'danger-class',
+                                title: 'ERROR: ' + json.Status,
+                                message: json.Message
+                            })
+
+                        } else {
+                            alertafixed({
+                                type: 'success',
+                                class: 'success-class',
+                                title: 'HECHO: ' + json.Status,
+                                message: json.Message
+                            })
+
+                            let html = `<tr>
+                                            <td nowrap class="d-none"></td>
+                                            <td nowrap>${data.Anio}</td>
+                                            <td nowrap>${data.Cpn}</td>
+                                            <td nowrap>${data.Complicacion}</td>
+                                            <td nowrap>${data.Parto}</td>
+                                            <td nowrap>${data.PesoRn}</td>
+                                            <td nowrap>${data.Puerpio}</td>
+                                        </tr>
+                                        `;
+                            if ($(".error-servidor").length > 0) $(".error-servidor").remove;
+
+                            $(html).appendTo($("#body-embarazos"));
+
+                            $("#modalNuevoEmabarazo").modal("hide");
+                        }
+                        $("#modalNuevoEmabarazo").find(".modal-header").removeClass("loadingGrid");
+                    },
+                    error: function (err, status, message) {
+                        alertafixed({
+                            type: 'danger',
+                            class: 'danger-class',
+                            title: 'ERROR: ' + status,
+                            message: 'Sucedió un error en el servidor: ' + message
+                        })
+                        $("#modalNuevoEmabarazo").find(".modal-header").removeClass("loadingGrid");
+                    }
+                })
+            }
+
+
+        })
+
+        $("#modalNuevoEmabarazo").on("show.bs.modal", function () {
+            $("#modalGenerales").modal("hide");
+        })
+
+        $("#modalNuevoEmabarazo").on("hidden.bs.modal", function () {
+            $("#modalGenerales").modal("show");
+        })
+
+        $("#btn-guardar-antecedentes").on("click", function () {
+            let Hijos = [];
+            var radios = $(".radio-actual:checked");
+            var arrEsoAntecedentesPadre = [];
+            let nombrePadre = "";
+            let grupoPadre = "";
+            let parametroPadre = "";
+
+            for (var i = 0; i < radios.length; i++) {
+
+                let NombrePadre = radios.eq(i).parent().parent().find("td").eq(5).text()
+
+                let value = radios.eq(i).data("radio");
+                let SI = true, NO = false;
+                let Nombre = radios.eq(i).parent().parent().find("td").eq(0).text()
+
+                let GrupoId = radios.eq(i).parent().parent().find("td").eq(3).text();
+                let ParametroId = radios.eq(i).parent().parent().find("td").eq(4).text();
+                if (value == 1 || value == "1") {
+                    SI = true;
+                    NO = false;
+                } else {
+                    SI = false;
+                    NO = true;
+                }
+                let EsoAntecedentesHijo = { Nombre, SI, NO, GrupoId, ParametroId };
+
+                if (nombrePadre != "" && nombrePadre != NombrePadre) { //Si cambió de padre
+                    let EsoAntecedentesPadre = {
+                        'GrupoId': grupoPadre,
+                        'Nombre': nombrePadre,
+                        'ParametroId': parametroPadre,
+                        'Hijos': Hijos,
+                    }
+                    arrEsoAntecedentesPadre.push(EsoAntecedentesPadre);
+                    nombrePadre = NombrePadre;
+                    Hijos = [];
+                } else {
+                    nombrePadre = NombrePadre;
+                }
+                grupoPadre = radios.eq(i).parent().parent().data("grupopadre");
+                parametroPadre = radios.eq(i).parent().parent().data("parametropadre");
+                if (radios.length == (i + 1)) {//el ultimo
+                    let EsoAntecedentesPadre = {
+                        'GrupoId': grupoPadre,
+                        'Nombre': nombrePadre,
+                        'ParametroId': parametroPadre,
+                        'Hijos': Hijos,
+                    }
+                    Hijos.push(EsoAntecedentesHijo);
+                    arrEsoAntecedentesPadre.push(EsoAntecedentesPadre);
+                } else {
+                    Hijos.push(EsoAntecedentesHijo);
+                }
+
+
+            }
+            let edad = Number($("#edad-paciente").val());
+            if (edad < 13) {
+                GuardarNiño(arrEsoAntecedentesPadre);
+            } else if (edad >=13 && edad <=17) {
+                GuardarAdolescente(arrEsoAntecedentesPadre);
+            } else {
+                GuardarAdultoYAdultoMayor(arrEsoAntecedentesPadre);
+            }
+
+        })
+
 
         $("#modal-add-medicine").on("keyup", "#js-Diseases" , function () {
             var value = $(this).val();
@@ -1293,7 +2326,7 @@
             var value = $("#js-NameMedicine").val();
             var promise = GetMedicine(value);
             promise.then(function (json) {
-                
+
                 if (json.length > 0) {
                     let arrHtml = [];
                     for (let i = 0; i < json.length; i++) {
@@ -1305,26 +2338,29 @@
                                             <input type="checkbox" class="custom-control-input checkbox-rows" onchange="ChangeCheckboxMedicines(this)" value="0" id="id-${arrJson[1]}">
                                             <label class="custom-control-label" for="id-${arrJson[1]}"></label>
                                         </div>
-                                    </td>                                    
+                                    </td>
                                     <td class="d-none" id="${arrJson[1]}">${arrJson[1]}</td>
                                     <td>${arrJson[0]}</td>
                                     <td></td>
                                     <td>${arrJson[2]}</td>
+                                    <td>${arrJson[3]}</td>
+                                    <td class="d-none">${arrJson[4]}</td>
+                                    <td>${arrJson[5]}</td>
                                 </tr>
                                 `;
                         arrHtml.push(html);
                     }
                     $("#body-medicamentos").html(arrHtml.join(""));
-                    
+
                 } else {
                     $("#body-medicamentos").html(`<tr><td colspan="7"  class="text-center sin-resultados">No hay resultados</td></tr>`);
                 }
-                
+
 
             }).catch(error => {
                 console.log(error)
             });
-            
+
         });
 
         $("#cbo-organization").attr("disabled", true);
@@ -1504,7 +2540,7 @@
         let arrObj = [];
         let arrRecomendations = [];
         let arrRestrictions = [];
-        
+
         if (!rowsRecipes.eq(0).find("td").hasClass("sin-resultados")) {
             let complete = true;
             for (let item of rowsRecipes) {
@@ -1513,9 +2549,18 @@
                 let Posologia = item.cells[2].children[0].value;
                 let Duration = item.cells[3].children[0].value;
                 let Quantity = item.cells[4].children[0].value;
-                let StockActual = item.cells[5].innerText;
-                let ProductId = item.cells[7].innerText;
-                if (Posologia === "" || Duration === "" || Quantity === "") {
+                //let NewPrice = item.cells[5].children[0].value;
+                let StockActual = item.cells[6].innerText;
+                let FechaFin = item.cells[7].children[0].value;
+                let ProductId = item.cells[9].innerText;
+                let DiseaseId = item.cells[10].innerText;
+                let ComponentId = item.cells[11].innerText;
+                let ProductoDetalleId = item.cells[12].innerText;
+                let IdLinea = item.cells[13].innerText;
+                let Price = item.cells[14].innerText;
+                let RecetaId = item.cells[15].innerText;
+
+                if (Posologia === "" || Duration === "" || Quantity === "" || FechaFin == "" ) {
                     complete = false;
                 }
                 let obj = {
@@ -1526,12 +2571,20 @@
                     Quantity,
                     StockActual,
                     ProductId,
+                    DiseaseId,
+                    ComponentId,
+                    ProductoDetalleId,
+                    IdLinea,
+                    Price,
+                    //NewPrice,
+                    FechaFin,
+                    RecetaId,
                 }
 
                 arrObj.push(obj);
-                
-            }
 
+            }
+            console.log(arrObj);
             if (complete) {
                 if (!rowsRecomendations.eq(0).hasClass("sin-resultados")) {
                     for (var i = 0; i < rowsRecomendations.length; i++) {
@@ -1556,8 +2609,8 @@
                 }
 
                 let warehouseId = sessionStorage.getItem("warehouseId");
-                if (warehouseId != -1) {
-                    let almacen = $('#cbo-organizationWarehouse option[value=' + warehouseId + ']').text();
+                if (warehouseId == -1) {
+                    let almacen = "Principal"/*$('#cbo-organizationWarehouse option[value=' + warehouseId + ']').text();*/
                     notificacion({
                         classTitleAndButtons: "warningTitleAndButtons",
                         classMessage: "warningMessage",
@@ -1587,35 +2640,63 @@
                             method: 'POST',
                             dataType: 'json',
                             data: data,
-                            url: '/PatientsAssistance/PrintRecipes',
+                            url: '/PatientsAssistance/SaveAndPrintRecipes',
                             success: json => {
-                                console.log(json);
 
-                                if (location.hostname === "localhost") {
-                                    var fileName = json + ".pdf";
-                                    var url = "http://localhost:1932/ESO/" + fileName;
-                                    window.open(url, '_blank');
+                                if (json.Error) {
+                                    alertafixed({
+                                        type: 'danger',
+                                        class: 'danger-class',
+                                        title: 'ERROR: ' + json.Status,
+                                        message: json.Message
+                                    })
                                 } else {
-                                    var url = "https://www.omegavigilanciaservicios.com/ESO/" + json + ".pdf";
+                                    alertafixed({
+                                        type: 'success',
+                                        class: 'success-class',
+                                        title: 'HECHO: ' + json.Status,
+                                        message: json.Message
+                                    })
+                                    var ApiURI = SigesoftWebApiUrl();
+                                    var url = ApiURI + "ESO/" + json.Id + ".pdf";
                                     window.open(url, '_blank');
+                                    //if (location.hostname === "localhost") {
+                                    //    //var fileName = json + ".pdf";
+
+                                    //    var url = "http://localhost:1932/ESO/" + json.Id + ".pdf";
+                                    //    window.open(url, '_blank');
+                                    //} else {
+                                    //    var url = "http://localhost:1932/ESO/" + json.Id + ".pdf";
+                                    //    window.open(url, '_blank');
+                                    //}
                                 }
 
+                                //console.log(json);
 
-                                for (var x = 0; x < rowsRecipes.length; x++) {
-                                    let refreshStock = 0;
-                                    let Quantity = parseInt(rowsRecipes.eq(x).find("td").eq(4).find("input").val());
-                                    let StockActual = parseInt(rowsRecipes.eq(x).find("td").eq(5).text());          
-                                    
-                                    if (StockActual > Quantity) {
-                                        refreshStock = StockActual - Quantity;
-                                    }
-                                    rowsRecipes.eq(x).find("td").eq(5).text(refreshStock);
 
-                                }
+
+
+                                //for (var x = 0; x < rowsRecipes.length; x++) {
+                                //    let refreshStock = 0;
+                                //    let Quantity = parseInt(rowsRecipes.eq(x).find("td").eq(4).find("input").val());
+                                //    let StockActual = parseInt(rowsRecipes.eq(x).find("td").eq(5).text());
+
+                                //    if (StockActual > Quantity) {
+                                //        refreshStock = StockActual - Quantity;
+                                //    }
+                                //    rowsRecipes.eq(x).find("td").eq(5).text(refreshStock);
+
+                                //}
                                 $("DivReceta").parent().removeClass("loadingGrid");
                             },
-                            error: error => {
-                                console.log(error);
+                            error: (error, Status, Message) => {
+                                $("DivReceta").parent().removeClass("loadingGrid");
+                                alertafixed({
+                                    type: 'danger',
+                                    class: 'danger-class',
+                                    title: 'ERROR: ' + Status,
+                                    message: 'Sucedió un error en el servidor: ' + Message
+                                })
                             }
                         })
                     })
@@ -1637,7 +2718,7 @@
                 })
             }
 
-            
+
         } else {
             alertafixed({
                 title: 'Aviso',
@@ -1646,8 +2727,8 @@
                 class: 'error-sin-almacen'
             })
         }
-        
-        
+
+
 
     });
 
@@ -1661,7 +2742,16 @@
                 title: 'Validación',
                 message: 'Elija un diagnóstico.'
             });
-        } else {
+            return;
+        } else if ($("#select-component-for-recipe").val() == "-1") {
+            alertafixed({
+                type: 'warning',
+                class: 'js-war-true',
+                title: 'Validación',
+                message: 'Elija un componente.'
+            });
+            return;
+        }else {
             if (rows.length > 0) {
                 var cantRows = 0;
                 let arrRows = [];
@@ -1676,7 +2766,10 @@
                         let diagnosticoId = $("#js-DiseasesID").val();
                         let medicamentoId = rows.eq(i).find('td').eq(1).text();
                         let medicamento = rows.eq(i).find('td').eq(2).text();
-
+                        let productoDetalleId = rows.eq(i).find('td').eq(6).text();
+                        let lineaId = rows.eq(i).find('td').eq(5).text();
+                        let precioVenta = rows.eq(i).find('td').eq(7).text();
+                        let componenteId = $("#select-component-for-recipe").val();
                         let rowHtml = `
                             <tr class="row-receta-new">
                                 <td>${diagnostico}</td>
@@ -1684,9 +2777,17 @@
                                 <td><textarea style="max-height:38px; resize:none" class="form-control"></textarea></td>
                                 <td><input class="form-control" type="text" /></td>
                                 <td><input style="width:70px" type="text" onkeyup="onlyInteger(this)" class="js-cantidad form-control p-1"  /></td>
+                                <td class="d-none"><input style="width:70px" type="number" class="form-control p-1"  /></td>
                                 <td>105</td>
+                                <td><input type="date"  class="form-control form-control-sm"/></td>
                                 <td><i onclick="deleteRowRecipe(this)" class="fas fa-trash-alt"></i></td>
                                 <td class="d-none">${medicamentoId}</td>
+                                <td class="d-none">${diagnosticoId}</td>
+                                <td class="d-none">${componenteId}</td>
+                                <td class="d-none">${productoDetalleId}</td>
+                                <td class="d-none">${lineaId}</td>
+                                <td class="d-none">${precioVenta}</td>
+                                <td class="d-none"></td>
                             </tr>
                             `;
                         arrRows.push(rowHtml);
@@ -1695,7 +2796,7 @@
 
                 }
 
-                
+
                 if (cantRows > 0) {
                     $("#body-recetas").html(arrRows.join(""));
                     $("#js-Diseases").val("");
@@ -1716,10 +2817,10 @@
 
             }
         }
-        
-        
-        
-        
+
+
+
+
     }
 
     const autocompleteDiseases = (value, inputDiseasesName, inputDiseasesId) => {
@@ -1793,7 +2894,7 @@
 
         if (warehouseId != "-1") {
             if (diseasesId != "" && diseasesId != undefined) {
-                $("#body-recetas").addClass("loadingGrid");
+                //$("#body-recetas").addClass("loadingGrid");
                 $.ajax({
                     cache: false,
                     method: 'GET',
@@ -1806,7 +2907,7 @@
                     success: json => {
 
                         let arrHtml = [];
-                        var body = $("#body-recetas");
+                        //var body = $("#body-recetas");
                         //if (!body.find("tr").eq(0).find("td").eq(0).hasClass("sin-resultados")) {
                         //    arrHtml.push(body.html());
                         //}
@@ -1826,13 +2927,13 @@
                             `;
                             arrHtml.push(html);
                         }
-                        if (arrHtml.length > 0) {
-                            $("#body-recetas").html(arrHtml.join(""));
-                        } else {
-                            $("#body-recetas").html(`<tr><td colspan="7" class="text-center sin-resultados">No hay resultados</td></tr>`);
-                        }
+                        //if (arrHtml.length > 0) {
+                        //    $("#body-recetas").html(arrHtml.join(""));
+                        //} else {
+                        //    $("#body-recetas").html(`<tr><td colspan="7" class="text-center sin-resultados">No hay resultados</td></tr>`);
+                        //}
 
-                        $("#body-recetas").removeClass("loadingGrid");
+                        //$("#body-recetas").removeClass("loadingGrid");
 
                     },
                     error: error => {
@@ -1842,7 +2943,7 @@
                 });
             }
         }
-        
+
     }
 
     function GetMedicine(value) {
@@ -1855,7 +2956,7 @@
             },
             url: '/ConfiguradorDx/SearchProduct',
         }));
-        
+
     }
 
     function LoadIndicators(patientId) {
@@ -2088,14 +3189,14 @@
                 $('input:checkbox:eq(' + j + ')').prop('checked', true);
             }
         };
-        
+
         for (var x = 0; x < $('input:radio').length; x++) {
             if (!$('input:radio:eq(' + x + ')').hasClass('group-field')) {
                 if ($('input:radio:eq(' + x + ')').val() == 1) {
                     $('input:radio:eq(' + x + ')').prop("checked", true);
                 }
             }
-            
+
         };
         $("#list-examen_" + categor).removeClass("loadingGrid");
         $("#examen_" + categor).removeClass("loadingGrid");
@@ -2461,7 +3562,7 @@
                         $("." + idRow).eq(i).find('td:eq(3) input').val(3)
                         $("." + idRow).eq(i).find('td:eq(4) input').val(2)
                     }
-                    
+
                 }
 
 
@@ -2497,9 +3598,9 @@
 
     //function EditRecomenRestric(idBody) {
     //    if ($("#" + idBody + " tr").hasClass("row-active")) {
-            
+
     //        var idRow = $("#" + idBody + " .row-active").attr("id");
-            
+
     //        if ($("#" + idBody + " .row-active").data("estado") != "nuevo") {
 
     //            $("#" + idRow + " td:eq(1) textarea").prop('disabled', false);
@@ -2600,7 +3701,7 @@
             $(firstOpt).appendTo($("#" + idSelect));
         };
 
-        
+
 
         for (var i = 0; i < rowDiagnostic.length; i++) {
 
@@ -2634,13 +3735,13 @@
 
     function SaveResult() {
 
-        if (sessionStorage.getItem("warehouseId") != "-1") {
+        if (/*sessionStorage.getItem("warehouseId")*/ 1 != 2 /*"-1"*/) {
             let warehouse = $("#cbo-organizationWarehouse option:selected").text();
 
             //Validaciones
             if (ValidacionDiseases()) {
                 if (ValidacionRecomendaciones() && ValidacionReestricciones()) {
-                    
+
                     notificacion({
                         classTitleAndButtons: "infoTitleAndButtons",
                         classMessage: "infoMessage",
@@ -2667,10 +3768,10 @@
                             url: '/PatientsAssistance/SaveDiagnostic',
                             success: json => {
                                 console.log(json);
-                                
+
                                 for (let i = 0; i < $(".RS-NEW").length; i++) {
                                     let rows = $(".RS-NEW").eq(i).parent().parent();
-                                    
+
                                     if (rows.find("td:eq(3) input") != "") {
                                         $(".RS-NEW").eq(i).val('1');
                                         rows.find('td:eq(1) textarea').prop('disabled', true);
@@ -2706,11 +3807,11 @@
                         })
 
                     });
-                    
+
                 }
             }
-            
-            
+
+
         } else {
             alertafixed({
                 type: 'warning',
@@ -2719,7 +3820,7 @@
                 message: 'Seleccione un almacén en la parte superior para continuar.'
             });
         }
-        
+
     };
 
     function setTextSelect(option, componentId) {
@@ -2758,9 +3859,9 @@
                     } else if (td.eq(1).find('input').hasClass('border-success')) {
                         td.eq(1).find('input').removeClass('border-success');
                     }
-                    
 
-                } 
+
+                }
 
                 if (td.eq(2).attr("data-componentid") == "" || td.eq(2).attr("data-componentid") === undefined) {
 
@@ -2771,7 +3872,7 @@
                         message: 'Debe seleccionar un componente para continuar.'
                     })
                     return false;
-                } 
+                }
                 if (td.eq(0).find('input').val() == "") {
 
                     alertafixed({
@@ -2791,7 +3892,7 @@
                         td.eq(1).find('input').removeClass('border-success');
                     }
 
-                } 
+                }
 
                 if (td.eq(3).find('input').val() == "") {
 
@@ -2821,7 +3922,7 @@
 
     const ValidacionRecomendaciones = _ => {
         let rows = $("#dx-recomendaciones tr");
-        
+
         for (let i = 0; i < rows.length; i++) {
             let td = rows.eq(i).find('td');
             if (td.eq(0).find('input').val() == "") {
@@ -2842,8 +3943,8 @@
                 } else if (td.eq(1).find('textarea').hasClass("border-success")) {
                     td.eq(1).find('textarea').removeClass("border-success")
                 }
-                
-                
+
+
             }
             if (td.eq(2).find('select').val() == "-1") {
                 alertafixed({
@@ -2953,7 +4054,7 @@
 
                         if ($(input).val() != "") {
 
-                            let rowDiagnosticoId = $("#" + arrayId[exists]).length;                                        
+                            let rowDiagnosticoId = $("#" + arrayId[exists]).length;
 
                             //Busca si el diagnostico elegido ya existe pero está removido
                             if ($('[data-diseasesid=' + arrayId[exists] + ']').length === 1 && $('[data-diseasesid=' + arrayId[exists] + ']').hasClass('d-none')) {
@@ -2965,7 +4066,7 @@
                                 td.eq(3).find('input').val(arrayCie[exists]);
 
                                 //Agrega el id del diagnostico al input oculto para luego validar si exiten errores
-                                td.eq(0).find('input').val(arrayId[exists]);                                
+                                td.eq(0).find('input').val(arrayId[exists]);
 
                                 //Si no existe el diagnóstico seleccionado
                                 if (!ExistDiseases(rowDiagnosticoId, td, input, arrayName[exists])) {
@@ -2986,13 +4087,13 @@
                                             select.find('option[value=' + arrayId[exists] + ']').attr("selected", true);
 
                                         }
-                                        GetConfigDx(input);
+                                        //GetConfigDx(input);
                                     }
                                 }
                             }
 
-                            
-                            
+
+
                         }
 
                     }
@@ -3059,7 +4160,7 @@
         if (!$(div).hasClass('disabled')) {
             $(div).next().toggleClass("d-none");
         }
-        
+
 
     }
 
@@ -3266,7 +4367,7 @@
         }
 
         return arrRestrictions;
-        
+
     }
 
     const ExistDiseases = (row, td, input, name) => {

@@ -9,6 +9,7 @@ using BE.Service;
 using DAL.Common;
 using DAL.Protocol;
 using DAL.Service;
+using BE.ProtocolComponent;
 
 namespace DAL.Calendar
 {

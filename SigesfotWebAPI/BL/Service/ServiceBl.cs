@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
+using BE.Categoria;
 using BE.Common;
+using BE.Component;
 using BE.Message;
+using BE.Organization;
+using BE.Pacient;
 using BE.Protocol;
+using BE.ProtocolComponent;
+using BE.RoleNodeComponentProfile;
 using BE.Service;
+using BE.Sigesoft;
 using BL.Protocol;
 using DAL.Calendar;
 using DAL.Hospitalizacion;
@@ -29,7 +37,10 @@ namespace BL.Service
             string serviceId = "";
             List<ProtocolComponentCustom> ListProtocolComponent = new ProtocolComponentDal().GetProtocolComponents(data.ProtocolId);
 
-            data.ProtocolId = new ProtocolBL().ReturnOrDuplicateProtocol(data, nodeId, userId, ListProtocolComponent);
+            if (data.FechaCalendario == null)
+            {
+                data.ProtocolId = new ProtocolBL().ReturnOrDuplicateProtocol(data, nodeId, userId, ListProtocolComponent);
+            }
 
             serviceId = new ServiceDal().CreateService(data, nodeId, userId);
             if (serviceId == null) return null;
@@ -53,9 +64,9 @@ namespace BL.Service
             _CalendarDto.v_PersonId = data.PersonId;
             _CalendarDto.v_ServiceId = data.ServiceId;
             _CalendarDto.v_PersonId = data.PersonId;
-            _CalendarDto.d_DateTimeCalendar = DateTime.Now;
-            _CalendarDto.d_CircuitStartDate = DateTime.Now;
-            _CalendarDto.d_EntryTimeCM = DateTime.Now;
+            _CalendarDto.d_DateTimeCalendar = data.FechaCalendario == null ? DateTime.Now : data.FechaCalendario;
+            _CalendarDto.d_CircuitStartDate = data.FechaCalendario == null ? DateTime.Now : data.FechaCalendario;
+            _CalendarDto.d_EntryTimeCM = data.FechaCalendario == null ? DateTime.Now : data.FechaCalendario;
             _CalendarDto.i_ServiceTypeId = data.MasterServiceTypeId;
             _CalendarDto.i_CalendarStatusId = 1;
             _CalendarDto.i_ServiceId = data.MasterServiceId;
@@ -91,6 +102,84 @@ namespace BL.Service
 
         public MessageCustom FusionarServicios(List<string> ServicesId, int nodeId, int userId) {
             return new ServiceDal().FusionarServicios(ServicesId, userId, nodeId);
+        }
+
+        public List<SaldoPaciente> GetListSaldosPaciente(string serviceId)
+        {
+            return new ServiceDal().GetListSaldosPaciente(serviceId);
+        }
+
+        public List<RoleNodeComponentProfileCustom> GetRoleNodeComponentProfileByRoleNodeId(int pintNodeId, int pintRoleId)
+        {
+            return new ServiceDal().GetRoleNodeComponentProfileByRoleNodeId(pintNodeId, pintRoleId);
+        }
+
+        public List<ServiceComponentList> GetServiceComponentsCulminados(string pstrServiceId)
+        {
+            return new ServiceDal().GetServiceComponentsCulminados(pstrServiceId);
+        }
+
+        public List<ServiceComponentList> GetServiceComponents(string pstrServiceId)
+        {
+            return new ServiceDal().GetServiceComponents(pstrServiceId);
+        }
+
+        public bool PermitirLlamar(string pstrServiceId, int pintPiso)
+        {
+            return new ServiceDal().PermitirLlamar(pstrServiceId, pintPiso);
+        }
+
+        public List<ServiceComponentList> GetServiceComponentByCategoryId(int pstrCategoryId, string pstrServiceId)
+        {
+            return new ServiceDal().GetServiceComponentByCategoryId(pstrCategoryId, pstrServiceId);
+        }
+
+        public bool UpdateAdditionalExam(List<ServiceComponentList> pobjDtoEntity, string serviceId, int isRequiredId, int userId)
+        {
+            return new ServiceDal().UpdateAdditionalExam(pobjDtoEntity, serviceId, isRequiredId, userId);
+        }
+
+        public bool AddAdditionalExam(List<AdditionalExamCustom> listAdditionalExam, int userId, int nodeId)
+        {
+            try
+            {
+                using (var ts = new TransactionScope())
+                {
+                    bool Result = new ServiceDal().AddAdditionalExam(listAdditionalExam, userId, nodeId);
+                    if (!Result) throw new Exception("Error");
+                    ts.Complete();
+                }
+                return true;     
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+        public UsuarioGrabo DevolverDatosUsuarioFirma(int systemuserId)
+        {
+            return new ServiceDal().DevolverDatosUsuarioFirma(systemuserId);
+        }
+
+        public OrganizationDto GetInfoMedicalCenter()
+        {
+            return new ServiceDal().GetInfoMedicalCenter();
+        }
+
+        public BoardServiceCustomList GetServicesPagedAndFiltered(BoardServiceCustomList data)
+        {
+            return new ServiceDal().GetServicesPagedAndFiltered(data);
+        }
+
+        public static List<Categoria> GetAllComponentsByService(string serviceId)
+        {
+            return ServiceComponentDal.GetAllComponentsByService(serviceId);
+        }
+
+        public static OrganizationCustom GetInfoMedicalCenterSede()
+        {
+            return ServiceDal.GetInfoMedicalCenterSede();
         }
     }
 }

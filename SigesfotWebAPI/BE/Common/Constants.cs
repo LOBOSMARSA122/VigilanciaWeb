@@ -8,6 +8,11 @@ namespace BE.Common
 {
     public class Constants
     {
+        public const string ATENCION_INTEGRAL_ID = "N009-ME000000405";
+        public const string Prot_Hospi_Adic = "N009-PR000000636";
+        public const string EXAMEN_FISICO_7C_ID = "N009-ME000000052";
+        public const string EXAMEN_FISICO_ID = "N002-ME000000022";
+        public const string OWNER_ORGNIZATION_ID = "N009-OO000000052";
         public const string OK_RESULT = "La operación se realizó correctamente.";
         public const string BAD_REQUEST = "Sucedió un error al procesar la información, por favor vuelva a intentar.";
         public const string RucWortec = "20505310072";

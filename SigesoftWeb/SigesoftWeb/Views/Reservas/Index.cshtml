@@ -1,0 +1,822 @@
+﻿
+@{
+    ViewBag.Title = "Reservas";
+    Layout = null;
+}
+<style>
+    .img-especialidad {
+        max-height:300px !important;
+        max-width: 100% !important;
+    }
+    .shadow {
+        box-shadow: -6px 6px 10px -2px #000000 !important;
+    }
+    .day.active {
+        border: 2px #3e9be0 dashed !important;
+    }
+    .day:hover {
+        border: 2px #3e9be0 dashed !important;
+        cursor: pointer;
+    }
+    .loadingGrid:before {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 100;
+        background: rgba(0,0,0,0.1) center center no-repeat url('/Content/Images/loadingGrid.gif');
+    }
+</style>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/fontawesome/css/all.css" rel="stylesheet" />
+<div class="row w-100 mx-0 justify-content-center" style="background-color:#3c4667">
+    <div class="col-9 py-5">
+        <h1 style="font-size: 2.5rem" class="text-white">Reserva en línea</h1>
+    </div>
+</div>
+<div class="row w-100 mx-0 justify-content-center py-3">
+    <div class="col-lg-9">
+        <div class="row w-100 mx-0 py-2">
+            @if (ViewBag.Especialidades != null)
+            {
+                foreach (var item in ViewBag.Especialidades.List)
+                {
+                    <div class="col-md-4 my-2 d-flex w-100">
+                        <div class="card w-100 text-center shadow">
+                            <img src="data:image/png;base64,@item.v_EspecialityPicture" class="card-img-top img-especialidad">
+                            <input type="time" class="d-none" id="horario-inicio-@item.v_EspecialityId" value="@item.t_StartTime" />
+                            <input type="time" class="d-none" id="horario-fin-@item.v_EspecialityId" value="@item.t_EndTime" />
+                            <input type="time" class="d-none" id="tiempo-@item.v_EspecialityId" value="@item.t_TimeForAttention" />
+                            <input type="time" class="d-none" id="horario-inicio-adicional-@item.v_EspecialityId" value="@item.t_StartTime2" />
+                            <input type="time" class="d-none" id="horario-fin-adicional-@item.v_EspecialityId" value="@item.t_EndTime2" />
+                            <div style="max-height: 320px" class="card-body">
+                                <h5 class="card-title">@item.v_EspecialityName</h5>
+                                <label>@item.t_TimeForAttention | s/. @item.r_Cost</label>
+                                <p class="card-text">@item.v_Description</p>
+                            </div>
+                            <button id="@item.v_EspecialityId" class="btn btn-info btn-small" onclick="Reservar('@item.v_EspecialityId', '@item.v_ProtocolId')">Reservar</button>
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+        
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalReserva" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="loadingHeader">
+                <h5 class="modal-title" id="exampleModalLabel">Reservación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row w-100 mx-0" id="registro-paciente">
+
+                    <div class="col-12 mb-2">
+                        <div class="group-box">
+                            <label class="label-group-box">Búsqueda</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" placeholder="DNI" aria-label="Paciente" aria-describedby="btn-trabajador" id="doc-number-find">
+                                <input type="text" class="d-none" value="" id="paciente-id" />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info" type="button" id="btn-trabajador"><i class="fas fa-search mr-1"></i>Buscar</button>
+                                </div>
+                            </div>
+                            <div class="form-inline d-none" id="cont-captcha">
+                                <figure id="figure-captcha">
+                                    <img src="" alt="CargandoCaptcha" id="img-captcha" />
+                                </figure>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" placeholder="Captcha" aria-label="Trabajador" aria-describedby="btn-trabajador" id="value-captcha">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-info" type="button" id="btn-enviarcaptcha"><i class="fas fa-check"></i></button>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-primary" type="button" id="btn-recargarcaptcha"><i class="fas fa-sync-alt"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-3 mt-2">
+                        <label class="small">Nombres</label>
+                        <input type="text" class="form-control form-control-sm" value="" id="nombres-paciente" />
+                    </div>
+                    <div class="col-12 col-lg-3 mt-2">
+                        <label class="small">Ap. Paterno</label>
+                        <input type="text" class="form-control form-control-sm " value="" id="apepat-paciente" />
+                    </div>
+                    <div class="col-12 col-lg-3 mt-2">
+                        <label class="small">Ap. Materno</label>
+                        <input type="text" class="form-control form-control-sm " value="" id="apemat-paciente" />
+                    </div>
+                    <div class="col-12 col-lg-3 mt-2">
+                        <label class="small">Fech.Nac:</label>
+                        <input type="date" class="form-control form-control-sm" id="fecha-nacimiento" />
+                    </div>
+                    <div class="col-lg-6 mt-2">
+                        <label class="small">Telefono:</label>
+                        <input type="number" class="form-control form-control-sm" id="telefono-paciente" />
+                    </div>
+                    <div class="col-lg-6 mt-2">
+                        <label class="small">Email:</label>
+                        <input type="email" class="form-control form-control-sm" id="email-paciente" />
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <label class="small"> Tipo Doc:</label>
+                        <select class="custom-select custom-select-sm" id="tipo-documento">
+                            <option value="-1">--Seleccionar--</option>
+                            @{
+                                foreach (var item in ViewBag.TipoDocumento)
+                                {
+                                    <option value="@item.Id">@item.Value</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <label class="small">Nro. Doc</label>
+                        <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" class="form-control form-control-sm " value="" id="numero-documento" />
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <label class="small">Género:</label>
+                        <select class="custom-select custom-select-sm" id="genero-paciente">
+                            <option value="-1">--Seleccionar--</option>
+                            @{
+                                foreach (var item in ViewBag.Genero)
+                                {
+                                    <option value="@item.Id">@item.Value</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-lg-2 pt-1">
+                        <button class="btn mt-4 btn-sm btn-info btn-block" id="btn-guardar-paciente">Registrarme</button>
+                    </div>
+                </div>
+                <div class="d-none cont-calendar" id="registro-reserva">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Lunes</th>
+                                <th>Martes</th>
+                                <th>Miercoles</th>
+                                <th>Jueves</th>
+                                <th>Viernes</th>
+                                <th>Sabado</th>
+                                <th>Domingo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="body-calendar"></tbody>
+                    </table>
+                    <div class="row w-100 justify-content-between mx-0">
+                        <div class="col-4" id="primer-turno"></div>
+                        <div class="col-4" id="segundo-turno"></div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/Alert.js"></script>
+<link href="~/Content/css/Alert.css" rel="stylesheet" />
+
+
+<script>
+       const WarningAlert = function (message) {
+        alertafixed({
+            class: 'warning-class',
+            type: 'warning',
+            title: 'VALIDACIÓN',
+            message,
+        })
+    }
+
+    const InfoAlert = function (message) {
+        alertafixed({
+            class: 'info-class',
+            type: 'info',
+            title: 'INFORMACIÓN',
+            message,
+        })
+    }
+
+    const AlertInfoServidor = function (status, message) {
+        alertafixed({
+            type: 'info',
+            class: 'info-class',
+            title: 'INFORMACIÓN DEL SERVIDOR: ' + status,
+            message,
+        })
+    }
+
+    const AlertErrorServidor = function (status, message) {
+        alertafixed({
+            type: 'danger',
+            class: 'danger-class',
+            title: 'ERROR: ' + status,
+            message,
+        })
+    }
+
+    const SuccessMessageServidor = function (status, message) {
+        alertafixed({
+            type: 'success',
+            class: 'success-class',
+            title: 'HECHO: ' + status,
+            message,
+        })
+    }
+
+    const validarEmail = function (email) {
+        const regExp = new RegExp(/^[\w-]+\@@*[\w-]+\.[a-z]{2,3}(\.[a-z]{2})?$/i);
+        let result = regExp.test(email);
+        return result;
+    }
+
+    const ValidarCamposEspecialidad = function (arrId) {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
+
+        let valido = true;
+
+        for (var i = 0; i < arrId.length; i++) {
+            if ($(arrId[i]).get(0).type == "select-one") {
+                if ($(arrId[i]).val() == "-1") {
+                    $(arrId[i]).addClass("border-danger");
+                    valido = false;
+                } else {
+                    $(arrId[i]).removeClass("border-danger").addClass("border-success");
+                }
+            } else if ($(arrId[i]).get(0).type == "text" || $(arrId[i]).get(0).type == "date" || $(arrId[i]).get(0).type == "password" || $(arrId[i]).get(0).type == "number" || $(arrId[i]).get(0).type == "time") {
+                if ($(arrId[i]).val() == "") {
+                    $(arrId[i]).addClass("border-danger");
+                    valido = false;
+                } else {
+                    $(arrId[i]).removeClass("border-danger").addClass("border-success");
+                }
+            } else if ($(arrId[i]).get(0).type == "email") {
+                if ($(arrId[i]).val() == "") {
+                    $(arrId[i]).addClass("border-danger");
+                    valido = false;
+                } else if (!validarEmail($(arrId[i]).val())) {
+                    alertafixed({
+                        type: 'warning',
+                        title: 'VALIDACIÓN',
+                        class: 'error-validate',
+                        message: 'Asegurese de ingresar un Email Valido.'
+                    })
+                    $(arrId[i]).addClass("border-danger");
+                    valido = false;
+                } else {
+                    $(arrId[i]).removeClass("border-danger").addClass("border-success");
+                }
+            } else if ($(arrId[i]).get(0).type == "file") {
+                if ($(arrId[i]).prop("files").length == 0) {
+                    alertafixed({
+                        type: 'warning',
+                        title: 'VALIDACIÓN',
+                        class: 'error-validate',
+                        message: 'Ingrese una imagen para continuar.'
+                    })
+                    valido = false;
+                }
+            }
+
+        }
+
+        if (!valido) {
+            alertafixed({
+                type: 'warning',
+                title: 'VALIDACIÓN',
+                class: 'error-validate',
+                message: 'Por favor, verifique las casillas en rojo y vuelva a intentar.'
+            })
+        }
+
+        return valido;
+    }
+
+    $(document).ready(function () {
+        
+        SetCalendar();
+        sessionStorage.setItem("protocolId", "");
+
+        $("#doc-number-find").on("keyup", function (e) {
+
+            var tecla = (document.all) ? e.keyCode : e.which;
+            if (tecla == 13) {
+                FindPersonByDocNumber($(this).val(), $(this));
+            }
+        })
+
+        $("#btn-recargarcaptcha").on("click", function () {
+
+            $("#figure-captcha").addClass("loadingGrid");
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                url: '/Reservas/GetCaptcha',
+                success: function (json) {
+
+                    if (json.Error) {
+                        AlertErrorServidor(json.Status, json.Message);
+                    } else {
+                        $("#img-captcha").attr("src", "data:image/jpeg;base64," + json.Id);
+
+                    }
+                    $("#figure-captcha").removeClass("loadingGrid");
+
+                },
+                error: function (err, status, message) {
+                    AlertErrorServidor(err.status, err.statusText);
+                    $("#figure-captcha").removeClass("loadingGrid");
+                }
+            })
+        })
+
+        $("#btn-enviarcaptcha").on("click", function () {
+            EnviarCaptchaSiS()
+        })
+
+        $("#value-captcha").on("keyup", function (e) {
+            var tecla = (document.all) ? e.keyCode : e.which;
+            if (tecla == 13) {
+                EnviarCaptchaSiS()
+            }
+        })
+
+        $("#btn-trabajador").on("click", function () {
+            var input = $("#doc-number-find");
+            FindPersonByDocNumber(input.val(), input);
+        })
+
+        $("#btn-guardar-paciente").on("click", function () {
+
+
+            let arrId = ["#tipo-documento", "#nombres-paciente", "#apepat-paciente", "#apemat-paciente", "#numero-documento", "#tipo-documento", "#genero-paciente", "#fecha-nacimiento", "#email-paciente", "#telefono-paciente"];
+
+            if (!ValidarCamposEspecialidad(arrId)) {
+                return;
+            }
+            $("#loadingHeader").addClass("loadingGrid");
+            let data = {
+                v_PersonId: $("#paciente-id").val(),
+                v_FirstName: $("#nombres-paciente").val(),
+                v_FirstLastName: $("#apepat-paciente").val(),
+                v_SecondLastName: $("#apemat-paciente").val(),
+                i_DocTypeId: $("#tipo-documento").val(),
+                v_DocNumber: $("#numero-documento").val(),
+                d_Birthdate: $("#fecha-nacimiento").val(),
+                i_SexTypeId: $("#genero-paciente").val(),
+                v_Mail: $("#email-paciente").val(),
+                v_TelephoneNumber: $("#telefono-paciente").val(),
+                i_NumberDeadChildren: 0,
+                i_NumberDependentChildren: 0,
+                i_NumberLiveChildren: 0,
+                i_NumberDeadChildren: 0,
+                i_NroHermanos: 0,
+                i_LevelOfId: -1,
+                i_MaritalStatusId: -1,
+                i_BloodGroupId: -1,
+                i_BloodFactorId: -1,
+                i_DepartmentId: -1,
+                i_ProvinceId: -1,
+                i_DistricId: -1,
+                i_ResidenceInWorkplaceId: -1,
+                i_TypeOfInsuranceId: -1,
+                i_NumberLivingChildren: 0,
+                i_OccupationTypeId: -1,
+                i_Relationship: -1,
+                i_AltitudeWorkId: -1,
+                i_PlaceWorkId: -1,
+            }
+            console.log(data);
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                data,
+                url: '/Reservas/UpdateCreatePacient',
+                success: function (json) {
+                    if (json.Error) {
+
+                        AlertErrorServidor(json.Status, json.Message);
+
+                    } else {
+
+                        SuccessMessageServidor(json.Status, json.Message);
+                        $("#paciente-id").val(json.Id);
+                        $("#registro-paciente").addClass("d-none");
+                        $("#registro-reserva").removeClass("d-none");
+                    }
+                    $("#loadingHeader").removeClass("loadingGrid");
+                },
+                error: function (err, status, message) {
+                    AlertErrorServidor(status, message);
+                    $("#loadingHeader").removeClass("loadingGrid");
+                }
+
+            })
+        })
+
+        $("#modalReserva").on("hidden.bs.modal", function () {
+            $("#primer-turno").html('');
+            $("#segundo-turno").html('');
+            sessionStorage.setItem("protocolId", "");
+            LimpiarDataPerson();
+            $("#registro-paciente").removeClass("d-none");
+            $("#registro-reserva").addClass("d-none");
+        })
+
+
+    })
+
+    function EnviarCaptchaSiS() {
+        LimpiarDataPerson();
+        var dni = $("#doc-number-find").val();
+        $("#figure-captcha").addClass("loadingGrid");
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            url: '/Reservas/GetData?captcha=' + $("#value-captcha").val() + '&dni=' + dni,
+            success: function (json) {
+                if (json.Error) {
+                    if (json.Status == 204) {
+                        $("#cont-captcha").addClass("d-none")
+                        alertafixed({
+                            type: 'info',
+                            class: 'info-class',
+                            title: 'INFORMACIÓN: ' + json.Status,
+                            message: "No se encuentra registrado, complete los datos para continuar.",
+                        })
+                        $("#value-captcha").val("");
+
+                        $("#figure-captcha").removeClass("loadingGrid");
+                        LimpiarDataPerson();
+                    } else {
+                        alertafixed({
+                            type: 'info',
+                            class: 'info-class',
+                            title: 'INFORMACIÓN: ' + json.Status,
+                            message: json.Message,
+                        })
+                        $("#value-captcha").val("");
+                        $("#figure-captcha").removeClass("loadingGrid");
+                        $("#btn-recargarcaptcha").click();
+                        LimpiarDataPerson();
+                    }
+
+                } else {
+                    $("#nombres-paciente").val(json.Result.Nombres).next().addClass("static");
+                    $("#apepat-paciente").val(json.Result.ApellidoPaterno).next().addClass("static");
+                    $("#apemat-paciente").val(json.Result.ApellidoMaterno).next().addClass("static");
+
+                    $("#nro-afiliacion").text(json.Result.NroAfiliacion);
+                    $("#tipo-asegurado").text(json.Result.TipoAsegurado);
+                    $("#estado-seguro").text(json.Result.Estado);
+                    $("#numero-documento").val(dni);
+                    $("#cont-captcha").addClass("d-none")
+                    $("#value-captcha").val("");
+                    $("#figure-captcha").removeClass("loadingGrid");
+                }
+
+            },
+            error: function (err, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'danger-class',
+                    title: 'ERROR: ' + status,
+                    message: 'Sucedió un error en el servidor: ' + message,
+                })
+                $("#figure-captcha").removeClass("loadingGrid");
+            }
+        })
+    }
+
+    const ReservarCita = function (day, moth, year, hour) {
+
+
+        notificacion({
+            classTitleAndButtons: "warningTitleAndButtons",
+            classMessage: "warningMessage",
+            title: "¡ Confirmación !",
+            icono: "",
+            contenido: "¿ Seguro(a) de agendar la cita ?",
+            btnAceptar: "Aceptar",
+            btnCancelar: "Cancelar",
+            btnOk: "OK",
+            mostrarBtnAceptarAndCancelar: "",
+            mostrarBtnOk: "no",
+        });
+
+        $(".bigBox-Aceptar").on("click", function () {
+            $(".bigBox-Cancelar").click();
+            $("#loadingHeader").addClass("loadingGrid");
+            let FechaCalendario = `${day}-${moth}-${year} ${hour}`;
+            var data = {
+                ProtocolId: sessionStorage.getItem("protocolId"),
+                OrganizationId: 'N009-OO000000052',
+                PersonId: $("#paciente-id").val(),
+                MasterServiceId: 10,
+                ServiceStatusId: 2,
+                AptitudeStatusId: 1,
+                MasterServiceTypeId: 9,
+                FlagAgentId: 1,
+                Motive: "",
+                FechaCalendario,
+                FechaNacimiento: $("#fecha-nacimiento").val(),
+                GeneroId: $("#genero-paciente").val(),
+                MedicoTratanteId: "-1",
+                CentroCosto: "",
+            }
+            console.log(data);
+
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                dataType: 'json',
+                data,
+                url: '/Reservas/AgendarPaciente',
+                success: function (json) {
+
+                    if (json.Error) {
+                        AlertErrorServidor(json.Status, json.Message);
+                    } else {
+                        SuccessMessageServidor(json.Status, json.Message);
+                        $("#modalReserva").modal("hide");
+                    }
+                    $("#loadingHeader").removeClass("loadingGrid");
+                },
+                error: function (err) {
+                    AlertErrorServidor(err.status, err.statusText);
+                    $("#loadingHeader").removeClass("loadingGrid");
+                }
+            })
+        })
+
+       
+    }
+
+    const FindPersonByDocNumber = function (value, input) {
+        
+        if (input.val() == "") {
+
+            alertafixed({
+                title: "VALIDACIÓN",
+                message: "Ingrese un número de documento por favor.",
+                type: "warning",
+                class: "validacin-interno"
+            })
+            input.addClass('border-danger');
+
+            return;
+        } else {
+            input.removeClass('border-danger');
+        }
+        LimpiarDataPerson();
+        $("#loadingHeader").addClass("loadingGrid");
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'docNumber': value },
+            url: '/Reservas/GetPacientByDocNumber',
+            success: function (json) {
+                if (json.BaseDatos) {
+                    SetValuePacient(json);
+                    $("#registro-paciente").addClass("d-none");
+                    $("#registro-reserva").removeClass("d-none");
+                    input.removeClass('border-danger');
+                    $("#cont-captcha").addClass("d-none")
+                } else {
+                    if (json.Error) {
+                        $("#cont-captcha").addClass("d-none")
+                        AlertErrorServidor(json.Status,json.Message);
+                    } else {
+                        InfoAlert(json.Message);
+                        $("#cont-captcha").removeClass("d-none");
+                        $("#img-captcha").attr("src", "data:image/jpeg;base64," + json.Id)
+                    }
+
+                }
+                $("#loadingHeader").removeClass("loadingGrid");
+            },
+            error: function (error) {
+                console.log(error)
+                AlertErrorServidor(error.status, error.statusText);
+                LimpiarDataPerson();
+                $("#loadingHeader").removeClass("loadingGrid");
+                $("#cont-captcha").addClass("d-none")
+            }
+        });
+
+    }
+
+    const SetValuePacient = function (json) {
+
+        $("#paciente-id").val(json.v_PersonId);
+        $("#nombres-paciente").val(json.v_FirstName).next().addClass("static");
+        $("#apepat-paciente").val(json.v_FirstLastName).next().addClass("static");
+        $("#apemat-paciente").val(json.v_SecondLastName).next().addClass("static");
+        $("#tipo-documento").val(json.i_DocTypeId);
+        $("#numero-documento").val(json.v_DocNumber).next().addClass("static");
+        $("#fecha-nacimiento").val(getDateFromAspNetFormat(json.d_Birthdate));
+        $("#genero-paciente").val(json.i_SexTypeId);
+
+    }
+
+    const getDateFromAspNetFormat = function (date) {
+        const re = /-?\d+/;
+        const m = re.exec(date);
+
+        var fecha = new Date(parseInt(m[0], 10));
+        var dd = String(fecha.getDate()).padStart(2, '0');
+        var mm = String(fecha.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = fecha.getFullYear();
+
+        fecha = yyyy + '-' + mm + '-' + dd;
+        return fecha;
+    }
+
+    const SetCalendar = function () {
+        let fechaActual = new Date();
+        let year = fechaActual.getFullYear();
+        let month = fechaActual.getMonth() + 1;
+        let dayActual = fechaActual.getDate();
+        let totalDays = new Date(year, month, 0).getDate();
+
+        let index = 0;
+        let rowHtml = `<tr>`;
+        let arrRows = [];
+        for (let i = 1; i <= totalDays; i++) {
+
+            let active = dayActual == i ? "active" : "";
+            let event = "";
+            if (i < dayActual) {
+                event = `QuitarHoras()`;
+            } else {
+                event = `ReserveDay(this, ${i},${month},${year})`;              
+            }
+
+            if (index == 6) {
+
+                rowHtml += `<td onclick="${event}" class="day ${active}">${i}</td></tr>`;
+                arrRows.push(rowHtml);
+                rowHtml = `<tr>`;
+                index = 0;
+            } else {
+                rowHtml += `<td onclick="${event}" class="day ${active}">${i}</td>`;
+                index++;
+            }
+        }
+        if (index > 0) {
+            rowHtml += `</tr>`;
+            arrRows.push(rowHtml);
+        }
+
+        $("#body-calendar").html(arrRows.join(""));
+
+    }
+
+    const Reservar = function (idEspecialidad, protocolId) {
+        sessionStorage.setItem("especialidadId", idEspecialidad);
+        sessionStorage.setItem("protocolId", protocolId);
+        $("#modalReserva").attr("data-especialidad", idEspecialidad);
+        $("#modalReserva").modal("show");
+    }
+
+    const QuitarHoras = function () {
+        $("#primer-turno").html("");
+        $("#segundo-turno").html("");
+    }
+
+    const ReserveDay = function (td, day, month, year) {
+        $("td.table-info").removeClass("table-info");
+        $(td).addClass("table-info")
+        let idEspecialidad = sessionStorage.getItem("especialidadId");
+
+        let tiempo = $("#tiempo-" + idEspecialidad).val();
+        let horaInicio = $("#horario-inicio-" + idEspecialidad).val();
+        let horaFinal = $("#horario-fin-" + idEspecialidad).val();
+        let horaInicioAdicional = $("#horario-inicio-adicional-" + idEspecialidad).val();
+        let horaFinalAdicional = $("#horario-fin-adicional-" + idEspecialidad).val();
+        
+        var data = { tiempo, horaInicio, horaFinal, horaInicioAdicional, horaFinalAdicional }
+        console.log(data);
+        setTiempos(data, day, month, year);
+        
+    }
+
+    function setTiempos(data, day, month, year) {
+
+        let arrButtons = ["<label class='badge badge-primary p-2' style='font-size:1.2rem'>Primer Turno</label>"];
+        
+        let arrButtonsOthers = ["<label class='badge badge-primary p-2' style='font-size:1.2rem'>Segundo Turno</label>"];
+
+        let button = `<button class="btn btn-sm btn-block btn-info" onclick="ReservarCita(${day}, ${month}, ${year}, '${data.horaInicio}')">${data.horaInicio}</button>`;
+        arrButtons.push(button);
+
+        while (data.horaInicio < data.horaFinal) {     
+            let result = sumarTiempos(data.horaInicio, data.tiempo)
+            if (result < data.horaFinal) {
+                data.horaInicio = result;
+                button = `<button class="btn btn-sm btn-block btn-info" onclick="ReservarCita(${day}, ${month}, ${year}, '${result}')">${result}</button>`;
+                arrButtons.push(button);
+            } else {
+                break;
+            }
+ 
+        }
+
+        if (data.horaInicioAdicional != "" && data.horaFinalAdicional != "") {
+            let button = ` <button class="btn btn-sm btn-block btn-info" onclick="ReservarCita(${day}, ${month}, ${year}, '${data.horaInicioAdicional}')">${data.horaInicioAdicional}</button>`;
+            arrButtonsOthers.push(button);
+            while (data.horaInicioAdicional < data.horaFinalAdicional) {
+
+                let result = sumarTiempos(data.horaInicioAdicional, data.tiempo)
+
+                if (result < data.horaFinalAdicional) {
+                    data.horaInicioAdicional = result;
+                    button = ` <button class="btn btn-sm btn-block btn-info" onclick="ReservarCita(${day}, ${month}, ${year}, '${result}')">${result}</button>`;
+                    arrButtonsOthers.push(button);
+                } else {
+                    break;
+                }
+            }
+        } else {
+
+        }
+        
+        $("#primer-turno").html(arrButtons.join(""));
+        $("#segundo-turno").html(arrButtonsOthers.join(""));
+
+    }
+
+    const sumarTiempos = function (inicio, fin) {
+
+        inicioMinutos = parseInt(inicio.substr(3, 2));
+        inicioHoras = parseInt(inicio.substr(0, 2));
+
+        finMinutos = parseInt(fin.substr(3, 2));
+        finHoras = parseInt(fin.substr(0, 2));
+
+        transcurridoMinutos = finMinutos + inicioMinutos;
+        transcurridoHoras = finHoras + inicioHoras;
+
+        if (transcurridoMinutos >= 60) {
+            transcurridoHoras++;
+            transcurridoMinutos = transcurridoMinutos - 60 ;
+        }
+
+        horas = transcurridoHoras.toString();
+        minutos = transcurridoMinutos.toString();
+
+        if (horas.length < 2) {
+            horas = "0" + horas;
+        }
+
+        if (minutos.length < 2) {
+            minutos = "0" + minutos;
+        }
+
+
+        return horas + ":" + minutos;
+    }
+
+    const LimpiarDataPerson = function () {
+
+        $("#paciente-id").val("");
+        $("#nombres-paciente").val("");
+        $("#apepat-paciente").val("");
+        $("#apemat-paciente").val("");
+        $("#tipo-documento").val("-1");
+        $("#numero-documento").val("");
+        $("#fecha-nacimiento").val("");
+        $("#genero-paciente").val("-1");       
+    }
+
+</script>

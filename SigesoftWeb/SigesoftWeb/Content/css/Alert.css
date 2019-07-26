@@ -25,7 +25,7 @@ body {
 
 .back-danger {
     background: #f56954;
-    border-left: 5px #d8513c solid;
+    border-left: 5px #d8513c solid !important;
 }
 
 .back-success {
@@ -40,7 +40,7 @@ body {
 
 .back-warning {
     background: #f39c12;
-    border-left: 5px #cc810c solid;
+    border-left: 5px #d18308 solid;
 }
 
 .alertBack > div > h2 {

@@ -21,8 +21,9 @@ namespace BE.Pacient
 
         public List<PacientCustom> List { get; set; }
     }
-    public class PacientCustom
+    public class PacientCustom 
     {
+        public bool BaseDatos { get; set; }
         public int ActionType { get; set; }
         public string v_PersonId { get; set; }
         public string v_FirstName { get; set; }
@@ -82,12 +83,22 @@ namespace BE.Pacient
         public string v_Nacionalidad { get; set; }
         public string v_ResidenciaAnterior { get; set; }
         public string v_Subs { get; set; }
+        public int i_Edad { get; set; }
         public string v_ComentaryUpdate { get; set; }
-
+        public string v_BloodGroupId { get; set; }
+        public string v_BloodFactorId { get; set; }
 
         //
         public string TieneRegistroHuella { get; set; }
         public string TieneRegistroFirma { get; set; }
         public string PersonImage { get; set; }
+        public string PersonFirma { get; set; }
+        public string PersonHuella { get; set; }
+    }
+
+    public class SaldoPaciente
+    {
+        public decimal? d_SaldoPaciente { get; set; }
+        public string v_Name { get; set; }
     }
 }

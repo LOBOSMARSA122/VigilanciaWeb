@@ -1,17 +1,882 @@
-﻿<div class="containerDinamic w-100 p-0">
+﻿
+
+
+<div class="containerDinamic w-100 p-0">
 
     <div class="row m-0 p-0 justify-content-between ">
         <button style="height:56px;" onclick="buttonDinamicNav()" class="btn w-100 btn-info d-xl-none">Ver Examenes<i id="iconDinamicNavBars" class=" ml-4 fas fa-bars"></i></button>
         <nav class="col-12 col-xl-2 p-0 navDinamic">
 
             <ul id="ulDinamic" class="js-tab-content mt-1 mt-xl-4 mr-xl-1"></ul>
+            <ul id="pestanias-adicionales" class="mt-1 mt-xl-4 mr-xl-1">
+                <li class="text-center">
+                    <a href="#list-integral" onclick="$(this).parent().parent().find('.active').removeClass('active'); $(this).addClass('active')" data-toggle="modal" data-target="#modalIntegral" class="list-group-item list-group-item-action" id="list-integral-list">Formato de Atx Integral</a>
+                </li>
+                <li class="text-center">
+                    <a href="#list-antecedentes" onclick="$(this).parent().parent().find('.active').removeClass('active'); $(this).addClass('active')" class="list-group-item list-group-item-action" id="list-antecedentes-list" data-toggle="modal" data-target="#modalGenerales">Datos generales y antecedentes</a>
+                </li>
+                <li class="text-center">
+                    <a href="#list-preventivos" onclick="$(this).parent().parent().find('.active').removeClass('active'); $(this).addClass('active')" data-toggle="modal" data-target="#modalPreventivos" class="list-group-item list-group-item-action" id="list-preventivos-list">Cuidados Preventivos</a>
+                </li>
+            </ul>
         </nav>
         <div id="contAlert" class="mt-5 mx-0">
 
         </div>
         <div class="col-12 col-xl-10 p-0 m-0" id="contExamenes">
             <div class="tab-content" id="nav-tabContent">
+                <div class="px-1 tab-pane j-tabPane-examen fade w-100 mx-0" id="list-integral" role="tabpanel" aria-labelledby="list-integral-list">
 
+                </div>
+                <div class="px-1 tab-pane j-tabPane-examen fade w-100 mx-0" id="list-antecedentes" role="tabpanel" aria-labelledby="list-antecedentes-list">Datos generales y antecedentes</div>
+                <div class="px-1 tab-pane j-tabPane-examen fade w-100 mx-0" id="list-preventivos" role="tabpanel" aria-labelledby="list-preventivos-list">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalGenerales" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-12 mt-2">
+                        <div class="group-box">
+                            <label class="label-group-box small">Datos Personales</label>
+                            <div class="row w-100 mx-0">
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Ape. Paterno</label>
+                                    <input disabled type="text" class="form-control form-control-sm" value="@ViewBag.Pacient.v_FirstLastName" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Ape. Materno</label>
+                                    <input disabled type="text" class="form-control form-control-sm" value="@ViewBag.Pacient.v_SecondLastName" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Nombres</label>
+                                    <input disabled type="text" class="form-control form-control-sm" value="@ViewBag.Pacient.v_FirstName" />
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">Género</label>
+                                    <select disabled class="custom-select custom-select-sm">
+                                        <option disabled value="-1">--Seleccionar--</option>
+                                        @foreach (var G in ViewBag.Genero)
+                                        {
+                                            <option value="@G.Id" @(G.Id == ViewBag.Pacient.i_SexTypeId.ToString() ? "selected" : "")>@G.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-1">
+                                    <label class="small">Edad</label>
+                                    <input disabled type="text" class="form-control form-control-sm" id="edad-paciente" value="@ViewBag.Pacient.i_Edad" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Fecha Nacimiento</label>
+                                    <input type="text" disabled class="form-control form-control-sm" value="@ViewBag.Pacient.d_Birthdate.ToShortDateString()" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Lugar Nac.</label>
+                                    <input type="text" disabled class="form-control form-control-sm" value="@ViewBag.Pacient.i_DepartmentId" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Procedencia</label>
+                                    <input type="text" disabled class="form-control form-control-sm" value="@ViewBag.Pacient.v_Procedencia" />
+                                </div>
+                                <div class="col-12 col-lg-1">
+                                    <label class="small">Gr.</label>
+                                    <select disabled class="custom-select custom-select-sm">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @foreach (var G in ViewBag.GrupoSanguineo)
+                                        {
+                                            <option value="@G.Id" @(G.Id == ViewBag.Pacient.i_BloodGroupId.ToString() ? "selected" : "")>@G.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">Factor Sanguineo</label>
+                                    <select disabled class="custom-select custom-select-sm">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @foreach (var G in ViewBag.FactorSanguineo)
+                                        {
+                                            <option value="@G.Id" @(G.Id == ViewBag.Pacient.i_BloodFactorId.ToString() ? "selected" : "")>@G.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Grado Instrucción</label>
+                                    <select disabled class="custom-select custom-select-sm">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @foreach (var G in ViewBag.GradoInstruccion)
+                                        {
+                                            <option value="@G.Id" @(G.Id == ViewBag.Pacient.i_LevelOfId.ToString() ? "selected" : "")>@G.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Estado Civil</label>
+                                    <select disabled class="custom-select custom-select-sm">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @foreach (var G in ViewBag.EstadoCivil)
+                                        {
+                                            <option value="@G.Id" @(G.Id == ViewBag.Pacient.i_MaritalStatusId.ToString() ? "selected" : "")>@G.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Ocupación</label>
+                                    <input disabled type="text" class="form-control form-control-sm" value="@ViewBag.Pacient.v_CurrentOccupation" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Domicilio</label>
+                                    <input disabled type="text" class="form-control form-control-sm" value="@ViewBag.Pacient.v_AdressLocation" />
+                                </div>
+                                <div class="col-12 col-lg-8">
+                                    <label class="small">Centro Educativo</label>
+                                    <input disabled type="text" class="form-control form-control-sm" value="@ViewBag.Pacient.v_CentroEducativo" />
+                                </div>
+                                <div class="col-12 col-lg-4">
+                                    <label class="small">Hijos Vivos</label>
+                                    <input disabled type="text" class="form-control form-control-sm" value="@ViewBag.Pacient.i_NumberLiveChildren" />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-12 my-3"></div>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Pacient.i_Edad <= 64 && ViewBag.Pacient.i_Edad >=18 ? "active show" : "d-none")" id="tab-adulto-tab" data-toggle="tab" href="#tab-adulto" role="tab" aria-controls="tab-adulto" aria-selected="true">Adulto Mayor/Adulto</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Pacient.i_Edad <= 17 && ViewBag.Pacient.i_Edad >=13 ? "active show" : "d-none")" id="tab-adolecente-tab" data-toggle="tab" href="#tab-adolecente" role="tab" aria-controls="tab-adolecente" aria-selected="false">Adolescente</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewBag.Pacient.i_Edad <= 12 ? "active show" : "d-none")" id="tab-ninio-tab" data-toggle="tab" href="#tab-ninio" role="tab" aria-controls="tab-ninio" aria-selected="false">Niño</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content col-12 my-3" id="cont-grupo-etario">
+                        <div class="tab-pane fade @(ViewBag.Pacient.i_Edad <= 64 && ViewBag.Pacient.i_Edad >=18 ? "active show" : "d-none")" id="tab-adulto" role="tabpanel" aria-labelledby="tab-adulto-tab">
+                            <div class="col-12 my-3">
+                                <input type="text" class="d-none" id="id-campo-adultoyadultomayor" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_AdultoId)" />
+                                <div class="group-box">
+                                    <label class="label-group-box">Adulto Mayor / Adulto</label>
+                                    <div class="row w-100 mx-0">
+                                        <div class="col-12 col-lg-7">
+                                            <label class="small">Familiar o Cuidador responsable</label>
+
+                                            <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_NombreCuidador)" id="nombre-cuidador" />
+                                        </div>
+                                        <div class="col-12 col-lg-2">
+                                            <label class="small">Edad</label>
+                                            <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_EdadCuidador)" id="edad-cuidador" />
+                                        </div>
+                                        <div class="col-12 col-lg-3">
+                                            <label class="small">Nro Documento (DNI)</label>
+                                            <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_DniCuidador)" id="dni-cuidador" />
+                                        </div>
+                                        <div class="col-12 col-lg-7">
+                                            <label class="small">Antecedentes familiares (otros)</label>
+                                            <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_DescripcionAntecedentes)" id="antecedentes-familiares" />
+                                        </div>
+                                        <div class="col-12 col-lg-5 solo-femenino  @(ViewBag.Pacient.i_SexTypeId == 1 ? "d-none" : "")">
+                                            <label class="small">Flujo Vaginal Patológico</label>
+                                            <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_FlujoVaginal)" id="fluido-vaginal" />
+                                        </div>
+                                        <div class="col-12 col-lg-7">
+                                            <label class="small">Medicamento Frecuente(dosis, tiempo de uso u otra observación)</label>
+                                            <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_MedicamentoFrecuente)" id="medicamentos-frecuentes" />
+                                        </div>
+                                        <div class="col-12 col-lg-5">
+                                            <label class="small">Reacción Alérgica a medicamentos</label>
+                                            <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_ReaccionAlergica)" id="reaccion-alergica" />
+                                        </div>
+                                        <div class="col-12 col-lg-6 pt-3">
+                                            <div class="group-box">
+                                                <label class="label-group-box">Sexualidad</label>
+                                                <div class="row w-100 mx-0">
+                                                    <div class="col-12 col-lg-6">
+                                                        <label class="small">Inicio RS</label>
+                                                        <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_InicioRS)" id="inicio-rs" />
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <label class="small">Número. PS(3 meses)</label>
+                                                        <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_NroPs)" id="nro-ps" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 pt-3">
+                                            <div class="group-box">
+                                                <label class="label-group-box">Menarquia</label>
+                                                <div class="row w-100 mx-0">
+                                                    <div class="col-12 col-lg-6">
+                                                        <label class="small">Fecha UR</label>
+                                                        <input type="date" class="form-control form-control-sm" id="fecha-ur" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_FechaUR)" />
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <label class="small">R/C</label>
+                                                        <input type="text" class="form-control form-control-sm" id="value-rc" value="@(ViewBag.DataGeneral.DataAdultoCustom == null ? "" : ViewBag.DataGeneral.DataAdultoCustom.v_RC)" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade @(ViewBag.Pacient.i_Edad <= 17 && ViewBag.Pacient.i_Edad >=13 ? "active show" : "d-none")" id="tab-adolecente" role="tabpanel" aria-labelledby="tab-adolecente-tab">
+                            <input type="text" class="d-none" id="id-campo-adolescente" value="@(ViewBag.DataGeneral.DataAdolescenteCustom == null ? "" : ViewBag.DataGeneral.DataAdolescenteCustom.v_AdolescenteId)" />
+                            <div class="group-box">
+                                <label class="label-group-box">Datos del Cuidador</label>
+                                <div class="row w-100 mx-0">
+                                    <div class="col-12 col-lg-6">
+                                        <label class="small">Nombre</label>
+                                        <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdolescenteCustom == null ? "" : ViewBag.DataGeneral.DataAdolescenteCustom.v_NombreCuidador)" id="nombre-cuidador-adloscente" />
+                                    </div>
+                                    <div class="col-12 col-lg-3">
+                                        <label class="small">DNI</label>
+                                        <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdolescenteCustom == null ? "" : ViewBag.DataGeneral.DataAdolescenteCustom.v_DniCuidador)" id="dni-cuidador-adloscente" />
+                                    </div>
+                                    <div class="col-12 col-lg-3">
+                                        <label class="small">Edad</label>
+                                        <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdolescenteCustom == null ? "" : ViewBag.DataGeneral.DataAdolescenteCustom.v_EdadCuidador)" id="edad-cuidador-adloscente" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group-box mt-3">
+                                <label class="label-group-box">Antecedentes Familiares</label>
+                                <div class="row w-100 mx-0">
+                                    <div class="col-12 col-lg-12">
+                                        <label class="small">En caso de no tener referente adulto, indicar con quien vive</label>
+                                        <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataAdolescenteCustom == null ? "" : ViewBag.DataGeneral.DataAdolescenteCustom.v_ViveCon)" id="vive-cuidador-adloscente" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group-box mt-3">
+                                <label class="label-group-box">Antecedentes Laborales</label>
+                                <div class="row w-100 mx-0">
+                                    <div class="col-12 col-lg-6">
+                                        <label class="small">Edad Inicio trabajo</label>
+                                        <input type="text" class="form-control form-control-sm" id="edadtrabajo-cuidador-adloscente" value="@(ViewBag.DataGeneral.DataAdolescenteCustom == null ? "" : ViewBag.DataGeneral.DataAdolescenteCustom.v_EdadInicioTrabajo)" />
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <label class="small">Tipo de trabajo</label>
+                                        <input type="text" class="form-control form-control-sm" id="tipotrabajo-cuidador-adloscente" value="@(ViewBag.DataGeneral.DataAdolescenteCustom == null ? "" : ViewBag.DataGeneral.DataAdolescenteCustom.v_TipoTrabajo)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group-box mt-3">
+                                <label class="label-group-box">Antecedentes Habitos</label>
+                                <div class="row w-100 mx-0">
+                                    <div class="col-12 col-lg-6">
+                                        <label class="small">Nro. Horas TV</label>
+                                        <input type="text" class="form-control form-control-sm" id="horastv-cuidador-adloscente" value="@(ViewBag.DataGeneral.DataAdolescenteCustom == null ? "" : ViewBag.DataGeneral.DataAdolescenteCustom.v_NroHorasTv)" />
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <label class="small">Nro. Horas Video Juegos</label>
+                                        <input type="text" class="form-control form-control-sm" id="horasjuegos-cuidador-adloscente" value="@(ViewBag.DataGeneral.DataAdolescenteCustom == null ? "" : ViewBag.DataGeneral.DataAdolescenteCustom.v_NroHorasJuegos)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group-box mt-3">
+                                <label class="label-group-box">Antecedente Sexual y Reproductiva</label>
+                                <div class="row w-100 mx-0">
+                                    <div class="col-12 col-lg-6">
+                                        <label class="small">Menarquia/Espermarquia</label>
+                                        <input type="text" class="form-control form-control-sm" id="menarquia-cuidador-adloscente" value="@(ViewBag.DataGeneral.DataAdolescenteCustom == null ? "" : ViewBag.DataGeneral.DataAdolescenteCustom.v_MenarquiaEspermarquia)" />
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <label class="small">Edad Inicio relación Sexual</label>
+                                        <input type="text" class="form-control form-control-sm" id="iniciosexual-cuidador-adloscente" value="@(ViewBag.DataGeneral.DataAdolescenteCustom == null ? "" : ViewBag.DataGeneral.DataAdolescenteCustom.v_EdadInicioRS)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade @(ViewBag.Pacient.i_Edad <= 12 ? "active show" : "d-none")" id="tab-ninio" role="tabpanel" aria-labelledby="tab-ninio-tab">
+                            <div style="cursor: pointer; border-radius:0.3rem" class="row table-primary justify-content-between align-items-center p-2 my-1" onclick="$('#row-datos-generales').toggleClass('d-none')">
+                                <label class="m-0">DATOS GENERALES FAMILIARES</label>
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="row d-none mx-0 w-100" id="row-datos-generales">
+                                <input type="text" class="d-none" id="id-campo-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_NinioId)" />
+                                <div class="col-12 col-lg-7">
+                                    <label class="small">Madre, Padre o adulto responsable del cuidado del niño(*)</label>
+                                    <input type="text" class="form-control form-control-sm" id="nombre-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_NombreCuidador)" />
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">Edad</label>
+                                    <input type="text" class="form-control form-control-sm" id="edad-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_EdadCuidador)" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">DNI</label>
+                                    <input type="text" class="form-control form-control-sm" id="dni-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_DniCuidador)" />
+                                </div>
+                                <div class="col-12 pl-4"><label>(*)INFORMACIÓN PARA PROBLEMAS Y ATENCIONES</label></div>
+                                <div class="col-12 col-lg-5">
+                                    <label class="small">Nombre y Apellidos Madre o Tutora</label>
+                                    <input type="text" class="form-control form-control-sm" id="nombremadre-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_NombreMadre)" />
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">Edad</label>
+                                    <input type="text" class="form-control form-control-sm" id="edadmadre-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_EdadMadre)" />
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">DNI</label>
+                                    <input type="text" class="form-control form-control-sm" id="dnimadre-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_DniMadre)" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Afiliación</label>
+                                    <select class="custom-select custom-select-sm" id="afilicionmadre-cuidador-ninio">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @foreach (var item in ViewBag.Afiliacion)
+                                        {
+                                            <option value="@item.Id" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_TipoAfiliacionMadre == int.Parse(item.Id) ? "selected" : "")>@item.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">Cod. Afiliación</label>
+                                    <input type="text" class="form-control form-control-sm" id="codafiliacionmadre-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_CodigoAfiliacionMadre)" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Grado Instrucción</label>
+                                    <select class="custom-select custom-select-sm" id="instruccionmadre-cuidador-ninio">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @foreach (var item in ViewBag.GradoInstruccion)
+                                        {
+                                            <option value="@item.Id" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_GradoInstruccionMadre == int.Parse(item.Id) ? "selected" : "")>@item.Value</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">Ocupación</label>
+                                    <input type="text" class="form-control form-control-sm" id="ocupacionmadre-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_OcupacionMadre)" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Estado Civil</label>
+                                    <select class="custom-select custom-select-sm" id="estadocivilmadre-cuidador-ninio">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @foreach (var item in ViewBag.EstadoCivil)
+                                        {
+                                            <option value="@item.Id" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_EstadoCivilIdMadre1 == int.Parse(item.Id) ? "selected" : "")>@item.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">Religión</label>
+                                    <input type="text" class="form-control form-control-sm" id="religionmadre-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_ReligionMadre)" />
+                                </div>
+                                <div class="col-12 col-lg-5">
+                                    <label class="small">Nombre y Apellidos Padre o Tutor</label>
+                                    <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_NombrePadre)" id="nombrepadre-cuidador-ninio" />
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">Edad</label>
+                                    <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_EdadPadre)" id="edadpadre-cuidador-ninio" />
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">DNI</label>
+                                    <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_DniPadre)" id="dnipadre-cuidador-ninio" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Afiliación</label>
+                                    <select class="custom-select custom-select-sm" id="afiliacionpadre-cuidador-ninio">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @foreach (var item in ViewBag.Afiliacion)
+                                        {
+                                            <option value="@item.Id" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_TipoAfiliacionPadre == int.Parse(item.Id) ? "selected" : "")>@item.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <label class="small">Cod. Afiliación</label>
+                                    <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_CodigoAfiliacionPadre)" id="codafiliacionpadre-cuidador-ninio" />
+                                </div>
+
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Grado de instrucción</label>
+                                    <select class="custom-select custom-select-sm" id="instruccionpadre-cuidador-ninio">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @foreach (var item in ViewBag.GradoInstruccion)
+                                        {
+                                            <option value="@item.Id" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_GradoInstruccionPadre == int.Parse(item.Id) ? "selected" : "")>@item.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Ocupación</label>
+                                    <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_OcupacionPadre)" id="ocupacionpadre-cuidador-ninio" />
+                                </div>
+                                <div class="col-12 col-lg-4">
+                                    <label class="small">Estado Civil</label>
+                                    <select class="custom-select custom-select-sm" id="estadocivilpadre-cuidador-ninio">
+                                        <option value="-1">--Seleccionar--</option>
+                                        @foreach (var item in ViewBag.EstadoCivil)
+                                        {
+                                            <option value="@item.Id" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_EstadoCivilIdPadre == int.Parse(item.Id) ? "selected" : "")>@item.Value</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-5">
+                                    <label class="small">Religión</label>
+                                    <input type="text" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_ReligionPadre)" id="religionpadre-cuidador-ninio" />
+                                </div>
+                            </div>
+                            <div style="cursor: pointer; border-radius:0.3rem" class="row table-primary justify-content-between align-items-center p-2 my-1" onclick="$('#row-personales-embarazo').toggleClass('d-none')">
+                                <label class="m-0">ANTECEDENTES PERSONALES - EMBARAZO - PARTO</label>
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="row w-100 mx-0 d-none" id="row-personales-embarazo">
+                                <div class="col-12">
+                                    <label class="small">Patología(s) durante la gestación</label>
+                                    <textarea class="form-control form-control-sm" rows="2" id="patologia-cuidador-ninio">@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_PatologiasGestacion)</textarea>
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">N° de Embarazo</label>
+                                    <input type="text" class="form-control form-control-sm" id="cantembarazo-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_nEmbarazos)" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">N° APN</label>
+                                    <input type="text" class="form-control form-control-sm" id="apn-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_nAPN)" />
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Lugar de APN</label>
+                                    <input type="text" class="form-control form-control-sm" id="lugarapn-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_LugarAPN)" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Complicaciones del Parto:</label>
+                                    <textarea class="form-control form-control-sm" rows="2" id="complicacion-cuidador-ninio">@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_ComplicacionesParto)</textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Especificar por quien fué atendido</label>
+                                    <input type="text" class="form-control form-control-sm" id="atencion-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_Atencion)" />
+                                </div>
+                            </div>
+                            <div style="cursor: pointer; border-radius:0.3rem" class="row table-primary justify-content-between align-items-center p-2 my-1" onclick="$('#row-personales-nacimiento').toggleClass('d-none')">
+                                <label class="m-0">ANTECEDENTES PERSONALES - NACIMIENTO - ALIMENTACIÓN - PATOLOGÍAS</label>
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="row w-100 mx-0 d-none" id="row-personales-nacimiento">
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Edad Gest. al Nacer(sem)</label>
+                                    <input type="text" class="form-control form-control-sm" id="edadgestacion-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_EdadGestacion)" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Peso al nacer(gr)</label>
+                                    <input type="text" class="form-control form-control-sm" id="pesonace-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_Peso)" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Talla al nacer(cm)</label>
+                                    <input type="text" class="form-control form-control-sm" id="tallanace-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_Talla)" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Perímetro Cefálico</label>
+                                    <input type="text" class="form-control form-control-sm" id="perimetrocefalico-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_PerimetroCefalico)" />
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label class="small">Tiempo de Hospitalización</label>
+                                    <input type="text" class="form-control form-control-sm" id="tiempohospitalizacion-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_TiempoHospitalizacion)" />
+                                </div>
+                                <div class="col-12 col-lg-3">
+                                    <label class="small">Perímetro Torácico</label>
+                                    <input type="text" class="form-control form-control-sm" id="perimetrotoracico-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_PerimetroToracico)" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Especificación de Respiración al Nacer</label>
+                                    <input type="text" class="form-control form-control-sm" id="respiracionnace-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_EspecificacionesNac)" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Inicio de alimentacion Complementaria</label>
+                                    <input type="text" class="form-control form-control-sm" id="inicioalimentacion-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_InicioAlimentacionComp)" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Especificar alergia a medicamentos</label>
+                                    <input type="text" class="form-control form-control-sm" id="alergiaespecifica-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_AlergiasMedicamentos)" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Especificar otros antecedentes</label>
+                                    <input type="text" class="form-control form-control-sm" id="otrosantecedentes-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_OtrosAntecedentes)" />
+                                </div>
+                            </div>
+                            <div style="cursor: pointer; border-radius:0.3rem" class="row table-primary justify-content-between align-items-center p-2 my-1" onclick="$('#row-familiares').toggleClass('d-none')">
+                                <label class="m-0">ANTECEDENTES FAMILIARES</label>
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="row w-100 mx-0 d-none" id="row-familiares">
+                                <div class="col-3">
+                                    <label class="smal">Tuberculosis</label>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" placeholder="(*)Padre(P), Madre(P), Hno(H), Abuelo/a(A), Otro(O)" class="form-control form-control-sm" id="tuberculosis-cuidador-ninio" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_QuienTuberculosis)" />
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-tbc-si" data-value="1" name="radio-tbc" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienTuberculosis == 1 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-tbc-si">SI</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-tbc-no" checked data-value="0" name="radio-tbc" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienTuberculosis == 0 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-tbc-no">NO</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class="smal">ASMA</label>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" placeholder="(*)Padre(P), Madre(P), Hno(H), Abuelo/a(A), Otro(O)" id="asma-cuidador-ninio" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_QuienAsma)" />
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-asma-si" data-value="1" name="radio-asma" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienAsma == 1 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-asma-si">SI</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-asma-no" data-value="0" name="radio-asma" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienAsma == 0 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-asma-no">NO</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class="smal">VIH-SIDA</label>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" placeholder="(*)Padre(P), Madre(P), Hno(H), Abuelo/a(A), Otro(O)" id="vih-cuidador-ninio" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_QuienVIH)" />
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-sida-si" data-value="1" name="radio-sida" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienVIH == 1 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-sida-si">SI</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-sida-no" data-value="0" name="radio-sida" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienVIH == 0 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-sida-no">NO</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class="smal">Diabetes</label>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" placeholder="(*)Padre(P), Madre(P), Hno(H), Abuelo/a(A), Otro(O)" id="diabetes-cuidador-ninio" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_QuienDiabetes)" />
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-diabetes-si" data-value="1" name="radio-diabetes" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienDiabetes == 1 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-diabetes-si">SI</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-diabetes-no" data-value="0" name="radio-diabetes" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienDiabetes == 0 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-diabetes-no">NO</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class="smal">Epilepsia</label>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" placeholder="(*)Padre(P), Madre(P), Hno(H), Abuelo/a(A), Otro(O)" id="epilepsia-cuidador-ninio" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_QuienEpilepsia)" />
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-epilepsia-si" data-value="1" name="radio-epilepsia" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienEpilepsia == 1 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-epilepsia-si">SI</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-epilepsia-no" data-value="0" name="radio-epilepsia" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienEpilepsia == 0 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-epilepsia-no">NO</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class="smal">Alergias a medicinas</label>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" placeholder="(*)Padre(P), Madre(P), Hno(H), Abuelo/a(A), Otro(O)" id="alergiassino-cuidador-ninio" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_QuienAlergias)" />
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-alergia-si" data-value="1" name="radio-alergia" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienAlergias == 1 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-alergia-si">SI</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-alergia-no" data-value="0" name="radio-alergia" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienAlergias == 0 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-alergia-no">NO</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class="smal">Violencia Familiar</label>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" placeholder="(*)Padre(P), Madre(P), Hno(H), Abuelo/a(A), Otro(O)" id="violenciasino-cuidador-ninio" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_QuienViolenciaFamiliar)" />
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-violencia-si" data-value="1" name="radio-violencia" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienViolenciaFamiliar == 1 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-violencia-si">SI</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-violencia-no" data-value="0" name="radio-violencia" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienViolenciaFamiliar == 0 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-violencia-no">NO</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class="smal">Alcoholismo</label>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" placeholder="(*)Padre(P), Madre(P), Hno(H), Abuelo/a(A), Otro(O)" id="alocoholismosino-cuidador-ninio" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_QuienAlcoholismo)" />
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-alcoholismo-si" data-value="1" name="radio-alcoholismo" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienAlcoholismo == 1 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-alcoholismo-si">SI</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-alcoholismo-no" data-value="0" name="radio-alcoholismo" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienAlcoholismo == 0 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-alcoholismo-no">NO</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class="smal">Drogadicción</label>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" placeholder="(*)Padre(P), Madre(P), Hno(H), Abuelo/a(A), Otro(O)" id="drogadiccionsino-cuidador-ninio" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_QuienDrogadiccion)" />
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-drogadiccion-si" data-value="1" name="radio-drogadiccion" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienDrogadiccion == 1 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-drogadiccion-si">SI</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-drogadiccion-no" data-value="0" name="radio-drogadiccion" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienDrogadiccion == 0 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-drogadiccion-no">NO</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <label class="smal">Hepatitis B.</label>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" placeholder="(*)Padre(P), Madre(P), Hno(H), Abuelo/a(A), Otro(O)" id="hebatitissino-cuidador-ninio" class="form-control form-control-sm" value="@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_QuienHeptitisB)" />
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-hepatitis-si" data-value="1" name="radio-hepatitis" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienHeptitisB == 0 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-hepatitis-si">SI</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="radio-hepatitis-no" data-value="0" name="radio-hepatitis" @(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.i_QuienHeptitisB == 1 ? "checked" : "") class="custom-control-input">
+                                        <label class="custom-control-label" for="radio-hepatitis-no">NO</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="cursor: pointer; border-radius:0.3rem" class="row table-primary justify-content-between align-items-center p-2 my-1" onclick="$('#row-vivienda').toggleClass('d-none')">
+                                <label class="m-0">ANTECEDENTES VIVIENDA/SANEAMIENTO BÁSICO</label>
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="row w-100 mx-0 d-none" id="row-vivienda">
+                                <div class="col-12">
+                                    <label class="small">Especificaciones de Agua Potable</label>
+                                    <textarea class="form-control form-control-sm" id="especiagua-cuidador-ninio" rows="2">@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_EspecificacionesAgua)</textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="small">Especificaciónes de Desagüe</label>
+                                    <textarea class="form-control form-control-sm" id="especidesague-cuidador-ninio" rows="2">@(ViewBag.DataGeneral.DataNinioCustom == null ? "" : ViewBag.DataGeneral.DataNinioCustom.v_EspecificacionesDesague)</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 solo-femenino my-3 @(ViewBag.Pacient.i_SexTypeId == 1 ? "d-none" : "")">
+
+                        <div class="row w-100 mx-0">
+                            <div class="col-12 col-lg-3">
+                                <label class="small">Cant. Embarazo</label>
+                                <input type="text" class="form-control form-control-sm" value="" id="cant-embarazos" />
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <label class="small">Cant. Prematuro</label>
+                                <input type="text" class="form-control form-control-sm" value="" id="cant-prematuros" />
+                            </div>
+                            <div class="col-12 col-lg-3">
+                                <label class="small">Cant. Aborto</label>
+                                <input type="text" class="form-control form-control-sm" value="" id="cant-abortos" />
+                            </div>
+                        </div>
+
+                        <div id="" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+                            <div class="box box-info mt-2 mb-0">
+                                <div class="scroll-css" style="overflow:scroll; height: 200px;">
+                                    <table class="table table-sm table-hover" id="table-examenes">
+                                        <thead>
+                                            <tr>
+                                                <th nowrap scope="col" class="d-none">EmabarazoId</th>
+                                                <th nowrap scope="col">Año</th>
+                                                <th nowrap scope="col">CPN</th>
+                                                <th nowrap scope="col">Complicación</th>
+                                                <th nowrap scope="col">Parto</th>
+                                                <th nowrap scope="col">Peso RN</th>
+                                                <th nowrap scope="col">Puerpio</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="body-embarazos">
+                                            @{
+
+                                                if (ViewBag.AntecedentesEmbarazo == null)
+                                                {
+                                                    <tr class="error-servidor"><td colspan="16" class="text-center">Sucedió un error en el servidor</td></tr>
+                                                }
+                                                else if (ViewBag.AntecedentesEmbarazo.Count == 0)
+                                                {
+                                                    <tr class="error-servidor"><td colspan="16" class="text-center">No hay resultados</td></tr>
+                                                }
+                                                else
+                                                {
+                                                    foreach (var item in ViewBag.AntecedentesEmbarazo)
+                                                    {
+                                                        <tr class="text-center">
+                                                            <td nowrap class="d-none">@item.EmbarazoId</td>
+                                                            <td nowrap>@item.Anio</td>
+                                                            <td nowrap>@item.Cpn</td>
+                                                            <td nowrap>@item.Complicacion</td>
+                                                            <td nowrap>@item.Parto</td>
+                                                            <td nowrap>@item.PesoRn</td>
+                                                            <td nowrap>@item.Puerpio</td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row w-100 mx-0 justify-content-end">
+                            <button disabled class="btn btn-sm btn-secondary m-2">Editar</button>
+                            <button class="btn btn-sm btn-success m-2" data-toggle="modal" data-target="#modalNuevoEmabarazo">Nuevo</button>
+                            <button disabled class="btn btn-sm btn-danger m-2">Eliminar</button>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="container-fluid" style="padding:0px;">
+                            <div class="box box-info mt-2 mb-0" id="acordion">
+                                <div class="box-header with-border" id="heading1">
+                                    <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>Antecedentes Actuales</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="contBoardAntecedentesActuales" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+                            <div class="box box-info mt-2 mb-0">
+                                <div class="scroll-css" style="overflow:scroll; height: 400px;">
+                                    <table class="table table-sm table-hover" id="table-examenes">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th nowrap scope="col" colspan="3">Enfermedades</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="body-antecedentes-actual">
+                                            @if (ViewBag.AtencedentesEso == null)
+                                            {
+                                                <tr><td nowrap class="text-center" colspan="3">Error en el servidor</td></tr>
+                                            }
+                                            else if (ViewBag.AtencedentesEso.AntecedenteActual.Count == 0)
+                                            {
+                                                <tr><td nowrap class="text-center" colspan="3">Error en el servidor</td></tr>
+                                            }
+                                            else
+                                            {
+                                                foreach (var actual in ViewBag.AtencedentesEso.AntecedenteActual)
+                                                {
+                                                    <tr onclick="$('.row-children-@actual.GrupoId-@actual.ParametroId').toggleClass('d-none')" id="row-padre-@actual.GrupoId-@actual.ParametroId" data-grupo="@actual.GrupoId" data-parametro="@actual.ParametroId" class="table-secondary"><td colspan="3"><i class="fas mr-2 fa-plus" style="cursor:pointer"></i>@actual.Nombre</td></tr>
+                                                    <tr class="d-none row-children-@actual.GrupoId-@actual.ParametroId">
+                                                        <td nowrap class="text-center">Nombre</td>
+                                                        <td nowrap class="text-center">SI</td>
+                                                        <td nowrap class="text-center">NO</td>
+                                                    </tr>
+                                                    var index = 0;
+                                                    foreach (var hijo in actual.Hijos)
+                                                    {
+                                                        <tr class="d-none row-children-@actual.GrupoId-@actual.ParametroId" data-grupopadre="@actual.GrupoId" data-parametropadre="@actual.ParametroId">
+                                                            <td nowrap>@hijo.Nombre</td>
+                                                            <td nowrap class="text-center"><input type="radio" @(hijo.SI == true ? "checked" : "") data-radio="1" class="radio-actual" name="radio-actual-@actual.GrupoId-@actual.ParametroId-@index" value="" /></td>
+                                                            <td nowrap class="text-center"><input type="radio" @(hijo.NO == true ? "checked" : "") data-radio="0" class="radio-actual" name="radio-actual-@actual.GrupoId-@actual.ParametroId-@index" value="" /></td>
+                                                            <td nowrap class="d-none">@hijo.GrupoId</td>
+                                                            <td nowrap class="d-none">@hijo.ParametroId</td>
+                                                            <td nowrap class="d-none">@actual.Nombre</td>
+                                                        </tr>
+                                                        index++;
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="container-fluid" style="padding:0px;">
+                            <div class="box box-info mt-2 mb-0" id="acordion">
+                                <div class="box-header with-border" id="heading1">
+                                    <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>Antecedentes Anteriores</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="contBoardAntecedentesAnteriores" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+                            <div class="box box-info mt-2 mb-0">
+                                <div class="scroll-css" style="overflow:scroll; height: 400px;">
+                                    <table class="table table-sm table-hover" id="table-examenes">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th nowrap scope="col" colspan="3">Enfermedades</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="body-antecedentes-anterior">
+                                            @if (ViewBag.AtencedentesEso == null)
+                                            {
+                                                <tr><td nowrap class="text-center" colspan="3">Error en el servidor</td></tr>
+                                            }
+                                            else if (ViewBag.AtencedentesEso.AntecedenteAnterior.Count == 0)
+                                            {
+                                                <tr><td nowrap class="text-center" colspan="3">Error en el servidor</td></tr>
+                                            }
+                                            else
+                                            {
+                                                foreach (var anterior in ViewBag.AtencedentesEso.AntecedenteAnterior)
+                                                {
+                                                    <tr onclick="$('.row-anteriores-children-@anterior.GrupoId-@anterior.ParametroId').toggleClass('d-none')" id="row-padre-@anterior.GrupoId-@anterior.ParametroId" data-grupo="@anterior.GrupoId" data-parametro="@anterior.ParametroId" class="table-secondary"><td colspan="3"><i class="fas mr-2 fa-plus" style="cursor:pointer"></i>@anterior.Nombre</td></tr>
+                                                    <tr class="d-none row-anteriores-children-@anterior.GrupoId-@anterior.ParametroId">
+                                                        <td nowrap class="text-center">Nombre</td>
+                                                        <td nowrap class="text-center">SI</td>
+                                                        <td nowrap class="text-center">NO</td>
+                                                    </tr>
+                                                    var index = 0;
+                                                    foreach (var hijo in anterior.Hijos)
+                                                    {
+                                                        <tr class="d-none row-anteriores-children-@anterior.GrupoId-@anterior.ParametroId">
+                                                            <td nowrap>@hijo.Nombre</td>
+                                                            <td nowrap class="text-center"><input type="radio" disabled @(hijo.SI == true ? "checked" : "") name="radio-anterior-@anterior.GrupoId-@anterior.ParametroId-@index" value="" /></td>
+                                                            <td nowrap class="text-center"><input type="radio" disabled @(hijo.NO == true ? "checked" : "") name="radio-anterior-@anterior.GrupoId-@anterior.ParametroId-@index" value="" /></td>
+                                                            <td nowrap class="d-none">@hijo.GrupoId</td>
+                                                            <td nowrap class="d-none">@hijo.ParametroId</td>
+                                                        </tr>
+                                                        index++;
+                                                    }
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 justify-content-end p-2">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btn-guardar-antecedentes">Guardar Cambios</button>
             </div>
         </div>
     </div>
@@ -19,3 +884,311 @@
 
 
 
+<div class="modal fade" id="modalPreventivos" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row mx-0">
+                    <div class="col-12">
+                        <div class="container-fluid" style="padding:0px;">
+                            <div class="box box-info mt-2 mb-0" id="acordion">
+                                <div class="box-header with-border" id="heading1">
+                                    <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>CUIDADOS PREVENTIVOS</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="contBoardProblemasCronicos" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+                            <div class="box box-info mt-2 mb-0">
+                                <div class="scroll-css" style="overflow:scroll; height: 500px;">
+                                    <table class="table table-sm table-hover" id="table-examenes">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th nowrap scope="col">Nombre</th>
+                                                @if (ViewBag.DataCuidadosPreventivos != null)
+                                                {
+                                                    foreach (var item in ViewBag.DataCuidadosPreventivos)
+                                                    {
+                                                        <th nowrap scope="col">@item.FechaServicio.ToShortDateString()</th>
+                                                    }
+                                                }
+                                                <th nowrap scope="col">Comentario</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="body-cuidados-preventivos">
+
+                                            @if (ViewBag.DataCuidadosPreventivos != null)
+                                            {
+
+                                                foreach (var item in ViewBag.DataCuidadosPreventivos)
+                                                {
+
+                                                    foreach (var padre in item.Listado)
+                                                    {
+
+                                                        <tr>
+                                                            <td nowrap style="font-size: 1.0rem; font-weight: bold" class="padre" data-grupo="@padre.GrupoId" data-parametro="@padre.ParameterId" colspan="16">@padre.Nombre</td>
+                                                        </tr>
+                                                        foreach (var hijo in padre.Hijos)
+                                                        {
+
+                                                            <tr>
+                                                                <td nowrap style="font-size: 0.7rem">@hijo.Nombre</td>
+                                                                <td nowrap class=""><input type="checkbox" data-grupo="@hijo.GrupoId" class="checkbox" data-parametro="@hijo.ParameterId" data-fecha="@item.FechaServicio" @(hijo.i_Valor == 1 ? "checked" : "")></td>
+
+
+                                                                @for (int i = 1; i < ViewBag.DataCuidadosPreventivos.Count; i++)
+                                                                {
+
+                                                                    foreach (var nextPadre in ViewBag.DataCuidadosPreventivos[i].Listado)
+                                                                    {
+
+                                                                        if (nextPadre.GrupoId == padre.GrupoId && nextPadre.ParameterId == padre.ParameterId)
+                                                                        {
+
+                                                                            foreach (var nextHijo in nextPadre.Hijos)
+                                                                            {
+                                                                                if (hijo.GrupoId == nextHijo.GrupoId && hijo.ParameterId == nextHijo.ParameterId)
+                                                                                {
+                                                                                    <td nowrap class=""><input type="checkbox" data-grupo="@nextHijo.GrupoId" data-parametro="@nextHijo.ParameterId" data-fecha="@ViewBag.DataCuidadosPreventivos[i].FechaServicio" @(nextHijo.i_Valor == 1 ? "checked" : "")></td>
+
+                                                                                }
+
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                <td nowrap style="font-size: 0.7rem"><input type="text" style="width:150px" class="form-control form-control-sm" value="@(padre.DataComentario == null ? "": padre.DataComentario.Comentario)" /></td>
+
+                                                            </tr>
+                                                        }
+
+                                                    }
+                                                    break;
+                                                }
+
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="guardar-cuidados-preventivos">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalIntegral" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row mx-0">
+                    <div class="col-12 col-lg-6">
+                        <div class="container-fluid" style="padding:0px;">
+                            <div class="box box-info mt-2 mb-0" id="acordion">
+                                <div class="box-header with-border" id="heading1">
+                                    <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>PROBLEMAS CRÓNICOS</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="contBoardProblemasCronicos" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+                            <div class="box box-info mt-2 mb-0">
+                                <div class="scroll-css" style="overflow:scroll; height: 300px;">
+                                    <table class="table table-sm table-hover" id="table-examenes">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th nowrap scope="col" class="d-none">v_ProblemaId</th>
+                                                <th nowrap scope="col">Fecha</th>
+                                                <th nowrap scope="col">Problema Crónico</th>
+                                                <th nowrap scope="col">¿Es Controlado?</th>
+                                                <th nowrap scope="col">Observación</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="body-cronico"></tbody>
+                                    </table>
+                                </div>
+                                <div class="row w-100 mx-0 justify-content-end p-2">
+                                    <button class="btn btn-sm btn-success ml-1" id="nuevo-problema-cronico">Agregar</button>
+                                    <button class="btn btn-sm btn-warning mx-1">Editar</button>
+                                    <button class="btn btn-sm btn-danger mx-1">Eliminar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="container-fluid" style="padding:0px;">
+                            <div class="box box-info mt-2 mb-0" id="acordion">
+                                <div class="box-header with-border" id="heading1">
+                                    <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>PROBLEMAS AGUDOS</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="contBoardProblemasAgudos" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+                            <div class="box box-info mt-2 mb-0">
+                                <div class="scroll-css" style="overflow:scroll; height: 300px;">
+                                    <table class="table table-sm table-hover" id="table-examenes">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th nowrap scope="col" class="d-none">ProblemaId</th>
+                                                <th nowrap scope="col">Fecha</th>
+                                                <th nowrap scope="col">Problema Agudo</th>
+                                                <th nowrap scope="col">Observación</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="body-agudo"></tbody>
+                                    </table>
+                                </div>
+                                <div class="row w-100 mx-0 justify-content-end p-2">
+                                    <button class="btn btn-sm btn-success ml-1" id="nuevo-problema-agudo">Agregar</button>
+                                    <button class="btn btn-sm btn-warning mx-1">Editar</button>
+                                    <button class="btn btn-sm btn-danger mx-1">Eliminar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="container-fluid" style="padding:0px;">
+                            <div class="box box-info mt-2 mb-0" id="acordion">
+                                <div class="box-header with-border" id="heading1">
+                                    <h3 class="box-title" style="cursor:pointer;"><i class="icon-list-numbered"></i>PLAN DE ATENCIÓN INTEGRAL</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="contBoardPlanIntegral" class="overflow-hidden p-1" style="width:100% !important; box-shadow: -5px 5px 8px #bebcbc; border-radius:0.3rem">
+                            <div class="box box-info mt-2 mb-0">
+                                <div class="scroll-css" style="overflow:scroll; height: 300px;">
+                                    <table class="table table-sm table-hover" id="table-examenes">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th nowrap scope="col" class="d-none">Id</th>
+                                                <th nowrap scope="col">Tipo</th>
+                                                <th nowrap scope="col">Fecha</th>
+                                                <th nowrap scope="col">Descripción</th>
+                                                <th nowrap scope="col">Lugar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="body-planintegral"></tbody>
+                                    </table>
+                                </div>
+                                <div class="row w-100 mx-0 justify-content-end p-2">
+                                    <button class="btn btn-sm btn-success ml-1" id="nuevo-plan-integral">Agregar</button>
+                                    <button class="btn btn-sm btn-warning mx-1" id="editar-plan-integral">Editar</button>
+                                    <button class="btn btn-sm btn-danger mx-1">Eliminar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 justify-content-between p-2">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+                <button type="button" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalNuevoEmabarazo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Detalle del Embarazo</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0 mt-3 justify-content-between">
+                    <div class="col-12">
+                        <label class="small">Año</label>
+                        <input type="text" class="form-control form-control-sm" id="embarazo-anio" value="" />
+                    </div>
+                    <div class="col-12">
+                        <label class="small">CPN</label>
+                        <input type="text" class="form-control form-control-sm" id="embarazo-cpn" value="" />
+                    </div>
+                    <div class="col-12">
+                        <label class="small">Complicación</label>
+                        <input type="text" class="form-control form-control-sm" id="embarazo-complicacion" value="" />
+                    </div>
+                    <div class="col-12">
+                        <label class="small">Parto</label>
+                        <input type="text" class="form-control form-control-sm" id="embarazo-parto" value="" />
+                    </div>
+                    <div class="col-12">
+                        <label class="small">Peso RN</label>
+                        <input type="text" class="form-control form-control-sm" id="embarazo-peso" value="" />
+                    </div>
+                    <div class="col-12">
+                        <label class="small">Puerperio</label>
+                        <input type="text" class="form-control form-control-sm" id="embarazo-puerperio" value="" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 justify-content-between p-2">
+                <button class="btn btn-sm btn-secondary" data-dismiss="modal">Salir</button>
+                <button class="btn btn-sm btn-primary" id="guardar-embarazo">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalProblemaPlan" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="tipo-popup"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0 mt-3 justify-content-between">
+                    <div class="col-12" id="cont-tipo">
+                        <label class="small">Tipo</label>
+                        <select class="form-control form-control-sm" id="prob-tipo">
+                            <option value="-1">--Seleccionar--</option>
+                            @foreach (var item in ViewBag.TipoPlan)
+                            {
+                                <option value="@item.Id">@item.Value</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="small">Fecha</label>
+                        <input type="date" class="form-control form-control-sm" id="prob-fecha" value="" />
+                    </div>
+                    <div class="col-12" id="cont-problema">
+                        <label class="small">Descripción</label>
+                        <input type="text" class="form-control form-control-sm" id="prob-problema" value="" />
+                    </div>
+                    <div class="col-12" id="cont-controlado">
+                        <label class="small">¿Es controlado?</label>
+                        <select class="form-control form-control-sm" id="prob-controlado">
+                            <option value="-1">--Seleccionar--</option>
+                            @foreach (var item in ViewBag.EsControlado)
+                            {
+                                <option value="@item.Id">@item.Value</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12" id="cont-observacion">
+                        <label class="small">Observaciones</label>
+                        <input type="text" class="form-control form-control-sm" id="prob-observacion" value="" />
+                    </div>
+                    <div class="col-12" id="cont-lugar">
+                        <label class="small">Lugar</label>
+                        <input type="text" class="form-control form-control-sm" id="prob-lugar" value="" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer row w-100 mx-0 justify-content-between p-2">
+                <button class="btn btn-sm btn-secondary" data-dismiss="modal">Salir</button>
+                <button class="btn btn-sm btn-primary" id="guardar-problema">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

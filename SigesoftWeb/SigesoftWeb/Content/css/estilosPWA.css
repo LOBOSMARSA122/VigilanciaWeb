@@ -22,7 +22,7 @@
 
 .back-warning {
     background: #f39c12;
-    border-left: 5px #cc810c solid;
+    border-left: 5px #cc80810c solid;
 }
 /*LOGIN*/
 .d-none{
@@ -98,7 +98,7 @@
         position: absolute;
         margin-top: 223.25px;
         width: 306.05px;
-        height: 255.81px;
+        height: 255.8081px;
         background: #FFFFFF;
         box-shadow: 0px 4px 10px rgba(44, 61, 94, 0.16);
         border-radius: 6px;
@@ -340,7 +340,7 @@
 }
 
 .div-fech-nac {
-    width: 81.39%;
+    width: 8081.39%;
     height: 3.125%;
     position: absolute;
     top: 59.22%;
@@ -350,7 +350,7 @@
 }
 
 .div-lugar-nac {
-    width: 81.39%;
+    width: 8081.39%;
     height: 3.125%;
     position: absolute;
     top: 63.75%;
@@ -360,7 +360,7 @@
 }
 
 .div-cellphone {
-    width: 81.39%;
+    width: 8081.39%;
     height: 3.125%;
     position: absolute;
     top: 59.22%;
@@ -370,7 +370,7 @@
 }
 
 .div-email {
-    width: 81.39%;
+    width: 8081.39%;
     height: 3.125%;
     position: absolute;
     top: 63.75%;
@@ -379,7 +379,7 @@
     color: #a6a3a3;
 }
 .div-estado-civil {
-    width: 81.39%;
+    width: 8081.39%;
     height: 3.125%;
     position: absolute;
     top: 68.28%;
@@ -625,7 +625,7 @@
 
 .edit-fech-nac {
     top: 55.78%;
-    width: 81.39%;
+    width: 8081.39%;
     height: 3.125%;
     position: absolute;
 }
@@ -1054,7 +1054,7 @@
 
 .comentario {
     position: absolute;
-    top: 55.81%;
+    top: 55.8081%;
     left: 28px;
     width:calc(100% - 55px);
     background: #FFFFFF;

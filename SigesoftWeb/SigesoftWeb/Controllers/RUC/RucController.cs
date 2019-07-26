@@ -41,14 +41,14 @@ namespace SigesoftWeb.Controllers.RUC
             return View();
         }
 
-        //[GeneralSecurity(Rol = "Ruc-GetDataContribuyenteByRuc")]
-        //public JsonResult GetDataContribuyenteByRuc(string ruc)
-        //{
-        //    Api API = new Api();
-        //    var result = API.Get<RootObject>("DataRuc/GetDataContribuyente?numDoc=" + ruc);
-        //    return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        //}
+        [GeneralSecurity(Rol = "Ruc-GetDataContribuyenteByRuc")]
+        public JsonResult GetDataContribuyenteByRuc(string ruc)
+        {
+            Api API = new Api();
+            var result = API.Get<RootObject>("DataRuc/GetDataContribuyente?numDoc=" + ruc);
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
 
-        
+
     }
 }

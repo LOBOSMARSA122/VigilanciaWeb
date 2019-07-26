@@ -4,6 +4,9 @@
         <div class="modal-content" id="modal-content-agenda">
             <div class="modal-header">
                 <h5 class="modal-title" style="font-size:1.2rem" id="agendarPersona">Agendar Trabajador</h5>
+                <label class="mx-3"><strong>Nro Afiliación: </strong><span id="nro-afiliacion"></span></label>
+                <label class="mx-3"><strong>Tipo Asegurado: </strong><span id="tipo-asegurado"></span></label>
+                <label class="mx-3"><strong>Estado Asegurado: </strong><span id="estado-seguro"></span></label>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -31,11 +34,26 @@
                     <div class="group-box">
                         <label class="label-group-box">Búsqueda</label>
                         <div class="input-group input-group-sm">
-                            <input type="text" class="form-control" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" placeholder="Trabajador" aria-label="Trabajador" aria-describedby="btn-trabajador" id="doc-number-find">
+                            <input type="text" class="form-control" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" placeholder="DNI" aria-label="Trabajador" aria-describedby="btn-trabajador" id="doc-number-find">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-info" type="button" id="btn-trabajador"><i class="fas fa-search mr-1"></i>Buscar</button>
                             </div>
                         </div>
+                        <div class="form-inline d-none" id="cont-captcha">
+                            <figure id="figure-captcha">
+                                <img src="" alt="CargandoCaptcha" id="img-captcha" />
+                            </figure>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" placeholder="Captcha" aria-label="Trabajador" aria-describedby="btn-trabajador" id="value-captcha">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info" type="button" id="btn-enviarcaptcha"><i class="fas fa-check"></i></button>
+                                </div>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary" type="button" id="btn-recargarcaptcha"><i class="fas fa-sync-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-12 py-2 col-lg-7" id="group-facturacion">
@@ -56,55 +74,53 @@
                     <div class="group-box">
                         <label class="label-group-box">Datos Obligatorios para crear Agenda</label>
                         <div class="row w-100 mx-0">
-                            <div class="col-12 col-lg-3">
-                                <input type="text" class="form-control form-control-sm inputLabelFloat" value="" id="nombres-paciente" />
-                                <label class="has-float-label">Nombres</label>
-                            </div>
-                            <div class="col-12 col-lg-3">
-                                <input type="text" class="form-control form-control-sm inputLabelFloat" value="" id="apepat-paciente" />
-                                <label class="has-float-label">Ap. Paterno</label>
-                            </div>
-                            <div class="col-12 col-lg-3">
-                                <input type="text" class="form-control form-control-sm inputLabelFloat" value="" id="apemat-paciente" />
-                                <label class="has-float-label">Ap. Materno</label>
+                            <div class="col-12 col-lg-3 mt-2">
+                                <label class="small">Nombres</label>
+                                <input type="text" class="form-control form-control-sm " value="" id="nombres-paciente" />
+
                             </div>
                             <div class="col-12 col-lg-3 mt-2">
-                                <div class="form-inline mt-2 justify-content-between">
-                                    <label class="small">Fech.Nac:</label>
-                                    <input type="date" class="form-control form-control-sm" id="fecha-nacimiento" />
-                                </div>
+                                <label class="small">Ap. Paterno</label>
+                                <input type="text" class="form-control form-control-sm " value="" id="apepat-paciente" />
+
                             </div>
-                            <div class="col-12 col-lg-3">
-                                <div class="form-inline mt-2 justify-content-between">
-                                    <label class="small"> Tipo Doc:</label>
-                                    <select class="custom-select custom-select-sm" id="tipo-documento">
-                                        <option value="-1">--Seleccionar--</option>
-                                        @{
-                                            foreach (var item in ViewBag.TipoDocumento)
-                                            {
-                                                <option value="@item.Id">@item.Value</option>
-                                            }
+                            <div class="col-12 col-lg-3 mt-2">
+                                <label class="small">Ap. Materno</label>
+                                <input type="text" class="form-control form-control-sm " value="" id="apemat-paciente" />
+
+                            </div>
+                            <div class="col-12 col-lg-3 mt-2">
+                                <label class="small">Fech.Nac:</label>
+                                <input type="date" class="form-control form-control-sm" id="fecha-nacimiento" />
+                            </div>
+                            <div class="col-12 col-lg-3 mt-2">
+                                <label class="small"> Tipo Doc:</label>
+                                <select class="custom-select custom-select-sm" id="tipo-documento">
+                                    <option value="-1">--Seleccionar--</option>
+                                    @{
+                                        foreach (var item in ViewBag.TipoDocumento)
+                                        {
+                                            <option value="@item.Id">@item.Value</option>
                                         }
-                                    </select>
-                                </div>
+                                    }
+                                </select>
                             </div>
-                            <div class="col-12 col-lg-3">
-                                <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" class="form-control form-control-sm inputLabelFloat" value="" id="numero-documento" />
-                                <label class="has-float-label">Nro. Doc</label>
+                            <div class="col-12 col-lg-3 mt-2">
+                                <label class="small">Nro. Doc</label>
+                                <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" class="form-control form-control-sm " value="" id="numero-documento" />
+
                             </div>
-                            <div class="col-12 col-lg-3">
-                                <div class="form-inline mt-2 justify-content-between">
-                                    <label class="small">Género:</label>
-                                    <select class="custom-select custom-select-sm" id="genero-paciente">
-                                        <option value="-1">--Seleccionar--</option>
-                                        @{
-                                            foreach (var item in ViewBag.Genero)
-                                            {
-                                                <option value="@item.Id">@item.Value</option>
-                                            }
+                            <div class="col-12 col-lg-3 mt-2">
+                                <label class="small">Género:</label>
+                                <select class="custom-select custom-select-sm" id="genero-paciente">
+                                    <option value="-1">--Seleccionar--</option>
+                                    @{
+                                        foreach (var item in ViewBag.Genero)
+                                        {
+                                            <option value="@item.Id">@item.Value</option>
                                         }
-                                    </select>
-                                </div>
+                                    }
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -524,7 +540,7 @@
                                             }
                                         }
                                     </select>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -533,8 +549,8 @@
 
             </div>
             <div class="modal-footer row w-100 mx-0 py-2 px-4 justify-content-between" id="footer-new-agenda">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btn-guardar-agenda">Agendar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1"></i>Close</button>
+                <button type="button" class="btn btn-primary" id="btn-guardar-agenda"><i class="far fa-calendar-alt mr-1"></i>Agendar</button>
             </div>
         </div>
     </div>

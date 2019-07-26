@@ -1,94 +1,99 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Agenda";
 }
 <div class="container-fluid">
     <article class="group-box box-content mt-3">
         <label class="label-group-box">Filtro</label>
-        <div class="form-row bg-light p-2">
-            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+        <div class="form-row p-2">
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3">
                 <label class="small my-1 mr-2">Fecha Inicio:</label>
                 <input type="date" class="form-control form-control-sm" id="filter-FechaInicio">
             </div>
-            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3">
+                <label class="small my-1 mr-2">Fecha Fin:</label>
+                <input type="date" class="form-control form-control-sm" id="filter-FechaFin">
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 justify-content-md-end">
                 <label class="small my-1 mr-2">Tipo Servicio</label>
                 <select class="custom-select custom-select-sm" id="filter-ServiceType">
                     <option value="-1">--Todos--</option>
                     @{
-                        foreach (var item in ViewBag.TypeService)
-                        {
-                            <option value="@item.Id">@item.Value</option>
-                        }
+                    foreach (var item in ViewBag.TypeService)
+                    {
+                    if (item.Id != "1")
+                    {
+                    <option value="@item.Id" @(item.Id=="9" ? "selected" : "" )>@item.Value</option>
+                    }
+
+                    }
                     }
                 </select>
             </div>
-            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 justify-content-md-end">
                 <label class="small my-1 mr-2">Cola:</label>
                 <select class="custom-select custom-select-sm" id="filter-Cola">
                     <option value="-1">--Todos--</option>
                     @{
-                        foreach (var item in ViewBag.LineStatus)
-                        {
-                            <option value="@item.Id">@item.Value</option>
-                        }
+                    foreach (var item in ViewBag.LineStatus)
+                    {
+                    <option value="@item.Id">@item.Value</option>
+                    }
                     }
                 </select>
             </div>
-            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3">
                 <label class="small my-1 mr-2">Paciente:</label>
                 <input type="text" class="form-control form-control-sm" id="filter-PacientName">
             </div>
-            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
-                <label class="small my-1 mr-2">Fecha Fin:</label>
-                <input type="date" class="form-control form-control-sm" id="filter-FechaFin">
-            </div>
-            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
+
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 justify-content-md-end">
                 <label class="small my-1 mr-2">Servicio</label>
                 <select class="custom-select custom-select-sm" id="filter-MasterService">
                     <option value="-1">--Todos--</option>
                 </select>
             </div>
-            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
-                <label class="small my-1 mr-2">VIP:</label>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 justify-content-md-end">
+                <label class="small my-1 mr-2">Preferencial:</label>
                 <select class="custom-select custom-select-sm" id="filter-Vip">
                     <option value="-1">--Todos--</option>
                     @{
-                        foreach (var item in ViewBag.Vip)
-                        {
-                            <option value="@item.Id">@item.Value</option>
-                        }
+                    foreach (var item in ViewBag.Vip)
+                    {
+                    <option value="@item.Id">@item.Value</option>
                     }
-                </select>
-            </div>
-            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start">
-                <label class="small my-1 mr-2">Nro Doc:</label>
-                <input type="text" class="form-control form-control-sm" id="filter-DocNumber">
-            </div>
-            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
-                <label class="small my-1 mr-2">Modalidad:</label>
-                <select class="custom-select custom-select-sm" id="filter-Modalidad">
-                    <option value="-1">--Todos--</option>
-                    @{
-                        foreach (var item in ViewBag.Modalidad)
-                        {
-                            <option value="@item.Id">@item.Value</option>
-                        }
-                    }
-                </select>
-            </div>
-            <div class="col-12 mb-2 mb-lg-0 col-lg-3 d-flex justify-content-start justify-content-md-end">
-                <label class="small my-1 mr-2">Estado Cita:</label>
-                <select class="custom-select custom-select-sm" id="filter-EstadoCita">
-                    <option value="-1">--Todos--</option>
-                    @{
-                        foreach (var item in ViewBag.CalendarStatus)
-                        {
-                            <option value="@item.Id">@item.Value</option>
-                        }
                     }
                 </select>
             </div>
             <div class="col-12 mb-2 mb-lg-0 col-lg-3">
+                <label class="small my-1 mr-2">Nro Doc:</label>
+                <input type="text" class="form-control form-control-sm" id="filter-DocNumber">
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 justify-content-md-end">
+                <label class="small my-1 mr-2">Modalidad:</label>
+                <select class="custom-select custom-select-sm" id="filter-Modalidad">
+                    <option value="-1">--Todos--</option>
+                    @{
+                    foreach (var item in ViewBag.Modalidad)
+                    {
+                    <option value="@item.Id">@item.Value</option>
+                    }
+                    }
+                </select>
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-3 justify-content-md-end">
+                <label class="small my-1 mr-2">Estado Cita:</label>
+                <select class="custom-select custom-select-sm" id="filter-EstadoCita">
+                    <option value="-1">--Todos--</option>
+                    @{
+                    foreach (var item in ViewBag.CalendarStatus)
+                    {
+                    <option value="@item.Id">@item.Value</option>
+                    }
+                    }
+                </select>
+            </div>
+            <div class="col-12 mb-2 mb-lg-0 col-lg-1">
+                <label class="m-0" style="opacity:0">Filtroooooo</label>
                 <button class="btn btn-sm btn-info" id="filtrar-agenda"><i class="fas fa-search mr-2"></i>Filtrar</button>
             </div>
         </div>
@@ -104,8 +109,8 @@
                 <button class="btn btn-sm m-1 btn-secondary" id="btn-facturar"><i class="fas fa-file-invoice-dollar mr-1"></i>Facturar</button>
                 <button class="btn btn-sm m-1 btn-info" id="editar-trabajador"><i class="fas fa-user-edit mr-1"></i>Editar Trabajador</button>
                 <button class="btn btn-sm m-1 btn-success" id="editar-protocolo"><i class="fas fa-exchange-alt mr-1"></i>Cambiar Protocolo</button>
-                <button class="btn btn-sm m-1 btn-secondary" id="solicitud-carta"><i class="fas fa-envelope-open-text mr-1"></i>Solicitud/Carta</button>
-                <button class="btn btn-sm m-1 btn-danger" id="btn-fusionar-servicios"><i class="fas fa-user-shield mr-1"></i>Fusionar Servicios</button>
+                <button class="btn btn-sm m-1 d-none btn-secondary" id="solicitud-carta"><i class="fas fa-envelope-open-text mr-1"></i>Solicitud/Carta</button>
+                <button class="btn btn-sm d-none m-1 btn-danger" id="btn-fusionar-servicios"><i class="fas fa-user-shield mr-1"></i>Fusionar Servicios</button>
             </div>
         </div>
         <div class="col-12 py-2 px-0 col-lg-5">
@@ -203,10 +208,10 @@
                                         <select disabled class="custom-select custom-select-sm" id="change-tiposervicio">
                                             <option value="-1">--Seleccionar--</option>
                                             @{
-                                                foreach (var item in ViewBag.TypeService)
-                                                {
-                                                    <option value="@item.Id">@item.Value</option>
-                                                }
+                                            foreach (var item in ViewBag.TypeService)
+                                            {
+                                            <option value="@item.Id">@item.Value</option>
+                                            }
                                             }
                                         </select>
                                     </div>
@@ -244,10 +249,10 @@
                                         <select disabled class="custom-select custom-select-sm" id="change-tipoeso">
                                             <option value="-1">--Seleccionar--</option>
                                             @{
-                                                foreach (var item in ViewBag.TipoEso)
-                                                {
-                                                    <option value="@item.Id">@item.Value</option>
-                                                }
+                                            foreach (var item in ViewBag.TipoEso)
+                                            {
+                                            <option value="@item.Id">@item.Value</option>
+                                            }
                                             }
                                         </select>
                                     </div>
@@ -264,10 +269,10 @@
                                         <select class="custom-select custom-select-sm" id="change-centrocosto" style="max-width: 100%">
                                             <option value="-1">--Seleccionar--</option>
                                             @{
-                                                foreach (var item in ViewBag.CentroCosto)
-                                                {
-                                                    <option value="@item.v_Id">@item.Value</option>
-                                                }
+                                            foreach (var item in ViewBag.CentroCosto)
+                                            {
+                                            <option value="@item.v_Id">@item.Value</option>
+                                            }
                                             }
 
                                         </select>
@@ -279,10 +284,10 @@
                                         <select disabled class="custom-select custom-select-sm" id="change-empresacliente" style="max-width: 100%">
                                             <option value="-1">--Seleccionar--</option>
                                             @{
-                                                foreach (var item in ViewBag.Empresa)
-                                                {
-                                                    <option value="@item.v_Id">@item.Value</option>
-                                                }
+                                            foreach (var item in ViewBag.Empresa)
+                                            {
+                                            <option value="@item.v_Id">@item.Value</option>
+                                            }
                                             }
 
                                         </select>
@@ -294,10 +299,10 @@
                                         <select disabled class="custom-select custom-select-sm" id="change-empresatrabajo" style="max-width: 100%">
                                             <option value="-1">--Seleccionar--</option>
                                             @{
-                                                foreach (var item in ViewBag.Empresa)
-                                                {
-                                                    <option value="@item.v_Id">@item.Value</option>
-                                                }
+                                            foreach (var item in ViewBag.Empresa)
+                                            {
+                                            <option value="@item.v_Id">@item.Value</option>
+                                            }
                                             }
                                         </select>
                                     </div>
@@ -308,8 +313,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-sm btn-primary" id="guardar-cambios-protocolo">Guardar</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1"></i>Cerrar</button>
+                <button type="button" class="btn btn-sm btn-primary" id="guardar-cambios-protocolo"><i class="fas fa-save mr-1"></i>Guardar</button>
             </div>
         </div>
     </div>
@@ -394,6 +399,64 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="modalExamenesAdicionales" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:0.9rem">Agregar Examen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row w-100 mx-0">
+                    <div class="col-12 col-lg-7 scroll-css" style="max-height: 500px; overflow:scroll">
+                        <ul class="list-group list-group-flush" id="cont-examenes-additional"></ul>
+                    </div>
+                    <div class="col-12 col-lg-5">
+                        <div class="row w-100 mx-0">
+                            <label class="small">Medico Tratante:</label>
+                            <select class="custom-select custom-select-sm w-50" id="medicoTratante">
+                                <option selected value="-1">--Seleccionar--</option>
+                                @{
+                                foreach (var item in ViewBag.Users)
+                                {
+                                <option value="@item.Id">@item.Value</option>
+                                }
+                                }
+                            </select>
+                            <div class="col-12">
+                                <label>Exámenes:</label>
+                                <ul class="list-group list-group-flush" id="cont-examenes-agreados"></ul>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-danger m-2" id="btn-cancelar-adicionales">Cancelar</button>
+                        <button class="btn btn-sm btn-primary m-2" id="btn-guardar-adicionales">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalPriceExam" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size: 0.8rem">Ingresar Precio</h5>
+            </div>
+            <div class="modal-body">
+                <input type="number" style="width:150px" value="" id="input-precio" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="guardar-precio">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="~/Scripts/FloatLabel.js"></script>
 <script src="~/Scripts/jquery-3.3.1.js"></script>
 <link href="~/Content/css/Alert.css" rel="stylesheet" />
@@ -404,16 +467,288 @@
     }
 </style>
 <script>
+    function EnviarCaptchaSiS() {
+        LimpiarDataSchedule();
+        $("#figure-captcha").addClass("loadingGrid");
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            url: '/ConsultaSIS/GetData?captcha=' + $("#value-captcha").val() + '&dni=' + $("#doc-number-find").val(),
+            success: function (json) {
+                if (json.Error) {
+                    if (json.Status == 204) {
+                        $("#cont-captcha").addClass("d-none")
+                        alertafixed({
+                            type: 'info',
+                            class: 'info-class',
+                            title: 'INFORMACIÓN: ' + json.Status,
+                            message: json.Message,
+                        })
+                        $("#value-captcha").val("");
+                        $("#figure-captcha").removeClass("loadingGrid");
+                        LimpiarDataSchedule();
+                    } else {
+                        alertafixed({
+                            type: 'info',
+                            class: 'info-class',
+                            title: 'INFORMACIÓN: ' + json.Status,
+                            message: json.Message,
+                        })
+                        $("#value-captcha").val("");
+                        $("#figure-captcha").removeClass("loadingGrid");
+                        $("#btn-recargarcaptcha").click();
+                        LimpiarDataSchedule();
+                    }
+                } else {
+                    $("#nombres-paciente").val(json.Result.Nombres);
+                    $("#apepat-paciente").val(json.Result.ApellidoPaterno);
+                    $("#apemat-paciente").val(json.Result.ApellidoMaterno);
+                    $("#numero-documento").val($("#doc-number-find").val());
+                    $("#nro-afiliacion").text(json.Result.NroAfiliacion);
+                    $("#tipo-asegurado").text(json.Result.TipoAsegurado);
+                    $("#estado-seguro").text(json.Result.Estado);
 
+                    $("#cont-captcha").addClass("d-none")
+                    $("#value-captcha").val("");
+                    $("#figure-captcha").removeClass("loadingGrid");
+                }
+
+            },
+            error: function (err, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'danger-class',
+                    title: 'ERROR: ' + status,
+                    message: 'Sucedió un error en el servidor: ' + message,
+                })
+                $("#figure-captcha").removeClass("loadingGrid");
+            }
+        })
+    }
     $(document).ready(function () {
+
+        $("#btn-recargarcaptcha").on("click", function () {
+
+            $("#figure-captcha").addClass("loadingGrid");
+            $.ajax({
+                cache: false,
+                method: 'GET',
+                dataType: 'json',
+                url: '/ConsultaSIS/GetCaptcha',
+                success: function (json) {
+
+                    if (json.Error) {
+                        alertafixed({
+                            type: 'danger',
+                            class: 'danger-class',
+                            title: 'ERROR: ' + json.Status,
+                            message: 'Sucedió un error en el servidor: ' + json.Message,
+                        })
+
+                    } else {
+                        $("#img-captcha").attr("src", "data:image/jpeg;base64," + json.Id);
+
+                    }
+                    $("#figure-captcha").removeClass("loadingGrid");
+
+                },
+                error: function (err, status, message) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'danger-class',
+                        title: 'ERROR: ' + status,
+                        message: 'Sucedió un error en el servidor: ' + message,
+                    })
+                    $("#figure-captcha").removeClass("loadingGrid");
+                }
+            })
+        })
+        setMasterServices();
+        $("#value-captcha").on("keyup", function (e) {
+            var tecla = (document.all) ? e.keyCode : e.which;
+            if (tecla == 13) {
+                EnviarCaptchaSiS()
+            }
+        })
+
+        $("#btn-enviarcaptcha").on("click", function () {
+            EnviarCaptchaSiS()
+        })
+
+        $.contextMenu({
+            selector: '.cmCalendar',
+            trigger: 'left',
+            callback: function (key, options) {
+                if (key === "ReagendarCita") {
+                    $("#table-examenes").addClass("loadingGrid");
+                    let ServiceId = "";
+                    let personId = "";
+                    $('tr.context-menu-active').each(function () {
+                        ServiceId = $(this).find('td').eq(1).text();
+                        personId = $(this).find('td').eq(7).text();
+                    });
+
+
+                } else if (key === "CancelarCita") {
+                    let examen = "";
+                    let CategoryId = "";
+                    let ServicecomponentId = "";
+                    let ServiceId = "";
+                    $('tr.context-menu-active').each(function () {
+                        examen = $(this).find('td').eq(2).text();
+                        CategoryId = $(this).find('td').eq(0).text();
+                        ServicecomponentId = $(this).find('td').eq(7).text();
+                        ServiceId = $(this).find('td').eq(1).text();
+                    });
+
+
+                } else if (key === "IniciarCircuito") {
+                    let CalendarId = "";
+                    $('tr.context-menu-active').each(function () {
+                        CalendarId = $(this).find('td').eq(1).text();
+                    });
+
+                    IniciarCircuitoCalendar(CalendarId);
+                } else if (key === "VerExamenesAdicionales") {
+
+                    let ServiceId = "";
+                    let PersonId = "";
+                    $('tr.context-menu-active').each(function () {
+                        ServiceId = $(this).find('td').eq(15).text();
+                        PersonId = $(this).find('td').eq(2).text();
+                    });
+                    AtenderExamenesAdicionales(ServiceId, PersonId);
+                }
+            },
+            items: {
+                "ReagendarCita": { name: "Reagendar Cita" },
+                "CancelarCita": { name: "Cancelar Cita" },
+                "IniciarCircuito": { name: "Iniciar Circuito" },
+                "VerExamenesAdicionales": { name: "Ver Exámenes Adicionales" },
+                "sep1": "---------",
+                "Salir": { name: "Salir" }
+            }
+        });
+
+        $("#btn-guardar-adicionales").on("click", function () {
+
+            if ($("#medicoTratante").val() == "-1") {
+                alertafixed({
+                    type: 'warning',
+                    class: 'warning-class',
+                    title: 'VALIDACIÓN',
+                    message: 'Seleccione a un medico tratante para continuar.'
+                })
+                $("#medicoTratante").addClass("border-danger").removeClass("border-success");
+                return;
+            }
+
+            if ($("#cont-examenes-agreados li").length == 0) {
+                alertafixed({
+                    type: 'warning',
+                    class: 'warning-class',
+                    title: 'VALIDACIÓN',
+                    message: 'No hay exámenes por guardar.'
+                })
+                return;
+            }
+            //$("#modalExamenesAdicionales").find(".modal-header").eq(0).addClass("loadingGrid");
+            $("#medicoTratante").removeClass("border-danger").addClass("border-success");
+            let li = $("#cont-examenes-agreados li");
+            let arrExams = [];
+            for (var i = 0; i < li.length; i++) {
+                let IsNewService = li.eq(i).data("nuevo-servicio");
+                let ComponentId = li.eq(i).data("componentid");
+                let PersonId = li.eq(i).data("personid");
+                let Price = li.eq(i).data("precio");
+                let ServiceId = li.eq(i).data("serviceid");
+                let MedicoTratante = $("#medicoTratante").val();
+
+                arrExams.push({ IsNewService, ComponentId, PersonId, Price, ServiceId, MedicoTratante });
+            }
+            $.ajax({
+                cache: false,
+                method: 'POST',
+                dataType: 'json',
+                data: { 'data': JSON.stringify(arrExams) },
+                url: '/Agenda/SaveAdditionalExamsForCalendar',
+                success: function (json) {
+                    if (json.Error) {
+                        alertafixed({
+                            type: 'danger',
+                            class: 'danger-class',
+                            title: 'ERROR: ' + json.Status,
+                            message: json.Message
+                        })
+                    } else {
+                        alertafixed({
+                            type: 'success',
+                            class: 'success-class',
+                            title: 'HECHO: ' + json.Status,
+                            message: json.Message
+                        })
+                        $("#modalExamenesAdicionales").modal("hide");
+                    }
+                    $("#modalExamenesAdicionales").find(".modal-header").eq(0).removeClass("loadingGrid");
+
+                },
+                error: function (err, status, message) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'danger-class',
+                        title: 'ERROR: ' + status,
+                        message
+                    })
+                    $("#modalExamenesAdicionales").find(".modal-header").eq(0).removeClass("loadingGrid");
+                }
+            })
+
+        })
+
+        $("#modalPriceExam").on("show.bs.modal", function () {
+            $("#modalExamenesAdicionales").modal("hide");
+        })
+
+        $("#modalPriceExam").on("hidden.bs.modal", function () {
+            $("#modalExamenesAdicionales").modal("show");
+        })
+        $("#guardar-precio").on("click", function () {
+
+            var li = $("#cont-examenes-additional").find(".row-active").eq(0);
+            precio = $("#input-precio").val();
+            let serviceId = li.data("service");
+            let personId = li.data("person");
+            let isNewService = li.data("nuevo");
+            precio = precio == "" ? 0 : precio;
+            $("#modalPriceExam").modal("hide");
+
+            let nombre = li.text();
+            let componentId = li.attr("id");
+            console.log(componentId);
+            var html = "";
+            html = `
+                    <li class="list-group-item" data-componentid="${componentId}" data-serviceid="${serviceId}" data-personid="${personId}" data-precio="${precio}" data-nuevo-servicio="${isNewService}" style="cursor:pointer" ondblclick="$(this).remove()">${nombre}</li>
+                    `;
+            $(html).appendTo($("#cont-examenes-agreados"));
+        })
+
 
         localStorage.setItem("TipoServicio", "");
         localStorage.setItem("Clean", 'true');
         SetDateTimeNow();
         localStorage.setItem("AbrirRegistroVenta", 'true');
+
+        $("#btn-guardarfactura").on("click", function () {
+            if (ValidacionesGuardarFactura()) {
+                console.log("listo para guardar")
+            }
+        })
+
         $("#reload-captcha").on("click", function () {
             GetCaptcha();
         })
+
         $("#find-personbyruc").on("click", function () {
             $("#cont-captcha").removeClass("d-none");
             GetCaptcha();
@@ -519,8 +854,11 @@
 
             if ($(this).val() != "1") {
                 $("#cont-solo-contado").addClass("d-none");
+                $("#factura-tiposervicio").val("-1");
+                $("#numero-operacion").attr("disabled", false);
             } else {
                 $("#cont-solo-contado").removeClass("d-none");
+                $("#numero-operacion").attr("disabled", true);
             }
         })
 
@@ -529,8 +867,65 @@
             $("#codigo-fac").prop("disabled", !$("#codigo-fac").attr("disabled"));
         })
 
+
         $("#btn-facturar").on("click", function () {
-            $("#modalVentaRapida").modal("show");
+            var chk = $(".row-active");
+
+            var body = $("#body-venta-rapida");
+            body.html("");
+            if (chk.length === 1) {
+
+                for (var i = 0; i < chk.length; i++) {
+                    let row = chk;
+                    let protocoloNombre = row.find("td").eq(18).text();
+                    let precioTotal = row.find("td").eq(27).text();
+                    let serviceId = row.find("td").eq(15).text();
+                    let empresaFacturacion = row.find("td").eq(26).text();
+                    let rucEmpresaFacturacion = row.find("td").eq(24).text();
+                    let masterServiceId = row.find("td").eq(22).text();
+                    if (masterServiceId == "12" || masterServiceId == "13") {
+                        $.ajax({
+                            method: 'GET',
+                            dataType: 'json',
+                            data: { 'serviceId': serviceId },
+                            url: '/Agenda/GetListSaldosPaciente',
+                            success: function (json) {
+                                let obj = { serviceId, precioTotal, empresaFacturacion, rucEmpresaFacturacion };
+                                ListSaldosPaciente(json, obj);
+
+                            },
+                            error: function (err) {
+                                alertafixed({
+                                    title: 'ERROR: ' + err.status,
+                                    message: 'Sucedió un error al conecatarse al servidor.',
+                                    class: 'error-servidor',
+                                    type: 'danger',
+                                })
+                            }
+
+                        });
+
+                    } else {
+                        let json = [{
+                            v_Name: protocoloNombre,
+                            d_SaldoPaciente: precioTotal
+                        }];
+                        let obj = { serviceId, precioTotal, empresaFacturacion, rucEmpresaFacturacion };
+                        ListSaldosPaciente(json, obj);
+                    }
+
+                }
+
+                $("#modalVentaRapida").modal("show");
+            } else {
+                alertafixed({
+                    type: 'warning',
+                    class: 'warning',
+                    title: 'VALIDACIÓN',
+                    message: 'Seleccione a un solo paciente por favor.'
+                })
+            }
+
         })
 
         $("#agregar-detalle-venta-rapida").on("click", function () {
@@ -577,14 +972,14 @@
 
         $("#btn-fusionar-servicios").on("click", function () {
 
-            let chk = $(".checkbox-agenda:checked");
+            let chk = $(".row-active");
             if (ValidacionFusionarServicios(chk)) {
 
 
                 let arrServices = [];
                 for (var i = 0; i < chk.length; i++) {
-                    var row = chk.eq(i).parent().parent().parent();
-                    var serviceId = row.find("td").eq(26).text();
+                    var row = chk.eq(i);
+                    var serviceId = row.find("td").eq(15).text();
                     arrServices.push(serviceId);
                 }
                 notificacion({
@@ -645,9 +1040,9 @@
         $("#btn-enviar-solicitud").on("click", function () {
 
             let solicitud = $("#numero-solicitud");
-            let chk = $(".checkbox-agenda:checked");
-            let row = chk.parent().parent().parent();
-            let serviceId = row.find("td").eq(26).text();
+            let chk = $(".-row-active");
+            let row = chk;
+            let serviceId = row.find("td").eq(15).text();
             if (solicitud.val() == "") {
                 solicitud.addClass("border-danger").removeClass("border-succes");
                 alertafixed({
@@ -693,10 +1088,10 @@
         })
 
         $("#guardar-cambios-protocolo").on("click", function () {
-            let chk = $(".checkbox-agenda:checked");
-            let row = chk.parent().parent().parent();
+            let chk = $(".row-active");
+            let row = chk;
 
-            let ServiceId = row.find("td").eq(26).text();
+            let ServiceId = row.find("td").eq(15).text();
             console.log(ServiceId);
             let ProtocolId = $("#change-protocolo").val();
             let CentroCosto = $("#change-centrocosto option[value='" + $("#change-centrocosto").val() + "']").text();
@@ -737,10 +1132,10 @@
 
         $("#editar-protocolo").on("click", function () {
 
-            let chk = $(".checkbox-agenda:checked");
+            let chk = $(".row-active");
 
             if (ValidacionEditPacient(chk)) {
-                let row = chk.parent().parent().parent();
+                let row = chk;
 
                 let RucEmpFact = row.find("td").eq(24).text();
                 let _masterServiceId = row.find("td").eq(22).text();
@@ -768,8 +1163,8 @@
         });
 
         $("#change-tiposervicio").on("change", function () {
-            let chk = $(".checkbox-agenda:checked");
-            let row = chk.parent().parent().parent();
+            let chk = $(".row-active");
+            let row = chk;
             row.addClass("row-active");
             $.ajax({
                 cache: false,
@@ -786,6 +1181,7 @@
 
                     $("#change-servicio").html(html);
                     let MasterServiceId = row.find("td").eq(22).text();
+                    console.log()
                     $("#change-servicio").val(MasterServiceId).trigger("change");
                 },
                 error: function (error) {
@@ -813,8 +1209,8 @@
                     }
                     $("#change-protocolo").html(html);
 
-                    let chk = $(".checkbox-agenda:checked");
-                    let row = chk.parent().parent().parent();
+                    let chk = $(".row-active");
+                    let row = chk;
                     let ProtocolId = row.find("td").eq(25).text();
                     $("#change-protocolo").val(ProtocolId).trigger("change");
 
@@ -956,13 +1352,15 @@
 
         $("#modalNuevaAgenda").on("hidden.bs.modal", function () {
             if (localStorage.getItem("Clean") == 'true') {
+                $("#tipo-servicio").val("1");
+                $("#servicio-id").val("2");
                 LimpiarDataSchedule();
             }
         })
 
         $("#modalNuevaAgenda").on("show.bs.modal", function () {
             if (localStorage.getItem("Clean") == 'true') {
-                $("#radOcupacional").click();
+                $("#radParticular").click();
             }
 
         })
@@ -1104,25 +1502,7 @@
         })
 
         $("#filter-ServiceType").on("change", function () {
-            $.ajax({
-                cache: false,
-                dataType: 'json',
-                method: 'GET',
-                data: { 'TypeService': $(this).val() },
-                url: '/Agenda/GetMasterServiceId',
-                success: function (json) {
-
-                    let html = "<option value='-1'>--Todos--</option>";
-                    for (var i = 0; i < json.length; i++) {
-                        html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
-                    }
-                    $("#filter-MasterService").html(html);
-
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            })
+            setMasterServices();
         })
 
         $("#tipo-servicio").on("change", function () {
@@ -1164,16 +1544,18 @@
 
         $("#btn-trabajador").on("click", function () {
             var input = $("#doc-number-find");
+
             FindPersonByDocNumber(input.val(), input);
+
         })
 
         $("#editar-trabajador").on("click", function () {
-            let chk = $(".checkbox-agenda:checked");
+            let chk = $(".row-active");
             if (ValidacionEditPacient(chk)) {
                 $("#doc-number-find").attr("disabled", true);
                 $("#btn-trabajador").attr("disabled", true);
 
-                let row = chk.parent().parent().parent();
+                let row = chk;
                 let PersonId = row.find("td").eq(2).text();
 
                 $.ajax({
@@ -1194,7 +1576,10 @@
         })
 
         $("#btn-nueva-agenda").on("click", function () {
-            $("#doc-number-find").attr("disabled", false);
+
+            $("#doc-number-find").attr("disabled", false).val("");
+            $("#cont-captcha").addClass("d-none");
+            $("#value-captcha").val("");
             $("#btn-trabajador").attr("disabled", false);
             $("#datos-protocolo").removeClass("d-none");
             $("#footer-new-agenda").removeClass("d-none");
@@ -1413,7 +1798,342 @@
         })
     })
 
+    const setMasterServices = function () {
+        $.ajax({
+            cache: false,
+            dataType: 'json',
+            method: 'GET',
+            data: { 'TypeService': $("#filter-ServiceType").val() },
+            url: '/Agenda/GetMasterServiceId',
+            success: function (json) {
 
+                let html = "<option value='-1'>--Todos--</option>";
+                for (var i = 0; i < json.length; i++) {
+                    html += `<option value='${json[i].Id}'>${json[i].Value}</option>`;
+                }
+                $("#filter-MasterService").html(html);
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    const AtenderExamenesAdicionales = function (ServiceId, personId) {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { ServiceId },
+            url: '/Agenda/GetExamenesAdicionales',
+            success: function (json) {
+                if (json.length == 0) {
+                    alertafixed({
+                        type: 'info',
+                        class: 'info-class',
+                        title: 'INFO',
+                        message: 'No se encontraron examenes adicionales.'
+                    })
+                } else {
+                    AddExamenesInLIst(json, ServiceId, personId);
+                    $("#modalExamenesAdicionales").modal("show");
+                }
+            },
+            error: function (err, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'danger-class',
+                    title: 'ERROR: ' + status,
+                    message
+                })
+            }
+        })
+    }
+
+    function colapse(icon) {
+        if ($("#" + icon.id).hasClass("fa-plus")) {
+            $("#" + icon.id).siblings().stop().animate({
+                height: '100%',
+            }, 300)
+        } else {
+            $("#" + icon.id).siblings().stop().animate({
+                height: '0px'
+            }, 300)
+        }
+
+        $("#" + icon.id).toggleClass("fa-plus").toggleClass("fa-minus");
+    }
+
+    const ClickComponent = function (li) {
+
+        if ($(".row-active").length > 0) {
+            $(".row-active").removeClass("row-active");
+        }
+        $(li).addClass("row-active");
+    }
+
+    const AddExamenesInLIst = function (json, serviceId, PersonId) {
+        $("#cont-examenes-additional").empty();
+        $("#cont-examenes-agreados").empty();
+        for (var i = 0; i < json.length; i++) {
+
+            var html = `
+                            <li class="list-group-item" data-categoryId="${json[i].i_CategoryId}">
+                                <i id="icon-categoryId-${json[i].i_CategoryId}" onclick="return colapse(this)" class="fas fa-plus"></i> ${json[i].v_CategoryName}
+                                <ul id="category-${json[i].i_CategoryId}" style="overflow:hidden; height:0px !important">
+
+                                </ul>
+                            </li>
+                        `;
+
+
+            $(html).appendTo($("#cont-examenes-additional"));
+
+            var componentes = json[i].Componentes;
+            var subListas = "";
+            for (var x = 0; x < componentes.length; x++) {
+                subListas += `<li onclick="ClickComponent(this)" style="cursor:pointer" data-service="${serviceId}" data-person="${PersonId}" data-nuevo="${componentes[x].i_NewService}" ondblclick="PasarExamen()" class="list-group-item" id="${componentes[x].v_ComponentId}">${componentes[x].v_ComponentName}</li>`;
+            }
+
+            $(`#category-${json[i].i_CategoryId}`).html(subListas);
+        }
+        $("#modalExamenesAdicionales").modal("show");
+
+    }
+
+
+    const PasarExamen = function () {
+        $("#modalPriceExam").modal("show");
+    }
+
+    const GetSeriesDocumento = function () {
+        $.ajax({
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            data: { 'IdDocumento': $("#select-documento").val() },
+            success: function (json) {
+                $("#serie-caja").val(json)
+            },
+            error: function (err) {
+                console.log("ERROR: ", err);
+            }
+        })
+    }
+
+    const IniciarCircuitoCalendar = function (CalendarId) {
+        console.log(CalendarId);
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data: { 'CalendarId': CalendarId },
+            url: '/Agenda/IniciarCircuito',
+            success: function (json) {
+                if (json.Error) {
+                    alertafixed({
+                        type: 'danger',
+                        class: 'danger-class',
+                        title: 'ERROR: ' + json.Status,
+                        message: json.Message
+                    })
+                } else {
+                    alertafixed({
+                        type: 'success',
+                        class: 'success-class',
+                        title: 'HECHO: ' + json.Status,
+                        message: json.Message
+                    })
+                    Filter();
+                }
+            },
+            error: function (err, status, message) {
+                alertafixed({
+                    type: 'danger',
+                    class: 'danger-class',
+                    title: 'ERROR: ' + status,
+                    message: 'Sucedió un error conectandose al servicio: ' + message
+                })
+            }
+        })
+
+    };
+
+    const ValidacionesGuardarFactura = () => {
+
+        if ($("#factura-tiposervicio").val() == "-1") {
+            $("#factura-tiposervicio").addClass("border-danger").removeClass("border-success");
+            ViewAlertWarning("El tipo de servicio es necesario.")
+            return false;
+        } else {
+            $("#factura-tiposervicio").addClass("border-success").removeClass("border-danger");
+        }
+
+        if ($("#select-condicion-pago").val() == "1" && $("#select-tipopago").val() == "-1") {
+            $("#select-tipopago").addClass("border-danger").removeClass("border-success");
+            ViewAlertWarning("El tipo de pago es necesario.")
+            return false;
+        } else {
+            $("#select-tipopago").addClass("border-success").removeClass("border-danger");
+        }
+
+        if ($("#select-condicion-pago").val() != "1" && $("#numero-operacion").val() == "") {
+            $("#numero-operacion").addClass("border-danger").removeClass("border-success");
+            ViewAlertWarning("Por favor ingrese el número de operación para la cobranza con tarjeta.")
+            return false;
+        } else {
+            $("#numero-operacion").addClass("border-success").removeClass("border-danger");
+        }
+
+        if ($("#factura-tipocambio").val() == "" || Number($("#factura-tipocambio").val()) <= 0) {
+            $("#factura-tipocambio").addClass("border-danger").removeClass("border-success");
+            ViewAlertWarning("Por favor ingrese un tipo de cambio válido.");
+            return false;
+        } else {
+            $("#factura-tipocambio").addClass("border-success").removeClass("border-danger");
+        }
+
+        var rows = $("#body-venta-rapida tr");
+
+        for (var i = 0; i < rows.length; i++) {
+            let idProductoDetalle = rows.eq(i).find("td").eq(1).find("input").val();
+            let cantidad = rows.eq(i).find("td").eq(4).find("input").val();
+            let precio = rows.eq(i).find("td").eq(6).find("input").val();
+            let unidadMedidadId = rows.eq(i).find("td").eq(12).text();
+            let precioVenta = rows.eq(i).find("td").eq(10).find("input").val()
+
+            if (Number(cantidad) <= 0 || Number(precio) == undefined || Number(precio) == NaN) {
+                ViewAlertWarning("Verifique las cantidaddes por favor.");
+                return false;
+            }
+
+            if (Number(precio) <= 0 || Number(precio) == undefined || Number(precio) == NaN) {
+                ViewAlertWarning("Verifique los precios por favor.");
+                return false;
+            }
+            if (unidadMedidadId == "" || unidadMedidadId == "-1") {
+                ViewAlertWarning("Verifique la unidad de medida.");
+                return false;
+            }
+            if (idProductoDetalle == "") {
+                ViewAlertWarning("Uno de los articulos se ingresó incorrectamente.");
+                return false;
+            }
+            if (Number(precioVenta) <= 0 || Number(precioVenta) == undefined || Number(precioVenta) == NaN) {
+                ViewAlertWarning("Todos los Totales no están calculados.");
+                return false;
+            }
+        }
+        let doc = $("#select-documento");
+        if (doc.val != "" && (doc.val() == "7" || doc.val() == "1")) {
+            ViewAlertWarning("Estetipo de documento no puede estar asociado a Público general.");
+            return false;
+        }
+
+        return true;
+    }
+
+    function ViewAlertWarning(message) {
+        alertafixed({
+            class: 'warning-validation',
+            type: 'warning',
+            title: 'VALIDACIÓN',
+            message,
+        });
+    }
+
+    const ListSaldosPaciente = (json, obj) => {
+        console.log(json, obj);
+        let arrDetalleVenta = [];
+
+        for (let x = 0; x < json.length; x++) {
+            let cant = 1;
+            let pu = json[x].d_SaldoPaciente;
+            let precioVenta = pu * cant;
+            let precioBase = (precioVenta / 1.18).toFixed(2)
+            let igv = (precioVenta - precioBase).toFixed(2);
+
+            var objVentaDetalle = {
+                Anticipio: 0,
+                IdAlmacen: 1,
+                IdCentroCosto: "0",
+                IdUnidadMedida: 15,
+                ProductoNombre: json[x].v_Name,
+                DescripcionProducto: json[x].v_Name,
+                IdProductoDetalle: "N001-PE000015780",
+                NroCuenta: "",
+                PrecioVenta: precioVenta,
+                Igv: igv,
+                Cantidad: cant,
+                CantidadEmpaque: cant,
+                Precio: pu,
+                Valor: pu,
+                ValorVenta: precioBase,
+                PrecioImpresion: pu,
+                CodigoInterno: "ATMD01",
+                Empaque: 1,
+                UMEmpaque: "UND",
+                EsServicio: 1,
+                IdUnidadMedidaProducto: 15,
+                UnidadMedida: 'UNIDAD',
+                ServiceId: obj.serviceId,
+                EmpresaFacturacion: obj.empresaFacturacion,
+                RucEmpFacturacion: obj.rucEmpresaFacturacion,
+            }
+
+            arrDetalleVenta.push(objVentaDetalle);
+        }
+
+        var body = $("#body-venta-rapida");
+
+
+        for (var z = 0; z < arrDetalleVenta.length; z++) {
+            AgregarFilaVentaRapida();
+            body.find("tr").eq(z).removeAttr("ondblclick");
+            let td = body.find("tr").eq(z).find("td");
+
+
+            td.eq(1).find("input").eq(0).val(arrDetalleVenta[z].IdProductoDetalle);//Id del producto
+            td.eq(2).find("input").eq(0).val(arrDetalleVenta[z].CodigoInterno);//Codigo del producto
+            td.eq(3).find("input").eq(0).val(arrDetalleVenta[z].DescripcionProducto);//Descripcion del producto
+            td.eq(4).find("input").eq(0).attr("disabled", false);//Descripcion del producto
+            td.eq(5).find("input").eq(0).val(arrDetalleVenta[z].UnidadMedida);//Unidad de medida del producto
+            td.eq(6).find("input").eq(0).val(arrDetalleVenta[z].Precio);//Precio unitario del producto
+            td.eq(12).text(arrDetalleVenta[z].IdUnidadMedidaProducto);//Unidad de medidaID del producto
+            let precUnit = Number(arrDetalleVenta[z].Precio);
+            let valorVenta = (1 * precUnit) / 1.18;
+            let igv = valorVenta * 0.18;
+            let conIgvTotal = valorVenta + igv;
+            td.eq(8).find("input").eq(0).val(valorVenta.toFixed(2));
+            td.eq(9).find("input").eq(0).val(igv.toFixed(2));
+            td.eq(10).find("input").eq(0).val(conIgvTotal.toFixed(2));
+        }
+
+        let rows2 = $("#body-venta-rapida").find("tr");
+        let total = 0;
+        let totalValorventa = 0;
+        let totalIgv = 0;
+        for (let x = 0; x < rows2.length; x++) {
+
+            let cant = Number(rows2.eq(x).find("td").eq(4).find("input").eq(0).val());
+            let precUnit = Number(rows2.eq(x).find("td").eq(6).find("input").eq(0).val());
+            let desct = Number(rows2.eq(x).find("td").eq(7).find("input").val());
+            let valorVenta = (cant * precUnit) / 1.18;
+            valorVenta = valorVenta - (valorVenta * (desct / 100))
+            let igv = valorVenta * 0.18;
+            let conIgvTotal = valorVenta + igv;
+
+            total += conIgvTotal;
+            totalValorventa += valorVenta;
+            totalIgv += igv;
+        }
+
+        $("#total-valorventa").val(totalValorventa.toFixed(2));
+        $("#total-igv").val(totalIgv.toFixed(2));
+        $("#total-total").val(total.toFixed(2));
+
+    }
 
     const GetCaptcha = function () {
         $.ajax({
@@ -1445,7 +2165,7 @@
             let precUnit = Number(row.find("td").eq(6).find("input").val());
             let descuento = Number(row.find("td").eq(7).find("input").val());
             let valorVenta = (cant * precUnit) / 1.18;
-            valorVenta = valorVenta - (valorVenta * descuento/100)
+            valorVenta = valorVenta - (valorVenta * descuento / 100)
             let igv = valorVenta * 0.18;
             let conIgvTotal = valorVenta + igv;
             row.find("td").eq(8).find("input").eq(0).val(valorVenta.toFixed(2));
@@ -1459,7 +2179,7 @@
             let precUnit = Number(row.find("td").eq(6).find("input").val());
             let descuento = Number(row.find("td").eq(7).find("input").val());
             let valorVenta = (cant * precUnit) / 1.18;
-            valorVenta = valorVenta - (valorVenta * (descuento/100))
+            valorVenta = valorVenta - (valorVenta * (descuento / 100))
             let igv = valorVenta * 0.18;
             let conIgvTotal = valorVenta + igv;
             row.find("td").eq(8).find("input").eq(0).val(valorVenta.toFixed(2));
@@ -1480,7 +2200,7 @@
             row.find("td").eq(9).find("input").eq(0).val(igv.toFixed(2));
             row.find("td").eq(10).find("input").eq(0).val(conIgvTotal.toFixed(2));
 
-        } 
+        }
 
 
         let rows = $("#body-venta-rapida").find("tr");
@@ -1513,6 +2233,7 @@
         let descripcionProducto = $(row).find("td").eq(2).text();
         let unidadMedida = $(row).find("td").eq(7).text();
         let precioUnitario = $(row).find("td").eq(6).text();
+        let unidadMedidaId = $(row).find("td").eq(10).text();
 
         let rows = $("#body-venta-rapida").find("tr");
         var inserto = false;
@@ -1525,7 +2246,8 @@
                     rows.eq(i).find("td").eq(3).find("input").eq(0).val(descripcionProducto);//Descripcion del producto
                     rows.eq(i).find("td").eq(4).find("input").eq(0).attr("disabled", false);//Descripcion del producto
                     rows.eq(i).find("td").eq(5).find("input").eq(0).val(unidadMedida);//Unidad de medida del producto
-                    rows.eq(i).find("td").eq(6).find("input").eq(0).val(precioUnitario);//Precio unitario del producto
+                    rows.eq(i).find("td").eq(6).find("input").eq(0).val(precioUnitario);//Precio unitario del producto/
+                    rows.eq(i).find("td").eq(12).text(unidadMedidaId);//Id Unidad de medidad del producto/
                     let precUnit = Number(precioUnitario);
                     let valorVenta = (1 * precUnit) / 1.18;
                     let igv = valorVenta * 0.18;
@@ -1740,10 +2462,11 @@
                         <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
                         <td nowrap class="text-center"><input onkeyup="calcValues(this, 'PRECIOUNITARIO')" type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
                         <td nowrap class="text-center"><input onkeyup="calcValues(this, 'DESCUENTO')" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" type="text" class="form-control form-control-sm" value="0" style="min-width:70px" /></td>
-                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:100px" /></td>
-                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:100px" /></td>
-                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" value="0.00" style="min-width:100px" /></td>
+                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" style="min-width:100px" /></td>
+                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" style="min-width:100px" /></td>
+                        <td nowrap class="text-center"><input disabled type="text" class="form-control form-control-sm" style="min-width:100px" /></td>
                         <td nowrap class="text-center"><input type="text" class="form-control form-control-sm" value="" style="min-width:150px" /></td>
+                        <td nowrap class="d-none"></td>
                         <td class="d-none RecordStatus" nowrap>2</td>
                         <td class="d-none RecordType" nowrap>1</td>
                     </tr>
@@ -1751,8 +2474,6 @@
 
         $(html).appendTo($("#body-venta-rapida"));
     }
-
-    
 
     const ValidacionFusionarServicios = function (chk) {
         if (chk.length <= 1) {
@@ -2170,6 +2891,7 @@
         } else {
             input.removeClass('border-danger');
         }
+        LimpiarDataSchedule();
         $.ajax({
             cache: false,
             method: 'GET',
@@ -2177,19 +2899,36 @@
             data: { 'docNumber': value },
             url: '/Pacientes/GetPacientByDocNumber',
             success: function (json) {
-                if (json.Error) {
-                    ValidacionInputFindPacient(json, input);
-                } else {
+                if (json.BaseDatos) {
                     SetValuePacient(json);
                     input.removeClass('border-danger');
+                    $("#cont-captcha").addClass("d-none")
+                } else {
+                    if (json.Error) {
+                        ValidacionInputFindPacient(json, input);
+                        $("#numero-documento").val(input);
+                        $("#cont-captcha").addClass("d-none")
+                    } else {
+                        alertafixed({
+                            type: 'info',
+                            class: 'info-class',
+                            title: 'INFORMACIÓN: ' + json.Status,
+                            message: json.Message,
+                        })
+                        $("#cont-captcha").removeClass("d-none");
+
+                        $("#img-captcha").attr("src", "data:image/jpeg;base64," + json.Id)
+                    }
 
                 }
+
                 $("#modal-content-agenda").removeClass("loadingGrid");
             },
             error: function (error) {
                 LimpiarDataSchedule();
                 ViewErrorResponse(error);
                 $("#modal-content-agenda").removeClass("loadingGrid");
+                $("#cont-captcha").addClass("d-none")
             }
         });
 
@@ -2395,6 +3134,11 @@
     }
 
     const LimpiarDataSchedule = function () {
+
+        $("#nro-afiliacion").text("");
+        $("#tipo-asegurado").text("");
+        $("#estado-seguro").text("");
+
         $("#paciente-id").val();
         $("#nombres-paciente").val("");
         $("#apepat-paciente").val("");
@@ -2429,8 +3173,7 @@
         $("#religion-paciente").val("");
         $("#parentesco-paciente").val("-1");
 
-        $("#tipo-servicio").val("1");
-        $("#servicio-id").val("2");
+
         $("#protocolo-id").val("-1");
         $("#geso-id").val("-1");
         $("#tipo-eso-id").val("-1");
@@ -2440,7 +3183,7 @@
 
         $("#empresa-cliente-id").val("-1");
         $("#empresa-trabajo-id").val("-1");
-        $("#doc-number-find").val("");
+        //$("#doc-number-find").val("");
     }
 
     const checkedAllCheckBoxes = function (className = "checkbox-agenda") {

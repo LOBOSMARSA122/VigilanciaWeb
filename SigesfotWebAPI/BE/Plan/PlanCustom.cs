@@ -8,12 +8,14 @@ namespace BE.Plan
 {
     public class PlanCustom
     {
-        public int PlanId { get; set; }
-        public string OrganizationSeguroId { get; set; }
-        public string ProtocoloId { get; set; }
-        public string IdUnidadProductiva { get; set; }
-        public int EsDeducible { get; set; }
-        public int EsCoaseguro { get; set; }
-        public decimal Importe { get; set; }
+        public int i_PlanId { get; set; }
+        public string v_OrganizationSeguroId { get; set; }
+        public string v_ProtocoloId { get; set; }
+        public string v_IdUnidadProductiva { get; set; }
+        public int? i_EsDeducible { get; set; }
+        public int? i_EsCoaseguro { get; set; }
+        public decimal? d_Importe { get; set; }
+        public decimal? d_ImporteCo { get; set; }
+        public string v_IdUnidadProductivaName { get; set; }
     }
 }
